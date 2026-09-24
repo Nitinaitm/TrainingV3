@@ -98,9 +98,9 @@ namespace Training.Admin
             DataTable dt = obj.GetDataTable("SELECT * FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             if (dt.Rows.Count == 0) return;
             DataRow r = dt.Rows[0];
-            txtTrainingID.Text = Convert.ToString(r["TrainingID"]); txtDateFrom.Text = Convert.ToString(r["DateFrom"]); txtDateTo.Text = Convert.ToString(r["DateTo"]);
+            txtTrainingID.Text = Convert.ToString(r["TrainingID"]); txtDateFrom.Text = FormatDateForText(r["DateFrom"]); txtDateTo.Text = FormatDateForText(r["DateTo"]);
             txtOfficeOrderNo.Text = r.Table.Columns.Contains("OfficeOrderNo") && r["OfficeOrderNo"] != DBNull.Value ? Convert.ToString(r["OfficeOrderNo"]) : "";
-            txtOfficeOrderDate.Text = r.Table.Columns.Contains("OfficeOrderDate") && r["OfficeOrderDate"] != DBNull.Value ? Convert.ToString(r["OfficeOrderDate"]) : "";
+            txtOfficeOrderDate.Text = r.Table.Columns.Contains("OfficeOrderDate") && r["OfficeOrderDate"] != DBNull.Value ? FormatDateForText(r["OfficeOrderDate"]) : "";
             if (ddlTrainingType.Items.FindByText(Convert.ToString(r["TrainingType"])) != null) ddlTrainingType.SelectedValue = Convert.ToString(r["TrainingType"]);
             if (ddlTrainingOrganizer.Items.FindByText(Convert.ToString(r["TrainingOrganizer"])) != null) ddlTrainingOrganizer.SelectedValue = Convert.ToString(r["TrainingOrganizer"]);
             if (ddlTrainingLocation.Items.FindByText(Convert.ToString(r["TrainingLocation"])) != null) ddlTrainingLocation.SelectedValue = Convert.ToString(r["TrainingLocation"]);
@@ -199,7 +199,31 @@ namespace Training.Admin
 
         private void AddParameters(SqlCommand cmd, string trainingID, DateTime fromDate, DateTime toDate)
         {
-            cmd.Parameters.AddWithValue("@TrainingID", trainingID); cmd.Parameters.AddWithValue("@TrainingType", ddlTrainingType.SelectedItem.Text); cmd.Parameters.AddWithValue("@TrainingOrganizer", ddlTrainingOrganizer.SelectedItem.Text); cmd.Parameters.AddWithValue("@TrainingLocation", ddlTrainingLocation.SelectedItem.Text); cmd.Parameters.AddWithValue("@Batch", txtBatch.Text.Trim()); cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = fromDate; cmd.Parameters.Add("@DateTo", SqlDbType.DateTime).Value = toDate; cmd.Parameters.AddWithValue("@OfficeOrderNo", string.IsNullOrWhiteSpace(txtOfficeOrderNo.Text) ? (object)DBNull.Value : txtOfficeOrderNo.Text.Trim()); object officeOrderDate = DBNull.Value; if (!string.IsNullOrWhiteSpace(txtOfficeOrderDate.Text)) { DateTime parsedOfficeOrderDate; if (!DateTime.TryParseExact(txtOfficeOrderDate.Text.Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedOfficeOrderDate)) throw new Exception("Please enter Office Order Date in dd-MM-yyyy format."); officeOrderDate = parsedOfficeOrderDate; } cmd.Parameters.Add("@OfficeOrderDate", SqlDbType.DateTime).Value = officeOrderDate; cmd.Parameters.AddWithValue("@CourseID", ddlCourse.SelectedValue); cmd.Parameters.AddWithValue("@TrainingCategory", ddlTrainingCategory.SelectedItem.Text); cmd.Parameters.AddWithValue("@NoOfDays", txtNoOfDays.Text.Trim()); cmd.Parameters.AddWithValue("@BatchStrength", txtStrength.Text.Trim()); cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text.Trim()); cmd.Parameters.AddWithValue("@Hours", txtHours.Text.Trim()); cmd.Parameters.AddWithValue("@HostelRequiredTrainee", chkTraineeHostelRequired.Checked ? "Yes" : "No"); cmd.Parameters.AddWithValue("@AttendanceRequired", chkAttendanceRequired.Checked); cmd.Parameters.AddWithValue("@AssessmentRequired", chkPreTrainingAssessment.Checked || chkPostTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@AssessmentMode", DBNull.Value); cmd.Parameters.AddWithValue("@InitialAssessmentRequired", chkPreTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@SessionAssessmentRequired", false); cmd.Parameters.AddWithValue("@FinalAssessmentRequired", chkPostTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@FeedbackRequired", chkFeedbackRequired.Checked); cmd.Parameters.AddWithValue("@CertificateRequired", chkCertificateRequired.Checked); cmd.Parameters.AddWithValue("@TrainerHostelRequired", chkTrainerHostelRequired.Checked); cmd.Parameters.AddWithValue("@TraineeHostelRequired", chkTraineeHostelRequired.Checked);
+            cmd.Parameters.AddWithValue("@TrainingID", trainingID); cmd.Parameters.AddWithValue("@TrainingType", ddlTrainingType.SelectedItem.Text); cmd.Parameters.AddWithValue("@TrainingOrganizer", ddlTrainingOrganizer.SelectedItem.Text); cmd.Parameters.AddWithValue("@TrainingLocation", ddlTrainingLocation.SelectedItem.Text); cmd.Parameters.AddWithValue("@Batch", txtBatch.Text.Trim()); cmd.Parameters.Add("@DateFrom", SqlDbType.VarChar, 10).Value = fromDate.ToString("dd-MM-yyyy"); cmd.Parameters.Add("@DateTo", SqlDbType.VarChar, 10).Value = toDate.ToString("dd-MM-yyyy"); cmd.Parameters.AddWithValue("@OfficeOrderNo", string.IsNullOrWhiteSpace(txtOfficeOrderNo.Text) ? (object)DBNull.Value : txtOfficeOrderNo.Text.Trim()); object officeOrderDate = DBNull.Value; if (!string.IsNullOrWhiteSpace(txtOfficeOrderDate.Text)) { DateTime parsedOfficeOrderDate; if (!DateTime.TryParseExact(txtOfficeOrderDate.Text.Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedOfficeOrderDate)) throw new Exception("Please enter Office Order Date in dd-MM-yyyy format."); officeOrderDate = parsedOfficeOrderDate.ToString("dd-MM-yyyy"); } cmd.Parameters.Add("@OfficeOrderDate", SqlDbType.VarChar, 10).Value = officeOrderDate; cmd.Parameters.AddWithValue("@CourseID", ddlCourse.SelectedValue); cmd.Parameters.AddWithValue("@TrainingCategory", ddlTrainingCategory.SelectedItem.Text); cmd.Parameters.AddWithValue("@NoOfDays", txtNoOfDays.Text.Trim()); cmd.Parameters.AddWithValue("@BatchStrength", txtStrength.Text.Trim()); cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text.Trim()); cmd.Parameters.AddWithValue("@Hours", txtHours.Text.Trim()); cmd.Parameters.AddWithValue("@HostelRequiredTrainee", chkTraineeHostelRequired.Checked ? "Yes" : "No"); cmd.Parameters.AddWithValue("@AttendanceRequired", chkAttendanceRequired.Checked); cmd.Parameters.AddWithValue("@AssessmentRequired", chkPreTrainingAssessment.Checked || chkPostTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@AssessmentMode", DBNull.Value); cmd.Parameters.AddWithValue("@InitialAssessmentRequired", chkPreTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@SessionAssessmentRequired", false); cmd.Parameters.AddWithValue("@FinalAssessmentRequired", chkPostTrainingAssessment.Checked); cmd.Parameters.AddWithValue("@FeedbackRequired", chkFeedbackRequired.Checked); cmd.Parameters.AddWithValue("@CertificateRequired", chkCertificateRequired.Checked); cmd.Parameters.AddWithValue("@TrainerHostelRequired", chkTrainerHostelRequired.Checked); cmd.Parameters.AddWithValue("@TraineeHostelRequired", chkTraineeHostelRequired.Checked);
+        }
+
+        private string FormatDateForText(object value)
+        {
+            if (value == null || value == DBNull.Value)
+                return "";
+
+            DateTime parsed;
+
+            if (value is DateTime)
+                return ((DateTime)value).ToString("dd-MM-yyyy");
+
+            string text = Convert.ToString(value).Trim();
+
+            if (DateTime.TryParseExact(text, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsed))
+                return parsed.ToString("dd-MM-yyyy");
+
+            if (DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out parsed))
+                return parsed.ToString("dd-MM-yyyy");
+
+            if (DateTime.TryParse(text, out parsed))
+                return parsed.ToString("dd-MM-yyyy");
+
+            return text;
         }
 
         private void SetButtonStatus()
