@@ -31,8 +31,7 @@ namespace Training.Admin
 
             btnCreateSessions.Enabled = batchCreated;
             btnAssignTrainee.Enabled = batchCreated;
-            btnAssignFeedback.Enabled = batchCreated;
-            btnAssignFeedback.Visible = batchCreated;
+            
         }
 
         private bool IsTrainingCompleted(string trainingID)
