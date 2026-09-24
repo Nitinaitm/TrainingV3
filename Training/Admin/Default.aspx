@@ -778,19 +778,28 @@ window.addEventListener('message', function (event) {
                 return;
             }
 
-            var gridWidth = grid.scrollWidth;
-            var gridClientWidth = grid.clientWidth;
+            top.style.display = 'block';
 
-            if (gridWidth > gridClientWidth) {
-                top.style.display = 'block';
-                inner.style.width = gridWidth + 'px';
-                inner.style.minWidth = gridWidth + 'px';
-                inner.style.maxWidth = 'none';
-                top.scrollLeft = grid.scrollLeft;
+            var gridWidth = grid.scrollWidth;
+
+            if (grid.firstElementChild) {
+                gridWidth = Math.max(
+                    gridWidth,
+                    grid.firstElementChild.scrollWidth,
+                    grid.firstElementChild.offsetWidth
+                );
             }
-            else {
-                top.style.display = 'none';
-                top.scrollLeft = 0;
+
+            if (gridWidth < grid.clientWidth) {
+                gridWidth = grid.clientWidth;
+            }
+
+            inner.style.width = gridWidth + 'px';
+            inner.style.minWidth = gridWidth + 'px';
+            inner.style.maxWidth = 'none';
+
+            if (top.scrollLeft !== grid.scrollLeft) {
+                top.scrollLeft = grid.scrollLeft;
             }
         }
 
@@ -807,19 +816,19 @@ window.addEventListener('message', function (event) {
 
                 top.setAttribute('data-scroll-bound', '1');
 
-                top.onscroll = function () {
+                top.addEventListener('scroll', function () {
 
                     if (grid.scrollLeft !== top.scrollLeft) {
                         grid.scrollLeft = top.scrollLeft;
                     }
-                };
+                });
 
-                grid.onscroll = function () {
+                grid.addEventListener('scroll', function () {
 
                     if (top.scrollLeft !== grid.scrollLeft) {
                         top.scrollLeft = grid.scrollLeft;
                     }
-                };
+                });
             }
 
             syncEmployeeGridScrollbars();
@@ -831,11 +840,15 @@ window.addEventListener('message', function (event) {
 
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            }, 50);
+            }, 100);
 
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            }, 250);
+            }, 500);
+
+            setTimeout(function () {
+                syncEmployeeGridScrollbars();
+            }, 1000);
         }
 
         $(document).ready(function () {
@@ -844,6 +857,10 @@ window.addEventListener('message', function (event) {
             refreshEmployeeGridScrollbars();
 
             $(window).on('resize', function () {
+                refreshEmployeeGridScrollbars();
+            });
+
+            $(window).on('load', function () {
                 refreshEmployeeGridScrollbars();
             });
 
