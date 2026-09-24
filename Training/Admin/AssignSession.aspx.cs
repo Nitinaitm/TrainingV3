@@ -262,6 +262,7 @@ T.TrainerType,
 T.TrainerID
 
 ", con);
+
                 DataTable dt = new DataTable();
 
                 da.Fill(dt);
@@ -511,6 +512,7 @@ WHERE T.TrainerID=@TrainerID
                 if (obj != null)
                     lblTrainerExpertise.Text =
                         obj.ToString();
+
                 con.Close();
             }
         }
@@ -810,3 +812,790 @@ VALUES
 
             txtSessionName.Focus();
         }
+        private void LoadSession(string SessionID)
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+
+SELECT
+    *
+FROM SessionMaster
+WHERE SessionID=@SessionID
+
+", con);
+
+                cmd.Parameters.AddWithValue("@SessionID", SessionID);
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    ViewState["SessionID"] = dr["SessionID"].ToString();
+
+                    txtSessionID.Text = dr["SessionID"].ToString();
+
+                    txtSessionNo.Text = dr["SessionNo"].ToString();
+
+                    txtSessionName.Text = dr["SessionName"].ToString();
+
+                    txtSessionDate.Text = dr["SessionDate"].ToString();
+
+                    if (ddlStartTime.Items.FindByValue(dr["StartTime"].ToString()) != null)
+                        ddlStartTime.SelectedValue = dr["StartTime"].ToString();
+
+                    if (ddlEndTime.Items.FindByValue(dr["EndTime"].ToString()) != null)
+                        ddlEndTime.SelectedValue = dr["EndTime"].ToString();
+
+                    txtTotalHours.Text = dr["TotalHours"].ToString();
+
+                    if (ddlTopic.Items.FindByValue(dr["TopicID"].ToString()) != null)
+                        ddlTopic.SelectedValue = dr["TopicID"].ToString();
+
+                    if (ddlTrainer.Items.FindByValue(dr["TrainerID"].ToString()) != null)
+                        ddlTrainer.SelectedValue = dr["TrainerID"].ToString();
+
+                    txtRemarks.Text = dr["Remarks"].ToString();
+
+                    btnSave.Visible = false;
+
+                    btnUpdate.Visible = true;
+
+                    btnDelete.Visible = true;
+
+                    ScriptManager.RegisterStartupScript(
+                        this,
+                        GetType(),
+                        "calcHours",
+                        "calculateHours();",
+                        true);
+                }
+
+                dr.Close();
+
+                con.Close();
+            }
+        }
+
+        protected void btnUpdate_Click(object sender, EventArgs e)
+        {
+            lblMessage.Text = "";
+
+            if (!Page.IsValid)
+                return;
+
+            if (ViewState["SessionID"] == null)
+            {
+                lblMessage.Text = "Please select a Session.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+
+            DateTime batchFrom;
+
+            DateTime batchTo;
+
+            LoadTrainingDates(
+                out batchFrom,
+                out batchTo);
+
+            DateTime sessionDate;
+
+            if (!DateTime.TryParseExact(txtSessionDate.Text.Trim(),
+                "dd-MM-yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out sessionDate))
+            {
+                lblMessage.Text = "Invalid Session Date.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+
+            if (sessionDate < batchFrom || sessionDate > batchTo)
+            {
+                lblMessage.Text = "Session Date should be within Training Duration.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+            decimal sessionHours;
+
+            if (!decimal.TryParse(
+                    hfTotalHours.Value,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out sessionHours))
+            {
+                ShowMessage("Invalid Session Hours.", Color.Red);
+                return;
+            }
+
+
+            if (sessionHours <= 0)
+            {
+                lblMessage.Text = "Session Hours should be greater than zero.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+
+            if (IsDuplicateSession())
+            {
+                ShowMessage("Session timing overlaps with an existing session.", Color.Red);
+                return;
+            }
+
+            if (IsTrainerBusy())
+            {
+                ShowMessage("Selected trainer is already assigned to another session during this time.", Color.Red);
+                return;
+            }
+
+            decimal plannedHours = Convert.ToDecimal(lblTrainingHours.Text);
+            decimal usedHours = 0;
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand hrs = new SqlCommand(@"
+
+SELECT ISNULL(SUM(CAST(TotalHours AS DECIMAL(10,2))),0)
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+
+AND SessionID<>@SessionID
+
+", con);
+
+                hrs.Parameters.AddWithValue("@TrainingID", lblTrainingID.Text);
+                hrs.Parameters.AddWithValue("@SessionID", ViewState["SessionID"].ToString());
+
+                con.Open();
+
+                usedHours = Convert.ToDecimal(hrs.ExecuteScalar());
+
+                con.Close();
+            }
+
+            if ((usedHours + sessionHours) > plannedHours)
+            {
+                lblMessage.Text = "Total Session Hours cannot exceed Planned Training Hours.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                con.Open();
+
+                SqlTransaction tran = con.BeginTransaction();
+
+                try
+                {
+                    SqlCommand cmd = new SqlCommand(@"
+
+UPDATE SessionMaster
+
+SET
+
+SessionName=@SessionName,
+SessionDate=@SessionDate,
+StartTime=@StartTime,
+EndTime=@EndTime,
+TotalHours=@TotalHours,
+TopicID=@TopicID,
+TrainerID=@TrainerID,
+Remarks=@Remarks,
+UpdatedOn=GETDATE(),
+UpdatedBy=@UpdatedBy
+
+WHERE SessionID=@SessionID
+
+", con, tran);
+
+                    cmd.Parameters.AddWithValue("@SessionID", ViewState["SessionID"].ToString());
+
+                    cmd.Parameters.AddWithValue("@SessionName", txtSessionName.Text.Trim());
+
+                    cmd.Parameters.AddWithValue("@SessionDate", sessionDate.ToString("dd-MM-yyyy"));
+
+                    cmd.Parameters.AddWithValue("@StartTime", ddlStartTime.SelectedValue);
+
+                    cmd.Parameters.AddWithValue("@EndTime", ddlEndTime.SelectedValue);
+
+                    cmd.Parameters.AddWithValue("@TotalHours", sessionHours);
+
+                    cmd.Parameters.AddWithValue("@TopicID", ddlTopic.SelectedValue);
+
+                    cmd.Parameters.AddWithValue("@TrainerID", ddlTrainer.SelectedValue);
+
+                    cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text.Trim());
+
+                    cmd.Parameters.AddWithValue("@UpdatedBy",
+                        Session["UserID"] == null
+                        ? "Admin"
+                        : Session["UserID"].ToString());
+
+                    cmd.ExecuteNonQuery();
+
+                    tran.Commit();
+
+                    lblMessage.Text = "Session updated successfully.";
+
+                    lblMessage.ForeColor = Color.Green;
+
+                    ClearControls();
+
+                    GenerateSessionNo();
+
+                    GenerateSessionID();
+
+                    BindGrid();
+
+                    BindSummary();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+
+                    lblMessage.Text = ex.Message;
+
+                    lblMessage.ForeColor = Color.Red;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        protected void btnFinishSession_Click(
+     object sender,
+     EventArgs e)
+        {
+            // Optional Validation
+            using (SqlConnection con =
+                new SqlConnection(constr))
+            {
+                SqlCommand cmd =
+                new SqlCommand(@"
+
+SELECT COUNT(*)
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+
+", con);
+
+                cmd.Parameters.AddWithValue(
+                    "@TrainingID",
+                    Session["TrainingID"]);
+
+                con.Open();
+
+                int sessionCount =
+                    Convert.ToInt32(
+                    cmd.ExecuteScalar());
+
+                con.Close();
+
+                if (sessionCount == 0)
+                {
+                    lblMessage.ForeColor =
+                        System.Drawing.Color.Red;
+
+                    lblMessage.Text =
+                        "Please create at least one Session before proceeding.";
+
+                    return;
+                }
+            }
+
+            Response.Redirect(
+                "ManageTraining.aspx");
+        }
+        protected void btnUpdateBatch_Click(
+object sender,
+EventArgs e)
+        {
+            Response.Redirect("CreateBatch.aspx?mode=edit");
+
+        }
+
+        protected void btnUpdateTrainee_Click(
+object sender,
+EventArgs e)
+        {
+            Response.Redirect("AssignTrainee.aspx");
+
+        }
+
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (ViewState["SessionID"] == null)
+            {
+                lblMessage.Text = "Please select a Session.";
+                lblMessage.ForeColor = Color.Red;
+                return;
+            }
+
+            DeleteSession(ViewState["SessionID"].ToString());
+            RenumberSessions();
+        }
+        private void RenumberSessions()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                con.Open();
+
+                SqlTransaction tran = con.BeginTransaction();
+
+                try
+                {
+                    SqlCommand cmd = new SqlCommand(@"
+
+SELECT
+SessionID
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+
+ORDER BY CAST(SessionNo AS INT)
+
+", con, tran);
+
+                    cmd.Parameters.AddWithValue(
+                        "@TrainingID",
+                        Session["TrainingID"].ToString());
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    List<string> ids = new List<string>();
+
+                    while (dr.Read())
+                    {
+                        ids.Add(dr["SessionID"].ToString());
+                    }
+
+                    dr.Close();
+
+                    int no = 1;
+
+                    foreach (string id in ids)
+                    {
+                        SqlCommand upd = new SqlCommand(@"
+
+UPDATE SessionMaster
+
+SET SessionNo=@SessionNo
+
+WHERE SessionID=@SessionID
+
+", con, tran);
+
+                        upd.Parameters.AddWithValue("@SessionNo", no);
+
+                        upd.Parameters.AddWithValue("@SessionID", id);
+
+                        upd.ExecuteNonQuery();
+
+                        no++;
+                    }
+
+                    tran.Commit();
+                }
+                catch
+                {
+                    tran.Rollback();
+                    throw;
+                }
+            }
+        }
+        private void DeleteSession(string sessionID)
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                con.Open();
+
+                SqlTransaction tran = con.BeginTransaction();
+
+                try
+                {
+                    SqlCommand cmd = new SqlCommand(@"
+
+DELETE FROM SessionMaster
+
+WHERE SessionID=@SessionID
+
+", con, tran);
+
+                    cmd.Parameters.AddWithValue("@SessionID", sessionID);
+
+                    int rows = cmd.ExecuteNonQuery();
+
+                    if (rows == 0)
+                    {
+                        tran.Rollback();
+
+                        lblMessage.Text = "Session not found.";
+
+                        lblMessage.ForeColor = Color.Red;
+
+                        return;
+                    }
+
+                    tran.Commit();
+
+                    lblMessage.Text = "Session deleted successfully.";
+
+                    lblMessage.ForeColor = Color.Green;
+
+                    ClearControls();
+
+
+
+                    RenumberSessions();
+
+                    GenerateSessionNo();
+
+                    GenerateSessionID();
+
+
+                    BindGrid();
+
+                    BindSummary();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+
+                    lblMessage.Text = ex.Message;
+
+                    lblMessage.ForeColor = Color.Red;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            ResetForm();
+        }
+        private void ResetForm()
+        {
+            ViewState["SessionID"] = null;
+
+            ClearControls();
+
+            GenerateSessionNo();
+
+            GenerateSessionID();
+
+            BindGrid();
+
+            BindSummary();
+
+            lblMessage.Text = "";
+
+            btnSave.Visible = true;
+
+            btnUpdate.Visible = false;
+
+            btnDelete.Visible = false;
+        }
+        protected void gvSession_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "EditRecord")
+            {
+                LoadSession(e.CommandArgument.ToString());
+            }
+
+            else if (e.CommandName == "DeleteRecord")
+            {
+                DeleteSession(e.CommandArgument.ToString());
+            }
+        }
+        protected override void Render(HtmlTextWriter writer)
+        {
+            foreach (GridViewRow row in gvSession.Rows)
+            {
+                Page.ClientScript.RegisterForEventValidation(
+                    gvSession.UniqueID,
+                    "EditRecord$" + row.RowIndex);
+
+                Page.ClientScript.RegisterForEventValidation(
+                    gvSession.UniqueID,
+                    "DeleteRecord$" + row.RowIndex);
+            }
+
+            base.Render(writer);
+        }
+        private bool IsDuplicateSession()
+        {
+            DateTime newStart = DateTime.ParseExact(
+                ddlStartTime.SelectedValue,
+                "hh:mm tt",
+                CultureInfo.InvariantCulture);
+
+            DateTime newEnd = DateTime.ParseExact(
+                ddlEndTime.SelectedValue,
+                "hh:mm tt",
+                CultureInfo.InvariantCulture);
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+
+SELECT
+SessionID,
+StartTime,
+EndTime
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+AND SessionDate=@SessionDate
+AND SessionID<>@SessionID
+
+", con);
+
+                cmd.Parameters.AddWithValue("@TrainingID", lblTrainingID.Text);
+
+                cmd.Parameters.AddWithValue("@SessionDate", txtSessionDate.Text.Trim());
+
+                if (ViewState["SessionID"] == null)
+                    cmd.Parameters.AddWithValue("@SessionID", "");
+                else
+                    cmd.Parameters.AddWithValue("@SessionID", ViewState["SessionID"].ToString());
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    DateTime oldStart = DateTime.ParseExact(
+                        dr["StartTime"].ToString(),
+                        "hh:mm tt",
+                        CultureInfo.InvariantCulture);
+
+                    DateTime oldEnd = DateTime.ParseExact(
+                        dr["EndTime"].ToString(),
+                        "hh:mm tt",
+                        CultureInfo.InvariantCulture);
+
+                    if (newStart < oldEnd && newEnd > oldStart)
+                    {
+                        dr.Close();
+                        con.Close();
+                        return true;
+                    }
+                }
+
+                dr.Close();
+
+                con.Close();
+            }
+
+            return false;
+        }
+        private bool IsTrainerBusy()
+        {
+            DateTime newStart = DateTime.ParseExact(
+                ddlStartTime.SelectedValue,
+                "hh:mm tt",
+                CultureInfo.InvariantCulture);
+
+            DateTime newEnd = DateTime.ParseExact(
+                ddlEndTime.SelectedValue,
+                "hh:mm tt",
+                CultureInfo.InvariantCulture);
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+
+SELECT
+SessionID,
+StartTime,
+EndTime,
+TrainingID
+
+FROM SessionMaster
+
+WHERE TrainerID=@TrainerID
+AND SessionDate=@SessionDate
+AND SessionID<>@SessionID
+
+", con);
+
+                cmd.Parameters.AddWithValue("@TrainerID", ddlTrainer.SelectedValue);
+
+                cmd.Parameters.AddWithValue("@SessionDate", txtSessionDate.Text.Trim());
+
+                if (ViewState["SessionID"] == null)
+                    cmd.Parameters.AddWithValue("@SessionID", "");
+                else
+                    cmd.Parameters.AddWithValue("@SessionID", ViewState["SessionID"].ToString());
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    DateTime oldStart = DateTime.ParseExact(
+                        dr["StartTime"].ToString(),
+                        "hh:mm tt",
+                        CultureInfo.InvariantCulture);
+
+                    DateTime oldEnd = DateTime.ParseExact(
+                        dr["EndTime"].ToString(),
+                        "hh:mm tt",
+                        CultureInfo.InvariantCulture);
+
+                    if (newStart < oldEnd && newEnd > oldStart)
+                    {
+                        dr.Close();
+                        con.Close();
+                        return true;
+                    }
+                }
+
+                dr.Close();
+
+                con.Close();
+            }
+
+            return false;
+        }
+        private bool IsSessionDateValid()
+        {
+            DateTime sessionDate;
+
+            if (!DateTime.TryParseExact(
+                txtSessionDate.Text.Trim(),
+                "dd-MM-yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out sessionDate))
+                return false;
+
+            DateTime batchFrom;
+
+            DateTime batchTo;
+
+            LoadTrainingDates(
+                out batchFrom,
+                out batchTo);
+
+            return sessionDate >= batchFrom &&
+                   sessionDate <= batchTo;
+        }
+        private decimal GetUsedHours()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand cmd;
+
+                if (ViewState["SessionID"] == null)
+                {
+                    cmd = new SqlCommand(@"
+
+SELECT
+ISNULL(SUM(CAST(TotalHours AS decimal(10,2))),0)
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+
+", con);
+
+                    cmd.Parameters.AddWithValue("@TrainingID", lblTrainingID.Text);
+                }
+                else
+                {
+                    cmd = new SqlCommand(@"
+
+SELECT
+ISNULL(SUM(CAST(TotalHours AS decimal(10,2))),0)
+
+FROM SessionMaster
+
+WHERE TrainingID=@TrainingID
+
+AND SessionID<>@SessionID
+
+", con);
+
+                    cmd.Parameters.AddWithValue("@TrainingID", lblTrainingID.Text);
+
+                    cmd.Parameters.AddWithValue("@SessionID", ViewState["SessionID"].ToString());
+                }
+
+                con.Open();
+
+                decimal hrs = Convert.ToDecimal(cmd.ExecuteScalar());
+
+                con.Close();
+
+                return hrs;
+            }
+        }
+        private bool ValidateTotalHours(decimal sessionHours)
+        {
+            decimal plannedHours =
+                Convert.ToDecimal(lblTrainingHours.Text);
+
+            decimal usedHours = GetUsedHours();
+
+            return (usedHours + sessionHours) <= plannedHours;
+        }
+        private void ShowMessage(string message, Color color)
+        {
+            lblMessage.Text = message;
+            lblMessage.ForeColor = color;
+        }
+        private void GenerateSessionID()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+
+SELECT TOP 1 SessionID
+
+FROM SessionMaster
+
+ORDER BY ID DESC
+
+", con);
+
+                con.Open();
+
+                object obj = cmd.ExecuteScalar();
+
+                int next = 1;
+
+                if (obj != null)
+                {
+                    string lastID = obj.ToString().Replace("SES", "");
+
+                    int.TryParse(lastID, out next);
+
+                    next++;
+                }
+
+                txtSessionID.Text = "SES" + next.ToString("000000");
+
+                con.Close();
+            }
+        }
+    }
+}
