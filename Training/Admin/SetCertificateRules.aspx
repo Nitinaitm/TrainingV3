@@ -29,8 +29,8 @@
 
 <div class="rule-card">
 <h5>Session-wise Pre-Test / Post-Test Certificate Rules</h5>
-<p class="rule-note">Only Required and non-skipped sessions need a rule. PASS means the trainee must pass that session test. ALL means the trainee may pass or fail after submitting the test.</p>
-<asp:GridView ID="gvSessions" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-striped" DataKeyNames="SessionID" OnRowCommand="gvSessions_RowCommand">
+<p class="rule-note">Only Required and non-skipped sessions need a rule. PASS means the trainee must achieve the configured passing marks. ALL means the trainee may pass or fail after submitting the test.</p>
+<asp:GridView ID="gvSessions" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-striped" DataKeyNames="SessionID" OnRowCommand="gvSessions_RowCommand" OnRowDataBound="gvSessions_RowDataBound">
 <Columns>
 <asp:BoundField DataField="SessionID" HeaderText="Session" />
 <asp:BoundField DataField="SessionNo" HeaderText="Session No." />
@@ -38,22 +38,24 @@
 <asp:TemplateField HeaderText="Pre-Test Rule">
 <ItemTemplate>
 <asp:Label ID="lblPreState" runat="server" Text='<%# Eval("PreState") %>' CssClass="badge bg-secondary" />
-<asp:DropDownList ID="ddlPreRule" runat="server" CssClass="form-select mt-2" Visible='<%# Convert.ToBoolean(Eval("PreApplicable")) %>'>
+<asp:DropDownList ID="ddlPreRule" runat="server" CssClass="form-select mt-2" AutoPostBack="true" OnSelectedIndexChanged="ddlPreRule_SelectedIndexChanged" Visible='<%# Convert.ToBoolean(Eval("PreApplicable")) %>'>
 <asp:ListItem Value="">Select Rule</asp:ListItem>
 <asp:ListItem Value="PASS">PASS - Certificate only if passed</asp:ListItem>
 <asp:ListItem Value="ALL">ALL - Pass or Fail accepted</asp:ListItem>
 </asp:DropDownList>
+<asp:Panel ID="pnlPrePassing" runat="server" CssClass="mt-2" Visible='<%# Convert.ToBoolean(Eval("PrePassMarksRequired")) %>'><label class="form-label mb-1">Pre-Test Passing Marks (%)</label><asp:TextBox ID="txtPrePassing" runat="server" CssClass="form-control" TextMode="Number" min="0" max="100" step="0.01" /></asp:Panel>
 <asp:Button ID="btnSavePre" runat="server" Text="Save Pre Rule" CommandName="SavePre" CommandArgument='<%# Eval("SessionID") %>' CssClass="btn btn-sm btn-outline-primary mt-2" Visible='<%# Convert.ToBoolean(Eval("PreApplicable")) %>' />
 </ItemTemplate>
 </asp:TemplateField>
 <asp:TemplateField HeaderText="Post-Test Rule">
 <ItemTemplate>
 <asp:Label ID="lblPostState" runat="server" Text='<%# Eval("PostState") %>' CssClass="badge bg-secondary" />
-<asp:DropDownList ID="ddlPostRule" runat="server" CssClass="form-select mt-2" Visible='<%# Convert.ToBoolean(Eval("PostApplicable")) %>'>
+<asp:DropDownList ID="ddlPostRule" runat="server" CssClass="form-select mt-2" AutoPostBack="true" OnSelectedIndexChanged="ddlPostRule_SelectedIndexChanged" Visible='<%# Convert.ToBoolean(Eval("PostApplicable")) %>'>
 <asp:ListItem Value="">Select Rule</asp:ListItem>
 <asp:ListItem Value="PASS">PASS - Certificate only if passed</asp:ListItem>
 <asp:ListItem Value="ALL">ALL - Pass or Fail accepted</asp:ListItem>
 </asp:DropDownList>
+<asp:Panel ID="pnlPostPassing" runat="server" CssClass="mt-2" Visible='<%# Convert.ToBoolean(Eval("PostPassMarksRequired")) %>'><label class="form-label mb-1">Post-Test Passing Marks (%)</label><asp:TextBox ID="txtPostPassing" runat="server" CssClass="form-control" TextMode="Number" min="0" max="100" step="0.01" /></asp:Panel>
 <asp:Button ID="btnSavePost" runat="server" Text="Save Post Rule" CommandName="SavePost" CommandArgument='<%# Eval("SessionID") %>' CssClass="btn btn-sm btn-outline-primary mt-2" Visible='<%# Convert.ToBoolean(Eval("PostApplicable")) %>' />
 </ItemTemplate>
 </asp:TemplateField>
