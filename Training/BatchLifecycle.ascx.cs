@@ -176,10 +176,8 @@ namespace Training
 
                 if (trainer)
                 {
-                    preTotal = publishedPre ? 1 : 0;
-                    preCompleted = publishedPre ? 1 : 0;
-                    postTotal = publishedPost ? 1 : 0;
-                    postCompleted = publishedPost ? 1 : 0;
+                    preTotal = publishedPre ? traineeTotal : 0;
+                    postTotal = publishedPost ? traineeTotal : 0;
                 }
 
                 StringBuilder stages = new StringBuilder();
