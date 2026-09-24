@@ -149,12 +149,28 @@
             $('#chkTraineeHostelRequired').prop('checked', isResidential);
         }
 
+        function setTrainingCategoryByHostelChecks() {
+            var trainerHostel = $('#chkTrainerHostelRequired').prop('checked');
+            var traineeHostel = $('#chkTraineeHostelRequired').prop('checked');
+
+            if (trainerHostel && traineeHostel) {
+                $('#ddlTrainingCategory').val('Residential').trigger('change');
+            }
+            else if (!trainerHostel && !traineeHostel) {
+                $('#ddlTrainingCategory').val('Non Residential').trigger('change');
+            }
+        }
+
         $(document).ready(function(){
             initControls();
             setHostelRequirementByCategory();
 
             $('#ddlTrainingCategory').on('change', function(){
                 setHostelRequirementByCategory();
+            });
+
+            $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function(){
+                setTrainingCategoryByHostelChecks();
             });
         });
     </script>
