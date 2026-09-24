@@ -63,6 +63,9 @@
 </asp:GridView>
 </div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true" />
+<div class="text-end mt-4">
+<asp:Button ID="btnNext" runat="server" Text="Next" CssClass="btn btn-success btn-action px-4" CausesValidation="false" OnClick="btnNext_Click" />
+</div>
 </div>
 </div>
 </asp:Content>
