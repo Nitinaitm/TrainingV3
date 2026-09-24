@@ -128,10 +128,10 @@ namespace Training.Trainee
                 }
                 else if (feedbackDone)
                 {
-                    feedback.Text = "View Feedback";
+                    feedback.Text = "Feedback";
                     feedback.Enabled = true;
                     feedback.CssClass = "btn btn-success btn-sm";
-                    feedback.ToolTip = "View submitted feedback in read-only mode.";
+                    feedback.ToolTip = "View submitted feedback.";
                 }
                 else if (attendanceRequired && !attendanceDone)
                 {
@@ -155,7 +155,8 @@ namespace Training.Trainee
                 {
                     feedback.Enabled = true;
                     feedback.CssClass = "btn btn-warning btn-sm";
-                    feedback.ToolTip = "You can submit Batch Feedback now.";
+                    feedback.Text = "Feedback";
+                    feedback.ToolTip = "Submit Feedback.";
                 }
             }
 
@@ -244,7 +245,12 @@ namespace Training.Trainee
             Session["TrainingID"] = trainingID;
             if (e.CommandName == "ViewTraining") { Response.Redirect("TrainingDetails.aspx", false); return; }
             if (e.CommandName == "Attendance") { Response.Redirect("Attendance.aspx", false); return; }
-            if (e.CommandName == "BatchFeedback") { Response.Redirect("TraineeFeedback.aspx?mode=view", false); return; }
+            if (e.CommandName == "BatchFeedback")
+            {
+                bool feedbackSubmitted = Convert.ToInt32(objDB.ExecuteScalar("SELECT COUNT(*) FROM Feedback WHERE TrainingID=@TrainingID AND EmpID=@EmpID AND ISNULL(Submitted,0)=1", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@EmpID", Session["EmpID"].ToString().Trim().ToUpperInvariant()) })) > 0;
+                Response.Redirect(feedbackSubmitted ? "TraineeFeedback.aspx?mode=view" : "TraineeFeedback.aspx", false);
+                return;
+            }
             if (e.CommandName == "Certificate")
             {
                 Session["CertificateFromTraining"] = true;
