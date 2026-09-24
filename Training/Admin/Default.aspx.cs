@@ -1266,6 +1266,8 @@ EventArgs e)
                 gvEmployee.DataSource = dt;
 
                 gvEmployee.DataBind();
+
+                gridScrollTop.Visible = dt.Rows.Count > 0;
             }
         }
 
@@ -1435,6 +1437,8 @@ EventArgs e)
             gvEmployee.DataSource = null;
 
             gvEmployee.DataBind();
+
+            gridScrollTop.Visible = false;
 
             LoadPlugins();
         }
