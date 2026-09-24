@@ -173,6 +173,7 @@
     <Content Include="Admin\css\StyleSheet3.css" />
     <Content Include="Admin\Dashboard.aspx" />
     <Content Include="Admin\Default.aspx" />
+    <Content Include="Admin\TopicCategoryList.aspx" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\BouncyCastle.Cryptography.dll" />
@@ -604,6 +605,7 @@
     <Content Include="SuperAdmin\TrainingReports.aspx" />
     <Content Include="SuperAdmin\TrainingSearch.aspx" />
     <Content Include="SuperAdmin\TrainingUnAssign.aspx" />
+    <Content Include="Admin\TopicCategoryMaster.aspx" />
     <Content Include="Trainee\Attendance.aspx" />
     <Content Include="Trainee\css\.DS_Store" />
     <Content Include="Trainee\css\bootstrap.min.css" />
@@ -1197,6 +1199,13 @@
     <Compile Include="Admin\SetCertificateRules.aspx.designer.cs">
       <DependentUpon>SetCertificateRules.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\TopicCategoryList.aspx.cs">
+      <DependentUpon>TopicCategoryList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TopicCategoryList.aspx.designer.cs">
+      <DependentUpon>TopicCategoryList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\TopicEntry.aspx.cs">
       <DependentUpon>TopicEntry.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1606,6 +1615,13 @@
     </Compile>
     <Compile Include="SuperAdmin\TrainingUnAssign.aspx.designer.cs">
       <DependentUpon>TrainingUnAssign.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TopicCategoryMaster.aspx.cs">
+      <DependentUpon>TopicCategoryMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TopicCategoryMaster.aspx.designer.cs">
+      <DependentUpon>TopicCategoryMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="TraineeMaster.Master.cs">
       <DependentUpon>TraineeMaster.Master</DependentUpon>

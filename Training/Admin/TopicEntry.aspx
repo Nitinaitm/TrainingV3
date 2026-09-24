@@ -1,159 +1,159 @@
-﻿<%@ Page Title=""
-Language="C#"
-MasterPageFile="~/AdminMaster.Master"
-AutoEventWireup="true"
-CodeBehind="TopicEntry.aspx.cs"
-Inherits="Training.Admin.TopicEntry" %>
+﻿<%@ page title=""
+    language="C#"
+    masterpagefile="~/AdminMaster.Master"
+    autoeventwireup="true"
+    codebehind="TopicEntry.aspx.cs"
+    inherits="Training.Admin.TopicEntry" %>
 
 <asp:Content ID="Content1"
-ContentPlaceHolderID="head"
-runat="server">
+    ContentPlaceHolderID="head"
+    runat="server">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" />
 
-<style>
+    <style>
+        .main-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #d9d9d9;
+            margin-top: 20px;
+        }
 
-.main-card{
-    background:#fff;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 0 10px #d9d9d9;
-    margin-top:20px;
-}
+        .page-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0d6efd;
+            margin-bottom: 20px;
+        }
 
-.page-heading{
-    font-size:28px;
-    font-weight:bold;
-    color:#0d6efd;
-    margin-bottom:20px;
-}
+        .validation {
+            color: red;
+            font-size: 13px;
+        }
 
-.validation{
-    color:red;
-    font-size:13px;
-}
-
-.gridview th{
-    background:#0d6efd;
-    color:white;
-    text-align:center;
-}
-
-</style>
+        .gridview th {
+            background: #0d6efd;
+            color: white;
+            text-align: center;
+        }
+    </style>
 
 </asp:Content>
 
 <asp:Content ID="Content2"
-ContentPlaceHolderID="ContentPlaceHolder1"
-runat="server">
+    ContentPlaceHolderID="ContentPlaceHolder1"
+    runat="server">
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
-<div class="main-card">
+        <div class="main-card">
 
-<div class="page-heading">
-Topic Master Entry
-</div>
+            <div class="page-heading">
+                Topic Master Entry
+            </div>
 
-<div class="row">
+            <div class="row">
 
-<div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3">
 
-<label>Topic Name *</label>
+                    <label>Topic Name *</label>
 
-<asp:TextBox
-ID="txtTopicName"
-runat="server"
-CssClass="form-control">
-</asp:TextBox>
+                    <asp:textbox
+                        id="txtTopicName"
+                        runat="server"
+                        cssclass="form-control">
+</asp:textbox>
 
-<asp:RequiredFieldValidator
-ID="rfvTopic"
-runat="server"
-ControlToValidate="txtTopicName"
-ValidationGroup="SaveGroup"
-CssClass="validation"
-ErrorMessage="Enter Topic Name">
-</asp:RequiredFieldValidator>
+                    <asp:requiredfieldvalidator
+                        id="rfvTopic"
+                        runat="server"
+                        controltovalidate="txtTopicName"
+                        validationgroup="SaveGroup"
+                        cssclass="validation"
+                        errormessage="Enter Topic Name">
+</asp:requiredfieldvalidator>
 
-</div>
+                </div>
 
-<div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3">
 
-<label>Category *</label>
+                   
+                <!-- Topic Category -->
 
-<asp:DropDownList
-ID="ddlCategory"
-runat="server"
-CssClass="form-select">
+                <div class="col-lg-6 mb-3">
 
-<asp:ListItem Text="Select Category" Value=""></asp:ListItem>
-<asp:ListItem Text="Engineering" Value="Engineering"></asp:ListItem>
-<asp:ListItem Text="Law" Value="Law"></asp:ListItem>
-<asp:ListItem Text="Management" Value="Management"></asp:ListItem>
-<asp:ListItem Text="IT" Value="IT"></asp:ListItem>
-<asp:ListItem Text="Other" Value="Other"></asp:ListItem>
+                    <label class="form-label">
+                        Topic Category *
 
-</asp:DropDownList>
+                    </label>
 
-<asp:RequiredFieldValidator
-ID="rfvCategory"
-runat="server"
-ControlToValidate="ddlCategory"
-InitialValue=""
-ValidationGroup="SaveGroup"
-CssClass="validation"
-ErrorMessage="Select Category">
-</asp:RequiredFieldValidator>
+                    <asp:DropDownList
+                        ID="ddlCourseCategory"
+                        runat="server"
+                        CssClass="form-select">
+                    </asp:DropDownList>
 
-</div>
+                    <asp:RequiredFieldValidator
+                        ID="rfvCategory"
+                        runat="server"
+                        ControlToValidate="ddlCourseCategory"
+                        InitialValue=""
+                        ValidationGroup="SaveGroup"
+                        CssClass="validation"
+                        ErrorMessage="Select Topic Category">
+                    </asp:RequiredFieldValidator>
 
-<div class="col-md-12 mb-3">
+                </div>
 
-<label>Description</label>
+                </div>
 
-<asp:TextBox
-ID="txtDescription"
-runat="server"
-CssClass="form-control"
-TextMode="MultiLine"
-Rows="4">
-</asp:TextBox>
+                <div class="col-md-12 mb-3">
 
-</div>
+                    <label>Description</label>
 
-<div class="col-md-12">
+                    <asp:textbox
+                        id="txtDescription"
+                        runat="server"
+                        cssclass="form-control"
+                        textmode="MultiLine"
+                        rows="4">
+</asp:textbox>
 
-<asp:Button
-ID="btnSave"
-runat="server"
-Text="Save Topic"
-CssClass="btn btn-primary"
-ValidationGroup="SaveGroup"
-OnClick="btnSave_Click" />
+                </div>
 
-</div>
+                <div class="col-md-12">
 
-<div class="col-md-12 mt-3">
+                    <asp:button
+                        id="btnSave"
+                        runat="server"
+                        text="Save Topic"
+                        cssclass="btn btn-primary"
+                        validationgroup="SaveGroup"
+                        onclick="btnSave_Click" />
 
-<asp:Label
-ID="lblMessage"
-runat="server"
-Font-Bold="true">
-</asp:Label>
+                </div>
 
-</div>
+                <div class="col-md-12 mt-3">
 
-</div>
+                    <asp:label
+                        id="lblMessage"
+                        runat="server"
+                        font-bold="true">
+</asp:label>
 
-<hr />
+                </div>
 
-<asp:GridView
-ID="gvTopic"
-runat="server"
-AutoGenerateColumns="False"
-CssClass="table table-bordered table-striped gridview">
+            </div>
+
+            <hr />
+
+            <asp:gridview
+                id="gvTopic"
+                runat="server"
+                autogeneratecolumns="False"
+                cssclass="table table-bordered table-striped gridview">
 
 <Columns>
 
@@ -180,10 +180,10 @@ DataFormatString="{0:dd-MM-yyyy}" />
 
 </Columns>
 
-</asp:GridView>
+</asp:gridview>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </asp:Content>

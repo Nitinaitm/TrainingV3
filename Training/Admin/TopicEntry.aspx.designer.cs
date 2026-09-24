@@ -31,13 +31,13 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvTopic;
         
         /// <summary>
-        /// ddlCategory control.
+        /// ddlCourseCategory control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCourseCategory;
         
         /// <summary>
         /// rfvCategory control.

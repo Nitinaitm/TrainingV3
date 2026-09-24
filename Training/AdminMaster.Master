@@ -597,6 +597,29 @@
                     </div>
 
 
+                     <!-- TOPIC CATEGORY -->
+
+                    <div class="menu-heading collapsed"
+                        onclick="toggleSubMenu('topicCategoryMenu',this)">
+
+                        <i class="fas fa-layer-group mr-2"></i>
+                        Topic Category
+
+                    </div>
+
+                    <div id="topicCategoryMenu"
+                        class="submenu-container hide">
+
+                        <a href="TopicCategoryMaster.aspx"
+                            class="submenu-item">Topic Category Entry
+                        </a>
+
+                        <a href="TopicCategoryList.aspx"
+                            class="submenu-item">Topic Category List
+                        </a>
+
+                    </div>
+
                     <!-- TOPIC -->
 
                     <div class="menu-heading collapsed"
