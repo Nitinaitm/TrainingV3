@@ -293,19 +293,28 @@
         ===================================================== */
 
         .grid-scroll-top {
+            display: block;
             width: 100%;
             max-width: 100%;
             min-width: 0;
-            overflow-x: auto;
+            height: 22px;
+            overflow-x: scroll;
             overflow-y: hidden;
-            height: 18px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            direction: ltr;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: auto;
         }
 
         .grid-scroll-top-inner {
-            height: 1px;
+            display: block;
+            height: 12px;
+            min-width: 1px;
             width: 100%;
+        }
+
+        .grid-scroll-top::-webkit-scrollbar {
+            height: 14px;
         }
 
         /* =====================================================
@@ -752,11 +761,12 @@ window.addEventListener('message', function (event) {
 
             var gridWidth = grid.scrollWidth;
 
-            if (gridWidth < grid.clientWidth) {
-                gridWidth = grid.clientWidth;
+            if (gridWidth <= grid.clientWidth) {
+                gridWidth = grid.clientWidth + 1;
             }
 
             inner.style.width = gridWidth + 'px';
+            inner.style.maxWidth = 'none';
             top.scrollLeft = grid.scrollLeft;
         }
 
