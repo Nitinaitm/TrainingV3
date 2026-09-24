@@ -120,25 +120,12 @@
                             runat="server"
                             CssClass="form-control">
 
-                            <asp:ListItem Value="">
-        All
-                            </asp:ListItem>
-
-                            <asp:ListItem Value="Draft">
-        Draft
-                            </asp:ListItem>
-
-                            <asp:ListItem Value="SessionAssigned">
-        Session Assigned
-                            </asp:ListItem>
-
-                            <asp:ListItem Value="TraineeAssigned">
-        Trainee Assigned
-                            </asp:ListItem>
-
-                            <asp:ListItem Value="Completed">
-        Completed
-                            </asp:ListItem>
+                            <asp:ListItem Value="">All</asp:ListItem>
+                            <asp:ListItem Value="Draft">Draft</asp:ListItem>
+                            <asp:ListItem Value="SessionAssigned">Session Assigned</asp:ListItem>
+                            <asp:ListItem Value="TraineeAssigned">Trainee Assigned</asp:ListItem>
+                            <asp:ListItem Value="InProgress">In Progress</asp:ListItem>
+                            <asp:ListItem Value="Completed">Completed</asp:ListItem>
 
                         </asp:DropDownList>
 
