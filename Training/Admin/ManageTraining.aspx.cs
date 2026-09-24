@@ -47,6 +47,12 @@ namespace Training.Admin
         private bool IsFeedbackAssigned() { return Convert.ToInt32(new clsDataAccess().ExecuteScalar("SELECT COUNT(*) FROM TrainingFeedbackCategory WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID))) > 0; }
         private bool IsTraineeAssigned() { return Convert.ToInt32(new clsDataAccess().ExecuteScalar("SELECT COUNT(*) FROM TrainingAssignment WHERE TrainingID=@TrainingID AND ISNULL(AssignmentStatus,'Assigned')='Assigned'", P("@TrainingID", TrainingID))) > 0; }
         private bool IsCertificateTemplateConfigured() { return Convert.ToInt32(new clsDataAccess().ExecuteScalar("SELECT COUNT(*) FROM TrainingCertificateTemplate WHERE TrainingID=@TrainingID AND ISNULL(TemplateID,'')<>''", P("@TrainingID", TrainingID))) > 0; }
+        private bool IsCertificateRuleConfigured()
+        {
+            string q = "SELECT CASE WHEN (ISNULL(TD.AttendanceRequired,0)=0 OR TD.MinimumAttendancePercentage IS NOT NULL) AND NOT EXISTS (SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TD.TrainingID AND ISNULL(TD.InitialAssessmentRequired,0)=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0 AND ISNULL(SM.PreTestCertificateRule,'')='') AND NOT EXISTS (SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TD.TrainingID AND ISNULL(TD.FinalAssessmentRequired,0)=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0 AND ISNULL(SM.PostTestCertificateRule,'')='') THEN 1 ELSE 0 END FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID";
+            object value = new clsDataAccess().ExecuteScalar(q, P("@TrainingID", TrainingID));
+            return value != null && value != DBNull.Value && Convert.ToInt32(value) == 1;
+        }
         private bool HasSessionsAndTrainers() { object value = new clsDataAccess().ExecuteScalar("SELECT CASE WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN ISNULL(TrainerID,'')<>'' THEN 1 ELSE 0 END) THEN 1 ELSE 0 END FROM SessionMaster WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID)); return Convert.ToInt32(value) == 1; }
 
         private int GetAssignedTraineeCount() { return Convert.ToInt32(new clsDataAccess().ExecuteScalar("SELECT COUNT(*) FROM TrainingAssignment WHERE TrainingID=@TrainingID AND ISNULL(AssignmentStatus,'Assigned')='Assigned'", P("@TrainingID", TrainingID))); }
@@ -272,6 +278,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             if (!IsTraineeAssigned()) missing.Add("2. Assign Trainees");
             if (IsFeedbackRequired() && !IsFeedbackAssigned()) missing.Add("3. Assign Feedback Questionnaire");
             if (IsCertificateRequired() && !IsCertificateTemplateConfigured()) missing.Add("4. Configure Certificate Template");
+            if (IsCertificateRequired() && !IsCertificateRuleConfigured()) missing.Add("5. Set Certificate Rules");
             if (missing.Count > 0) { ShowStartValidation(missing); return; }
             StartTraining();
         }
@@ -298,6 +305,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
         {
             if (IsFeedbackRequired() && !IsFeedbackAssigned()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Feedback is required. Please assign Feedback before starting training."; return; }
             if (IsCertificateRequired() && !IsCertificateTemplateConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please configure Certificate Template before starting training."; return; }
+            if (IsCertificateRequired() && !IsCertificateRuleConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please set Certificate Rules before starting training."; return; }
             clsWorkflow.UpdateWorkflow(TrainingID, "InProgress", "E"); pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Green; lblMessage.Text = "Training has started successfully."; LoadWorkflow();
         }
         protected void btnAttendance_Click(object sender, EventArgs e) { Response.Redirect("TrainingAttendance.aspx"); }
