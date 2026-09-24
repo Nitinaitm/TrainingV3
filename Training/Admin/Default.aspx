@@ -742,33 +742,28 @@ window.addEventListener('message', function (event) {
 
         function syncEmployeeGridScrollbars() {
 
-            var top =
-                document.getElementById('gridScrollTop');
-
-            var inner =
-                document.getElementById('gridScrollTopInner');
-
-            var grid =
-                document.getElementById('gridScroll');
+            var top = document.getElementById('gridScrollTop');
+            var inner = document.getElementById('gridScrollTopInner');
+            var grid = document.getElementById('gridScroll');
 
             if (!top || !inner || !grid) {
                 return;
             }
 
-            inner.style.width =
-                grid.scrollWidth + 'px';
+            var gridWidth = grid.scrollWidth;
 
-            top.scrollLeft =
-                grid.scrollLeft;
+            if (gridWidth < grid.clientWidth) {
+                gridWidth = grid.clientWidth;
+            }
+
+            inner.style.width = gridWidth + 'px';
+            top.scrollLeft = grid.scrollLeft;
         }
 
         function initializeEmployeeGridScrollbars() {
 
-            var top =
-                document.getElementById('gridScrollTop');
-
-            var grid =
-                document.getElementById('gridScroll');
+            var top = document.getElementById('gridScrollTop');
+            var grid = document.getElementById('gridScroll');
 
             if (!top || !grid) {
                 return;
@@ -776,49 +771,50 @@ window.addEventListener('message', function (event) {
 
             syncEmployeeGridScrollbars();
 
-            if (top.getAttribute('data-scroll-bound') !== '1') {
-
-                top.setAttribute(
-                    'data-scroll-bound',
-                    '1'
-                );
-
-                top.addEventListener(
-                    'scroll',
-                    function () {
-
-                        grid.scrollLeft =
-                            top.scrollLeft;
-
-                    }
-                );
-
-                grid.addEventListener(
-                    'scroll',
-                    function () {
-
-                        top.scrollLeft =
-                            grid.scrollLeft;
-
-                    }
-                );
+            if (top.getAttribute('data-scroll-bound') === '1') {
+                return;
             }
+
+            top.setAttribute('data-scroll-bound', '1');
+
+            top.addEventListener('scroll', function () {
+                if (grid.scrollLeft !== top.scrollLeft) {
+                    grid.scrollLeft = top.scrollLeft;
+                }
+            });
+
+            grid.addEventListener('scroll', function () {
+                if (top.scrollLeft !== grid.scrollLeft) {
+                    top.scrollLeft = grid.scrollLeft;
+                }
+            });
+
+            setTimeout(function () {
+                syncEmployeeGridScrollbars();
+            }, 100);
+
+            setTimeout(function () {
+                syncEmployeeGridScrollbars();
+            }, 500);
+        }
+
+        function refreshEmployeeGridScrollbars() {
+
+            initializeEmployeeGridScrollbars();
+
+            setTimeout(function () {
+                syncEmployeeGridScrollbars();
+            }, 100);
         }
 
         $(document).ready(function () {
 
             LoadSearchableDropdowns();
+            refreshEmployeeGridScrollbars();
 
-            initializeEmployeeGridScrollbars();
-
-            $(window).on(
-                'resize',
-                function () {
-
-                    syncEmployeeGridScrollbars();
-
-                }
-            );
+            $(window).on('resize', function () {
+                refreshEmployeeGridScrollbars();
+            });
 
         });
 
@@ -1230,6 +1226,13 @@ window.addEventListener('message', function (event) {
                     Text="Reset"
                     CssClass="custom-btn btn-reset"
                     OnClick="btnReset_Click" />
+
+                <asp:Button
+                    ID="btnExportExcel"
+                    runat="server"
+                    Text="Download Excel"
+                    CssClass="custom-btn btn-search"
+                    OnClick="btnExportExcel_Click" />
 
             </div>
 

@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using OfficeOpenXml;
 
 namespace Training.Admin
 {
@@ -1352,6 +1353,50 @@ EventArgs e)
                     string.Join(",", parameters) +
                     ")"
                 );
+            }
+        }
+
+        protected void btnExportExcel_Click(object sender, EventArgs e)
+        {
+            BindEmployee();
+
+            if (gvEmployee.Rows.Count == 0)
+            {
+                return;
+            }
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee Data");
+
+                int exportColumnIndex = 1;
+
+                for (int i = 2; i < gvEmployee.HeaderRow.Cells.Count; i++)
+                {
+                    worksheet.Cells[1, exportColumnIndex].Value = gvEmployee.HeaderRow.Cells[i].Text;
+                    exportColumnIndex++;
+                }
+
+                for (int rowIndex = 0; rowIndex < gvEmployee.Rows.Count; rowIndex++)
+                {
+                    exportColumnIndex = 1;
+
+                    for (int cellIndex = 2; cellIndex < gvEmployee.Rows[rowIndex].Cells.Count; cellIndex++)
+                    {
+                        worksheet.Cells[rowIndex + 2, exportColumnIndex].Value = Server.HtmlDecode(gvEmployee.Rows[rowIndex].Cells[cellIndex].Text);
+                        exportColumnIndex++;
+                    }
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment; filename=EmployeeData.xlsx");
+                Response.BinaryWrite(package.GetAsByteArray());
+                Response.End();
             }
         }
 
