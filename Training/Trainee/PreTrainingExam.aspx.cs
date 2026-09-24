@@ -538,6 +538,11 @@ namespace Training.Trainee
             return "RES" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
         }
 
+        protected void btnFinish_Click(object sender, EventArgs e)
+        {
+            btnSubmit_Click(sender, e);
+        }
+
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             if (ViewState["AttemptID"] == null)
