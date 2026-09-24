@@ -22,12 +22,18 @@ namespace Training.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["TrainingID"] == null)
+            {
+                Response.Redirect("TrainingList.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
-                if (Session["TrainingID"] == null) { Response.Redirect("TrainingList.aspx"); return; }
                 TrainingSummary1.LoadTraining(TrainingID);
-                LoadWorkflow();
             }
+
+            LoadWorkflow();
         }
 
         private bool IsTrainingStarted()
