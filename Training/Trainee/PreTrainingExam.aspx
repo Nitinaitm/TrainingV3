@@ -106,7 +106,7 @@
                     <div class="text-center">
                         <asp:Button ID="btnPrevious" runat="server" Text="Previous" CssClass="btn btn-secondary" OnClick="btnPrevious_Click" />
                         <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="btn btn-primary" OnClick="btnNext_Click" />
-                        <asp:Button ID="btnFinish" runat="server" Text="Finish Test" CssClass="btn btn-success" CausesValidation="false" Visible="false" OnClientClick="return FinishExam();" />
+                        <asp:Button ID="btnFinish" runat="server" Text="Finish Test" CssClass="btn btn-success" CausesValidation="false" Visible="false" OnClick="btnFinish_Click" OnClientClick="return confirm('Are you sure you want to submit the examination?');" />
                         <asp:Button ID="btnSubmit" runat="server" Style="display: none;" ClientIDMode="Static" OnClick="btnSubmit_Click" />
                     </div>
                 </div>
