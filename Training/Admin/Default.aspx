@@ -4,7 +4,7 @@
     Inherits="Training.Admin.Default" %>
 
 <asp:Content
-    ID="Content1"
+    ID="Content1" 
     ContentPlaceHolderID="head"
     runat="server">
 
