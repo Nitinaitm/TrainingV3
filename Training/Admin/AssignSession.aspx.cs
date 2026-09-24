@@ -63,7 +63,6 @@ namespace Training.Admin
 
                 BindTrainer();
 
-
                 GenerateSessionNo();
 
                 GenerateSessionID();
@@ -71,14 +70,14 @@ namespace Training.Admin
                 BindGrid();
 
                 BindSummary();
-
-                ScriptManager.RegisterStartupScript(
-                       this,
-                       GetType(),
-                       "Init",
-                       "initControls();calculateHours();",
-                       true);
             }
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "InitControls",
+                "initControls();calculateHours();",
+                true);
         }
 
         private void LoadTrainingDates(
