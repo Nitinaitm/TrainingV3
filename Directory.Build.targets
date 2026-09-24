@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Content Include="Training\TrainingHistory.aspx" Condition="Exists('Training\TrainingHistory.aspx')" />
+    <Compile Include="Training\TrainingHistory.aspx.cs" Condition="Exists('Training\TrainingHistory.aspx.cs')"><DependentUpon>TrainingHistory.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Training\TrainingHistory.aspx.designer.cs" Condition="Exists('Training\TrainingHistory.aspx.designer.cs')"><DependentUpon>TrainingHistory.aspx</DependentUpon></Compile>
+    <Content Include="Training\BatchLifecycle.ascx" Condition="Exists('Training\BatchLifecycle.ascx')" />
+    <Compile Include="Training\BatchLifecycle.ascx.cs" Condition="Exists('Training\BatchLifecycle.ascx.cs')"><DependentUpon>BatchLifecycle.ascx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Training\BatchLifecycle.ascx.designer.cs" Condition="Exists('Training\BatchLifecycle.ascx.designer.cs')"><DependentUpon>BatchLifecycle.ascx</DependentUpon></Compile>
+    <Compile Include="Training\Admin\CreateBatch.Lifecycle.cs" Condition="Exists('Training\Admin\CreateBatch.Lifecycle.cs')" />
+    <Compile Include="Training\Admin\AssignSession.Lifecycle.cs" Condition="Exists('Training\Admin\AssignSession.Lifecycle.cs')" />
+    <Compile Include="Training\Admin\AssignTrainee.Lifecycle.cs" Condition="Exists('Training\Admin\AssignTrainee.Lifecycle.cs')" />
+    <Compile Include="Training\Admin\TrainingRequirements.Lifecycle.cs" Condition="Exists('Training\Admin\TrainingRequirements.Lifecycle.cs')" />
+    <Compile Include="Training\Admin\ManageTraining.Lifecycle.cs" Condition="Exists('Training\Admin\ManageTraining.Lifecycle.cs')" />
+    <Compile Include="Training\Trainer\SessionAttendance.Lifecycle.cs" Condition="Exists('Training\Trainer\SessionAttendance.Lifecycle.cs')" />
+    <Content Include="Training\Admin\EditEmployee.aspx" Condition="Exists('Training\Admin\EditEmployee.aspx')" />
+    <Compile Include="Training\Admin\EditEmployee.aspx.cs" Condition="Exists('Training\Admin\EditEmployee.aspx.cs')"><DependentUpon>EditEmployee.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Training\Admin\EditEmployee.aspx.designer.cs" Condition="Exists('Training\Admin\EditEmployee.aspx.designer.cs')"><DependentUpon>EditEmployee.aspx</DependentUpon></Compile>
+    <Content Include="Training\Admin\Dashboard.aspx" Condition="Exists('Training\Admin\Dashboard.aspx')" />
+    <Compile Include="Training\Admin\Dashboard.aspx.cs" Condition="Exists('Training\Admin\Dashboard.aspx.cs')"><DependentUpon>Dashboard.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Training\Admin\Dashboard.aspx.designer.cs" Condition="Exists('Training\Admin\Dashboard.aspx.designer.cs')"><DependentUpon>Dashboard.aspx</DependentUpon></Compile>
+    <Content Include="Training\Scripts\employee-edit-grid.js" Condition="Exists('Training\Scripts\employee-edit-grid.js')" />
+  </ItemGroup>
+</Project>
