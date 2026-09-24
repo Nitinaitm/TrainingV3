@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-lg-4 mb-3">
                     <label class="form-label">Training Category *</label>
-                    <asp:DropDownList ID="ddlTrainingCategory" runat="server" CssClass="form-select"></asp:DropDownList>
+                    <asp:DropDownList ID="ddlTrainingCategory" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlTrainingCategory_SelectedIndexChanged"></asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfvTrainingCategory" runat="server" ControlToValidate="ddlTrainingCategory" InitialValue="" ValidationGroup="SaveGroup" CssClass="validation" ErrorMessage="Select Training Category"></asp:RequiredFieldValidator>
                 </div>
                 <div class="col-lg-4 mb-3">
@@ -107,8 +107,8 @@
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkPostTrainingAssessment" runat="server" Text="Post-Training Assessment" Checked="true" /></div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkFeedbackRequired" runat="server" Text="Feedback" Checked="true" /></div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkCertificateRequired" runat="server" Text="Certificate" Checked="true" /></div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTrainerHostelRequired" runat="server" Text="Trainer Hostel" Checked="true" /></div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTraineeHostelRequired" runat="server" Text="Trainee Hostel" Checked="true" /></div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTrainerHostelRequired" runat="server" Text="Trainer Hostel" Checked="true" AutoPostBack="true" OnCheckedChanged="chkTrainerHostelRequired_CheckedChanged" /></div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTraineeHostelRequired" runat="server" Text="Trainee Hostel" Checked="true" AutoPostBack="true" OnCheckedChanged="chkTraineeHostelRequired_CheckedChanged" /></div>
                     </div>
                 </div>
                 <div class="col-lg-4 mb-3">
@@ -122,8 +122,6 @@
                     <asp:Button ID="btnCreateSessions" runat="server" Text="Assign Sessions & Trainers" CssClass="btn btn-success" OnClick="btnCreateSessions_Click" Visible="false" Enabled="false" />
                     &nbsp;
                     <asp:Button ID="btnAssignTrainee" runat="server" Text="Assign Trainee" CssClass="btn btn-success" OnClick="btnAssignTrainee_Click" Visible="false" Enabled="false" />
-                    &nbsp;
-                    <asp:Button ID="btnAssignFeedback" runat="server" Text="Assign Feedback" CssClass="btn btn-warning" OnClick="btnAssignFeedback_Click" Visible="false" Enabled="false" />
                 </div>
                 <div class="col-12 mt-3"><asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label></div>
             </div>
@@ -141,41 +139,8 @@
         }
         function calculateDays() { var from=$('#txtDateFrom').val(),to=$('#txtDateTo').val(); if(!from||!to){$('#txtNoOfDays').val('');return;} var p1=from.split('-'),p2=to.split('-'); var d1=new Date(p1[2],p1[1]-1,p1[0]),d2=new Date(p2[2],p2[1]-1,p2[0]); var diff=(d2-d1)/(1000*60*60*24); $('#txtNoOfDays').val(diff>=0?diff+1:''); }
 
-        function setHostelRequirementByCategory() {
-            var category = $('#ddlTrainingCategory').val();
-            var isResidential = category && category.toLowerCase() === 'residential';
-
-            $('#chkTrainerHostelRequired').prop('checked', isResidential);
-            $('#chkTraineeHostelRequired').prop('checked', isResidential);
-        }
-
-        function setTrainingCategoryByHostelChecks() {
-            var checked = $(this).prop('checked');
-
-            $('#chkTrainerHostelRequired').prop('checked', checked);
-            $('#chkTraineeHostelRequired').prop('checked', checked);
-
-            if (checked) {
-                $('#ddlTrainingCategory').val('Residential').trigger('change.select2');
-                $('#ddlTrainingCategory').trigger('change');
-            }
-            else {
-                $('#ddlTrainingCategory').val('Non Residential').trigger('change.select2');
-                $('#ddlTrainingCategory').trigger('change');
-            }
-        }
-
         $(document).ready(function(){
             initControls();
-            setHostelRequirementByCategory();
-
-            $('#ddlTrainingCategory').on('change', function(){
-                setHostelRequirementByCategory();
-            });
-
-            $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function(){
-                setTrainingCategoryByHostelChecks.call(this);
-            });
         });
     </script>
 </asp:Content>
