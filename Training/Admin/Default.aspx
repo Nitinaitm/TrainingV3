@@ -1231,6 +1231,13 @@ window.addEventListener('message', function (event) {
                     CssClass="custom-btn btn-reset"
                     OnClick="btnReset_Click" />
 
+                <asp:Button
+                    ID="btnExportExcel"
+                    runat="server"
+                    Text="Download Excel"
+                    CssClass="custom-btn btn-search"
+                    OnClick="btnExportExcel_Click" />
+
             </div>
 
         </div>
