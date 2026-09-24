@@ -199,14 +199,18 @@
         }
 
         function setTrainingCategoryByHostelChecks() {
-            var trainerHostel = $('#chkTrainerHostelRequired').prop('checked');
-            var traineeHostel = $('#chkTraineeHostelRequired').prop('checked');
+            var checked = $(this).prop('checked');
 
-            if (trainerHostel && traineeHostel) {
-                $('#ddlTrainingCategory').val('Residential').trigger('change');
+            $('#chkTrainerHostelRequired').prop('checked', checked);
+            $('#chkTraineeHostelRequired').prop('checked', checked);
+
+            if (checked) {
+                $('#ddlTrainingCategory').val('Residential').trigger('change.select2');
+                $('#ddlTrainingCategory').trigger('change');
             }
-            else if (!trainerHostel && !traineeHostel) {
-                $('#ddlTrainingCategory').val('Non Residential').trigger('change');
+            else {
+                $('#ddlTrainingCategory').val('Non Residential').trigger('change.select2');
+                $('#ddlTrainingCategory').trigger('change');
             }
         }
 
@@ -218,8 +222,13 @@
                 setHostelRequirementByCategory();
             });
 
+<<<<<<< HEAD
             $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function () {
                 setTrainingCategoryByHostelChecks();
+=======
+            $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function(){
+                setTrainingCategoryByHostelChecks.call(this);
+>>>>>>> 5e13e2c3f99d3c025f473f0c3c7a5dfd0a30c3ca
             });
         });
     </script>
