@@ -66,7 +66,7 @@ namespace Training
         {
             int number = 1;
             int traineeCount = GetCount("SELECT COUNT(*) FROM TrainingAssignment WHERE TrainingID=@TrainingID AND ISNULL(AssignmentStatus,'Assigned')='Assigned'", trainingID);
-            bool trainingStarted = GetBool("SELECT CASE WHEN ISNULL(WorkflowStatus,'') LIKE '%E%' OR ISNULL(TrainingStatus,'') IN ('InProgress','AttendanceCompleted','TrainingCompleted') THEN 1 ELSE 0 END", trainingID);
+            bool trainingStarted = GetBool("SELECT CASE WHEN ISNULL(WorkflowStatus,'') LIKE '%E%' OR ISNULL(TrainingStatus,'')='InProgress' OR ISNULL(TrainingStatus,'')='AttendanceCompleted' OR ISNULL(TrainingStatus,'')='TrainingCompleted' THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", trainingID);
             StringBuilder stages = new StringBuilder();
 
             if (!trainee && !trainer)
