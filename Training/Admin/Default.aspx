@@ -301,10 +301,10 @@
         }
 
         .grid-scroll-top {
-            display: block;
+            display: block !important;
             width: 100%;
-            height: 20px;
-            overflow-x: auto;
+            height: 22px;
+            overflow-x: scroll;
             overflow-y: hidden;
             margin-bottom: 8px;
             -webkit-overflow-scrolling: touch;
@@ -313,7 +313,7 @@
         .grid-scroll-top-inner {
             display: block;
             height: 1px;
-            width: 1px;
+            width: 100%;
             min-width: 1px;
         }
 
