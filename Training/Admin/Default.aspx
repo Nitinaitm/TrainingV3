@@ -318,8 +318,8 @@
         .grid-scroll-top-inner {
             display: block;
             height: 12px;
-            width: 3000px;
-            min-width: 3000px;
+            width: 1px;
+            min-width: 1px;
             max-width: none;
         }
 
@@ -779,15 +779,19 @@ window.addEventListener('message', function (event) {
             }
 
             var gridWidth = grid.scrollWidth;
+            var gridClientWidth = grid.clientWidth;
 
-            if (gridWidth < 3000) {
-                gridWidth = 3000;
+            if (gridWidth > gridClientWidth) {
+                top.style.display = 'block';
+                inner.style.width = gridWidth + 'px';
+                inner.style.minWidth = gridWidth + 'px';
+                inner.style.maxWidth = 'none';
+                top.scrollLeft = grid.scrollLeft;
             }
-
-            inner.style.width = gridWidth + 'px';
-            inner.style.minWidth = gridWidth + 'px';
-            inner.style.maxWidth = 'none';
-            top.scrollLeft = grid.scrollLeft;
+            else {
+                top.style.display = 'none';
+                top.scrollLeft = 0;
+            }
         }
 
         function initializeEmployeeGridScrollbars() {
@@ -799,33 +803,26 @@ window.addEventListener('message', function (event) {
                 return;
             }
 
-            syncEmployeeGridScrollbars();
+            if (top.getAttribute('data-scroll-bound') !== '1') {
 
-            if (top.getAttribute('data-scroll-bound') === '1') {
-                return;
+                top.setAttribute('data-scroll-bound', '1');
+
+                top.onscroll = function () {
+
+                    if (grid.scrollLeft !== top.scrollLeft) {
+                        grid.scrollLeft = top.scrollLeft;
+                    }
+                };
+
+                grid.onscroll = function () {
+
+                    if (top.scrollLeft !== grid.scrollLeft) {
+                        top.scrollLeft = grid.scrollLeft;
+                    }
+                };
             }
 
-            top.setAttribute('data-scroll-bound', '1');
-
-            top.addEventListener('scroll', function () {
-                if (grid.scrollLeft !== top.scrollLeft) {
-                    grid.scrollLeft = top.scrollLeft;
-                }
-            });
-
-            grid.addEventListener('scroll', function () {
-                if (top.scrollLeft !== grid.scrollLeft) {
-                    top.scrollLeft = grid.scrollLeft;
-                }
-            });
-
-            setTimeout(function () {
-                syncEmployeeGridScrollbars();
-            }, 100);
-
-            setTimeout(function () {
-                syncEmployeeGridScrollbars();
-            }, 500);
+            syncEmployeeGridScrollbars();
         }
 
         function refreshEmployeeGridScrollbars() {
@@ -834,7 +831,11 @@ window.addEventListener('message', function (event) {
 
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            }, 100);
+            }, 50);
+
+            setTimeout(function () {
+                syncEmployeeGridScrollbars();
+            }, 250);
         }
 
         $(document).ready(function () {
