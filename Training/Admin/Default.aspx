@@ -292,6 +292,14 @@
            TOP HORIZONTAL SCROLLBAR
         ===================================================== */
 
+        .grid-toolbar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
         .grid-scroll-top {
             display: block;
             width: 100%;
@@ -304,17 +312,28 @@
             direction: ltr;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: auto;
+            scrollbar-gutter: stable;
         }
 
         .grid-scroll-top-inner {
             display: block;
             height: 12px;
-            min-width: 1px;
-            width: 100%;
+            width: 3000px;
+            min-width: 3000px;
+            max-width: none;
         }
 
         .grid-scroll-top::-webkit-scrollbar {
-            height: 14px;
+            height: 16px;
+        }
+
+        .grid-scroll-top::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        .grid-scroll-top::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 8px;
         }
 
         /* =====================================================
@@ -761,11 +780,12 @@ window.addEventListener('message', function (event) {
 
             var gridWidth = grid.scrollWidth;
 
-            if (gridWidth <= grid.clientWidth) {
-                gridWidth = grid.clientWidth + 1;
+            if (gridWidth < 3000) {
+                gridWidth = 3000;
             }
 
             inner.style.width = gridWidth + 'px';
+            inner.style.minWidth = gridWidth + 'px';
             inner.style.maxWidth = 'none';
             top.scrollLeft = grid.scrollLeft;
         }
@@ -1237,13 +1257,6 @@ window.addEventListener('message', function (event) {
                     CssClass="custom-btn btn-reset"
                     OnClick="btnReset_Click" />
 
-                <asp:Button
-                    ID="btnExportExcel"
-                    runat="server"
-                    Text="Download Excel"
-                    CssClass="custom-btn btn-search"
-                    OnClick="btnExportExcel_Click" />
-
             </div>
 
         </div>
@@ -1254,6 +1267,17 @@ window.addEventListener('message', function (event) {
         ====================================================== -->
 
         <div class="grid-card">
+
+            <div class="grid-toolbar">
+
+                <asp:Button
+                    ID="btnExportExcel"
+                    runat="server"
+                    Text="Download Excel"
+                    CssClass="custom-btn btn-search"
+                    OnClick="btnExportExcel_Click" />
+
+            </div>
 
             <!-- TOP HORIZONTAL SCROLLBAR -->
 
