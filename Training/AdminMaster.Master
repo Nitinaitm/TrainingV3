@@ -633,7 +633,7 @@
                     <div id="topicMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="TopicEntry.aspx"
+                        <a href="TopicMaster.aspx"
                             class="submenu-item">Topic Entry
                         </a>
 
@@ -641,9 +641,7 @@
                             class="submenu-item">Topic List
                         </a>
 
-                        <a href="TopicManagement.aspx"
-                            class="submenu-item">Topic Management
-                        </a>
+                      
 
                     </div>
 
