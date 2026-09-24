@@ -72,7 +72,7 @@ namespace Training.Admin
 
             string CategoryID = "";
 
-            SqlCommand cmdID = new SqlCommand("SELECT 'CR'+RIGHT('000000'+CAST(ISNULL(MAX(ID),0)+1 AS VARCHAR(6)),6) FROM TopicCategoryMaster", con);
+            SqlCommand cmdID = new SqlCommand("SELECT 'TCR'+RIGHT('000000'+CAST(ISNULL(MAX(ID),0)+1 AS VARCHAR(6)),6) FROM TopicCategoryMaster", con);
 
             con.Open();
 
