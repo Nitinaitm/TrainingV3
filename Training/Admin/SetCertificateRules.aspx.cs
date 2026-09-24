@@ -211,6 +211,16 @@ namespace Training.Admin
             return decimal.TryParse(value.Substring(5), NumberStyles.Number, CultureInfo.InvariantCulture, out marks) && marks >= 0 && marks <= 100;
         }
 
+        protected void btnNext_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TrainingID))
+            {
+                Response.Redirect("TrainingList.aspx", true);
+                return;
+            }
+            Response.Redirect("ManageTraining.aspx", true);
+        }
+
         private SqlParameter[] P(string name, object value)
         {
             return new SqlParameter[] { new SqlParameter(name, value) };
