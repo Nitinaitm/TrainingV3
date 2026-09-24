@@ -18,7 +18,6 @@ namespace Training.Admin
         protected CheckBox chkCertificateRequired;
         protected CheckBox chkTrainerHostelRequired;
         protected CheckBox chkTraineeHostelRequired;
-        protected Button btnAssignFeedback;
 
         string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
 
@@ -33,6 +32,51 @@ namespace Training.Admin
                 if (Request.QueryString["mode"] == "edit" && Session["TrainingID"] != null) LoadTrainingForEdit(Session["TrainingID"].ToString());
                 else SetButtonStatus();
                 LoadPlugins();
+            }
+        }
+
+        protected void ddlTrainingCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetHostelRequirementsByCategory();
+        }
+
+        protected void chkTrainerHostelRequired_CheckedChanged(object sender, EventArgs e)
+        {
+            SetCategoryByHostelRequirements();
+        }
+
+        protected void chkTraineeHostelRequired_CheckedChanged(object sender, EventArgs e)
+        {
+            SetCategoryByHostelRequirements();
+        }
+
+        private void SetHostelRequirementsByCategory()
+        {
+            string category = ddlTrainingCategory.SelectedItem == null ? "" : ddlTrainingCategory.SelectedItem.Text.Trim();
+            bool residential = category.Equals("Residential", StringComparison.OrdinalIgnoreCase);
+            chkTrainerHostelRequired.Checked = residential;
+            chkTraineeHostelRequired.Checked = residential;
+        }
+
+        private void SetCategoryByHostelRequirements()
+        {
+            bool trainerRequired = chkTrainerHostelRequired.Checked;
+            bool traineeRequired = chkTraineeHostelRequired.Checked;
+            bool residential = trainerRequired || traineeRequired;
+
+            chkTrainerHostelRequired.Checked = residential;
+            chkTraineeHostelRequired.Checked = residential;
+
+            ListItem residentialItem = ddlTrainingCategory.Items.FindByText("Residential");
+            ListItem nonResidentialItem = ddlTrainingCategory.Items.FindByText("Non Residential");
+
+            if (residential && residentialItem != null)
+            {
+                ddlTrainingCategory.SelectedValue = residentialItem.Value;
+            }
+            else if (!residential && nonResidentialItem != null)
+            {
+                ddlTrainingCategory.SelectedValue = nonResidentialItem.Value;
             }
         }
 
@@ -171,7 +215,6 @@ namespace Training.Admin
 
         protected void btnCreateSessions_Click(object sender, EventArgs e) { Session["TrainingID"] = txtTrainingID.Text; Response.Redirect("~/Admin/AssignSession.aspx"); }
         protected void btnAssignTrainee_Click(object sender, EventArgs e) { Session["TrainingID"] = txtTrainingID.Text; Response.Redirect("~/Admin/AssignTrainee.aspx"); }
-        protected void btnAssignFeedback_Click(object sender, EventArgs e) { Session["TrainingID"] = txtTrainingID.Text; Response.Redirect("~/Admin/AssignFeedback.aspx"); }
         private void LoadPlugins() { ScriptManager.RegisterStartupScript(this, GetType(), Guid.NewGuid().ToString(), "$('#ddlCourse').select2({width:'100%'});$('#ddlTrainingType').select2({width:'100%'});$('#ddlTrainingCategory').select2({width:'100%'});$('#ddlTrainingOrganizer').select2({width:'100%'});$('#ddlTrainingLocation').select2({width:'100%'});", true); }
     }
 }
