@@ -7,7 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using OfficeOpenXml;
 
-namespace Training.Admin
+namespace Training.Admin 
 {
     public partial class Default : System.Web.UI.Page
     {
