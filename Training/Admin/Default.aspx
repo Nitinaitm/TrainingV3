@@ -301,7 +301,7 @@
         }
 
         .grid-scroll-top {
-            display: block;
+            display: none;
             width: 100%;
             height: 20px;
             overflow-x: auto;
