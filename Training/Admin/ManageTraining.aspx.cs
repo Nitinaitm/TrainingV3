@@ -30,6 +30,12 @@ namespace Training.Admin
             }
         }
 
+        private bool IsTrainingStarted()
+        {
+            object value = new clsDataAccess().ExecuteScalar("SELECT CASE WHEN ISNULL(TrainingStatus,'') IN ('InProgress','AttendanceCompleted','TrainingCompleted','Completed') THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID));
+            return value != null && value != DBNull.Value && Convert.ToInt32(value) == 1;
+        }
+
         private bool GetRequirement(string column)
         {
             string[] allowedColumns = { "FeedbackRequired", "FeedbackSkipped", "CertificateRequired", "CertificateSkipped", "AttendanceRequired", "InitialAssessmentRequired", "FinalAssessmentRequired" };
@@ -230,7 +236,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnUpdateTraining.Visible = true;
             btnAssignSession.Visible = true;
             btnAssignTrainee.Visible = true;
-            btnRequirements.Visible = workflow.Contains("E");
+            btnRequirements.Visible = IsTrainingStarted();
             btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
             btnAssignFeedback.Visible = fr;
             btnAssignFeedback.Enabled = fr;
