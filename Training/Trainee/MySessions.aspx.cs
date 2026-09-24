@@ -25,7 +25,8 @@ namespace Training.Trainee
             }
 
             string empID = Convert.ToString(Session["EmpID"]).Trim().ToUpperInvariant();
-            string sessionID = Convert.ToString(Request.QueryString["SessionID"]).Trim();
+            string querySessionID = Request == null || Request.QueryString == null ? "" : Convert.ToString(Request.QueryString["SessionID"]).Trim();
+            string sessionID = querySessionID;
             if (string.IsNullOrWhiteSpace(sessionID))
             {
                 sessionID = Convert.ToString(Session["SessionID"]).Trim();
@@ -39,7 +40,7 @@ namespace Training.Trainee
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(trainingID) || !string.IsNullOrWhiteSpace(Request.QueryString["SessionID"]))
+            if (string.IsNullOrWhiteSpace(trainingID) || !string.IsNullOrWhiteSpace(querySessionID))
             {
                 object value = objDB.ExecuteScalar("SELECT TrainingID FROM SessionMaster WHERE SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@SessionID", sessionID) });
                 trainingID = value == null || value == DBNull.Value ? "" : Convert.ToString(value).Trim();
