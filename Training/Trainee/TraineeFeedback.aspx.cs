@@ -55,13 +55,14 @@ namespace Training.Trainee
                     trainingID,
                     empID);
 
-                if (String.Equals(Request.QueryString["mode"], "view", StringComparison.OrdinalIgnoreCase))
+                BuildFeedback();
+
+                if (IsFeedbackSubmitted())
                 {
-                    BuildFeedback();
                     LoadExistingFeedback();
                     SetFeedbackReadOnly();
                     btnSubmit.Visible = false;
-                    lblMessage.Text = "Feedback submitted. You are viewing it in read-only mode.";
+                    lblMessage.Text = "Feedback already submitted. You are viewing it in read-only mode.";
                     lblMessage.ForeColor = System.Drawing.Color.Green;
                     return;
                 }
