@@ -764,7 +764,7 @@ window.addEventListener('message', function (event) {
 
         function getEmployeeGridElements() {
 
-            var top = document.getElementById('gridScrollTop');
+            var top = document.getElementById('<%= gridScrollTop.ClientID %>');
             var inner = document.getElementById('gridScrollTopInner');
             var bottom = document.getElementById('gridScroll');
 
@@ -799,28 +799,22 @@ window.addEventListener('message', function (event) {
             var bottom = elements.bottom;
             var table = elements.table;
 
-            var tableWidth = table.scrollWidth;
+            var tableWidth = Math.ceil(table.getBoundingClientRect().width);
+            var bottomWidth = bottom.scrollWidth;
 
-            if (tableWidth < table.offsetWidth) {
-                tableWidth = table.offsetWidth;
+            if (bottomWidth > tableWidth) {
+                tableWidth = bottomWidth;
             }
 
-            if (tableWidth < bottom.clientWidth) {
-                tableWidth = bottom.clientWidth;
+            if (tableWidth <= bottom.clientWidth) {
+                tableWidth = bottom.clientWidth + 1;
             }
 
             inner.style.width = tableWidth + 'px';
+            inner.style.minWidth = tableWidth + 'px';
 
             if (top.scrollLeft !== bottom.scrollLeft) {
                 top.scrollLeft = bottom.scrollLeft;
-            }
-
-            if (tableWidth > bottom.clientWidth) {
-                top.style.display = 'block';
-            }
-            else {
-                top.style.display = 'none';
-                top.scrollLeft = 0;
             }
         }
 
@@ -835,26 +829,18 @@ window.addEventListener('message', function (event) {
             var top = elements.top;
             var bottom = elements.bottom;
 
-            if (top.getAttribute('data-scroll-bound') === '1') {
-                syncEmployeeGridScrollbars();
-                return;
-            }
+            if (top.getAttribute('data-scroll-bound') !== '1') {
 
-            top.setAttribute('data-scroll-bound', '1');
+                top.setAttribute('data-scroll-bound', '1');
 
-            top.addEventListener('scroll', function () {
-
-                if (bottom.scrollLeft !== top.scrollLeft) {
+                top.addEventListener('scroll', function () {
                     bottom.scrollLeft = top.scrollLeft;
-                }
-            });
+                });
 
-            bottom.addEventListener('scroll', function () {
-
-                if (top.scrollLeft !== bottom.scrollLeft) {
+                bottom.addEventListener('scroll', function () {
                     top.scrollLeft = bottom.scrollLeft;
-                }
-            });
+                });
+            }
 
             syncEmployeeGridScrollbars();
         }
@@ -863,17 +849,17 @@ window.addEventListener('message', function (event) {
 
             initializeEmployeeGridScrollbars();
 
-            window.requestAnimationFrame(function () {
+            setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            });
+            }, 50);
 
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            }, 100);
+            }, 250);
 
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
-            }, 500);
+            }, 750);
         }
 
         $(document).ready(function () {
@@ -1322,7 +1308,9 @@ window.addEventListener('message', function (event) {
 
             <div
                 id="gridScrollTop"
-                class="grid-scroll-top">
+                runat="server"
+                class="grid-scroll-top"
+                visible="false">
 
                 <div
                     id="gridScrollTopInner"
