@@ -140,6 +140,22 @@
             if ($('#ddlTrainingLocation').length) { if ($('#ddlTrainingLocation').hasClass('select2-hidden-accessible')) $('#ddlTrainingLocation').select2('destroy'); $('#ddlTrainingLocation').select2({ width:'100%' }); }
         }
         function calculateDays() { var from=$('#txtDateFrom').val(),to=$('#txtDateTo').val(); if(!from||!to){$('#txtNoOfDays').val('');return;} var p1=from.split('-'),p2=to.split('-'); var d1=new Date(p1[2],p1[1]-1,p1[0]),d2=new Date(p2[2],p2[1]-1,p2[0]); var diff=(d2-d1)/(1000*60*60*24); $('#txtNoOfDays').val(diff>=0?diff+1:''); }
-        $(document).ready(function(){initControls();});
+
+        function setHostelRequirementByCategory() {
+            var category = $('#ddlTrainingCategory').val();
+            var isResidential = category && category.toLowerCase() === 'residential';
+
+            $('#chkTrainerHostelRequired').prop('checked', isResidential);
+            $('#chkTraineeHostelRequired').prop('checked', isResidential);
+        }
+
+        $(document).ready(function(){
+            initControls();
+            setHostelRequirementByCategory();
+
+            $('#ddlTrainingCategory').on('change', function(){
+                setHostelRequirementByCategory();
+            });
+        });
     </script>
 </asp:Content>
