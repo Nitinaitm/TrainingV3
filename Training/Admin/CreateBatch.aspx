@@ -1,10 +1,10 @@
-﻿<%@ Page Title=""
-    Language="C#"
-    MasterPageFile="~/AdminMaster.Master"
-    AutoEventWireup="true"
-    CodeBehind="CreateBatch.aspx.cs" MaintainScrollPositionOnPostback="true"
-    Inherits="Training.Admin.CreateBatch"
-    ClientIDMode="Static" %>
+﻿<%@ page title=""
+    language="C#"
+    masterpagefile="~/AdminMaster.Master"
+    autoeventwireup="true"
+    codebehind="CreateBatch.aspx.cs" maintainscrollpositiononpostback="true"
+    inherits="Training.Admin.CreateBatch"
+    clientidmode="Static" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -14,22 +14,71 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
-        body { background:#f5f5f5; }
-        .main-card { background:#fff; padding:25px; border-radius:12px; box-shadow:0 0 10px #d9d9d9; margin-top:20px; margin-bottom:20px; }
-        .page-heading { font-size:28px; font-weight:bold; color:darkcyan; margin-bottom:20px; }
-        .validation { color:red; font-size:13px; }
-        .btn-save { background:darkcyan; color:white; border:none; }
-        .btn-save:hover { background:teal; color:white; }
-        .select2-container { width:100% !important; }
-        .select2-container--default .select2-selection--multiple { min-height:38px !important; border:1px solid #ced4da !important; }
-        .form-select { height:38px !important; }
-        .select2-container .select2-selection--single { height:38px !important; border:1px solid #ced4da !important; }
-        .select2-selection__rendered { line-height:36px !important; }
-        .select2-selection__arrow { height:36px !important; }
+        body {
+            background: #f5f5f5;
+        }
+
+        .main-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #d9d9d9;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .page-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: darkcyan;
+            margin-bottom: 20px;
+        }
+
+        .validation {
+            color: red;
+            font-size: 13px;
+        }
+
+        .btn-save {
+            background: darkcyan;
+            color: white;
+            border: none;
+        }
+
+            .btn-save:hover {
+                background: teal;
+                color: white;
+            }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            min-height: 38px !important;
+            border: 1px solid #ced4da !important;
+        }
+
+        .form-select {
+            height: 38px !important;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 38px !important;
+            border: 1px solid #ced4da !important;
+        }
+
+        .select2-selection__rendered {
+            line-height: 36px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 36px !important;
+        }
     </style>
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
       <div class="container-fluid">
         <div class="main-card">
             <div class="page-heading">Create Batch</div>
@@ -133,13 +182,13 @@
         function initControls() {
             document.querySelectorAll(".flatpickr").forEach(function (el) { if (el._flatpickr) { el._flatpickr.destroy(); } });
             flatpickr(".flatpickr", { dateFormat: "d-m-Y", allowInput: false, clickOpens: true, onChange: function () { calculateDays(); } });
-            if ($('#ddlCourse').length) { if ($('#ddlCourse').hasClass('select2-hidden-accessible')) $('#ddlCourse').select2('destroy'); $('#ddlCourse').select2({ width:'100%' }); }
-            if ($('#ddlTrainingType').length) { if ($('#ddlTrainingType').hasClass('select2-hidden-accessible')) $('#ddlTrainingType').select2('destroy'); $('#ddlTrainingType').select2({ width:'100%' }); }
-            if ($('#ddlTrainingCategory').length) { if ($('#ddlTrainingCategory').hasClass('select2-hidden-accessible')) $('#ddlTrainingCategory').select2('destroy'); $('#ddlTrainingCategory').select2({ width:'100%' }); }
-            if ($('#ddlTrainingOrganizer').length) { if ($('#ddlTrainingOrganizer').hasClass('select2-hidden-accessible')) $('#ddlTrainingOrganizer').select2('destroy'); $('#ddlTrainingOrganizer').select2({ width:'100%' }); }
-            if ($('#ddlTrainingLocation').length) { if ($('#ddlTrainingLocation').hasClass('select2-hidden-accessible')) $('#ddlTrainingLocation').select2('destroy'); $('#ddlTrainingLocation').select2({ width:'100%' }); }
+            if ($('#ddlCourse').length) { if ($('#ddlCourse').hasClass('select2-hidden-accessible')) $('#ddlCourse').select2('destroy'); $('#ddlCourse').select2({ width: '100%' }); }
+            if ($('#ddlTrainingType').length) { if ($('#ddlTrainingType').hasClass('select2-hidden-accessible')) $('#ddlTrainingType').select2('destroy'); $('#ddlTrainingType').select2({ width: '100%' }); }
+            if ($('#ddlTrainingCategory').length) { if ($('#ddlTrainingCategory').hasClass('select2-hidden-accessible')) $('#ddlTrainingCategory').select2('destroy'); $('#ddlTrainingCategory').select2({ width: '100%' }); }
+            if ($('#ddlTrainingOrganizer').length) { if ($('#ddlTrainingOrganizer').hasClass('select2-hidden-accessible')) $('#ddlTrainingOrganizer').select2('destroy'); $('#ddlTrainingOrganizer').select2({ width: '100%' }); }
+            if ($('#ddlTrainingLocation').length) { if ($('#ddlTrainingLocation').hasClass('select2-hidden-accessible')) $('#ddlTrainingLocation').select2('destroy'); $('#ddlTrainingLocation').select2({ width: '100%' }); }
         }
-        function calculateDays() { var from=$('#txtDateFrom').val(),to=$('#txtDateTo').val(); if(!from||!to){$('#txtNoOfDays').val('');return;} var p1=from.split('-'),p2=to.split('-'); var d1=new Date(p1[2],p1[1]-1,p1[0]),d2=new Date(p2[2],p2[1]-1,p2[0]); var diff=(d2-d1)/(1000*60*60*24); $('#txtNoOfDays').val(diff>=0?diff+1:''); }
+        function calculateDays() { var from = $('#txtDateFrom').val(), to = $('#txtDateTo').val(); if (!from || !to) { $('#txtNoOfDays').val(''); return; } var p1 = from.split('-'), p2 = to.split('-'); var d1 = new Date(p1[2], p1[1] - 1, p1[0]), d2 = new Date(p2[2], p2[1] - 1, p2[0]); var diff = (d2 - d1) / (1000 * 60 * 60 * 24); $('#txtNoOfDays').val(diff >= 0 ? diff + 1 : ''); }
 
         function setHostelRequirementByCategory() {
             var category = $('#ddlTrainingCategory').val();
@@ -161,17 +210,17 @@
             }
         }
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             initControls();
             setHostelRequirementByCategory();
 
-            $('#ddlTrainingCategory').on('change', function(){
+            $('#ddlTrainingCategory').on('change', function () {
                 setHostelRequirementByCategory();
             });
 
-            $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function(){
+            $('#chkTrainerHostelRequired, #chkTraineeHostelRequired').on('change', function () {
                 setTrainingCategoryByHostelChecks();
             });
         });
     </script>
-</asp:Content>
+</asp:content>
