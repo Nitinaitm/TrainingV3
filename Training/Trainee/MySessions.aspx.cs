@@ -25,11 +25,15 @@ namespace Training.Trainee
             }
 
             string empID = Convert.ToString(Session["EmpID"]).Trim().ToUpperInvariant();
-            string querySessionID = Request == null || Request.QueryString == null ? "" : Convert.ToString(Request.QueryString["SessionID"]).Trim();
-            string sessionID = querySessionID;
-            if (string.IsNullOrWhiteSpace(sessionID))
+            string sessionID = Convert.ToString(Session["SessionID"]).Trim();
+            string querySessionID = "";
+            if (Page != null && Page.Request != null && Page.Request.QueryString != null)
             {
-                sessionID = Convert.ToString(Session["SessionID"]).Trim();
+                querySessionID = Convert.ToString(Page.Request.QueryString["SessionID"]).Trim();
+            }
+            if (!string.IsNullOrWhiteSpace(querySessionID))
+            {
+                sessionID = querySessionID;
             }
             string trainingID = Convert.ToString(Session["TrainingID"]).Trim();
 
