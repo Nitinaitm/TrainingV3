@@ -301,30 +301,24 @@
         }
 
         .grid-scroll-top {
-            display: block;
+            display: none;
             width: 100%;
-            max-width: 100%;
-            min-width: 0;
-            height: 22px;
-            overflow-x: scroll;
+            height: 20px;
+            overflow-x: auto;
             overflow-y: hidden;
             margin-bottom: 8px;
-            direction: ltr;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: auto;
-            scrollbar-gutter: stable;
         }
 
         .grid-scroll-top-inner {
             display: block;
-            height: 12px;
+            height: 1px;
             width: 1px;
             min-width: 1px;
-            max-width: none;
         }
 
         .grid-scroll-top::-webkit-scrollbar {
-            height: 16px;
+            height: 14px;
         }
 
         .grid-scroll-top::-webkit-scrollbar-track {
@@ -333,7 +327,7 @@
 
         .grid-scroll-top::-webkit-scrollbar-thumb {
             background: #64748b;
-            border-radius: 8px;
+            border-radius: 7px;
         }
 
         /* =====================================================
@@ -768,68 +762,99 @@ window.addEventListener('message', function (event) {
            GRID TOP / BOTTOM SCROLLBAR
         ===================================================== */
 
-        function syncEmployeeGridScrollbars() {
+        function getEmployeeGridElements() {
 
             var top = document.getElementById('gridScrollTop');
             var inner = document.getElementById('gridScrollTopInner');
-            var grid = document.getElementById('gridScroll');
+            var bottom = document.getElementById('gridScroll');
 
-            if (!top || !inner || !grid) {
+            if (!top || !inner || !bottom) {
+                return null;
+            }
+
+            var table = bottom.querySelector('table.gridview');
+
+            if (!table) {
+                return null;
+            }
+
+            return {
+                top: top,
+                inner: inner,
+                bottom: bottom,
+                table: table
+            };
+        }
+
+        function syncEmployeeGridScrollbars() {
+
+            var elements = getEmployeeGridElements();
+
+            if (!elements) {
                 return;
             }
 
-            top.style.display = 'block';
+            var top = elements.top;
+            var inner = elements.inner;
+            var bottom = elements.bottom;
+            var table = elements.table;
 
-            var gridWidth = grid.scrollWidth;
+            var tableWidth = table.scrollWidth;
 
-            if (grid.firstElementChild) {
-                gridWidth = Math.max(
-                    gridWidth,
-                    grid.firstElementChild.scrollWidth,
-                    grid.firstElementChild.offsetWidth
-                );
+            if (tableWidth < table.offsetWidth) {
+                tableWidth = table.offsetWidth;
             }
 
-            if (gridWidth < grid.clientWidth) {
-                gridWidth = grid.clientWidth;
+            if (tableWidth < bottom.clientWidth) {
+                tableWidth = bottom.clientWidth;
             }
 
-            inner.style.width = gridWidth + 'px';
-            inner.style.minWidth = gridWidth + 'px';
-            inner.style.maxWidth = 'none';
+            inner.style.width = tableWidth + 'px';
 
-            if (top.scrollLeft !== grid.scrollLeft) {
-                top.scrollLeft = grid.scrollLeft;
+            if (top.scrollLeft !== bottom.scrollLeft) {
+                top.scrollLeft = bottom.scrollLeft;
+            }
+
+            if (tableWidth > bottom.clientWidth) {
+                top.style.display = 'block';
+            }
+            else {
+                top.style.display = 'none';
+                top.scrollLeft = 0;
             }
         }
 
         function initializeEmployeeGridScrollbars() {
 
-            var top = document.getElementById('gridScrollTop');
-            var grid = document.getElementById('gridScroll');
+            var elements = getEmployeeGridElements();
 
-            if (!top || !grid) {
+            if (!elements) {
                 return;
             }
 
-            if (top.getAttribute('data-scroll-bound') !== '1') {
+            var top = elements.top;
+            var bottom = elements.bottom;
 
-                top.setAttribute('data-scroll-bound', '1');
-
-                top.addEventListener('scroll', function () {
-
-                    if (grid.scrollLeft !== top.scrollLeft) {
-                        grid.scrollLeft = top.scrollLeft;
-                    }
-                });
-
-                grid.addEventListener('scroll', function () {
-
-                    if (top.scrollLeft !== grid.scrollLeft) {
-                        top.scrollLeft = grid.scrollLeft;
-                    }
-                });
+            if (top.getAttribute('data-scroll-bound') === '1') {
+                syncEmployeeGridScrollbars();
+                return;
             }
+
+            top.setAttribute('data-scroll-bound', '1');
+
+            top.addEventListener('scroll', function () {
+
+                if (bottom.scrollLeft !== top.scrollLeft) {
+                    bottom.scrollLeft = top.scrollLeft;
+                }
+            });
+
+            bottom.addEventListener('scroll', function () {
+
+                if (top.scrollLeft !== bottom.scrollLeft) {
+                    top.scrollLeft = bottom.scrollLeft;
+                }
+            });
 
             syncEmployeeGridScrollbars();
         }
@@ -838,6 +863,10 @@ window.addEventListener('message', function (event) {
 
             initializeEmployeeGridScrollbars();
 
+            window.requestAnimationFrame(function () {
+                syncEmployeeGridScrollbars();
+            });
+
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
             }, 100);
@@ -845,10 +874,6 @@ window.addEventListener('message', function (event) {
             setTimeout(function () {
                 syncEmployeeGridScrollbars();
             }, 500);
-
-            setTimeout(function () {
-                syncEmployeeGridScrollbars();
-            }, 1000);
         }
 
         $(document).ready(function () {
@@ -857,10 +882,6 @@ window.addEventListener('message', function (event) {
             refreshEmployeeGridScrollbars();
 
             $(window).on('resize', function () {
-                refreshEmployeeGridScrollbars();
-            });
-
-            $(window).on('load', function () {
                 refreshEmployeeGridScrollbars();
             });
 
