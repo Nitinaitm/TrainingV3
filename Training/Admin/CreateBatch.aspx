@@ -117,11 +117,11 @@
                 </div>
                 <div class="col-12 mt-3 text-center">
                     <asp:Button ID="btnSave" runat="server" Text="Create Batch" CssClass="btn btn-save" ValidationGroup="SaveGroup" OnClick="btnSave_Click" />
-                    <asp:Button ID="btnUpdate" runat="server" Text="Update Batch" CssClass="btn btn-warning" ValidationGroup="SaveGroup" OnClick="btnUpdate_Click" />
+                    <asp:Button ID="btnUpdate" runat="server" Text="Update Batch" CssClass="btn btn-warning" ValidationGroup="SaveGroup" OnClick="btnUpdate_Click" Visible="false" Enabled="false" />
                     &nbsp;
-                    <asp:Button ID="btnCreateSessions" runat="server" Text="Assign Sessions & Trainers" CssClass="btn btn-success" OnClick="btnCreateSessions_Click" />
+                    <asp:Button ID="btnCreateSessions" runat="server" Text="Assign Sessions & Trainers" CssClass="btn btn-success" OnClick="btnCreateSessions_Click" Visible="false" Enabled="false" />
                     &nbsp;
-                    <asp:Button ID="btnAssignTrainee" runat="server" Text="Assign Trainee" CssClass="btn btn-success" OnClick="btnAssignTrainee_Click" Enabled="false" />
+                    <asp:Button ID="btnAssignTrainee" runat="server" Text="Assign Trainee" CssClass="btn btn-success" OnClick="btnAssignTrainee_Click" Visible="false" Enabled="false" />
                     &nbsp;
                     <asp:Button ID="btnAssignFeedback" runat="server" Text="Assign Feedback" CssClass="btn btn-warning" OnClick="btnAssignFeedback_Click" Visible="false" Enabled="false" />
                 </div>
