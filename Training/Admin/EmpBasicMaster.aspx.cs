@@ -317,6 +317,26 @@ namespace Training.Admin
             }
         }
 
+        private string GetSelectedText(DropDownList ddl)
+        {
+            if (ddl == null)
+            {
+                return "";
+            }
+
+            if (ddl.SelectedIndex <= 0)
+            {
+                return "";
+            }
+
+            if (ddl.SelectedItem == null)
+            {
+                return "";
+            }
+
+            return ddl.SelectedItem.Text.Trim();
+        }
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
             lblSingleMessage.Text = "";
@@ -360,10 +380,47 @@ namespace Training.Admin
                 return;
             }
 
-            if (ddlPostingDetailPlace.SelectedValue == "Field" && (string.IsNullOrWhiteSpace(ddlAreaBoardZone.SelectedValue) || string.IsNullOrWhiteSpace(ddlCircle.SelectedValue) || string.IsNullOrWhiteSpace(ddlDivision.SelectedValue) || string.IsNullOrWhiteSpace(ddlSubdivision.SelectedValue) || string.IsNullOrWhiteSpace(ddlSection.SelectedValue)))
+            //if (ddlPostingDetailPlace.SelectedValue == "Field" && (string.IsNullOrWhiteSpace(ddlAreaBoardZone.SelectedValue) || string.IsNullOrWhiteSpace(ddlCircle.SelectedValue) || string.IsNullOrWhiteSpace(ddlDivision.SelectedValue) || string.IsNullOrWhiteSpace(ddlSubdivision.SelectedValue) || string.IsNullOrWhiteSpace(ddlSection.SelectedValue)))
+            //{
+            //    ShowError("Select complete Field Office hierarchy.");
+            //    return;
+            //}
+
+            if (ddlPostingDetailPlace.SelectedValue == "Field")
             {
-                ShowError("Select complete Field Office hierarchy.");
-                return;
+                if (string.IsNullOrWhiteSpace(ddlAreaBoardZone.SelectedValue))
+                {
+                    ShowError("Select Area Board / Zone.");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(ddlCircle.SelectedValue) &&
+                    string.IsNullOrWhiteSpace(ddlAreaBoardZone.SelectedValue))
+                {
+                    ShowError("Select Area Board / Zone.");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(ddlDivision.SelectedValue) &&
+                    string.IsNullOrWhiteSpace(ddlCircle.SelectedValue))
+                {
+                    ShowError("Select Circle.");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(ddlSubdivision.SelectedValue) &&
+                    string.IsNullOrWhiteSpace(ddlDivision.SelectedValue))
+                {
+                    ShowError("Select Division.");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(ddlSection.SelectedValue) &&
+                    string.IsNullOrWhiteSpace(ddlSubdivision.SelectedValue))
+                {
+                    ShowError("Select Subdivision.");
+                    return;
+                }
             }
 
             clsDataAccess db = DB();
@@ -414,11 +471,17 @@ namespace Training.Admin
         private void SavePostingDetails(clsDataAccess db, string empID, bool update)
         {
             string department = ddlPostingDetailPlace.SelectedValue == "HQ" ? ddlPostingDepartment.SelectedValue : "";
-            string zone = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlAreaBoardZone.SelectedItem.Text : "";
-            string circle = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlCircle.SelectedItem.Text : "";
-            string division = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlDivision.SelectedItem.Text : "";
-            string subdivision = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlSubdivision.SelectedItem.Text : "";
-            string section = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlSection.SelectedItem.Text : "";
+            //string zone = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlAreaBoardZone.SelectedItem.Text : "";
+            //string circle = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlCircle.SelectedItem.Text : "";
+            //string division = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlDivision.SelectedItem.Text : "";
+            //string subdivision = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlSubdivision.SelectedItem.Text : "";
+            //string section = ddlPostingDetailPlace.SelectedValue == "Field" ? ddlSection.SelectedItem.Text : "";
+
+            string zone = ddlPostingDetailPlace.SelectedValue == "Field" ? GetSelectedText(ddlAreaBoardZone) : "";
+            string circle = ddlPostingDetailPlace.SelectedValue == "Field" ? GetSelectedText(ddlCircle) : "";
+            string division = ddlPostingDetailPlace.SelectedValue == "Field" ? GetSelectedText(ddlDivision) : "";
+            string subdivision = ddlPostingDetailPlace.SelectedValue == "Field" ? GetSelectedText(ddlSubdivision) : "";
+            string section = ddlPostingDetailPlace.SelectedValue == "Field" ? GetSelectedText(ddlSection) : "";
 
             if (update)
             {
