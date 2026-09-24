@@ -1,4 +1,4 @@
-<%@ Page Title="Certificate Rules" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="SetCertificateRules.aspx.cs" Inherits="Training.Admin.SetCertificateRules" %>
+<%@ Page Title="Certificate Rules" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="SetCertificateRules.aspx.cs" Inherits="Training.Admin.SetCertificateRules"  MaintainScrollPositionOnPostback="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 <style>

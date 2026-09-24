@@ -2,7 +2,7 @@
     AutoEventWireup="true"
     CodeBehind="CertificateTemplate.aspx.cs"
     Inherits="Training.Admin.CertificateTemplate"
-    MasterPageFile="~/AdminMaster.Master" %>
+    MasterPageFile="~/AdminMaster.Master"  MaintainScrollPositionOnPostback="true" %>
 
 <%@ Register
     Src="~/Admin/TrainingSummary.ascx"

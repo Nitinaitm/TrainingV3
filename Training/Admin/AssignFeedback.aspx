@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Assign Feedback" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AssignFeedback.aspx.cs" Inherits="Training.Admin.AssignFeedback" %>
+﻿<%@ Page Title="Assign Feedback" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AssignFeedback.aspx.cs" Inherits="Training.Admin.AssignFeedback"  MaintainScrollPositionOnPostback="true" %>
 <%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />

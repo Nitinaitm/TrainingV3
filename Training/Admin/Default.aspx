@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master"
     AutoEventWireup="true"
     CodeBehind="Default.aspx.cs"
-    Inherits="Training.Admin.Default" %>
+    Inherits="Training.Admin.Default"  MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content
     ID="Content1" 
