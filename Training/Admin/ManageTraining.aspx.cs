@@ -230,7 +230,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnUpdateTraining.Visible = true;
             btnAssignSession.Visible = true;
             btnAssignTrainee.Visible = true;
-            btnRequirements.Visible = true;
+            btnRequirements.Visible = workflow.Contains("E");
             btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
             btnAssignFeedback.Visible = fr;
             btnAssignFeedback.Enabled = fr;
@@ -244,6 +244,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnAssignSession.Text = sa ? "Assign Sessions & Trainers ✓" : "Assign Sessions & Trainers";
             btnAssignTrainee.Text = ta ? "Assign Trainee ✓" : "Assign Trainee";
             if (certificateRequired && ta && !certificateSkipped) btnCertificateTemplate.Text = ct ? "Certificate Template ✓" : "Certificate Template";
+            btnCertificateRules.Text = IsCertificateRuleConfigured() ? "Set Certificate Rules ✓" : "Set Certificate Rules";
 
             if (workflow.Contains("E"))
             {
