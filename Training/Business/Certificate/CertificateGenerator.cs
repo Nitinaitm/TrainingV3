@@ -163,7 +163,7 @@ SELECT TCT.TrainingID,@EmpID AS EmpID,TCT.TemplateID,TCT.CourseTitle,
 TCT.LeftSignature,TCT.LeftName,TCT.LeftDesignation,TCT.RightSignature,TCT.RightName,TCT.RightDesignation,
 CTM.TemplateName,CTM.HeaderText,CTM.FooterText,CTM.BackgroundImage,CTM.LogoImage,
 CTM.HeaderFontSize,CTM.FooterFontSize,CTM.CourseTitleFontSize,CTM.BodyFontSize,
-CTM.Orientation,CTM.PaperSize,CTM.LogoX,CTM.LogoY,CTM.HeaderY,CTM.TitleY,CTM.BodyY,
+CTM.Orientation,CTM.PaperSize,CTM.PageWidth,CTM.PageHeight,CTM.LogoX,CTM.LogoY,CTM.HeaderY,CTM.TitleY,CTM.BodyY,
 CTM.LeftSignatureX,CTM.RightSignatureX,CTM.SignatureY,CTM.FooterY,
 TD.DateFrom,TD.DateTo,CM.CourseName,ISNULL(EBM.EmpName,TME.TraineeName) AS EmpName
 FROM TrainingCertificateTemplate TCT
@@ -214,26 +214,26 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawLogo(PdfWriter writer, Document document, DataRow dr)
         {
-            string logo = dr["LogoImage"].ToString(); if (String.IsNullOrWhiteSpace(logo)) return; string filePath = HttpContext.Current.Server.MapPath(logo); if (!File.Exists(filePath)) return; Image image = Image.GetInstance(filePath); image.ScaleToFit(80f, 80f); image.SetAbsolutePosition(Convert.ToSingle(dr["LogoX"]), Convert.ToSingle(dr["LogoY"])); writer.DirectContent.AddImage(image);
+            string logo = dr["LogoImage"].ToString(); if (String.IsNullOrWhiteSpace(logo)) return; string filePath = HttpContext.Current.Server.MapPath(logo); if (!File.Exists(filePath)) return; Image image = Image.GetInstance(filePath); float logoWidth = DesignToPdfX(90f, document, dr); float logoHeight = DesignToPdfY(90f, document, dr); image.ScaleToFit(logoWidth, logoHeight); float x = DesignToPdfX(Convert.ToSingle(dr["LogoX"]), document, dr); float y = PdfYFromTop(Convert.ToSingle(dr["LogoY"]), document, dr) - image.ScaledHeight; image.SetAbsolutePosition(x, y); writer.DirectContent.AddImage(image);
         }
         private void DrawHeader(PdfWriter writer, Document document, DataRow dr)
         {
-            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, Convert.ToSingle(dr["HeaderY"]), 0);
+            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, PdfYFromTop(Convert.ToSingle(dr["HeaderY"]), document, dr), 0);
         }
         private void DrawBody(PdfWriter writer, Document document, DataRow dr)
         {
             Font titleFont = GetTitleFont(dr); Font bodyFont = GetBodyFont(dr); Font nameFont = new Font(GetBaseFont(), 28, Font.BOLD, BaseColor.BLACK); PdfPTable table = new PdfPTable(1); table.TotalWidth = document.PageSize.Width - 120; table.LockedWidth = true; table.HorizontalAlignment = Element.ALIGN_CENTER; PdfPCell cell = new PdfPCell(); cell.Border = Rectangle.NO_BORDER; cell.HorizontalAlignment = Element.ALIGN_CENTER; cell.Padding = 5;
-            cell.AddElement(new Paragraph("CERTIFICATE OF COMPLETION", titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nThis Certificate is proudly presented to\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["EmpName"].ToString(), nameFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nFor Successfully Completing\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["CourseTitle"].ToString(), titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nDuration : " + Convert.ToDateTime(dr["DateFrom"]).ToString("dd MMM yyyy") + "  To  " + Convert.ToDateTime(dr["DateTo"]).ToString("dd MMM yyyy"), bodyFont) { Alignment = Element.ALIGN_CENTER }); table.AddCell(cell); table.WriteSelectedRows(0, -1, 60, Convert.ToSingle(dr["BodyY"]), writer.DirectContent);
+            cell.AddElement(new Paragraph("CERTIFICATE OF COMPLETION", titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nThis Certificate is proudly presented to\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["EmpName"].ToString(), nameFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nFor Successfully Completing\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["CourseTitle"].ToString(), titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nDuration : " + Convert.ToDateTime(dr["DateFrom"]).ToString("dd MMM yyyy") + "  To  " + Convert.ToDateTime(dr["DateTo"]).ToString("dd MMM yyyy"), bodyFont) { Alignment = Element.ALIGN_CENTER }); table.AddCell(cell); table.WriteSelectedRows(0, -1, DesignToPdfX(60f, document, dr), PdfYFromTop(Convert.ToSingle(dr["BodyY"]), document, dr), writer.DirectContent);
         }
         private void DrawSignature(PdfWriter writer, Document document, DataRow dr)
         {
-            DrawSingleSignature(writer, dr, dr["LeftSignature"].ToString(), dr["LeftName"].ToString(), dr["LeftDesignation"].ToString(), Convert.ToSingle(dr["LeftSignatureX"]), Convert.ToSingle(dr["SignatureY"])); DrawSingleSignature(writer, dr, dr["RightSignature"].ToString(), dr["RightName"].ToString(), dr["RightDesignation"].ToString(), Convert.ToSingle(dr["RightSignatureX"]), Convert.ToSingle(dr["SignatureY"]));
+            DrawSingleSignature(writer, document, dr, dr["LeftSignature"].ToString(), dr["LeftName"].ToString(), dr["LeftDesignation"].ToString(), Convert.ToSingle(dr["LeftSignatureX"]), Convert.ToSingle(dr["SignatureY"])); DrawSingleSignature(writer, document, dr, dr["RightSignature"].ToString(), dr["RightName"].ToString(), dr["RightDesignation"].ToString(), Convert.ToSingle(dr["RightSignatureX"]), Convert.ToSingle(dr["SignatureY"]));
         }
-        private void DrawSingleSignature(PdfWriter writer, DataRow dr, string imagePath, string name, string designation, float x, float y)
+        private void DrawSingleSignature(PdfWriter writer, Document document, DataRow dr, string imagePath, string name, string designation, float xDesign, float yDesign)
         {
-            PdfContentByte canvas = writer.DirectContent; if (!String.IsNullOrWhiteSpace(imagePath)) { string filePath = HttpContext.Current.Server.MapPath(imagePath); if (File.Exists(filePath)) { Image img = Image.GetInstance(filePath); img.ScaleToFit(120f, 50f); img.SetAbsolutePosition(x, y); canvas.AddImage(img); } } Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), x + 60f, y - 15f, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), x + 60f, y - 32f, 0);
+            PdfContentByte canvas = writer.DirectContent; float x = DesignToPdfX(xDesign, document, dr); float yTop = PdfYFromTop(yDesign, document, dr); float imageWidth = DesignToPdfX(180f, document, dr); float imageHeight = DesignToPdfY(70f, document, dr); if (!String.IsNullOrWhiteSpace(imagePath)) { string filePath = HttpContext.Current.Server.MapPath(imagePath); if (File.Exists(filePath)) { Image img = Image.GetInstance(filePath); img.ScaleToFit(imageWidth, imageHeight); img.SetAbsolutePosition(x, yTop - img.ScaledHeight); canvas.AddImage(img); } } Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); float centerX = x + (imageWidth / 2f); float nameY = yTop - imageHeight - 10f; float designationY = nameY - 17f; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), centerX, nameY, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), centerX, designationY, 0);
         }
-        private void DrawFooter(PdfWriter writer, Document document, DataRow dr) { PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(dr["FooterText"].ToString(), GetFooterFont(dr)), document.PageSize.Width / 2, Convert.ToSingle(dr["FooterY"]), 0); }
+        private void DrawFooter(PdfWriter writer, Document document, DataRow dr) { PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(dr["FooterText"].ToString(), GetFooterFont(dr)), document.PageSize.Width / 2, PdfYFromTop(Convert.ToSingle(dr["FooterY"]), document, dr), 0); }
 
         private void SaveCertificate(string certificateID, string certificateNo, DataRow dr, string pdfName, string verificationCode)
         {
@@ -252,6 +252,33 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         {
             string value = certificateNo + "|" + trainingID + "|" + empID + "|" + verificationCode; using (SHA256 sha256 = SHA256.Create()) { byte[] bytes = Encoding.UTF8.GetBytes(value); byte[] hash = sha256.ComputeHash(bytes); StringBuilder result = new StringBuilder(); foreach (byte item in hash) result.Append(item.ToString("x2")); return result.ToString(); }
         }
+        private float DesignToPdfX(float value, Document document, DataRow dr)
+        {
+            float designWidth = 1123f;
+            if (dr.Table.Columns.Contains("PageWidth") && dr["PageWidth"] != DBNull.Value)
+            {
+                float.TryParse(dr["PageWidth"].ToString(), out designWidth);
+                if (designWidth <= 0) designWidth = 1123f;
+            }
+            return value * document.PageSize.Width / designWidth;
+        }
+
+        private float DesignToPdfY(float value, Document document, DataRow dr)
+        {
+            float designHeight = 794f;
+            if (dr.Table.Columns.Contains("PageHeight") && dr["PageHeight"] != DBNull.Value)
+            {
+                float.TryParse(dr["PageHeight"].ToString(), out designHeight);
+                if (designHeight <= 0) designHeight = 794f;
+            }
+            return value * document.PageSize.Height / designHeight;
+        }
+
+        private float PdfYFromTop(float topValue, Document document, DataRow dr)
+        {
+            return document.PageSize.Height - DesignToPdfY(topValue, document, dr);
+        }
+
         private Rectangle GetPageSize(string paperSize, string orientation)
         {
             Rectangle page; switch (paperSize.ToUpper()) { case "A3": page = PageSize.A3; break; case "LETTER": page = PageSize.LETTER; break; case "LEGAL": page = PageSize.LEGAL; break; default: page = PageSize.A4; break; } if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase)) page = page.Rotate(); return page;
