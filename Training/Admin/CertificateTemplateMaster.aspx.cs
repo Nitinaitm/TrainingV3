@@ -142,9 +142,11 @@ TemplateName
                 return;
             }
 
+            Session["CertificatePreviewTemplateID"] = hfID.Value;
+            Session["CertificatePreviewTrainingID"] = null;
+
             Response.Redirect(
-                "CertificatePreview.aspx?TemplateID=" +
-                Server.UrlEncode(hfID.Value));
+                "CertificatePreview.aspx");
         }
         //-----------------------------------------------------
         // Generate Template ID
