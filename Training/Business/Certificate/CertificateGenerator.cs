@@ -117,7 +117,7 @@ namespace Training.Business.Certificate
                 {
                     decimal passingPercentage;
                     if (!TryGetPassingPercentage(ruleValue, out passingPercentage)) return false;
-                    object passCount = objDB.ExecuteScalar("SELECT COUNT(*) FROM TestMaster TM INNER JOIN TestResult TR ON TR.TestID=TM.TestID AND TR.EmpID=@EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType AND TM.IsPublished=1 AND TR.IsFinalAttempt=1 AND ISNULL(TR.Score,0)>=@PassingPercentage", new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TestType", testType), new SqlParameter("@EmpID", empID), new SqlParameter("@PassingPercentage", passingPercentage) });
+                    object passCount = objDB.ExecuteScalar("SELECT COUNT(*) FROM TestMaster TM INNER JOIN TestResult TR ON TR.TestID=TM.TestID AND TR.EmpID=@EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType AND TM.IsPublished=1 AND TR.IsFinalAttempt=1 AND ISNULL(TR.Percentage,0)>=@PassingPercentage", new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TestType", testType), new SqlParameter("@EmpID", empID), new SqlParameter("@PassingPercentage", passingPercentage) });
                     if (passCount == null || Convert.ToInt32(passCount) == 0) return false;
                 }
             }
