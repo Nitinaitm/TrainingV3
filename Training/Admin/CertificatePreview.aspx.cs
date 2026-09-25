@@ -283,7 +283,7 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
             lblHeader.Font.Size = FontUnit.Point(Px(ViewState["HeaderFont"], 20));
             lblFooter.Font.Size = FontUnit.Point(Px(ViewState["FooterFont"], 12));
             lblTitle.Font.Size = FontUnit.Point(Px(ViewState["TitleFont"], 24));
-            lblCourse.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 18));
+            lblCourse.Font.Size = FontUnit.Point(Px(ViewState["TitleFont"], 24));
             lblEmployee.Font.Size = FontUnit.Point(Px(ViewState["NameFont"], 36));
             lblDuration.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 18));
             lblBodyIntro.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 16));
