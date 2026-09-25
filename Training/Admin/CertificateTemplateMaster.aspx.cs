@@ -19,12 +19,6 @@ namespace Training.Admin
             object sender,
             EventArgs e)
         {
-            if (Session["AdminID"] == null)
-            {
-                Response.Redirect("~/Default.aspx");
-                return;
-            }
-
             if (!IsPostBack)
             {
                 BindGrid();
