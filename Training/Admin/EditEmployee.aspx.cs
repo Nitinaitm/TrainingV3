@@ -1479,7 +1479,7 @@ namespace Training.Admin
                 else
                 {
                     db.ExecuteSql(
-                        "INSERT INTO EmpPostingDetails(EmpID,EmpPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,Subdivision,Section,EmpOnDeputation,CreatedOn,CreatedBy,AssessmentYear) VALUES(@EmpID,@Place,@Dept,@Zone,@Circle,@Division,@Subdivision,@Section,@Deputation,GETDATE(),@CreatedBy,@AssessmentYear)",
+                        "INSERT INTO EmpPostingDetails(EmpID,EmpPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,Subdivision,Section,EmpOnDeputation,CreatedOn,CreatedBy) VALUES(@EmpID,@Place,@Dept,@Zone,@Circle,@Division,@Subdivision,@Section,@Deputation,GETDATE(),@CreatedBy)",
                         new SqlParameter[]
                         {
                             new SqlParameter(
@@ -1530,11 +1530,6 @@ namespace Training.Admin
                             new SqlParameter(
                                 "@CreatedBy",
                                 "Admin"
-                            ),
-
-                            new SqlParameter(
-                                "@AssessmentYear",
-                                AssessmentYear()
                             )
                         },
                         db.Transaction
@@ -1586,22 +1581,5 @@ namespace Training.Admin
          * ============================================================
          */
 
-        private string AssessmentYear()
-        {
-            DateTime now =
-                DateTime.Now;
-
-            int year =
-                now.Month >= 4
-                    ? now.Year
-                    : now.Year - 1;
-
-            return
-                year +
-                "-" +
-                (year + 1)
-                .ToString()
-                .Substring(2);
-        }
     }
 }
