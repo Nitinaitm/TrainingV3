@@ -174,7 +174,76 @@ LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=@EmpID
 LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=@EmpID
 WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1 AND CTM.Active=1";
             DataTable dt = objDB.GetDataTable(query, new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@EmpID", empID), new SqlParameter("@TemplateID", templateID) });
-            return dt.Rows.Count == 0 ? null : dt.Rows[0];
+            if (dt.Rows.Count == 0) return null;
+
+            DataRow row = dt.Rows[0];
+            NormalizeLegacyLayout(row);
+            return row;
+        }
+
+        private void NormalizeLegacyLayout(DataRow dr)
+        {
+            if
+            (
+                dr["PageWidth"] == DBNull.Value
+                ||
+                Convert.ToSingle(dr["PageWidth"]) <= 0
+            )
+            {
+                dr["PageWidth"] =
+                    dr["Orientation"].ToString().Equals(
+                        "Portrait",
+                        StringComparison.OrdinalIgnoreCase)
+                    ? 794
+                    : 1123;
+            }
+
+            if
+            (
+                dr["PageHeight"] == DBNull.Value
+                ||
+                Convert.ToSingle(dr["PageHeight"]) <= 0
+            )
+            {
+                dr["PageHeight"] =
+                    dr["Orientation"].ToString().Equals(
+                        "Portrait",
+                        StringComparison.OrdinalIgnoreCase)
+                    ? 1123
+                    : 794;
+            }
+
+            if
+            (
+                Convert.ToInt32(dr["LogoX"]) == 50
+                &&
+                Convert.ToInt32(dr["LogoY"]) == 700
+                &&
+                Convert.ToInt32(dr["HeaderY"]) == 730
+                &&
+                Convert.ToInt32(dr["TitleY"]) == 650
+                &&
+                Convert.ToInt32(dr["BodyY"]) == 520
+                &&
+                Convert.ToInt32(dr["LeftSignatureX"]) == 180
+                &&
+                Convert.ToInt32(dr["RightSignatureX"]) == 650
+                &&
+                Convert.ToInt32(dr["SignatureY"]) == 150
+                &&
+                Convert.ToInt32(dr["FooterY"]) == 50
+            )
+            {
+                dr["LogoX"] = 516;
+                dr["LogoY"] = 35;
+                dr["HeaderY"] = 125;
+                dr["TitleY"] = 210;
+                dr["BodyY"] = 300;
+                dr["LeftSignatureX"] = 120;
+                dr["RightSignatureX"] = 783;
+                dr["SignatureY"] = 590;
+                dr["FooterY"] = 750;
+            }
         }
 
         private bool CreatePDF(DataRow dr, string certificateID, string certificateNo, string pdfName, string verificationCode)
