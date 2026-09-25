@@ -25,8 +25,13 @@ namespace Training.Admin
 
             if (!IsPostBack)
             {
-                string trainingID = Request.QueryString["TrainingID"];
-                string templateID = Request.QueryString["TemplateID"];
+                string trainingID =
+                    Convert.ToString(
+                    Session["CertificatePreviewTrainingID"]);
+
+                string templateID =
+                    Convert.ToString(
+                    Session["CertificatePreviewTemplateID"]);
 
                 if (!String.IsNullOrWhiteSpace(trainingID))
                 {
@@ -232,27 +237,21 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
 
         protected void btnNext_Click(object sender, EventArgs e)
         {
-            string trainingID = Request.QueryString["TrainingID"];
+            string trainingID =
+                Convert.ToString(
+                Session["CertificatePreviewTrainingID"]);
 
             if (!String.IsNullOrWhiteSpace(trainingID))
             {
+                Session["TrainingID"] = trainingID;
+
                 Response.Redirect(
-                    "CertificateTemplate.aspx?TrainingID=" +
-                    Server.UrlEncode(trainingID));
+                    "CertificateTemplate.aspx");
                 return;
             }
 
-            string sessionTrainingID =
-                Convert.ToString(
-                    Session["TrainingID"]);
-
-            if (!String.IsNullOrWhiteSpace(sessionTrainingID))
-            {
-                Response.Redirect(
-                    "CertificateTemplate.aspx?TrainingID=" +
-                    Server.UrlEncode(sessionTrainingID));
-                return;
-            }
+            Session["TrainingID"] = null;
+            Session["CertificatePreviewTemplateID"] = null;
 
             Response.Redirect("CertificateTemplateMaster.aspx");
         }
