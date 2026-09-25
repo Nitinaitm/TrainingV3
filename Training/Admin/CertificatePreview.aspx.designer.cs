@@ -11,7 +11,7 @@ namespace Training.Admin {
     
     public partial class CertificatePreview {
         
-        protected global::System.Web.UI.WebControls.Button btnBack;
+        protected global::System.Web.UI.WebControls.Button btnNext;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCertificate;
         protected global::System.Web.UI.WebControls.Image imgLogo;
         protected global::System.Web.UI.WebControls.Label lblHeader;
