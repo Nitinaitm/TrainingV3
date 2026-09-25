@@ -3,6 +3,9 @@ using System.Data;
 using System.Data.SqlClient;
 using OfficeOpenXml;
 using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Configuration;
+using System.Web;
 
 namespace Training.Admin
 {
@@ -50,6 +53,68 @@ namespace Training.Admin
 
             gvExternalTrainee.DataSource = dt;
             gvExternalTrainee.DataBind();
+        }
+
+        protected void gvExternalTrainee_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "EditExternal")
+            {
+                string empID = e.CommandArgument.ToString();
+                Response.Redirect("ExternalTraineeEdit.aspx?EmpID=" + Server.UrlEncode(empID));
+                return;
+            }
+
+            if (e.CommandName == "DeleteExternal")
+            {
+                DeleteExternalTrainee(e.CommandArgument.ToString());
+            }
+        }
+
+        private void DeleteExternalTrainee(string empID)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlTransaction transaction = null;
+
+                try
+                {
+                    con.Open();
+                    transaction = con.BeginTransaction();
+
+                    string deleteLogin = "DELETE FROM Login WHERE CorrespondingEmpID=@EmpID OR LoginIDUserID=@EmpID";
+                    using (SqlCommand cmdLogin = new SqlCommand(deleteLogin, con, transaction))
+                    {
+                        cmdLogin.Parameters.AddWithValue("@EmpID", empID);
+                        cmdLogin.ExecuteNonQuery();
+                    }
+
+                    string deleteEmployee = "DELETE FROM EmpBasicMaster WHERE EmpID=@EmpID AND EmpType='External'";
+                    using (SqlCommand cmdEmployee = new SqlCommand(deleteEmployee, con, transaction))
+                    {
+                        cmdEmployee.Parameters.AddWithValue("@EmpID", empID);
+                        int affected = cmdEmployee.ExecuteNonQuery();
+
+                        if (affected == 0)
+                        {
+                            throw new Exception("External trainee record not found.");
+                        }
+                    }
+
+                    transaction.Commit();
+                    BindReport();
+                }
+                catch (Exception ex)
+                {
+                    if (transaction != null)
+                    {
+                        transaction.Rollback();
+                    }
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "deleteError", "alert(" + HttpUtility.JavaScriptStringEncode(ex.Message, true) + ");", true);
+                }
+            }
         }
 
         protected void btnExportExcel_Click(object sender, EventArgs e)
