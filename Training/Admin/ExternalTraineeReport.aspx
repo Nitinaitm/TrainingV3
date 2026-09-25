@@ -15,7 +15,7 @@
         .etr-gridview{width:max-content;min-width:100%;border-collapse:collapse}
         .etr-gridview th{padding:11px 12px;background:#2563eb;color:#fff;white-space:nowrap;font-size:13px}
         .etr-gridview td{padding:10px 12px;border-bottom:1px solid #e2e8f0;white-space:nowrap;font-size:13px;color:#334155}
-        .etr-gridview tr:nth-child(even){background:#f8fafc}
+        .etr-gridview tr:nth-child(even){background:#f8fafc}.etr-edit-input{min-width:150px}.etr-save{background:#198754}.etr-cancel{background:#64748b}
         @media(max-width:900px){.etr-grid{grid-template-columns:repeat(2,1fr)}}
         @media(max-width:576px){.etr-container{padding:10px}.etr-card{padding:15px}.etr-grid{grid-template-columns:1fr}}
     </style>
@@ -59,16 +59,18 @@
                         <asp:TemplateField HeaderText="Sl No">
                             <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField DataField="EmpID" HeaderText="Employee ID" />
-                        <asp:BoundField DataField="EmpName" HeaderText="Name" />
-                        <asp:BoundField DataField="MobileNo" HeaderText="Mobile No" />
-                        <asp:BoundField DataField="EmailId" HeaderText="Email ID" />
-                        <asp:BoundField DataField="EmpCompany" HeaderText="Organization / Company" />
-                        <asp:BoundField DataField="EmpDesignation" HeaderText="Designation" />
+                        <asp:TemplateField HeaderText="Employee ID"><ItemTemplate><asp:Label ID="lblEmpID" runat="server" Text='<%# Eval("EmpID") %>'></asp:Label></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Name"><ItemTemplate><asp:Label ID="lblEmpName" runat="server" Text='<%# Eval("EmpName") %>'></asp:Label><asp:TextBox ID="txtRowEmpName" runat="server" Text='<%# Eval("EmpName") %>' CssClass="etr-input etr-edit-input" Visible="false"></asp:TextBox></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Mobile No"><ItemTemplate><asp:Label ID="lblMobileNo" runat="server" Text='<%# Eval("MobileNo") %>'></asp:Label><asp:TextBox ID="txtRowMobileNo" runat="server" Text='<%# Eval("MobileNo") %>' CssClass="etr-input etr-edit-input" Visible="false"></asp:TextBox></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Email ID"><ItemTemplate><asp:Label ID="lblEmailId" runat="server" Text='<%# Eval("EmailId") %>'></asp:Label><asp:TextBox ID="txtRowEmailId" runat="server" Text='<%# Eval("EmailId") %>' CssClass="etr-input etr-edit-input" Visible="false"></asp:TextBox></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Organization / Company"><ItemTemplate><asp:Label ID="lblCompany" runat="server" Text='<%# Eval("EmpCompany") %>'></asp:Label><asp:TextBox ID="txtRowCompany" runat="server" Text='<%# Eval("EmpCompany") %>' CssClass="etr-input etr-edit-input" Visible="false"></asp:TextBox></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Designation"><ItemTemplate><asp:Label ID="lblDesignation" runat="server" Text='<%# Eval("EmpDesignation") %>'></asp:Label><asp:TextBox ID="txtRowDesignation" runat="server" Text='<%# Eval("EmpDesignation") %>' CssClass="etr-input etr-edit-input" Visible="false"></asp:TextBox></ItemTemplate></asp:TemplateField>
                         <asp:BoundField DataField="CreatedOn" HeaderText="Created On" DataFormatString="{0:dd-MM-yyyy}" />
                         <asp:TemplateField HeaderText="Action">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnEditExternal" runat="server" Text="Edit" CommandName="EditExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn etr-search" Style="padding:6px 12px;text-decoration:none;display:inline-block;" />
+                                <asp:LinkButton ID="btnSaveExternal" runat="server" Text="Save" CommandName="SaveExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn etr-save" Style="padding:6px 12px;text-decoration:none;display:inline-block;" Visible="false" />
+                                <asp:LinkButton ID="btnCancelExternal" runat="server" Text="Cancel" CommandName="CancelExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn etr-cancel" Style="padding:6px 12px;text-decoration:none;display:inline-block;margin-left:6px;" Visible="false" />
                                 <asp:LinkButton ID="btnDeleteExternal" runat="server" Text="Delete" CommandName="DeleteExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn" Style="padding:6px 12px;background:#dc3545;text-decoration:none;display:inline-block;margin-left:6px;" OnClientClick="return confirm('Are you sure you want to delete this external trainee?');" />
                             </ItemTemplate>
                         </asp:TemplateField>
