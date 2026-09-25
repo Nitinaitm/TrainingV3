@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls; 
 
@@ -26,6 +27,18 @@ namespace Training.Trainee
 
             string empID = Convert.ToString(Session["EmpID"]).Trim().ToUpperInvariant();
             string sessionID = Convert.ToString(Session["SessionID"]).Trim();
+            string querySessionID = "";
+
+            if (HttpContext.Current != null && HttpContext.Current.Request != null && HttpContext.Current.Request.QueryString != null)
+            {
+                querySessionID = Convert.ToString(HttpContext.Current.Request.QueryString["SessionID"]).Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(querySessionID))
+            {
+                sessionID = querySessionID;
+            }
+
             string trainingID = Convert.ToString(Session["TrainingID"]).Trim();
 
             if (string.IsNullOrWhiteSpace(sessionID))
