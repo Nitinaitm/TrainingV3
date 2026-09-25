@@ -1582,6 +1582,64 @@ TemplateID=@TemplateID
             txtFooterY.Text =
                 dr["FooterY"].ToString();
 
+            if
+            (
+                txtLogoX.Text == "50"
+                &&
+                txtLogoY.Text == "700"
+                &&
+                txtHeaderY.Text == "730"
+                &&
+                txtTitleY.Text == "650"
+                &&
+                txtBodyY.Text == "520"
+                &&
+                txtLeftSignatureX.Text == "180"
+                &&
+                txtRightSignatureX.Text == "650"
+                &&
+                txtSignatureY.Text == "150"
+                &&
+                txtFooterY.Text == "50"
+            )
+            {
+                txtLogoX.Text = "516";
+                txtLogoY.Text = "35";
+                txtHeaderY.Text = "125";
+                txtTitleY.Text = "210";
+                txtBodyY.Text = "300";
+                txtLeftSignatureX.Text = "120";
+                txtRightSignatureX.Text = "783";
+                txtSignatureY.Text = "590";
+                txtFooterY.Text = "750";
+            }
+
+            if
+            (
+                String.IsNullOrWhiteSpace(txtPageWidth.Text)
+                ||
+                txtPageWidth.Text == "0"
+            )
+            {
+                txtPageWidth.Text =
+                    ddlOrientation.SelectedValue == "Portrait"
+                    ? "794"
+                    : "1123";
+            }
+
+            if
+            (
+                String.IsNullOrWhiteSpace(txtPageHeight.Text)
+                ||
+                txtPageHeight.Text == "0"
+            )
+            {
+                txtPageHeight.Text =
+                    ddlOrientation.SelectedValue == "Portrait"
+                    ? "1123"
+                    : "794";
+            }
+
             chkActive.Checked =
                 Convert.ToBoolean(
                 dr["Active"]);
