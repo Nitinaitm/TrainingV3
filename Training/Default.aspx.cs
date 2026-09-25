@@ -233,7 +233,7 @@ WHERE EmpID=@EmpID";
                 "";
 
             Session["UserType"] =
-                "Internal";
+                string.Equals(dt.Rows[0]["EmpType"].ToString(), "External", StringComparison.OrdinalIgnoreCase) ? "External" : "Internal";
             return true;
         }
         private bool LoadTrainerProfile(
@@ -270,8 +270,6 @@ WHERE EmpID=@EmpID";
 
             if (trainerType == "Internal")
             {
-                Session["UserType"] =
-                    "Internal";
 
                 bool loaded =
                     LoadEmployeeProfile(
@@ -289,6 +287,20 @@ WHERE EmpID=@EmpID";
                     trainerType;
 
                 return true;
+            }
+
+            string externalEmpID = dt.Rows[0]["EmpID"].ToString().Trim();
+
+            if (externalEmpID != "")
+            {
+                bool employeeLoaded = LoadEmployeeProfile(externalEmpID);
+
+                if (employeeLoaded)
+                {
+                    Session["TrainerID"] = trainerID;
+                    Session["TrainerType"] = trainerType;
+                    return true;
+                }
             }
 
             Session["UserType"] =
@@ -685,7 +697,7 @@ WHERE TraineeID=@TraineeID";
                 case "Trainee":
 
                     string query =
-                        @"SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID";
+                        @"SELECT EmpType FROM EmpBasicMaster WHERE EmpID=@EmpID";
 
                     SqlParameter[] param =
                     {
@@ -694,17 +706,13 @@ WHERE TraineeID=@TraineeID";
                     userID)
             };
 
-                    int count =
-                        Convert.ToInt32(
+                    object empType =
                         cls.ExecuteScalar(
                         query,
-                        param));
+                        param);
 
-                    if (count > 0)
+                    if (empType != null)
                     {
-                        Session["UserType"] =
-                            "Internal";
-
                         return
                             LoadEmployeeProfile(
                             userID);
