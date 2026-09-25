@@ -314,7 +314,7 @@
             display: block;
             height: 1px;
             width: 100%;
-            min-width: 1px;
+            min-width: 100%;
         }
 
         .grid-scroll-top::-webkit-scrollbar {
@@ -812,6 +812,7 @@ window.addEventListener('message', function (event) {
 
             inner.style.width = tableWidth + 'px';
             inner.style.minWidth = tableWidth + 'px';
+            top.style.display = 'block';
 
             if (top.scrollLeft !== bottom.scrollLeft) {
                 top.scrollLeft = bottom.scrollLeft;
@@ -1310,7 +1311,7 @@ window.addEventListener('message', function (event) {
                 id="gridScrollTop"
                 runat="server"
                 class="grid-scroll-top"
-                visible="false">
+                visible="true">
 
                 <div
                     id="gridScrollTopInner"
