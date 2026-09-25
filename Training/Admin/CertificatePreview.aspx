@@ -86,7 +86,7 @@
     </div>
 
     <div class="cp-toolbar cp-toolbar-bottom">
-        <asp:Button ID="btnNext" runat="server" Text="Next →" CssClass="btn btn-primary btn-lg btn-action" OnClick="btnNext_Click" />
+        <asp:Button ID="btnNext" runat="server" Text="Back" CssClass="btn btn-primary btn-lg btn-action" OnClick="btnNext_Click" />
     </div>
 </div>
 </asp:Content>
