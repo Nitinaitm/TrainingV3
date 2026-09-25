@@ -165,7 +165,7 @@ EmpType
                             int loginExists = Convert.ToInt32(cmdLoginCheck.ExecuteScalar());
                             if (loginExists == 0)
                             {
-                                string loginQuery = "INSERT INTO Login(LoginIDUserID,Password,Role,' + String.fromCharCode(67,111,114,114,101,115,112,111,110,100,105,110,103,69,109,112,73,68) + ",Active,re) VALUES(@LoginIDUserID,@Password,'Trainee',@CorrespondingEmpID,'Y',@FirstLogin)";
+                                string loginQuery = "INSERT INTO Login(LoginIDUserID,Password,Role,CorrespondingEmpID,Active,re) VALUES(@LoginIDUserID,@Password,'Trainee',@CorrespondingEmpID,'Y',@FirstLogin)";
                                 using (SqlCommand cmdLogin = new SqlCommand(loginQuery, con))
                                 {
                                     cmdLogin.Parameters.AddWithValue("@LoginIDUserID", txtEmpID.Text.Trim().ToUpperInvariant());
