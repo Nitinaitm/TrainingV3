@@ -49,6 +49,15 @@ HeaderFontSize,
 FooterFontSize,
 BodyFontSize,
 NameFontSize,
+LogoX,
+LogoY,
+HeaderY,
+TitleY,
+BodyY,
+LeftSignatureX,
+RightSignatureX,
+SignatureY,
+FooterY,
 CreatedOn,
 Active
 FROM
@@ -187,10 +196,10 @@ CertificateTemplateMaster
                 "A4";
 
             txtPageWidth.Text =
-                "";
+                "1123";
 
             txtPageHeight.Text =
-                "";
+                "794";
 
             txtHeader.Text =
                 "";
@@ -199,7 +208,7 @@ CertificateTemplateMaster
                 "";
 
             txtCourseTitleFont.Text =
-                "26";
+                "24";
 
             txtHeaderFont.Text =
                 "18";
@@ -211,7 +220,40 @@ CertificateTemplateMaster
                 "16";
 
             txtNameFont.Text =
-                "28";
+                "30";
+
+            txtLogoX.Text =
+                "516";
+
+            txtLogoY.Text =
+                "35";
+
+            txtHeaderY.Text =
+                "125";
+
+            txtTitleY.Text =
+                "210";
+
+            txtBodyY.Text =
+                "300";
+
+            txtLeftSignatureX.Text =
+                "120";
+
+            txtRightSignatureX.Text =
+                "783";
+
+            txtSignatureY.Text =
+                "590";
+
+            txtFooterY.Text =
+                "750";
+
+            ddlOrientation.SelectedValue =
+                "Landscape";
+
+            ddlPaperSize.SelectedValue =
+                "A4";
 
             chkActive.Checked =
                 true;
@@ -661,6 +703,159 @@ CertificateTemplateMaster
                 return false;
             }
 
+            if
+            (
+                !int.TryParse(
+                txtLogoX.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 1033
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Logo X. Use 0 to 1033.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtLogoY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 704
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Logo Y. Use 0 to 704.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtHeaderY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 774
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Header Y. Use 0 to 774.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtTitleY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 744
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Title Y. Use 0 to 744.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtBodyY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 594
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Body Y. Use 0 to 594.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtLeftSignatureX.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 903
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Left Signature X. Use 0 to 903.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtRightSignatureX.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 903
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Right Signature X. Use 0 to 903.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtSignatureY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 694
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Signature Y. Use 0 to 694.";
+
+                return false;
+            }
+
+            if
+            (
+                !int.TryParse(
+                txtFooterY.Text,
+                out value)
+                ||
+                value < 0
+                ||
+                value > 774
+            )
+            {
+                lblMessage.Text =
+                    "Invalid Footer Y. Use 0 to 774.";
+
+                return false;
+            }
+
             lblMessage.ForeColor =
                 System.Drawing.Color.Red;
 
@@ -726,6 +921,15 @@ VALUES
 @FooterFontSize,
 @BodyFontSize,
 @NameFontSize,
+@LogoX,
+@LogoY,
+@HeaderY,
+@TitleY,
+@BodyY,
+@LeftSignatureX,
+@RightSignatureX,
+@SignatureY,
+@FooterY,
 GETDATE(),
 @CreatedBy,
 @Active
@@ -836,6 +1040,51 @@ GETDATE(),
                 txtNameFont.Text)),
 
         new SqlParameter(
+            "@LogoX",
+            Convert.ToInt32(
+                txtLogoX.Text)),
+
+        new SqlParameter(
+            "@LogoY",
+            Convert.ToInt32(
+                txtLogoY.Text)),
+
+        new SqlParameter(
+            "@HeaderY",
+            Convert.ToInt32(
+                txtHeaderY.Text)),
+
+        new SqlParameter(
+            "@TitleY",
+            Convert.ToInt32(
+                txtTitleY.Text)),
+
+        new SqlParameter(
+            "@BodyY",
+            Convert.ToInt32(
+                txtBodyY.Text)),
+
+        new SqlParameter(
+            "@LeftSignatureX",
+            Convert.ToInt32(
+                txtLeftSignatureX.Text)),
+
+        new SqlParameter(
+            "@RightSignatureX",
+            Convert.ToInt32(
+                txtRightSignatureX.Text)),
+
+        new SqlParameter(
+            "@SignatureY",
+            Convert.ToInt32(
+                txtSignatureY.Text)),
+
+        new SqlParameter(
+            "@FooterY",
+            Convert.ToInt32(
+                txtFooterY.Text)),
+
+        new SqlParameter(
             "@CreatedBy",
             Session["AdminID"] == null
             ?
@@ -937,6 +1186,15 @@ HeaderFontSize=@HeaderFontSize,
 FooterFontSize=@FooterFontSize,
 BodyFontSize=@BodyFontSize,
 NameFontSize=@NameFontSize,
+LogoX=@LogoX,
+LogoY=@LogoY,
+HeaderY=@HeaderY,
+TitleY=@TitleY,
+BodyY=@BodyY,
+LeftSignatureX=@LeftSignatureX,
+RightSignatureX=@RightSignatureX,
+SignatureY=@SignatureY,
+FooterY=@FooterY,
 ModifiedOn=GETDATE(),
 ModifiedBy=@ModifiedBy,
 Active=@Active
@@ -1047,6 +1305,51 @@ TemplateID=@TemplateID
             "@NameFontSize",
             Convert.ToInt32(
             txtNameFont.Text)),
+
+        new SqlParameter(
+            "@LogoX",
+            Convert.ToInt32(
+            txtLogoX.Text)),
+
+        new SqlParameter(
+            "@LogoY",
+            Convert.ToInt32(
+            txtLogoY.Text)),
+
+        new SqlParameter(
+            "@HeaderY",
+            Convert.ToInt32(
+            txtHeaderY.Text)),
+
+        new SqlParameter(
+            "@TitleY",
+            Convert.ToInt32(
+            txtTitleY.Text)),
+
+        new SqlParameter(
+            "@BodyY",
+            Convert.ToInt32(
+            txtBodyY.Text)),
+
+        new SqlParameter(
+            "@LeftSignatureX",
+            Convert.ToInt32(
+            txtLeftSignatureX.Text)),
+
+        new SqlParameter(
+            "@RightSignatureX",
+            Convert.ToInt32(
+            txtRightSignatureX.Text)),
+
+        new SqlParameter(
+            "@SignatureY",
+            Convert.ToInt32(
+            txtSignatureY.Text)),
+
+        new SqlParameter(
+            "@FooterY",
+            Convert.ToInt32(
+            txtFooterY.Text)),
 
         new SqlParameter(
             "@ModifiedBy",
@@ -1234,6 +1537,33 @@ TemplateID=@TemplateID
 
             txtNameFont.Text =
                 dr["NameFontSize"].ToString();
+
+            txtLogoX.Text =
+                dr["LogoX"].ToString();
+
+            txtLogoY.Text =
+                dr["LogoY"].ToString();
+
+            txtHeaderY.Text =
+                dr["HeaderY"].ToString();
+
+            txtTitleY.Text =
+                dr["TitleY"].ToString();
+
+            txtBodyY.Text =
+                dr["BodyY"].ToString();
+
+            txtLeftSignatureX.Text =
+                dr["LeftSignatureX"].ToString();
+
+            txtRightSignatureX.Text =
+                dr["RightSignatureX"].ToString();
+
+            txtSignatureY.Text =
+                dr["SignatureY"].ToString();
+
+            txtFooterY.Text =
+                dr["FooterY"].ToString();
 
             chkActive.Checked =
                 Convert.ToBoolean(
