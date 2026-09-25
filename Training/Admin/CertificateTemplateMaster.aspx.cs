@@ -638,6 +638,14 @@ CertificateTemplateMaster
                 return false;
             }
 
+            int pageWidth =
+                Convert.ToInt32(
+                txtPageWidth.Text);
+
+            int pageHeight =
+                Convert.ToInt32(
+                txtPageHeight.Text);
+
             if
             (
                 !int.TryParse(
@@ -711,7 +719,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 1033
+                value > pageWidth - 90
             )
             {
                 lblMessage.Text =
@@ -728,7 +736,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 704
+                value > pageHeight - 90
             )
             {
                 lblMessage.Text =
@@ -745,7 +753,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 774
+                value > pageHeight - 20
             )
             {
                 lblMessage.Text =
@@ -762,7 +770,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 744
+                value > pageHeight - 50
             )
             {
                 lblMessage.Text =
@@ -779,7 +787,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 594
+                value > pageHeight - 200
             )
             {
                 lblMessage.Text =
@@ -796,7 +804,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 903
+                value > pageWidth - 220
             )
             {
                 lblMessage.Text =
@@ -830,7 +838,7 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 694
+                value > pageHeight - 100
             )
             {
                 lblMessage.Text =
