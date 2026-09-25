@@ -17,7 +17,9 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.Label lblHeader;
         protected global::System.Web.UI.WebControls.Label lblTitle;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divBody;
+        protected global::System.Web.UI.WebControls.Label lblBodyIntro;
         protected global::System.Web.UI.WebControls.Label lblEmployee;
+        protected global::System.Web.UI.WebControls.Label lblBodyCompletion;
         protected global::System.Web.UI.WebControls.Label lblCourse;
         protected global::System.Web.UI.WebControls.Label lblDuration;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLeftSignature;
