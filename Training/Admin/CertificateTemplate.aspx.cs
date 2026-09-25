@@ -265,7 +265,10 @@ namespace Training.Admin
             if (string.IsNullOrWhiteSpace(TrainingID)) { Response.Redirect("~/Admin/ManageTraining.aspx"); return; }
             object exists = objDB.ExecuteScalar(@"SELECT COUNT(*) FROM TrainingCertificateTemplate WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", TrainingID) });
             if (Convert.ToInt32(exists) == 0) { ShowMessage("Please save the certificate configuration before preview.", false); return; }
-            Response.Redirect("~/Admin/CertificatePreview.aspx?TrainingID=" + Server.UrlEncode(TrainingID));
+            Session["CertificatePreviewTrainingID"] = TrainingID;
+            Session["CertificatePreviewTemplateID"] = null;
+
+            Response.Redirect("~/Admin/CertificatePreview.aspx");
         }
 
         protected void btnPreviewConfiguration_Click(object sender, EventArgs e)
