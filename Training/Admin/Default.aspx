@@ -312,7 +312,7 @@
 
          .grid-scroll-top-inner {
             display: block;
-            height: 1px;
+            height: 14px;
             width: 100%;
             min-width: 100%;
         }
@@ -396,6 +396,16 @@
 
         .action-button:hover {
             background: #1d4ed8;
+            color: #ffffff !important;
+        }
+
+        .action-delete-button {
+            background: #dc2626;
+            margin-left: 6px;
+        }
+
+        .action-delete-button:hover {
+            background: #b91c1c;
             color: #ffffff !important;
         }
 
@@ -1337,7 +1347,8 @@ window.addEventListener('message', function (event) {
                     AutoGenerateColumns="False"
                     CssClass="gridview"
                     EmptyDataText="No Record Found"
-                    GridLines="None">
+                    GridLines="None"
+                    OnRowCommand="gvEmployee_RowCommand">
 
                     <Columns>
 
@@ -1362,6 +1373,18 @@ window.addEventListener('message', function (event) {
                                     Edit
 
                                 </a>
+
+                                <asp:LinkButton
+                                    ID="btnDeleteEmployee"
+                                    runat="server"
+                                    CommandName="DeleteEmployee"
+                                    CommandArgument='<%# Eval("EmpID") %>'
+                                    CssClass="action-button action-delete-button"
+                                    OnClientClick="return confirm('Are you sure you want to delete this employee?');">
+
+                                    Delete
+
+                                </asp:LinkButton>
 
                             </ItemTemplate>
 
