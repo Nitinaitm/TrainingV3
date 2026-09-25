@@ -310,11 +310,11 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        .grid-scroll-top-inner {
+         .grid-scroll-top-inner {
             display: block;
             height: 1px;
-            width: 1px;
-            min-width: 1px;
+            width: 100%;
+            min-width: 100%;
         }
 
         .grid-scroll-top::-webkit-scrollbar {
@@ -799,18 +799,16 @@ window.addEventListener('message', function (event) {
             var bottom = elements.bottom;
             var table = elements.table;
 
-            var tableWidth = Math.ceil(table.getBoundingClientRect().width);
-            var bottomWidth = bottom.scrollWidth;
+            var tableWidth = Math.ceil(table.scrollWidth);
+            var bottomWidth = Math.ceil(bottom.scrollWidth);
 
-            if (bottomWidth > tableWidth) {
-                tableWidth = bottomWidth;
-            }
-
+            tableWidth = Math.max(tableWidth, bottomWidth);
             tableWidth = Math.max(tableWidth, bottom.clientWidth + 1);
 
             inner.style.width = tableWidth + 'px';
             inner.style.minWidth = tableWidth + 'px';
             top.style.display = 'block';
+            top.style.overflowX = 'scroll';
 
             if (top.scrollLeft !== bottom.scrollLeft) {
                 top.scrollLeft = bottom.scrollLeft;
@@ -865,6 +863,10 @@ window.addEventListener('message', function (event) {
 
             LoadSearchableDropdowns();
             refreshEmployeeGridScrollbars();
+
+            setTimeout(function () {
+                refreshEmployeeGridScrollbars();
+            }, 300);
 
             setTimeout(function () {
                 refreshEmployeeGridScrollbars();
