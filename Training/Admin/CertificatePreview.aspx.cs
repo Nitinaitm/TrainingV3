@@ -125,7 +125,44 @@ AND Active=1";
             ViewState["SignatureY"] = dr["SignatureY"];
             ViewState["FooterY"] = dr["FooterY"];
 
+            ApplyLegacyLayoutDefaults(dr);
+
             return true;
+        }
+
+        private void ApplyLegacyLayoutDefaults(DataRow dr)
+        {
+            if
+            (
+                Convert.ToInt32(dr["LogoX"]) == 50
+                &&
+                Convert.ToInt32(dr["LogoY"]) == 700
+                &&
+                Convert.ToInt32(dr["HeaderY"]) == 730
+                &&
+                Convert.ToInt32(dr["TitleY"]) == 650
+                &&
+                Convert.ToInt32(dr["BodyY"]) == 520
+                &&
+                Convert.ToInt32(dr["LeftSignatureX"]) == 180
+                &&
+                Convert.ToInt32(dr["RightSignatureX"]) == 650
+                &&
+                Convert.ToInt32(dr["SignatureY"]) == 150
+                &&
+                Convert.ToInt32(dr["FooterY"]) == 50
+            )
+            {
+                ViewState["LogoX"] = 516;
+                ViewState["LogoY"] = 35;
+                ViewState["HeaderY"] = 125;
+                ViewState["TitleY"] = 210;
+                ViewState["BodyY"] = 300;
+                ViewState["LeftSignatureX"] = 120;
+                ViewState["RightSignatureX"] = 783;
+                ViewState["SignatureY"] = 590;
+                ViewState["FooterY"] = 750;
+            }
         }
 
         private bool LoadPreview(string trainingID)
@@ -189,6 +226,7 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
             ViewState["RightSignatureX"] = dr["RightSignatureX"];
             ViewState["SignatureY"] = dr["SignatureY"];
             ViewState["FooterY"] = dr["FooterY"];
+            ApplyLegacyLayoutDefaults(dr);
             return true;
         }
 
