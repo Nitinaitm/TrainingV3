@@ -959,7 +959,7 @@
                         <Columns>
 
 
-                            <!-- ACTION -->
+                           
 
                             <asp:TemplateField
                                 HeaderText="Action">
@@ -995,56 +995,56 @@
                             </asp:TemplateField>
 
 
-                            <!-- TEMPLATE NAME -->
+                           
 
                             <asp:BoundField
                                 DataField="TemplateName"
                                 HeaderText="Template Name" />
 
 
-                            <!-- ORIENTATION -->
+                          
 
                             <asp:BoundField
                                 DataField="Orientation"
                                 HeaderText="Orientation" />
 
 
-                            <!-- PAPER SIZE -->
+                           
 
                             <asp:BoundField
                                 DataField="PaperSize"
                                 HeaderText="Paper Size" />
 
 
-                            <!-- WIDTH -->
+                           
 
                             <asp:BoundField
                                 DataField="PageWidth"
                                 HeaderText="Width" />
 
 
-                            <!-- HEIGHT -->
+                        
 
                             <asp:BoundField
                                 DataField="PageHeight"
                                 HeaderText="Height" />
 
 
-                            <!-- ORDER -->
+                            
 
                             <asp:BoundField
                                 DataField="DisplayOrder"
                                 HeaderText="Order" />
 
 
-                            <!-- ACTIVE -->
+                            
 
                             <asp:CheckBoxField
                                 DataField="Active"
                                 HeaderText="Active" />
 
 
-                            <!-- CREATED -->
+                            
 
                             <asp:BoundField
                                 DataField="CreatedOn"
