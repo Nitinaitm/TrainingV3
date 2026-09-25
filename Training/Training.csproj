@@ -173,6 +173,7 @@
     <Content Include="Admin\css\StyleSheet3.css" />
     <Content Include="Admin\Dashboard.aspx" />
     <Content Include="Admin\Default.aspx" />
+    <Content Include="Admin\ExternalTraineeReport.aspx" />
     <Content Include="Admin\TopicCategoryList.aspx" />
     <Content Include="Admin\TopicMaster.aspx" />
     <Content Include="bin\Antlr3.Runtime.dll" />
@@ -1061,6 +1062,12 @@
     </Compile>
     <Compile Include="Admin\ExternalEmpEntry.aspx.designer.cs">
       <DependentUpon>ExternalEmpEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ExternalTraineeReport.aspx.cs">
+      <DependentUpon>ExternalTraineeReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ExternalTraineeReport.aspx.designer.cs">
+      <DependentUpon>ExternalTraineeReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\FeedbackCategoryMaster.aspx.cs">
       <DependentUpon>FeedbackCategoryMaster.aspx</DependentUpon>
