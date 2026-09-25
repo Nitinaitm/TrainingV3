@@ -12,7 +12,12 @@ namespace Training.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["AdminID"] == null && Session["UserID"] == null)
+            string role = Convert.ToString(Session["Role"]);
+
+            if (String.IsNullOrWhiteSpace(role) ||
+                !(role.Equals("Admin", StringComparison.OrdinalIgnoreCase) ||
+                  role.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase) ||
+                  role.Equals("Nodal", StringComparison.OrdinalIgnoreCase)))
             {
                 Response.Redirect("~/Default.aspx");
                 return;
@@ -21,15 +26,106 @@ namespace Training.Admin
             if (!IsPostBack)
             {
                 string trainingID = Request.QueryString["TrainingID"];
-                if (String.IsNullOrWhiteSpace(trainingID))
+                string templateID = Request.QueryString["TemplateID"];
+
+                if (!String.IsNullOrWhiteSpace(trainingID))
+                {
+                    if (!LoadPreview(trainingID)) return;
+                }
+                else if (!String.IsNullOrWhiteSpace(templateID))
+                {
+                    if (!LoadTemplatePreview(templateID)) return;
+                }
+                else
                 {
                     Response.Redirect("ManageTraining.aspx");
                     return;
                 }
 
-                if (!LoadPreview(trainingID)) return;
                 ApplyTemplate();
             }
+        }
+
+        private bool LoadTemplatePreview(string templateID)
+        {
+            string sql = @"
+SELECT
+TemplateID,
+TemplateName,
+HeaderText,
+FooterText,
+BackgroundImage,
+LogoImage,
+CourseTitleFontSize,
+HeaderFontSize,
+FooterFontSize,
+BodyFontSize,
+NameFontSize,
+LogoX,
+LogoY,
+HeaderY,
+TitleY,
+BodyY,
+LeftSignatureX,
+RightSignatureX,
+SignatureY,
+FooterY,
+Orientation,
+PaperSize
+FROM CertificateTemplateMaster
+WHERE TemplateID=@TemplateID
+AND Active=1";
+
+            DataTable dt = objDB.GetDataTable(
+                sql,
+                new SqlParameter[]
+                {
+                    new SqlParameter("@TemplateID", templateID)
+                });
+
+            if (dt.Rows.Count == 0)
+            {
+                Response.Write("Certificate template was not found or is inactive.");
+                return false;
+            }
+
+            DataRow dr = dt.Rows[0];
+
+            lblHeader.Text = dr["HeaderText"].ToString();
+            lblFooter.Text = dr["FooterText"].ToString();
+            lblTitle.Text = dr["TemplateName"].ToString();
+            lblEmployee.Text = "Sample Trainee";
+            lblCourse.Text = "Sample Training Course";
+            lblDuration.Text = "01-Jan-2026 To 03-Jan-2026";
+
+            lblLeftName.Text = "";
+            lblLeftDesignation.Text = "";
+            lblRightName.Text = "";
+            lblRightDesignation.Text = "";
+
+            imgLeftSignature.ImageUrl = "";
+            imgRightSignature.ImageUrl = "";
+            imgLogo.ImageUrl = dr["LogoImage"].ToString();
+
+            ViewState["BackgroundImage"] = dr["BackgroundImage"].ToString();
+            ViewState["Orientation"] = dr["Orientation"].ToString();
+            ViewState["PaperSize"] = dr["PaperSize"].ToString();
+            ViewState["HeaderFont"] = dr["HeaderFontSize"];
+            ViewState["FooterFont"] = dr["FooterFontSize"];
+            ViewState["TitleFont"] = dr["CourseTitleFontSize"];
+            ViewState["BodyFont"] = dr["BodyFontSize"];
+            ViewState["NameFont"] = dr["NameFontSize"];
+            ViewState["LogoX"] = dr["LogoX"];
+            ViewState["LogoY"] = dr["LogoY"];
+            ViewState["HeaderY"] = dr["HeaderY"];
+            ViewState["TitleY"] = dr["TitleY"];
+            ViewState["BodyY"] = dr["BodyY"];
+            ViewState["LeftSignatureX"] = dr["LeftSignatureX"];
+            ViewState["RightSignatureX"] = dr["RightSignatureX"];
+            ViewState["SignatureY"] = dr["SignatureY"];
+            ViewState["FooterY"] = dr["FooterY"];
+
+            return true;
         }
 
         private bool LoadPreview(string trainingID)
@@ -98,7 +194,22 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("CertificateTemplate.aspx?TrainingID=" + Server.UrlEncode(Request.QueryString["TrainingID"]));
+            string trainingID = Request.QueryString["TrainingID"];
+            string templateID = Request.QueryString["TemplateID"];
+
+            if (!String.IsNullOrWhiteSpace(trainingID))
+            {
+                Response.Redirect("CertificateTemplate.aspx?TrainingID=" + Server.UrlEncode(trainingID));
+                return;
+            }
+
+            if (!String.IsNullOrWhiteSpace(templateID))
+            {
+                Response.Redirect("CertificateTemplateMaster.aspx");
+                return;
+            }
+
+            Response.Redirect("ManageTraining.aspx");
         }
 
         private void ApplyTemplate()
