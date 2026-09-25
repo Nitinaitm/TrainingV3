@@ -54,7 +54,7 @@
                 <asp:Button ID="btnExportExcel" runat="server" Text="Download Excel" CssClass="etr-btn etr-export" OnClick="btnExportExcel_Click" />
             </div>
             <div class="etr-scroll">
-                <asp:GridView ID="gvExternalTrainee" runat="server" AutoGenerateColumns="False" CssClass="etr-gridview" GridLines="None" EmptyDataText="No External Trainee Found">
+                <asp:GridView ID="gvExternalTrainee" runat="server" AutoGenerateColumns="False" CssClass="etr-gridview" GridLines="None" EmptyDataText="No External Trainee Found" OnRowCommand="gvExternalTrainee_RowCommand">
                     <Columns>
                         <asp:TemplateField HeaderText="Sl No">
                             <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
@@ -66,6 +66,12 @@
                         <asp:BoundField DataField="EmpCompany" HeaderText="Organization / Company" />
                         <asp:BoundField DataField="EmpDesignation" HeaderText="Designation" />
                         <asp:BoundField DataField="CreatedOn" HeaderText="Created On" DataFormatString="{0:dd-MM-yyyy}" />
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="btnEditExternal" runat="server" Text="Edit" CommandName="EditExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn etr-search" Style="padding:6px 12px;text-decoration:none;display:inline-block;" />
+                                <asp:LinkButton ID="btnDeleteExternal" runat="server" Text="Delete" CommandName="DeleteExternal" CommandArgument='<%# Eval("EmpID") %>' CssClass="etr-btn" Style="padding:6px 12px;background:#dc3545;text-decoration:none;display:inline-block;margin-left:6px;" OnClientClick="return confirm('Are you sure you want to delete this external trainee?');" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
