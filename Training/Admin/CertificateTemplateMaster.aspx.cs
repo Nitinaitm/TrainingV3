@@ -122,11 +122,20 @@ TemplateName
         object sender,
         EventArgs e)
         {
-            Session["PreviewTemplate"] =
-                hfID.Value;
+            if (String.IsNullOrWhiteSpace(hfID.Value))
+            {
+                lblMessage.ForeColor =
+                    System.Drawing.Color.Red;
+
+                lblMessage.Text =
+                    "Please save or select a certificate template before preview.";
+
+                return;
+            }
 
             Response.Redirect(
-                "CertificatePreview.aspx");
+                "CertificatePreview.aspx?TemplateID=" +
+                Server.UrlEncode(hfID.Value));
         }
         //-----------------------------------------------------
         // Generate Template ID
