@@ -821,11 +821,11 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 903
+                value > pageWidth - 220
             )
             {
                 lblMessage.Text =
-                    "Invalid Right Signature X. Use 0 to 903.";
+                    "Invalid Right Signature X. It must remain inside the page.";
 
                 return false;
             }
@@ -855,11 +855,11 @@ CertificateTemplateMaster
                 ||
                 value < 0
                 ||
-                value > 774
+                value > pageHeight - 20
             )
             {
                 lblMessage.Text =
-                    "Invalid Footer Y. Use 0 to 774.";
+                    "Invalid Footer Y. It must remain inside the page.";
 
                 return false;
             }
