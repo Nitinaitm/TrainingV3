@@ -440,7 +440,17 @@ namespace Training.Admin
 
                 db.ExecuteSql("INSERT INTO EmpBasicMaster(EmpID,EmpName,DOB,DOJ,MobileNo,EmailId,EmpCompany,EmpDesignation,EmpPostingPlace,CreatedOn,CreatedBy,EmpType) VALUES(@EmpID,@EmpName,@DOB,@DOJ,@MobileNo,@EmailId,@EmpCompany,@EmpDesignation,@EmpPostingPlace,GETDATE(),@CreatedBy,@EmpType)", new SqlParameter[] { new SqlParameter("@EmpID", txtEmpID.Text.Trim().ToUpperInvariant()), new SqlParameter("@EmpName", txtEmpName.Text.Trim()), new SqlParameter("@DOB", dob.ToString("dd-MM-yyyy")), new SqlParameter("@DOJ", doj.ToString("dd-MM-yyyy")), new SqlParameter("@MobileNo", txtMobileNo.Text.Trim()), new SqlParameter("@EmailId", txtEmailId.Text.Trim()), new SqlParameter("@EmpCompany", ddlCompany.SelectedValue), new SqlParameter("@EmpDesignation", ddlDesignation.SelectedValue), new SqlParameter("@EmpPostingPlace", ddlPostingPlace.SelectedValue), new SqlParameter("@CreatedBy", "Admin"), new SqlParameter("@EmpType", "Internal") }, db.Transaction);
 
-                SavePostingDetails(db, txtEmpID.Text.Trim().ToUpperInvariant(), false);
+                string empID = txtEmpID.Text.Trim().ToUpperInvariant();
+                int loginExists = Convert.ToInt32(db.ExecuteScalar("SELECT COUNT(*) FROM Login WHERE LoginIDUserID=@LoginIDUserID", new SqlParameter[] { new SqlParameter("@LoginIDUserID", empID) }, db.Transaction));
+                if (loginExists == 0)
+                {
+                    Encryptor2 encryptor = new Encryptor2();
+                    string password = encryptor.Encrypt("Bsphcl*123");
+                    string firstLogin = encryptor.Encrypt("Y");
+                    db.ExecuteSql("INSERT INTO Login(LoginIDUserID,Password,Role,CorrespondingEmpID,Active,re) VALUES(@LoginIDUserID,@Password,'Trainee',@CorrespondingEmpID,'Y',@FirstLogin)", new SqlParameter[] { new SqlParameter("@LoginIDUserID", empID), new SqlParameter("@Password", password), new SqlParameter("@CorrespondingEmpID", empID), new SqlParameter("@FirstLogin", firstLogin) }, db.Transaction);
+                }
+
+                SavePostingDetails(db, empID, false);
 
                 db.Commit();
 
@@ -598,7 +608,16 @@ namespace Training.Admin
                             return;
                         }
 
-                        DB().ExecuteSql("INSERT INTO EmpBasicMaster(EmpID,EmpName,DOB,DOJ,MobileNo,EmailId,EmpCompany,EmpDesignation,EmpPostingPlace,CreatedOn,CreatedBy) VALUES(@EmpID,@EmpName,@DOB,@DOJ,@MobileNo,@EmailId,@EmpCompany,@EmpDesignation,@EmpPostingPlace,GETDATE(),@CreatedBy)", new SqlParameter[] { new SqlParameter("@EmpID", empid), new SqlParameter("@EmpName", empname), new SqlParameter("@DOB", dobDate.ToString("dd-MM-yyyy")), new SqlParameter("@DOJ", dojDate.ToString("dd-MM-yyyy")), new SqlParameter("@MobileNo", mobileno), new SqlParameter("@EmailId", email), new SqlParameter("@EmpCompany", company), new SqlParameter("@EmpDesignation", designation), new SqlParameter("@EmpPostingPlace", postingplace), new SqlParameter("@CreatedBy", "Admin") });
+                        DB().ExecuteSql("INSERT INTO EmpBasicMaster(EmpID,EmpName,DOB,DOJ,MobileNo,EmailId,EmpCompany,EmpDesignation,EmpPostingPlace,CreatedOn,CreatedBy,EmpType) VALUES(@EmpID,@EmpName,@DOB,@DOJ,@MobileNo,@EmailId,@EmpCompany,@EmpDesignation,@EmpPostingPlace,GETDATE(),@CreatedBy,@EmpType)", new SqlParameter[] { new SqlParameter("@EmpID", empid), new SqlParameter("@EmpName", empname), new SqlParameter("@DOB", dobDate.ToString("dd-MM-yyyy")), new SqlParameter("@DOJ", dojDate.ToString("dd-MM-yyyy")), new SqlParameter("@MobileNo", mobileno), new SqlParameter("@EmailId", email), new SqlParameter("@EmpCompany", company), new SqlParameter("@EmpDesignation", designation), new SqlParameter("@EmpPostingPlace", postingplace), new SqlParameter("@CreatedBy", "Admin"), new SqlParameter("@EmpType", "Internal") });
+
+                        int loginExists = Convert.ToInt32(DB().ExecuteScalar("SELECT COUNT(*) FROM Login WHERE LoginIDUserID=@LoginIDUserID", new SqlParameter[] { new SqlParameter("@LoginIDUserID", empid) }));
+                        if (loginExists == 0)
+                        {
+                            Encryptor2 encryptor = new Encryptor2();
+                            string password = encryptor.Encrypt("Bsphcl*123");
+                            string firstLogin = encryptor.Encrypt("Y");
+                            DB().ExecuteSql("INSERT INTO Login(LoginIDUserID,Password,Role,CorrespondingEmpID,Active,re) VALUES(@LoginIDUserID,@Password,'Trainee',@CorrespondingEmpID,'Y',@FirstLogin)", new SqlParameter[] { new SqlParameter("@LoginIDUserID", empid), new SqlParameter("@Password", password), new SqlParameter("@CorrespondingEmpID", empid), new SqlParameter("@FirstLogin", firstLogin) });
+                        }
 
                         insertedCount++;
                     }
