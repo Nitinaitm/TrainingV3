@@ -1403,6 +1403,100 @@ EventArgs e)
         }
 
         /* =========================================================
+           DELETE EMPLOYEE
+        ========================================================= */
+
+        protected void gvEmployee_RowCommand(
+            object sender,
+            GridViewCommandEventArgs e)
+        {
+            if (!string.Equals(
+                e.CommandName,
+                "DeleteEmployee",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            string empID = Convert.ToString(e.CommandArgument);
+
+            if (string.IsNullOrWhiteSpace(empID))
+            {
+                return;
+            }
+
+            clsDataAccess db = DB();
+
+            try
+            {
+                db.BeginTransaction();
+
+                db.ExecuteSql(
+                    "DELETE FROM EmpPostingDetails WHERE EmpID=@EmpID",
+                    new SqlParameter[]
+                    {
+                        new SqlParameter(
+                            "@EmpID",
+                            empID
+                        )
+                    },
+                    db.Transaction
+                );
+
+                db.ExecuteSql(
+                    "DELETE FROM Login WHERE CorrespondingEmpID=@EmpID OR LoginIDUserID=@EmpID",
+                    new SqlParameter[]
+                    {
+                        new SqlParameter(
+                            "@EmpID",
+                            empID
+                        )
+                    },
+                    db.Transaction
+                );
+
+                db.ExecuteSql(
+                    "DELETE FROM EmpBasicMaster WHERE EmpID=@EmpID AND EmpType='Internal'",
+                    new SqlParameter[]
+                    {
+                        new SqlParameter(
+                            "@EmpID",
+                            empID
+                        )
+                    },
+                    db.Transaction
+                );
+
+                db.Commit();
+
+                BindEmployee();
+
+                LoadPlugins();
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    db.Rollback();
+                }
+                catch
+                {
+                }
+
+                ClientScript.RegisterStartupScript(
+                    GetType(),
+                    "DeleteEmployeeError",
+                    "alert(" +
+                    Newtonsoft.Json.JsonConvert.SerializeObject(
+                        "Employee could not be deleted. " + ex.Message
+                    ) +
+                    ");",
+                    true
+                );
+            }
+        }
+
+        /* =========================================================
            RESET
         ========================================================= */
 
