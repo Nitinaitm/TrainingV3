@@ -217,7 +217,8 @@ namespace Training.Trainee
             foreach (DataRow session in sessions.Rows)
             {
                 if (Convert.ToBoolean(session["Skipped"])) continue;
-                string rule = Convert.ToString(session["RuleValue"]).Trim().ToUpperInvariant();
+                string ruleValue = Convert.ToString(session["RuleValue"]).Trim().ToUpperInvariant();
+                string rule = ruleValue == "ALL" || ruleValue.StartsWith("PASS|") ? (ruleValue == "ALL" ? "ALL" : "PASS") : ruleValue;
                 if (rule != "PASS" && rule != "ALL") return false;
                 string sessionID = Convert.ToString(session["SessionID"]);
 
@@ -229,12 +230,21 @@ namespace Training.Trainee
 
                 if (rule == "PASS")
                 {
-                    object passCount = objDB.ExecuteScalar("SELECT COUNT(*) FROM TestMaster TM INNER JOIN TestResult TR ON TR.TestID=TM.TestID AND TR.EmpID=@EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType AND TM.IsPublished=1 AND TR.IsFinalAttempt=1 AND TR.ResultStatus IN ('PASS','PASSED')", new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TestType", testType), new SqlParameter("@EmpID", empID) });
+                    decimal passingPercentage;
+                    if (!TryGetPassingPercentage(ruleValue, out passingPercentage)) return false;
+                    object passCount = objDB.ExecuteScalar("SELECT COUNT(*) FROM TestMaster TM INNER JOIN TestResult TR ON TR.TestID=TM.TestID AND TR.EmpID=@EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType AND TM.IsPublished=1 AND TR.IsFinalAttempt=1 AND ISNULL(TR.Percentage,0)>=@PassingPercentage", new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TestType", testType), new SqlParameter("@EmpID", empID), new SqlParameter("@PassingPercentage", passingPercentage) });
                     if (passCount == null || Convert.ToInt32(passCount) == 0) return false;
                 }
             }
 
             return true;
+        }
+
+        private bool TryGetPassingPercentage(string ruleValue, out decimal passingPercentage)
+        {
+            passingPercentage = 0;
+            if (string.IsNullOrWhiteSpace(ruleValue) || !ruleValue.StartsWith("PASS|")) return false;
+            return decimal.TryParse(ruleValue.Substring(5), System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out passingPercentage) && passingPercentage >= 0 && passingPercentage <= 100;
         }
 
         protected void gvTraining_RowCommand(object sender, GridViewCommandEventArgs e)
