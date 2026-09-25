@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <asp:Label ID="lblFooter" runat="server" CssClass="footer" />
+            <asp:Label ID="lblFooter" runat="server" CssClass="cp-footer" />
         </div>
     </div>
 
