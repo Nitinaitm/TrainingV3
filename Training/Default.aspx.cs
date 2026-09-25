@@ -240,7 +240,7 @@ WHERE EmpID=@EmpID";
       string trainerID,
       string correspondingEmpID)
         {
-            string query = @"SELECT TrainerID,TrainerType,EmpID,NameExternal,DesignationExternal,TrainerOrganizerExternal,MobileNo,EmailID FROM TrainerMaster WHERE TrainerID=@TrainerID";
+            string query = @"SELECT TrainerID,TrainerType,EmpID,EmpIDExternal,NameExternal,DesignationExternal,TrainerOrganizerExternal,MobileNo,EmailID FROM TrainerMaster WHERE TrainerID=@TrainerID";
 
             SqlParameter[] param =
             {
@@ -289,7 +289,7 @@ WHERE EmpID=@EmpID";
                 return true;
             }
 
-            string externalEmpID = dt.Rows[0]["EmpID"].ToString().Trim();
+            string externalEmpID = dt.Rows[0]["EmpIDExternal"].ToString().Trim();
 
             if (externalEmpID != "")
             {
