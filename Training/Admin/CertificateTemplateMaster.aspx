@@ -7,39 +7,70 @@
     ContentPlaceHolderID="head"
     runat="server">
 
-    <style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" />
 
-        .card {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        body {
+            background: #f5f5f5;
+        }
+
+        .main-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 10px #d9d9d9;
+            margin-top: 20px;
             margin-bottom: 20px;
         }
 
-        .required {
+        .page-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: darkcyan;
+            margin-bottom: 20px;
+        }
+
+        .validation {
             color: red;
+            font-size: 13px;
         }
 
-        .preview-img {
-            width: 120px;
-            height: 80px;
-            object-fit: contain;
-            border: 1px solid #ccc;
-            padding: 5px;
-            background: white;
+        .btn-save {
+            background: darkcyan;
+            color: white;
+            border: none;
         }
 
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #ddd;
+            .btn-save:hover {
+                background: teal;
+                color: white;
+            }
+
+        .select2-container {
+            width: 100% !important;
         }
 
-        .position-help {
-            font-size: 11px;
-            color: #777;
-            margin-top: 3px;
+        .select2-container--default
+        .select2-selection--single {
+            height: 38px !important;
+            border: 1px solid #ced4da !important;
         }
 
+        .select2-selection__rendered {
+            line-height: 36px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 36px !important;
+        }
     </style>
 
 </asp:Content>
@@ -169,7 +200,7 @@
 
             <div class="card-header bg-success text-white">
 
-                Template Details
+               Create Template Details
 
             </div>
 
