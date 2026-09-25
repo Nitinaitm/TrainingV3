@@ -59,14 +59,87 @@ namespace Training.Admin
         {
             if (e.CommandName == "EditExternal")
             {
-                string empID = e.CommandArgument.ToString();
-                Response.Redirect("ExternalTraineeEdit.aspx?EmpID=" + Server.UrlEncode(empID));
+                GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
+                SetRowEditMode(row, true);
+                return;
+            }
+
+            if (e.CommandName == "CancelExternal")
+            {
+                BindReport();
+                return;
+            }
+
+            if (e.CommandName == "SaveExternal")
+            {
+                GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
+                UpdateExternalTrainee(row);
                 return;
             }
 
             if (e.CommandName == "DeleteExternal")
             {
                 DeleteExternalTrainee(e.CommandArgument.ToString());
+            }
+        }
+
+
+        private void SetRowEditMode(GridViewRow row, bool editMode)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            ((Label)row.FindControl("lblEmpName")).Visible = !editMode;
+            ((Label)row.FindControl("lblMobileNo")).Visible = !editMode;
+            ((Label)row.FindControl("lblEmailId")).Visible = !editMode;
+            ((Label)row.FindControl("lblCompany")).Visible = !editMode;
+            ((Label)row.FindControl("lblDesignation")).Visible = !editMode;
+            ((TextBox)row.FindControl("txtRowEmpName")).Visible = editMode;
+            ((TextBox)row.FindControl("txtRowMobileNo")).Visible = editMode;
+            ((TextBox)row.FindControl("txtRowEmailId")).Visible = editMode;
+            ((TextBox)row.FindControl("txtRowCompany")).Visible = editMode;
+            ((TextBox)row.FindControl("txtRowDesignation")).Visible = editMode;
+
+            LinkButton edit = (LinkButton)row.FindControl("btnEditExternal");
+            LinkButton save = (LinkButton)row.FindControl("btnSaveExternal");
+            LinkButton cancel = (LinkButton)row.FindControl("btnCancelExternal");
+            edit.Visible = !editMode;
+            save.Visible = editMode;
+            cancel.Visible = editMode;
+        }
+
+        private void UpdateExternalTrainee(GridViewRow row)
+        {
+            string empID = ((Label)row.FindControl("lblEmpID")).Text.Trim();
+
+            string sql = "UPDATE EmpBasicMaster SET EmpName=@EmpName,MobileNo=@MobileNo,EmailId=@EmailId,EmpCompany=@EmpCompany,EmpDesignation=@EmpDesignation WHERE EmpID=@EmpID AND EmpType='External'";
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["constr"].ConnectionString))
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@EmpID", empID);
+                    cmd.Parameters.AddWithValue("@EmpName", ((TextBox)row.FindControl("txtRowEmpName")).Text.Trim());
+                    cmd.Parameters.AddWithValue("@MobileNo", ((TextBox)row.FindControl("txtRowMobileNo")).Text.Trim());
+                    cmd.Parameters.AddWithValue("@EmailId", ((TextBox)row.FindControl("txtRowEmailId")).Text.Trim());
+                    cmd.Parameters.AddWithValue("@EmpCompany", ((TextBox)row.FindControl("txtRowCompany")).Text.Trim());
+                    cmd.Parameters.AddWithValue("@EmpDesignation", ((TextBox)row.FindControl("txtRowDesignation")).Text.Trim());
+                    con.Open();
+
+                    if (cmd.ExecuteNonQuery() == 0)
+                    {
+                        throw new Exception("External trainee record not found.");
+                    }
+                }
+
+                BindReport();
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "updateError", "alert(" + HttpUtility.JavaScriptStringEncode(ex.Message, true) + ");", true);
             }
         }
 
