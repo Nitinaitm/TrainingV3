@@ -332,7 +332,8 @@
                             </asp:ListItem>
 
                             <asp:ListItem
-                                Value="Landscape">
+                                Value="Landscape"
+                                Selected="True">
                                 Landscape
                             </asp:ListItem>
 
@@ -365,7 +366,8 @@
                             </asp:ListItem>
 
                             <asp:ListItem
-                                Value="A4">
+                                Value="A4"
+                                Selected="True">
                                 A4
                             </asp:ListItem>
 
@@ -417,6 +419,7 @@
                         <asp:TextBox
                             ID="txtPageWidth"
                             runat="server"
+                            Text="1123"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -436,6 +439,7 @@
                         <asp:TextBox
                             ID="txtPageHeight"
                             runat="server"
+                            Text="794"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -443,6 +447,10 @@
                             Coordinate / page height
                         </div>
 
+                    </div>
+
+                    <div class="alert alert-info mt-2">
+                        A4 Landscape design area: 1123 x 794 px. These position values are used by both Preview and PDF; the PDF automatically converts them to A4 points.
                     </div>
 
 
@@ -529,7 +537,7 @@
                         <asp:TextBox
                             ID="txtCourseTitleFont"
                             runat="server"
-                            Text="26"
+                            Text="24"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -601,7 +609,7 @@
                         <asp:TextBox
                             ID="txtNameFont"
                             runat="server"
-                            Text="28"
+                            Text="30"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -651,7 +659,7 @@
                         <asp:TextBox
                             ID="txtLogoX"
                             runat="server"
-                            Text="50"
+                            Text="516"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -673,7 +681,7 @@
                         <asp:TextBox
                             ID="txtLogoY"
                             runat="server"
-                            Text="700"
+                            Text="35"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -695,7 +703,7 @@
                         <asp:TextBox
                             ID="txtHeaderY"
                             runat="server"
-                            Text="730"
+                            Text="125"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -713,7 +721,7 @@
                         <asp:TextBox
                             ID="txtTitleY"
                             runat="server"
-                            Text="650"
+                            Text="210"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -739,7 +747,7 @@
                         <asp:TextBox
                             ID="txtBodyY"
                             runat="server"
-                            Text="520"
+                            Text="300"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -757,7 +765,7 @@
                         <asp:TextBox
                             ID="txtLeftSignatureX"
                             runat="server"
-                            Text="180"
+                            Text="120"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -775,7 +783,7 @@
                         <asp:TextBox
                             ID="txtRightSignatureX"
                             runat="server"
-                            Text="650"
+                            Text="783"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -793,7 +801,7 @@
                         <asp:TextBox
                             ID="txtSignatureY"
                             runat="server"
-                            Text="150"
+                            Text="590"
                             CssClass="form-control">
                         </asp:TextBox>
 
@@ -819,7 +827,7 @@
                         <asp:TextBox
                             ID="txtFooterY"
                             runat="server"
-                            Text="50"
+                            Text="750"
                             CssClass="form-control">
                         </asp:TextBox>
 
