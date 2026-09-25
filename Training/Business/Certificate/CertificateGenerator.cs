@@ -222,8 +222,84 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawBody(PdfWriter writer, Document document, DataRow dr)
         {
-            Font titleFont = GetTitleFont(dr); Font bodyFont = GetBodyFont(dr); Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["NameFontSize"]), Font.BOLD, BaseColor.BLACK); PdfPTable table = new PdfPTable(1); table.TotalWidth = document.PageSize.Width - 120; table.LockedWidth = true; table.HorizontalAlignment = Element.ALIGN_CENTER; PdfPCell cell = new PdfPCell(); cell.Border = Rectangle.NO_BORDER; cell.HorizontalAlignment = Element.ALIGN_CENTER; cell.Padding = 5;
-            cell.AddElement(new Paragraph("CERTIFICATE OF COMPLETION", titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nThis Certificate is proudly presented to\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["EmpName"].ToString(), nameFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nFor Successfully Completing\n", bodyFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph(dr["CourseTitle"].ToString(), titleFont) { Alignment = Element.ALIGN_CENTER }); cell.AddElement(new Paragraph("\nDuration : " + Convert.ToDateTime(dr["DateFrom"]).ToString("dd MMM yyyy") + "  To  " + Convert.ToDateTime(dr["DateTo"]).ToString("dd MMM yyyy"), bodyFont) { Alignment = Element.ALIGN_CENTER }); table.AddCell(cell); table.WriteSelectedRows(0, -1, DesignToPdfX(60f, document, dr), PdfYFromTop(Convert.ToSingle(dr["BodyY"]), document, dr), writer.DirectContent);
+            Font titleFont = GetTitleFont(dr);
+            Font bodyFont = GetBodyFont(dr);
+            Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["NameFontSize"]), Font.BOLD, BaseColor.BLACK);
+
+            PdfContentByte canvas = writer.DirectContent;
+
+            ColumnText.ShowTextAligned(
+                canvas,
+                Element.ALIGN_CENTER,
+                new Phrase("CERTIFICATE OF COMPLETION", titleFont),
+                document.PageSize.Width / 2f,
+                PdfYFromTop(Convert.ToSingle(dr["TitleY"]), document, dr),
+                0);
+
+            PdfPTable table = new PdfPTable(1);
+            table.TotalWidth = document.PageSize.Width - DesignToPdfX(180f, document, dr);
+            table.LockedWidth = true;
+            table.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PdfPCell cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell.Padding = DesignToPdfY(5f, document, dr);
+
+            cell.AddElement(
+                new Paragraph(
+                    "This Certificate is proudly presented to",
+                    bodyFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                });
+
+            cell.AddElement(
+                new Paragraph(
+                    dr["EmpName"].ToString(),
+                    nameFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                });
+
+            cell.AddElement(
+                new Paragraph(
+                    "For Successfully Completing",
+                    bodyFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                });
+
+            cell.AddElement(
+                new Paragraph(
+                    dr["CourseTitle"].ToString(),
+                    titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                });
+
+            cell.AddElement(
+                new Paragraph(
+                    "Duration : " +
+                    Convert.ToDateTime(dr["DateFrom"]).ToString("dd MMM yyyy") +
+                    "  To  " +
+                    Convert.ToDateTime(dr["DateTo"]).ToString("dd MMM yyyy"),
+                    bodyFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                });
+
+            table.AddCell(cell);
+
+            table.WriteSelectedRows(
+                0,
+                -1,
+                DesignToPdfX(90f, document, dr),
+                PdfYFromTop(
+                    Convert.ToSingle(dr["BodyY"]),
+                    document,
+                    dr),
+                writer.DirectContent);
         }
         private void DrawSignature(PdfWriter writer, Document document, DataRow dr)
         {
