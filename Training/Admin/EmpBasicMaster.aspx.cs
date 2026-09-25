@@ -499,14 +499,7 @@ namespace Training.Admin
                 return;
             }
 
-            db.ExecuteSql("INSERT INTO EmpPostingDetails(EmpID,EmpPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,Subdivision,Section,EmpOnDeputation,CreatedOn,CreatedBy,AssessmentYear) VALUES(@EmpID,@EmpPostingPlace,@EmpPostingDepartment,@AreaBoardZone,@Circle,@Division,@Subdivision,@Section,@EmpOnDeputation,GETDATE(),@CreatedBy,@AssessmentYear)", new SqlParameter[] { new SqlParameter("@EmpID", empID), new SqlParameter("@EmpPostingPlace", ddlPostingDetailPlace.SelectedValue), new SqlParameter("@EmpPostingDepartment", department), new SqlParameter("@AreaBoardZone", zone), new SqlParameter("@Circle", circle), new SqlParameter("@Division", division), new SqlParameter("@Subdivision", subdivision), new SqlParameter("@Section", section), new SqlParameter("@EmpOnDeputation", "NO"), new SqlParameter("@CreatedBy", "Admin"), new SqlParameter("@AssessmentYear", GetAssessmentYear()) }, db.Transaction);
-        }
-
-        private string GetAssessmentYear()
-        {
-            DateTime now = DateTime.Now;
-            int startYear = now.Month >= 4 ? now.Year : now.Year - 1;
-            return startYear.ToString() + "-" + (startYear + 1).ToString().Substring(2);
+            db.ExecuteSql("INSERT INTO EmpPostingDetails(EmpID,EmpPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,Subdivision,Section,EmpOnDeputation,CreatedOn,CreatedBy) VALUES(@EmpID,@EmpPostingPlace,@EmpPostingDepartment,@AreaBoardZone,@Circle,@Division,@Subdivision,@Section,@EmpOnDeputation,GETDATE(),@CreatedBy)", new SqlParameter[] { new SqlParameter("@EmpID", empID), new SqlParameter("@EmpPostingPlace", ddlPostingDetailPlace.SelectedValue), new SqlParameter("@EmpPostingDepartment", department), new SqlParameter("@AreaBoardZone", zone), new SqlParameter("@Circle", circle), new SqlParameter("@Division", division), new SqlParameter("@Subdivision", subdivision), new SqlParameter("@Section", section), new SqlParameter("@EmpOnDeputation", "NO"), new SqlParameter("@CreatedBy", "Admin") }, db.Transaction);
         }
 
         private void ShowError(string message)
