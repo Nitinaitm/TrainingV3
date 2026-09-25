@@ -2,11 +2,11 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
-body{background:#f3f5f7}
+.cp-preview-page{background:#f3f5f7}
 .cp-preview-page{padding:10px 0 30px}
-.toolbar{text-align:center;margin-bottom:14px}
-.certificate-wrap{width:100%;overflow:auto;padding:10px 10px 20px}
-.certificate{position:relative;width:1123px;height:794px;margin:0 auto;background:#fff;background-repeat:no-repeat;background-position:center;background-size:100% 100%;border:1px solid #b8b8b8;box-shadow:0 4px 18px rgba(0,0,0,.18);overflow:hidden;box-sizing:border-box}
+ .cp-toolbar{text-align:center;margin-bottom:14px}
+ .cp-certificate-wrap{width:100%;overflow:auto;padding:10px 10px 20px}
+ .cp-certificate{position:relative;width:1123px;height:794px;margin:0 auto;background:#fff;background-repeat:no-repeat;background-position:center;background-size:100% 100%;border:1px solid #b8b8b8;box-shadow:0 4px 18px rgba(0,0,0,.18);overflow:hidden;box-sizing:border-box}
 .cp-logo,.cp-header,.cp-title,.cp-body,.cp-footer,.cp-signature{position:absolute;box-sizing:border-box}
 .cp-logo{width:90px;height:90px;object-fit:contain}
 .cp-header{left:80px;right:80px;text-align:center;font-weight:bold;line-height:1.25;white-space:normal}
@@ -22,14 +22,14 @@ body{background:#f3f5f7}
 .cp-sign-designation{font-size:15px;line-height:1.2;margin-top:3px}
 .cp-footer{left:60px;right:60px;text-align:center;line-height:1.2;white-space:normal}
 @media(max-width:1200px){
-.certificate{transform-origin:top center}
+.cp-certificate{transform-origin:top center}
 }
 @media print{
-body{background:#fff}
+.cp-preview-page{background:#fff}
 .cp-preview-page{padding:0}
-.toolbar{display:none}
-.certificate-wrap{padding:0;overflow:visible}
-.certificate{border:none;box-shadow:none;margin:0;width:1123px;height:794px}
+.cp-toolbar{display:none}
+.cp-certificate-wrap{padding:0;overflow:visible}
+.cp-certificate{border:none;box-shadow:none;margin:0;width:1123px;height:794px}
 }
 </style>
 </asp:Content>
@@ -42,26 +42,26 @@ body{background:#fff}
 
     <div class="cp-certificate-wrap">
         <div id="divCertificate" runat="server" class="cp-certificate">
-            <asp:Image ID="imgLogo" runat="server" CssClass="logo" />
+            <asp:Image ID="imgLogo" runat="server" CssClass="cp-logo" />
 
-            <asp:Label ID="lblHeader" runat="server" CssClass="header" />
+            <asp:Label ID="lblHeader" runat="server" CssClass="cp-header" />
 
-            <asp:Label ID="lblTitle" runat="server" CssClass="title" />
+            <asp:Label ID="lblTitle" runat="server" CssClass="cp-title" />
 
             <div id="divBody" runat="server" class="cp-body">
-                <asp:Label ID="lblBodyIntro" runat="server" CssClass="body-intro">
+                <asp:Label ID="lblBodyIntro" runat="server" CssClass="cp-body-intro">
                     This Certificate is proudly presented to
                 </asp:Label>
 
-                <asp:Label ID="lblEmployee" runat="server" CssClass="trainee-name" />
+                <asp:Label ID="lblEmployee" runat="server" CssClass="cp-trainee-name" />
 
-                <asp:Label ID="lblBodyCompletion" runat="server" CssClass="body-completion">
+                <asp:Label ID="lblBodyCompletion" runat="server" CssClass="cp-body-completion">
                     for successfully completing
                 </asp:Label>
 
-                <asp:Label ID="lblCourse" runat="server" CssClass="course-title" />
+                <asp:Label ID="lblCourse" runat="server" CssClass="cp-course-title" />
 
-                <asp:Label ID="lblDuration" runat="server" CssClass="duration" />
+                <asp:Label ID="lblDuration" runat="server" CssClass="cp-duration" />
             </div>
 
             <div id="divLeftSignature" runat="server" class="cp-signature">
