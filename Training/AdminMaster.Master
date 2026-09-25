@@ -546,6 +546,10 @@
                             class="submenu-item">External Trainee Entry
                         </a>
 
+                        <a href="ExternalTraineeReport.aspx"
+                            class="submenu-item">External Trainee Report
+                        </a>
+
                     </div>
 
 
