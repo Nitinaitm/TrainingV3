@@ -274,7 +274,10 @@ namespace Training.Admin
         protected void btnPreviewConfiguration_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TrainingID)) return;
-            Response.Redirect("~/Admin/CertificatePreview.aspx?TrainingID=" + Server.UrlEncode(TrainingID));
+            Session["CertificatePreviewTrainingID"] = TrainingID;
+            Session["CertificatePreviewTemplateID"] = null;
+
+            Response.Redirect("~/Admin/CertificatePreview.aspx");
         }
     }
 }
