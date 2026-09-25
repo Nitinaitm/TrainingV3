@@ -242,7 +242,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnUpdateTraining.Visible = true;
             btnAssignSession.Visible = true;
             btnAssignTrainee.Visible = true;
-            btnRequirements.Visible = IsTrainingStarted();
+            btnRequirements.Visible = string.Equals(lblStatus.Text, "InProgress", StringComparison.OrdinalIgnoreCase);
             btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
             btnAssignFeedback.Visible = fr;
             btnAssignFeedback.Enabled = fr;
