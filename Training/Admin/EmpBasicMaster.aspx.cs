@@ -122,7 +122,7 @@ namespace Training.Admin
                 return;
             }
 
-            DataTable dt = DB().GetDataTable("SELECT DISTINCT EPD.EmpPostingDepartment FROM EmpPostingDetails EPD INNER JOIN EmpBasicMaster EBM ON EBM.EmpID=EPD.EmpID WHERE EBM.EmpCompany=@Company AND ISNULL(EPD.EmpPostingDepartment,'')<>'' ORDER BY EPD.EmpPostingDepartment", new SqlParameter[] { new SqlParameter("@Company", ddlCompany.SelectedValue) });
+            DataTable dt = DB().GetDataTable("SELECT DISTINCT EPD.EmpPostingDepartment FROM EmpPostingDetails EPD INNER JOIN EmpBasicMaster EBM ON EBM.EmpID=EPD.EmpID WHERE EBM.EmpType='Internal' AND EBM.EmpCompany=@Company AND ISNULL(EPD.EmpPostingDepartment,'')<>'' ORDER BY EPD.EmpPostingDepartment", new SqlParameter[] { new SqlParameter("@Company", ddlCompany.SelectedValue) });
             foreach (DataRow row in dt.Rows)
             {
                 string value = Convert.ToString(row["EmpPostingDepartment"]);
