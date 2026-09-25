@@ -1211,7 +1211,7 @@ TemplateID=@TemplateID
             BindGrid();
         }
 
-        protected void btnClearSearch_Click(
+        protected void btnResetSearch_Click(
             object sender,
             EventArgs e)
         {
@@ -1222,6 +1222,13 @@ TemplateID=@TemplateID
                 0;
 
             BindGrid();
+        }
+
+        protected void btnReset_Click(
+            object sender,
+            EventArgs e)
+        {
+            ResetForm();
         }
     }
 }
