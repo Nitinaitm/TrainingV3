@@ -313,8 +313,8 @@
         .grid-scroll-top-inner {
             display: block;
             height: 1px;
-            width: 100%;
-            min-width: 100%;
+            width: 1px;
+            min-width: 1px;
         }
 
         .grid-scroll-top::-webkit-scrollbar {
@@ -806,9 +806,7 @@ window.addEventListener('message', function (event) {
                 tableWidth = bottomWidth;
             }
 
-            if (tableWidth <= bottom.clientWidth) {
-                tableWidth = bottom.clientWidth + 1;
-            }
+            tableWidth = Math.max(tableWidth, bottom.clientWidth + 1);
 
             inner.style.width = tableWidth + 'px';
             inner.style.minWidth = tableWidth + 'px';
@@ -867,6 +865,10 @@ window.addEventListener('message', function (event) {
 
             LoadSearchableDropdowns();
             refreshEmployeeGridScrollbars();
+
+            setTimeout(function () {
+                refreshEmployeeGridScrollbars();
+            }, 1000);
 
             $(window).on('resize', function () {
                 refreshEmployeeGridScrollbars();
