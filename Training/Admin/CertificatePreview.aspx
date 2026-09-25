@@ -5,6 +5,7 @@
 .cp-preview-page{background:#f3f5f7}
 .cp-preview-page{padding:10px 0 30px}
  .cp-toolbar{text-align:center;margin-top:18px;margin-bottom:10px}
+.cp-toolbar .btn-action{min-width:180px;margin-right:10px;margin-bottom:10px}
  .cp-certificate-wrap{width:100%;overflow:auto;padding:10px 10px 20px}
  .cp-certificate{position:relative;width:1123px;height:794px;margin:0 auto;background:#fff;background-repeat:no-repeat;background-position:center;background-size:100% 100%;border:1px solid #b8b8b8;box-shadow:0 4px 18px rgba(0,0,0,.18);overflow:hidden;box-sizing:border-box}
 .cp-logo,.cp-header,.cp-title,.cp-body,.cp-footer,.cp-signature{position:absolute;box-sizing:border-box}
@@ -85,7 +86,7 @@
     </div>
 
     <div class="cp-toolbar cp-toolbar-bottom">
-        <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="btn btn-primary px-4" OnClick="btnNext_Click" />
+        <asp:Button ID="btnNext" runat="server" Text="Next →" CssClass="btn btn-primary btn-action" OnClick="btnNext_Click" />
     </div>
 </div>
 </asp:Content>
