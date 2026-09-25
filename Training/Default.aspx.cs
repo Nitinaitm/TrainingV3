@@ -25,9 +25,8 @@ namespace Training
         {
             if (!IsPostBack)
             {
-                LoadLoginCache();
-
-                LoadMobileCache();
+                Session.Remove("dt_Login");
+                Session.Remove("dt_Mobile");
             }
         }
         private void LoadLoginCache()
@@ -432,34 +431,19 @@ WHERE TraineeID=@TraineeID";
                 Session["UserID"] =
                     userID;
 
-                DataTable dtLogin =
-                    Session["dt_Login"]
-                    as DataTable;
+                string loginQuery = "SELECT TOP 1 LoginIDUserID,Password,Role,CorrespondingEmpID,Active,re FROM Login WHERE LoginIDUserID=@LoginIDUserID";
 
-                if
-                (
-                    dtLogin == null
-                )
+                SqlParameter[] loginParameters =
                 {
-                    LoadLoginCache();
+                    new SqlParameter("@LoginIDUserID", userID)
+                };
 
-                    dtLogin =
-                        Session["dt_Login"]
-                        as DataTable;
-                }
+                DataTable dtLogin =
+                    cls.GetDataTable(
+                    loginQuery,
+                    loginParameters);
 
-                DataRow[] rows =
-                    dtLogin.Select(
-                    "LoginIDUserID='"
-                    +
-                    userID.Replace("'", "''")
-                    +
-                    "'");
-
-                if
-                (
-                    rows.Length == 0
-                )
+                if (dtLogin.Rows.Count == 0)
                 {
                     lblMsg.Text =
                         "Invalid User ID.";
@@ -468,7 +452,7 @@ WHERE TraineeID=@TraineeID";
                 }
 
                 DataRow row =
-                    rows[0];
+                    dtLogin.Rows[0];
 
                 Encryptor2 encryptor =
                     new Encryptor2();
@@ -530,34 +514,19 @@ WHERE TraineeID=@TraineeID";
                     return;
                 }
 
-                DataTable dtMobile =
-                    Session["dt_Mobile"]
-                    as DataTable;
+                string mobileQuery = "SELECT TOP 1 MobileNo FROM (SELECT L.LoginIDUserID AS LoginID,L.CorrespondingEmpID,E.MobileNo,L.Role FROM Login L INNER JOIN EmpBasicMaster E ON L.CorrespondingEmpID=E.EmpID WHERE L.LoginIDUserID=@LoginID AND L.Role IN ('Admin','SuperAdmin','Nodal','Trainee') UNION ALL SELECT TM.TrainerID AS LoginID,TM.EmpID AS CorrespondingEmpID,E.MobileNo,'Trainer' AS Role FROM TrainerMaster TM INNER JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE TM.TrainerType='Internal' AND TM.TrainerID=@LoginID UNION ALL SELECT TrainerID AS LoginID,TrainerID AS CorrespondingEmpID,MobileNo,'Trainer' AS Role FROM TrainerMaster WHERE TrainerType='External' AND TrainerID=@LoginID UNION ALL SELECT M.ManagerID AS LoginID,M.EmpID AS CorrespondingEmpID,E.MobileNo,'Manager' AS Role FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID WHERE ISNULL(M.ActiveStatus,'Y')='Y' AND M.ManagerID=@LoginID UNION ALL SELECT TraineeID AS LoginID,TraineeID AS CorrespondingEmpID,MobileNo,'Trainee' AS Role FROM TraineeMasterExternal WHERE TraineeID=@LoginID AND ISNULL(MobileNo,'')<>'') AS U WHERE LoginID=@LoginID";
 
-                if
-                (
-                    dtMobile == null
-                )
+                SqlParameter[] mobileParameters =
                 {
-                    LoadMobileCache();
+                    new SqlParameter("@LoginID", userID)
+                };
 
-                    dtMobile =
-                        Session["dt_Mobile"]
-                        as DataTable;
-                }
+                DataTable dtMobile =
+                    cls.GetDataTable(
+                    mobileQuery,
+                    mobileParameters);
 
-                DataRow[] mobileRows =
-                    dtMobile.Select(
-                    "LoginID='"
-                    +
-                    userID.Replace("'", "''")
-                    +
-                    "'");
-
-                if
-                (
-                    mobileRows.Length == 0
-                )
+                if (dtMobile.Rows.Count == 0)
                 {
                     lblMsg.Text =
                         "Mobile Number Not Registered.";
@@ -566,7 +535,7 @@ WHERE TraineeID=@TraineeID";
                 }
 
                 string mobileNo =
-                    mobileRows[0]["MobileNo"].ToString().Trim();
+                    dtMobile.Rows[0]["MobileNo"].ToString().Trim();
 
                 if
                 (
