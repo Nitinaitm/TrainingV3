@@ -274,7 +274,7 @@ namespace Training.Admin
             string sql =
                 "SELECT DISTINCT EmpDesignation " +
                 "FROM EmpBasicMaster " +
-                "WHERE ISNULL(EmpDesignation,'')<>''" +
+                "WHERE EmpType='Internal' AND ISNULL(EmpDesignation,'')<>''" +
                 CompanyWhere("EmpCompany") +
                 " ORDER BY EmpDesignation";
 
@@ -299,7 +299,7 @@ namespace Training.Admin
             string sql =
                 "SELECT DISTINCT EmpPostingPlace " +
                 "FROM EmpBasicMaster " +
-                "WHERE ISNULL(EmpPostingPlace,'')<>''" +
+                "WHERE EmpType='Internal' AND ISNULL(EmpPostingPlace,'')<>''" +
                 CompanyWhere("EmpCompany") +
                 " ORDER BY EmpPostingPlace";
 
@@ -1104,7 +1104,7 @@ EventArgs e)
                 "WHERE X.EmpID=EBM.EmpID " +
                 "ORDER BY X.ID DESC" +
                 ") " +
-                "WHERE 1=1"
+                "WHERE EBM.EmpType='Internal'"
             );
 
             using (
