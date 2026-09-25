@@ -90,13 +90,13 @@ namespace Training.Admin
 
         private void BindDesignation()
         {
-            DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpDesignation FROM EmpBasicMaster WHERE ISNULL(EmpDesignation,'')<>'' ORDER BY EmpDesignation");
+            DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpDesignation FROM EmpBasicMaster WHERE EmpType='Internal' AND ISNULL(EmpDesignation,'')<>'' ORDER BY EmpDesignation");
             BindSimpleList(ddlDesignation, dt, "EmpDesignation", "Select Designation");
         }
 
         private void BindPostingPlace()
         {
-            DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpPostingPlace FROM EmpBasicMaster WHERE ISNULL(EmpPostingPlace,'')<>'' ORDER BY EmpPostingPlace");
+            DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpPostingPlace FROM EmpBasicMaster WHERE EmpType='Internal' AND ISNULL(EmpPostingPlace,'')<>'' ORDER BY EmpPostingPlace");
             BindSimpleList(ddlPostingPlace, dt, "EmpPostingPlace", "Select HRMS Posting Place");
         }
 
