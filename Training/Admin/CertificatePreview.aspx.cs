@@ -93,7 +93,7 @@ AND Active=1";
 
             lblHeader.Text = dr["HeaderText"].ToString();
             lblFooter.Text = dr["FooterText"].ToString();
-            lblTitle.Text = dr["TemplateName"].ToString();
+            lblTitle.Text = "CERTIFICATE OF COMPLETION";
             lblEmployee.Text = "Sample Trainee";
             lblCourse.Text = "Sample Training Course";
             lblDuration.Text = "01-Jan-2026 To 03-Jan-2026";
@@ -160,7 +160,7 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
             DataRow dr = dt.Rows[0];
             lblHeader.Text = dr["HeaderText"].ToString();
             lblFooter.Text = dr["FooterText"].ToString();
-            lblTitle.Text = dr["TemplateName"].ToString();
+            lblTitle.Text = "CERTIFICATE OF COMPLETION";
             lblEmployee.Text = "Sample Trainee";
             lblCourse.Text = String.IsNullOrWhiteSpace(dr["CourseTitle"].ToString()) ? dr["CourseName"].ToString() : dr["CourseTitle"].ToString();
             lblDuration.Text = Convert.ToDateTime(dr["DateFrom"]).ToString("dd-MMM-yyyy") + " To " + Convert.ToDateTime(dr["DateTo"]).ToString("dd-MMM-yyyy");
@@ -286,6 +286,8 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
             lblCourse.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 18));
             lblEmployee.Font.Size = FontUnit.Point(Px(ViewState["NameFont"], 36));
             lblDuration.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 18));
+            lblBodyIntro.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 16));
+            lblBodyCompletion.Font.Size = FontUnit.Point(Px(ViewState["BodyFont"], 16));
         }
 
         private void ToggleLogo()
