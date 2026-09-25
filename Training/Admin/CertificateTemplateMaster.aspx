@@ -1012,6 +1012,19 @@
 
 
                                     <asp:LinkButton
+                                        ID="lnkPreview"
+                                        runat="server"
+                                        CommandName="PreviewTemplate"
+                                        CommandArgument='<%# Eval("TemplateID") %>'
+                                        Text="Preview"
+                                        CssClass="btn btn-sm btn-info">
+                                    </asp:LinkButton>
+
+
+                                    &nbsp;
+
+
+                                    <asp:LinkButton
                                         ID="lnkStatus"
                                         runat="server"
                                         CommandName="ChangeStatus"
