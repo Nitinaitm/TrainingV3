@@ -1113,10 +1113,49 @@ TemplateID<>@TemplateID
                 e.CommandName
                 ==
                 "EditTemplate"
+                ||
+                e.CommandName
+                ==
+                "EditRow"
             )
             {
                 LoadTemplate(
                     e.CommandArgument.ToString());
+
+                return;
+            }
+
+            if
+            (
+                e.CommandName
+                ==
+                "PreviewTemplate"
+            )
+            {
+                string templateID =
+                    e.CommandArgument.ToString();
+
+                if
+                (
+                    String.IsNullOrWhiteSpace(
+                        templateID)
+                )
+                {
+                    lblMessage.ForeColor =
+                        System.Drawing.Color.Red;
+
+                    lblMessage.Text =
+                        "Template ID is missing.";
+
+                    return;
+                }
+
+                Response.Redirect(
+                    "CertificatePreview.aspx?TemplateID=" +
+                    Server.UrlEncode(
+                        templateID));
+
+                return;
             }
         }
 
