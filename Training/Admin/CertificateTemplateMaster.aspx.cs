@@ -1472,10 +1472,11 @@ TemplateID<>@TemplateID
                     return;
                 }
 
+                Session["CertificatePreviewTemplateID"] = templateID;
+                Session["CertificatePreviewTrainingID"] = null;
+
                 Response.Redirect(
-                    "CertificatePreview.aspx?TemplateID=" +
-                    Server.UrlEncode(
-                        templateID));
+                    "CertificatePreview.aspx");
 
                 return;
             }
