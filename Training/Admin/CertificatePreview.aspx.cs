@@ -230,24 +230,31 @@ WHERE TCT.TrainingID=@TrainingID AND CTM.Active=1";
             return true;
         }
 
-        protected void btnBack_Click(object sender, EventArgs e)
+        protected void btnNext_Click(object sender, EventArgs e)
         {
             string trainingID = Request.QueryString["TrainingID"];
-            string templateID = Request.QueryString["TemplateID"];
 
             if (!String.IsNullOrWhiteSpace(trainingID))
             {
-                Response.Redirect("CertificateTemplate.aspx?TrainingID=" + Server.UrlEncode(trainingID));
+                Response.Redirect(
+                    "CertificateTemplate.aspx?TrainingID=" +
+                    Server.UrlEncode(trainingID));
                 return;
             }
 
-            if (!String.IsNullOrWhiteSpace(templateID))
+            string sessionTrainingID =
+                Convert.ToString(
+                    Session["TrainingID"]);
+
+            if (!String.IsNullOrWhiteSpace(sessionTrainingID))
             {
-                Response.Redirect("CertificateTemplateMaster.aspx");
+                Response.Redirect(
+                    "CertificateTemplate.aspx?TrainingID=" +
+                    Server.UrlEncode(sessionTrainingID));
                 return;
             }
 
-            Response.Redirect("ManageTraining.aspx");
+            Response.Redirect("CertificateTemplateMaster.aspx");
         }
 
         private void ApplyTemplate()
