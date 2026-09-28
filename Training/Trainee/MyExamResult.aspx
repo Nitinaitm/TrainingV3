@@ -3,7 +3,7 @@
     masterpagefile="~/TraineeMaster.Master"
     autoeventwireup="true"
     codebehind="MyExamResult.aspx.cs"
-    inherits="Training.Trainee.MyExamResult" %>
+    inherits="Training.Trainee.MyExamResult" MaintainScrollPositionOnPostback="true"  %>
 
 <%@ Register
     Src="~/Trainee/SessionSummary.ascx"

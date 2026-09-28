@@ -99,98 +99,7 @@
         </div>
 
 
-        <!-- ===================================================== -->
-        <!-- SEARCH -->
-        <!-- ===================================================== -->
-
-        <div class="card">
-
-            <div class="card-header bg-dark text-white">
-
-                Search Templates
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="row">
-
-                    <!-- Template Name -->
-
-                    <div class="col-md-4">
-
-                        <label>
-                            Template Name
-                        </label>
-
-                        <asp:TextBox
-                            ID="txtSearchTemplate"
-                            runat="server"
-                            CssClass="form-control">
-                        </asp:TextBox>
-
-                    </div>
-
-
-                    <!-- Status -->
-
-                    <div class="col-md-3">
-
-                        <label>
-                            Status
-                        </label>
-
-                        <asp:DropDownList
-                            ID="ddlSearchStatus"
-                            runat="server"
-                            CssClass="form-control">
-
-                            <asp:ListItem
-                                Value="">
-                                All
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Value="1">
-                                Active
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Value="0">
-                                Inactive
-                            </asp:ListItem>
-
-                        </asp:DropDownList>
-
-                    </div>
-
-
-                    <!-- Buttons -->
-
-                    <div class="col-md-5 pt-4">
-
-                        <asp:Button
-                            ID="btnSearch"
-                            runat="server"
-                            Text="Search"
-                            CssClass="btn btn-primary"
-                            OnClick="btnSearch_Click" />
-
-                        <asp:Button
-                            ID="btnResetSearch"
-                            runat="server"
-                            Text="Reset"
-                            CssClass="btn btn-secondary"
-                            OnClick="btnResetSearch_Click" />
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
+       
 
         <!-- ===================================================== -->
         <!-- TEMPLATE ENTRY -->
@@ -968,6 +877,97 @@
 
         </div>
 
+         <!-- ===================================================== -->
+        <!-- SEARCH -->
+        <!-- ===================================================== -->
+
+        <div class="card">
+
+            <div class="card-header bg-dark text-white">
+
+                Search Templates
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <!-- Template Name -->
+
+                    <div class="col-md-4">
+
+                        <label>
+                            Template Name
+                        </label>
+
+                        <asp:TextBox
+                            ID="txtSearchTemplate"
+                            runat="server"
+                            CssClass="form-control">
+                        </asp:TextBox>
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-3">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <asp:DropDownList
+                            ID="ddlSearchStatus"
+                            runat="server"
+                            CssClass="form-control">
+
+                            <asp:ListItem
+                                Value="">
+                                All
+                            </asp:ListItem>
+
+                            <asp:ListItem
+                                Value="1">
+                                Active
+                            </asp:ListItem>
+
+                            <asp:ListItem
+                                Value="0">
+                                Inactive
+                            </asp:ListItem>
+
+                        </asp:DropDownList>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="col-md-5 pt-4">
+
+                        <asp:Button
+                            ID="btnSearch"
+                            runat="server"
+                            Text="Search"
+                            CssClass="btn btn-primary"
+                            OnClick="btnSearch_Click" />
+
+                        <asp:Button
+                            ID="btnResetSearch"
+                            runat="server"
+                            Text="Reset"
+                            CssClass="btn btn-secondary"
+                            OnClick="btnResetSearch_Click" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
         <!-- ===================================================== -->
         <!-- TEMPLATE GRID -->
