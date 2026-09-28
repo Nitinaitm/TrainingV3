@@ -421,6 +421,11 @@ namespace Training.Trainer
             AddResultFilters(
                 ref query);
 
+            if (!String.IsNullOrWhiteSpace(Request.QueryString["SessionID"]))
+            {
+                query += " AND TM.SessionID=@SessionID";
+            }
+
             query +=
                 " ORDER BY TD.DateFrom DESC, TM.TrainingID DESC, CASE WHEN TM.TestType='Pre' THEN 1 WHEN TM.TestType='Post' THEN 2 ELSE 3 END, TM.TestTitle, TR.EmpID, TR.AttemptNo DESC";
 
@@ -608,6 +613,12 @@ namespace Training.Trainer
                         ddlTest.SelectedValue)
                     ? (object)DBNull.Value
                     : ddlTest.SelectedValue),
+
+                new SqlParameter(
+                    "@SessionID",
+                    String.IsNullOrWhiteSpace(Request.QueryString["SessionID"])
+                    ? (object)DBNull.Value
+                    : Request.QueryString["SessionID"]),
 
                 new SqlParameter(
                     "@Trainee",
