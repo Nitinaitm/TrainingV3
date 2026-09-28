@@ -23,12 +23,12 @@ namespace Training.Trainer
                 LoadTrainerInfo();
             }
 
-            try
-            {
-                Control lifecycle = LoadControl("~/BatchLifecycle.ascx");
-                ContentPlaceHolder1.Controls.Add(lifecycle);
-            }
-            catch { }
+            //try
+            //{
+            //    Control lifecycle = LoadControl("~/BatchLifecycle.ascx");
+            //    ContentPlaceHolder1.Controls.Add(lifecycle);
+            //}
+            //catch { }
         }
 
         private void LoadTrainerInfo()

@@ -8,7 +8,7 @@
     background: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 10px;
-    padding: 15px;
+    padding: 5px;
     margin-bottom: 20px;
     font-weight: bold;
     width: 100%;
@@ -177,7 +177,7 @@
     <div class="row">
 
 
-        <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
+        <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
 
             <span class="summary-label">
 
@@ -193,7 +193,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -209,7 +209,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -223,7 +223,7 @@
             </span>
 
         </div>
-          <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+          <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -265,7 +265,7 @@
     <div class="row">
 
 
-        <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -281,7 +281,7 @@
         </div>
 
 
-      <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+      <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -297,7 +297,7 @@
 
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -313,7 +313,7 @@
         </div>
 
 
-        <div class="col-lg-2 col-md-2 col-sm-6 mb-4">
+        <div class="col-lg-2 col-md-2 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -339,7 +339,7 @@
     <div class="row">
 
 
-        <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -355,7 +355,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -396,7 +396,7 @@
     <div class="row">
 
 
-        <div class="col-lg-4 col-md-8 col-sm-12 mb-4">
+        <div class="col-lg-4 col-md-8 col-sm-12 mb-2">
 
             <span class="summary-label">
 
@@ -412,7 +412,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-4 col-sm-12 mb-4">
+        <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
 
             <span class="summary-label">
 
@@ -450,7 +450,7 @@
     <div class="row">
 
 
-        <div class="col-lg-4 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -467,7 +467,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -484,7 +484,7 @@
         </div>
 
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 
@@ -501,7 +501,7 @@
         </div>
 
 
-        <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
 

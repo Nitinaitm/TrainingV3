@@ -64,7 +64,7 @@ namespace Training.Trainee
                     sessionID,
                     empID);
 
-                LoadSessionDetails();
+               // LoadSessionDetails();
 
                 LoadRequirements();
 
@@ -121,66 +121,66 @@ namespace Training.Trainee
             return value != null && value != DBNull.Value && Convert.ToInt32(value) == 1;
         }
 
-        private void LoadSessionDetails()
-        {
-            string trainingID = Convert.ToString(Session["TrainingID"]).Trim();
-            string sessionID = Convert.ToString(Session["SessionID"]).Trim();
+        //private void LoadSessionDetails()
+        //{
+        //    string trainingID = Convert.ToString(Session["TrainingID"]).Trim();
+        //    string sessionID = Convert.ToString(Session["SessionID"]).Trim();
 
-            string sql = "SELECT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,SM.SessionID,SM.SessionNo,SM.SessionName,TM.TopicName,CASE WHEN TR.TrainerType='Internal' THEN EB.EmpName ELSE TR.NameExternal END AS TrainerName,TRY_CONVERT(date,SM.SessionDate,105) AS SessionDate,SM.StartTime,SM.EndTime,SM.TotalHours FROM SessionMaster SM INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID LEFT JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TopicMaster TM ON TM.TopicID=SM.TopicID LEFT JOIN TrainerMaster TR ON TR.TrainerID=SM.TrainerID LEFT JOIN EmpBasicMaster EB ON EB.EmpID=TR.EmpID WHERE SM.TrainingID=@TrainingID AND SM.SessionID=@SessionID";
+        //    string sql = "SELECT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,SM.SessionID,SM.SessionNo,SM.SessionName,TM.TopicName,CASE WHEN TR.TrainerType='Internal' THEN EB.EmpName ELSE TR.NameExternal END AS TrainerName,TRY_CONVERT(date,SM.SessionDate,105) AS SessionDate,SM.StartTime,SM.EndTime,SM.TotalHours FROM SessionMaster SM INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID LEFT JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TopicMaster TM ON TM.TopicID=SM.TopicID LEFT JOIN TrainerMaster TR ON TR.TrainerID=SM.TrainerID LEFT JOIN EmpBasicMaster EB ON EB.EmpID=TR.EmpID WHERE SM.TrainingID=@TrainingID AND SM.SessionID=@SessionID";
 
-            DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID) });
+        //    DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID) });
 
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                lblTrainingID.Text = trainingID;
-                lblCourse.Text = "-";
-                lblTrainingType.Text = "-";
-                lblOrganizer.Text = "-";
-                lblSessionNo.Text = "-";
-                lblSessionName.Text = "-";
-                lblTopic.Text = "-";
-                lblTrainer.Text = "-";
-                lblSessionDate.Text = "-";
-                lblStartTime.Text = "-";
-                lblEndTime.Text = "-";
-                lblDuration.Text = "-";
-                return;
-            }
+        //    if (dt == null || dt.Rows.Count == 0)
+        //    {
+        //        lblTrainingID.Text = trainingID;
+        //        lblCourse.Text = "-";
+        //        lblTrainingType.Text = "-";
+        //        lblOrganizer.Text = "-";
+        //        lblSessionNo.Text = "-";
+        //        lblSessionName.Text = "-";
+        //        lblTopic.Text = "-";
+        //        lblTrainer.Text = "-";
+        //        lblSessionDate.Text = "-";
+        //        lblStartTime.Text = "-";
+        //        lblEndTime.Text = "-";
+        //        lblDuration.Text = "-";
+        //        return;
+        //    }
 
-            DataRow row = dt.Rows[0];
+        //    DataRow row = dt.Rows[0];
 
-            lblTrainingID.Text = Convert.ToString(row["TrainingID"]);
-            lblCourse.Text = Convert.ToString(row["CourseName"]);
-            lblTrainingType.Text = Convert.ToString(row["TrainingType"]);
-            lblOrganizer.Text = Convert.ToString(row["TrainingOrganizer"]);
-            lblSessionNo.Text = Convert.ToString(row["SessionNo"]);
-            lblSessionName.Text = Convert.ToString(row["SessionName"]);
-            lblTopic.Text = Convert.ToString(row["TopicName"]);
-            lblTrainer.Text = Convert.ToString(row["TrainerName"]);
+        //    lblTrainingID.Text = Convert.ToString(row["TrainingID"]);
+        //    lblCourse.Text = Convert.ToString(row["CourseName"]);
+        //    lblTrainingType.Text = Convert.ToString(row["TrainingType"]);
+        //    lblOrganizer.Text = Convert.ToString(row["TrainingOrganizer"]);
+        //    lblSessionNo.Text = Convert.ToString(row["SessionNo"]);
+        //    lblSessionName.Text = Convert.ToString(row["SessionName"]);
+        //    lblTopic.Text = Convert.ToString(row["TopicName"]);
+        //    lblTrainer.Text = Convert.ToString(row["TrainerName"]);
 
-            DateTime sessionDate;
+        //    DateTime sessionDate;
 
-            if (DateTime.TryParse(Convert.ToString(row["SessionDate"]), out sessionDate))
-            {
-                lblSessionDate.Text = sessionDate.ToString("dd-MMM-yyyy");
-            }
-            else
-            {
-                lblSessionDate.Text = "-";
-            }
+        //    if (DateTime.TryParse(Convert.ToString(row["SessionDate"]), out sessionDate))
+        //    {
+        //        lblSessionDate.Text = sessionDate.ToString("dd-MMM-yyyy");
+        //    }
+        //    else
+        //    {
+        //        lblSessionDate.Text = "-";
+        //    }
 
-            lblStartTime.Text = Convert.ToString(row["StartTime"]);
-            lblEndTime.Text = Convert.ToString(row["EndTime"]);
+        //    lblStartTime.Text = Convert.ToString(row["StartTime"]);
+        //    lblEndTime.Text = Convert.ToString(row["EndTime"]);
 
-            if (row["TotalHours"] == DBNull.Value || string.IsNullOrWhiteSpace(Convert.ToString(row["TotalHours"])))
-            {
-                lblDuration.Text = "-";
-            }
-            else
-            {
-                lblDuration.Text = Convert.ToString(row["TotalHours"]) + " Hours";
-            }
-        }
+        //    if (row["TotalHours"] == DBNull.Value || string.IsNullOrWhiteSpace(Convert.ToString(row["TotalHours"])))
+        //    {
+        //        lblDuration.Text = "-";
+        //    }
+        //    else
+        //    {
+        //        lblDuration.Text = Convert.ToString(row["TotalHours"]) + " Hours";
+        //    }
+        //}
 
         private void LoadTestStatus()
         {
