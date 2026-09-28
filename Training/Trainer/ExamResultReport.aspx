@@ -215,12 +215,12 @@
 
                 <div class="row">
 
-                    <!-- Training -->
+                    <!-- Session -->
 
                     <div class="col-md-4 mb-3">
 
                         <label class="filter-label">
-                            Training
+                            Session / Training
                         </label>
 
                         <asp:DropDownList
@@ -600,6 +600,7 @@
 
                     <asp:GridView
                         ID="gvResult"
+                        OnRowCommand="gvResult_RowCommand"
                         runat="server"
                         AutoGenerateColumns="false"
                         CssClass="table table-bordered table-hover report-table"
@@ -824,7 +825,7 @@
 
                             <asp:TemplateField HeaderText="Action">
                                 <ItemTemplate>
-                                    <asp:HyperLink ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' />
+                                    <asp:LinkButton ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary" CommandName="ViewAnswers" CommandArgument='<%# Eval("ResultID") %>' CausesValidation="false" />
                                 </ItemTemplate>
                                 <ItemStyle HorizontalAlign="Center" />
                             </asp:TemplateField>
