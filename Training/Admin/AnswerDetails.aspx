@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Trainee Answer Details" Language="C#" MasterPageFile="~/TrainerMaster.Master" AutoEventWireup="true" CodeBehind="AnswerDetails.aspx.cs" Inherits="Training.Trainer.AnswerDetails" %>
+﻿<%@ Page Title="Trainee Answer Details" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AnswerDetails.aspx.cs" Inherits="Training.Admin.AnswerDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />

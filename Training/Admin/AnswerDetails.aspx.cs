@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 
-namespace Training.Trainer
+namespace Training.Admin
 {
     public partial class AnswerDetails : System.Web.UI.Page
     {
@@ -13,15 +13,9 @@ namespace Training.Trainer
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["TrainerID"] == null || String.IsNullOrWhiteSpace(Session["TrainerID"].ToString()))
-            {
-                Response.Redirect("~/Default.aspx");
-                return;
-            }
-
             if (String.IsNullOrWhiteSpace(Request.QueryString["ResultID"]))
             {
-                Response.Redirect("~/Trainer/ExamResultReport.aspx");
+                Response.Redirect("~/Admin/ExamResultReport.aspx");
                 return;
             }
 
@@ -29,7 +23,7 @@ namespace Training.Trainer
             {
                 if (!LoadResult())
                 {
-                    Response.Redirect("~/Trainer/ExamResultReport.aspx");
+                    Response.Redirect("~/Admin/ExamResultReport.aspx");
                     return;
                 }
 
@@ -42,8 +36,8 @@ namespace Training.Trainer
 
         private bool LoadResult()
         {
-            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND TM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID";
-            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
+            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID ";
+            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID) });
             if (dt.Rows.Count == 0) return false;
             DataRow dr = dt.Rows[0];
             lblEmpID.Text = dr["EmpID"].ToString();
@@ -65,8 +59,8 @@ namespace Training.Trainer
 
         private void LoadAnswers()
         {
-            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID WHERE TA.ResultID=@ResultID AND TM.TrainerID=@TrainerID ORDER BY TA.SequenceNo";
-            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
+            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID WHERE TA.ResultID=@ResultID  ORDER BY TA.SequenceNo";
+            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID) });
             gvAnswers.DataSource = dt;
             gvAnswers.DataBind();
         }
@@ -97,6 +91,6 @@ namespace Training.Trainer
             return sb.ToString();
         }
 
-        protected void btnBack_Click(object sender, EventArgs e) { Response.Redirect("~/Trainer/ExamResultReport.aspx"); }
+        protected void btnBack_Click(object sender, EventArgs e) { Response.Redirect("~/Admin/ExamResultReport.aspx"); }
     }
 }

@@ -165,7 +165,7 @@ namespace Training.Trainer
 
         protected void btnTestResult_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Trainer/TestResult.aspx");
+            Response.Redirect("~/Trainer/ExamResultReport.aspx?TrainingID=" + Server.UrlEncode(TrainingID) + "&SessionID=" + Server.UrlEncode(SessionID));
         }
 
         private bool IsRequired(string column)

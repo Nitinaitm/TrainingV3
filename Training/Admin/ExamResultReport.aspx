@@ -818,8 +818,14 @@
 
 
 
-                            <asp:TemplateField
-                                HeaderText="Final">
+                            <asp:TemplateField HeaderText="Action">
+                                <ItemTemplate>
+                                    <asp:HyperLink ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' />
+                                </ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Final">
 
                                 <ItemTemplate>
 

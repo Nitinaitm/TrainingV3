@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Training.Trainer {
+namespace Training.Admin {
     
     
     public partial class AnswerDetails {
