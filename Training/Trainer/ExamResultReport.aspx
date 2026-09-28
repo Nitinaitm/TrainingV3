@@ -1030,6 +1030,10 @@
 
         </div>
 
+    <div class="text-right mt-3 mb-4">
+        <asp:Button ID="btnBackSessionReport" runat="server" Text="Back to Session Reports" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnBackSessionReport_Click" />
+    </div>
+
     </div>
 
 </asp:Content>
