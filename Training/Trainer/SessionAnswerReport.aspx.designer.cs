@@ -1,0 +1,1 @@
+namespace Training.Trainer { public partial class SessionAnswerReport { protected global::System.Web.UI.WebControls.Label lblSession; protected global::System.Web.UI.WebControls.GridView gvAnswers; protected global::System.Web.UI.WebControls.Button btnBack; } }
