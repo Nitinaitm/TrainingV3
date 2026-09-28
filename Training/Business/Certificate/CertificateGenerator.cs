@@ -253,21 +253,21 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
             {
                 Rectangle page = GetPageSize(dr["PaperSize"].ToString(), dr["Orientation"].ToString());
                 document = new Document(page, 20, 20, 20, 20); writer = PdfWriter.GetInstance(document, new FileStream(pdfPath, FileMode.Create)); document.Open();
-                DrawBackground(writer, document, dr); DrawLogo(writer, document, dr); DrawHeader(writer, document, dr); DrawBody(writer, document, dr); DrawSignature(writer, document, dr); DrawVerificationBlock(writer, document, certificateNo, verificationCode); DrawFooter(writer, document, dr);
+                DrawBackground(writer, document, dr); DrawLogo(writer, document, dr); DrawHeader(writer, document, dr); DrawBody(writer, document, dr); DrawSignature(writer, document, dr); DrawVerificationBlock(writer, document, dr, certificateNo, verificationCode); DrawFooter(writer, document, dr);
                 document.Close(); SaveCertificate(certificateID, certificateNo, dr, pdfName, verificationCode); return true;
             }
             catch { if (document != null && document.IsOpen()) document.Close(); if (File.Exists(pdfPath)) File.Delete(pdfPath); throw; }
         }
 
-        private void DrawVerificationBlock(PdfWriter writer, Document document, string certificateNo, string verificationCode)
+        private void DrawVerificationBlock(PdfWriter writer, Document document, DataRow dr, string certificateNo, string verificationCode)
         {
-            PdfContentByte canvas = writer.DirectContent; BaseFont baseFont = GetBaseFont(); Font smallFont = new Font(baseFont, 8, Font.NORMAL, BaseColor.BLACK); Font boldFont = new Font(baseFont, 8, Font.BOLD, BaseColor.BLACK); float leftX = 40f; float bottomY = 55f;
-            ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Certificate No: " + certificateNo, boldFont), leftX, bottomY + 28f, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Verification Code: " + verificationCode, smallFont), leftX, bottomY + 14f, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Scan QR code to verify this certificate", smallFont), leftX, bottomY, 0); DrawVerificationQRCode(writer, document, certificateNo, verificationCode);
+            PdfContentByte canvas = writer.DirectContent; BaseFont baseFont = GetBaseFont(); Font smallFont = new Font(baseFont, 8, Font.NORMAL, BaseColor.BLACK); Font boldFont = new Font(baseFont, 8, Font.BOLD, BaseColor.BLACK); float leftX = DesignToPdfX(40f, document, dr); float bottomY = DesignToPdfY(55f, document, dr);
+            ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Certificate No: " + certificateNo, boldFont), leftX, bottomY + 28f, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Verification Code: " + verificationCode, smallFont), leftX, bottomY + 14f, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase("Scan QR code to verify this certificate", smallFont), leftX, bottomY, 0); DrawVerificationQRCode(writer, document, dr, certificateNo, verificationCode);
         }
 
-        private void DrawVerificationQRCode(PdfWriter writer, Document document, string certificateNo, string verificationCode)
+        private void DrawVerificationQRCode(PdfWriter writer, Document document, DataRow dr, string certificateNo, string verificationCode)
         {
-            string verificationURL = BuildVerificationURL(certificateNo, verificationCode); BarcodeQRCode qrCode = new BarcodeQRCode(verificationURL, 150, 150, null); Image qrImage = qrCode.GetImage(); qrImage.ScaleAbsolute(65f, 65f); float qrX = document.PageSize.Width - 105f; float qrY = 45f; qrImage.SetAbsolutePosition(qrX, qrY); writer.DirectContent.AddImage(qrImage);
+            string verificationURL = BuildVerificationURL(certificateNo, verificationCode); BarcodeQRCode qrCode = new BarcodeQRCode(verificationURL, 150, 150, null); Image qrImage = qrCode.GetImage(); float qrSize = DesignToPdfX(65f, document, dr); qrImage.ScaleAbsolute(qrSize, qrSize); float qrX = DesignToPdfX(990f, document, dr); float qrY = DesignToPdfY(45f, document, dr); qrImage.SetAbsolutePosition(qrX, qrY); writer.DirectContent.AddImage(qrImage);
         }
 
         private string BuildVerificationURL(string certificateNo, string verificationCode)
@@ -287,7 +287,7 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawHeader(PdfWriter writer, Document document, DataRow dr)
         {
-            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, PdfYFromTop(Convert.ToSingle(dr["HeaderY"]), document, dr), 0);
+            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; float headerY = Convert.ToSingle(dr["HeaderY"]); if (!String.IsNullOrWhiteSpace(dr["LogoImage"].ToString())) { float minimumHeaderY = Convert.ToSingle(dr["LogoY"]) + 110f; if (headerY < minimumHeaderY) headerY = minimumHeaderY; } PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, PdfYFromTop(headerY, document, dr), 0);
         }
         private void DrawBody(PdfWriter writer, Document document, DataRow dr)
         {
@@ -372,7 +372,7 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawSignature(PdfWriter writer, Document document, DataRow dr)
         {
-            DrawSingleSignature(writer, document, dr, dr["LeftSignature"].ToString(), dr["LeftName"].ToString(), dr["LeftDesignation"].ToString(), Convert.ToSingle(dr["LeftSignatureX"]), Convert.ToSingle(dr["SignatureY"])); DrawSingleSignature(writer, document, dr, dr["RightSignature"].ToString(), dr["RightName"].ToString(), dr["RightDesignation"].ToString(), Convert.ToSingle(dr["RightSignatureX"]), Convert.ToSingle(dr["SignatureY"]));
+            float signatureY = Convert.ToSingle(dr["SignatureY"]); float leftSignatureX = Convert.ToSingle(dr["LeftSignatureX"]); float rightSignatureX = Convert.ToSingle(dr["RightSignatureX"]); if (signatureY == 590f) signatureY = 520f; if (rightSignatureX == 783f) rightSignatureX = 925f; DrawSingleSignature(writer, document, dr, dr["LeftSignature"].ToString(), dr["LeftName"].ToString(), dr["LeftDesignation"].ToString(), leftSignatureX, signatureY); DrawSingleSignature(writer, document, dr, dr["RightSignature"].ToString(), dr["RightName"].ToString(), dr["RightDesignation"].ToString(), rightSignatureX, signatureY);
         }
         private void DrawSingleSignature(PdfWriter writer, Document document, DataRow dr, string imagePath, string name, string designation, float xDesign, float yDesign)
         {
