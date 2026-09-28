@@ -163,20 +163,18 @@ namespace Training.Trainer
             Label lblAttendance = (Label)e.Row.FindControl("lblAttendance");
             if (lblWorkflow != null)
             {
-                switch (lblWorkflow.Text)
-                {
-                    case "A": lblWorkflow.Text = "Draft"; lblWorkflow.CssClass = "badge bg-secondary"; break;
-                    case "B": lblWorkflow.Text = "Trainer Assigned"; lblWorkflow.CssClass = "badge bg-info"; break;
-                    case "C": lblWorkflow.Text = "Sessions Created"; lblWorkflow.CssClass = "badge bg-primary"; break;
-                    case "D": lblWorkflow.Text = "Trainees Assigned"; lblWorkflow.CssClass = "badge bg-warning"; break;
-                    case "ABCDE": lblWorkflow.Text = "Training Started"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    case "ABCDEF": lblWorkflow.Text = "Attendance Completed"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    case "ABCDEFG": lblWorkflow.Text = "Pre Test Completed"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    case "ABCDEFGH": lblWorkflow.Text = "Post Test Completed"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    case "ABCDEFGHI": lblWorkflow.Text = "Feedback Submitted"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    case "ABCDEFGHIJ": lblWorkflow.Text = "Certificate Generated"; lblWorkflow.CssClass = "badge bg-success"; break;
-                    default: lblWorkflow.CssClass = "badge bg-secondary"; break;
-                }
+                string workflow = lblWorkflow.Text.Trim().ToUpperInvariant();
+                if (workflow.Contains("J")) { lblWorkflow.Text = "Certificate Generated"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("I")) { lblWorkflow.Text = "Feedback Submitted"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("H")) { lblWorkflow.Text = "Post Test Completed"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("G")) { lblWorkflow.Text = "Pre Test Completed"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("F")) { lblWorkflow.Text = "Attendance Completed"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("E")) { lblWorkflow.Text = "Training Started"; lblWorkflow.CssClass = "badge bg-success"; }
+                else if (workflow.Contains("D")) { lblWorkflow.Text = "Trainees Assigned"; lblWorkflow.CssClass = "badge bg-warning"; }
+                else if (workflow.Contains("C")) { lblWorkflow.Text = "Sessions Created"; lblWorkflow.CssClass = "badge bg-primary"; }
+                else if (workflow.Contains("B")) { lblWorkflow.Text = "Trainer Assigned"; lblWorkflow.CssClass = "badge bg-info"; }
+                else if (workflow.Contains("A")) { lblWorkflow.Text = "Draft"; lblWorkflow.CssClass = "badge bg-secondary"; }
+                else { lblWorkflow.Text = ""; lblWorkflow.CssClass = ""; }
             }
             if (lblAttendance != null)
             {
