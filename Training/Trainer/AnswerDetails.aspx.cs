@@ -21,7 +21,7 @@ namespace Training.Trainer
 
             if (Session["TrainerAnswerResultID"] == null || String.IsNullOrWhiteSpace(Session["TrainerAnswerResultID"].ToString()))
             {
-                Response.Redirect("~/Trainer/ExamResultReport.aspx");
+                Response.Redirect("~/Trainer/SessionAnswerReport.aspx");
                 return;
             }
 
