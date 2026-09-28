@@ -1,4 +1,5 @@
 <%@ Page Title="Certificate Rules" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="SetCertificateRules.aspx.cs" Inherits="Training.Admin.SetCertificateRules"  MaintainScrollPositionOnPostback="true" %>
+<%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 <style>
@@ -9,7 +10,8 @@
 <div class="container-fluid">
 <div class="main-card">
 <div class="heading">Certificate Rules</div>
-<asp:Label ID="lblTraining" runat="server" CssClass="fw-bold" />
+    <uc:TrainingSummary ID="TrainingSummary1" runat="server" />
+<asp:Label ID="lblTraining" runat="server" CssClass="fw-bold" visible="false"/>
 <div class="rule-card mt-3">
 <h5>Attendance Certificate Rule</h5>
 <p class="rule-note">Minimum attendance is calculated as Present sessions divided by all attendance-required and non-skipped sessions. Example: 10 applicable sessions and 30% rule means at least 3 Present sessions.</p>

@@ -3,7 +3,7 @@
     MasterPageFile="~/AdminMaster.Master"
     AutoEventWireup="true"
     CodeBehind="CourseMaster.aspx.cs"
-    Inherits="Training.Admin.CourseMaster"
+    Inherits="Training.Admin.CourseMaster" MaintainScrollPositionOnPostback="true" 
     ClientIDMode="Static" %>
 
 <asp:Content ID="Content1"
@@ -282,6 +282,7 @@
 
                         </asp:TemplateField>
 
+                        <asp:BoundField DataField="CourseID" HeaderText="Course ID" />
                         <asp:BoundField DataField="CourseName" HeaderText="Course Name" />
 
                         <asp:BoundField DataField="CourseCategory" HeaderText="Category" />

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TopicCategoryMaster.aspx.cs" Inherits="Training.Admin.TopicCategoryMaster" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TopicCategoryMaster.aspx.cs" Inherits="Training.Admin.TopicCategoryMaster" MaintainScrollPositionOnPostback="true"  %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet" />
@@ -221,8 +221,9 @@
 
                         </asp:TemplateField>
 
-                        <asp:BoundField DataField="CategoryName" HeaderText="Topic Category Name" SortExpression="CategoryName" />
-                        <asp:BoundField DataField="Remarks" HeaderText="Remarks" SortExpression="Remarks" />
+                        <asp:BoundField DataField="CategoryID" HeaderText="Category ID"  />
+                        <asp:BoundField DataField="CategoryName" HeaderText="Topic Category Name"  />
+                        <asp:BoundField DataField="Remarks" HeaderText="Remarks"  />
 
                      
 

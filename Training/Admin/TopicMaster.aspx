@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TopicMaster.aspx.cs" Inherits="Training.Admin.TopicMaster" ClientIDMode="Static" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TopicMaster.aspx.cs" Inherits="Training.Admin.TopicMaster" MaintainScrollPositionOnPostback="true"  ClientIDMode="Static" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
@@ -172,6 +172,7 @@
 
                         </asp:TemplateField>
 
+                        <asp:BoundField DataField="TopicID" HeaderText="Topic ID" />
                         <asp:BoundField DataField="TopicName" HeaderText="Topic Name" />
 
                         <asp:BoundField DataField="Category" HeaderText="Category" />

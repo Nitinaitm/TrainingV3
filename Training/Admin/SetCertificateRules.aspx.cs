@@ -38,6 +38,8 @@ namespace Training.Admin
             if (!IsPostBack)
             {
                 lblTraining.Text = "Training: " + TrainingID;
+                TrainingSummary1.LoadTraining(TrainingID);
+
                 LoadRules();
                 LoadSessions();
             }

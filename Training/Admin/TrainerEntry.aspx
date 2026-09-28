@@ -3,7 +3,7 @@
     MasterPageFile="~/AdminMaster.Master"
     AutoEventWireup="true"
     CodeBehind="TrainerEntry.aspx.cs"
-    Inherits="Training.Admin.TrainerEntry" %>
+    Inherits="Training.Admin.TrainerEntry" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1"
     ContentPlaceHolderID="head"

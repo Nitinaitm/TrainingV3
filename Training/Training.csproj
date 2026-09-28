@@ -145,10 +145,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\AllCategory.aspx" />
-    <Content Include="Admin\AllCourses.aspx" />
-    <Content Include="Admin\AllTopic.aspx" />
-    <Content Include="Admin\AllTrainers.aspx" />
     <Content Include="Admin\AreaOfExpertiseMaster.aspx" />
     <Content Include="Admin\AssignFeedback.aspx" />
     <Content Include="Admin\AssignSession.aspx" />
@@ -174,7 +170,6 @@
     <Content Include="Admin\Dashboard.aspx" />
     <Content Include="Admin\Default.aspx" />
     <Content Include="Admin\ExternalTraineeReport.aspx" />
-    <Content Include="Admin\TopicCategoryList.aspx" />
     <Content Include="Admin\TopicMaster.aspx" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
@@ -264,8 +259,6 @@
     <Content Include="Admin\ExternalEmpEntry.aspx" />
     <Content Include="Admin\FeedbackCategoryMaster.aspx" />
     <Content Include="Admin\FeedbackMaster.aspx" />
-    <Content Include="Admin\FeedbackReport.aspx" />
-    <Content Include="Admin\FeedbackTrainingRelated.aspx" />
     <Content Include="Admin\FindTrainingID.aspx" />
     <Content Include="Admin\fonts\.DS_Store" />
     <Content Include="Admin\GeneratedCertificateList.aspx" />
@@ -281,12 +274,10 @@
     <Content Include="Admin\js\popper.js" />
     <Content Include="Admin\js\select2.js" />
     <Content Include="Admin\LocationEntry.aspx" />
-    <Content Include="Admin\LocationManagement.aspx" />
     <Content Include="Admin\Logout.aspx" />
     <Content Include="Admin\ManagerMaster.aspx" />
     <Content Include="Admin\ManageTraining.aspx" />
     <Content Include="Admin\OrganizerEntry.aspx" />
-    <Content Include="Admin\OrganizerManagement.aspx" />
     <Content Include="Admin\QualificationMaster.aspx" />
     <Content Include="Admin\QuestionApproval.aspx" />
     <Content Include="Admin\QuestionBank.aspx" />
@@ -385,23 +376,18 @@
     <Content Include="Admin\SessionAttendance.aspx" />
     <Content Include="Admin\SetCertificateRules.aspx" />
     <Content Include="Admin\TrainerEntry.aspx" />
-    <Content Include="Admin\TrainerManagement.aspx" />
     <Content Include="Admin\TrainingAttendance.aspx" />
     <Content Include="Admin\TrainingAttendance1.aspx" />
     <Content Include="Admin\TrainingCategoryEntry.aspx" />
-    <Content Include="Admin\TrainingCategoryManagement.aspx" />
     <Content Include="Admin\TrainingCompletionSummaryReport.aspx" />
     <Content Include="Admin\TrainingDetailsReport.aspx" />
     <Content Include="Admin\TrainingList.aspx" />
     <Content Include="Admin\TrainingNotAttendedReport.aspx" />
-    <Content Include="Admin\TrainingReAssign.aspx" />
     <Content Include="Admin\TrainingReports.aspx" />
     <Content Include="Admin\TrainingRequirements.aspx" />
     <Content Include="Admin\TrainingSearch.aspx" />
     <Content Include="Admin\TrainingSummary.ascx" />
     <Content Include="Admin\TrainingTypeEntry.aspx" />
-    <Content Include="Admin\TrainingTypeManagement.aspx" />
-    <Content Include="Admin\TrainingUnAssign.aspx" />
     <Content Include="BatchLifecycle.ascx" />
     <Content Include="ManagerMaster.Master" />
     <Content Include="Manager\Default.aspx" />
@@ -469,6 +455,9 @@
     <Content Include="mail\contact.php" />
     <Content Include="mail\jqBootstrapValidation.min.js" />
     <Content Include="CertificateVerification.aspx" />
+    <Content Include="obj\Debug\Training.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\Training.dll" />
+    <Content Include="obj\Debug\Training.pdb" />
     <Content Include="Registration.aspx" />
     <Content Include="ResetPassword.aspx" />
     <Content Include="SuperAdmin\AssignTraining.aspx" />
@@ -904,34 +893,6 @@
     <Compile Include="AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
     </Compile>
-    <Compile Include="Admin\AllCategory.aspx.cs">
-      <DependentUpon>AllCategory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\AllCategory.aspx.designer.cs">
-      <DependentUpon>AllCategory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\AllCourses.aspx.cs">
-      <DependentUpon>AllCourses.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\AllCourses.aspx.designer.cs">
-      <DependentUpon>AllCourses.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\AllTopic.aspx.cs">
-      <DependentUpon>AllTopic.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\AllTopic.aspx.designer.cs">
-      <DependentUpon>AllTopic.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\AllTrainers.aspx.cs">
-      <DependentUpon>AllTrainers.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\AllTrainers.aspx.designer.cs">
-      <DependentUpon>AllTrainers.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\AreaOfExpertiseMaster.aspx.cs">
       <DependentUpon>AreaOfExpertiseMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1083,20 +1044,6 @@
     <Compile Include="Admin\FeedbackMaster.aspx.designer.cs">
       <DependentUpon>FeedbackMaster.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\FeedbackReport.aspx.cs">
-      <DependentUpon>FeedbackReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\FeedbackReport.aspx.designer.cs">
-      <DependentUpon>FeedbackReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\FeedbackTrainingRelated.aspx.cs">
-      <DependentUpon>FeedbackTrainingRelated.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\FeedbackTrainingRelated.aspx.designer.cs">
-      <DependentUpon>FeedbackTrainingRelated.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\FindTrainingID.aspx.cs">
       <DependentUpon>FindTrainingID.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1117,13 +1064,6 @@
     </Compile>
     <Compile Include="Admin\LocationEntry.aspx.designer.cs">
       <DependentUpon>LocationEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\LocationManagement.aspx.cs">
-      <DependentUpon>LocationManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\LocationManagement.aspx.designer.cs">
-      <DependentUpon>LocationManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Logout.aspx.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
@@ -1155,13 +1095,6 @@
     </Compile>
     <Compile Include="Admin\OrganizerEntry.aspx.designer.cs">
       <DependentUpon>OrganizerEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\OrganizerManagement.aspx.cs">
-      <DependentUpon>OrganizerManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\OrganizerManagement.aspx.designer.cs">
-      <DependentUpon>OrganizerManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\QualificationMaster.aspx.cs">
       <DependentUpon>QualificationMaster.aspx</DependentUpon>
@@ -1205,13 +1138,6 @@
     <Compile Include="Admin\SetCertificateRules.aspx.designer.cs">
       <DependentUpon>SetCertificateRules.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\TopicCategoryList.aspx.cs">
-      <DependentUpon>TopicCategoryList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TopicCategoryList.aspx.designer.cs">
-      <DependentUpon>TopicCategoryList.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\TopicMaster.aspx.cs">
       <DependentUpon>TopicMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1225,13 +1151,6 @@
     </Compile>
     <Compile Include="Admin\TrainerEntry.aspx.designer.cs">
       <DependentUpon>TrainerEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TrainerManagement.aspx.cs">
-      <DependentUpon>TrainerManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainerManagement.aspx.designer.cs">
-      <DependentUpon>TrainerManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingAttendance.aspx.cs">
       <DependentUpon>TrainingAttendance.aspx</DependentUpon>
@@ -1253,13 +1172,6 @@
     </Compile>
     <Compile Include="Admin\TrainingCategoryEntry.aspx.designer.cs">
       <DependentUpon>TrainingCategoryEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TrainingCategoryManagement.aspx.cs">
-      <DependentUpon>TrainingCategoryManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainingCategoryManagement.aspx.designer.cs">
-      <DependentUpon>TrainingCategoryManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingCompletionSummaryReport.aspx.cs">
       <DependentUpon>TrainingCompletionSummaryReport.aspx</DependentUpon>
@@ -1288,13 +1200,6 @@
     </Compile>
     <Compile Include="Admin\TrainingNotAttendedReport.aspx.designer.cs">
       <DependentUpon>TrainingNotAttendedReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TrainingReAssign.aspx.cs">
-      <DependentUpon>TrainingReAssign.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainingReAssign.aspx.designer.cs">
-      <DependentUpon>TrainingReAssign.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingReports.aspx.cs">
       <DependentUpon>TrainingReports.aspx</DependentUpon>
@@ -1333,20 +1238,6 @@
     </Compile>
     <Compile Include="Admin\TrainingTypeEntry.aspx.designer.cs">
       <DependentUpon>TrainingTypeEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TrainingTypeManagement.aspx.cs">
-      <DependentUpon>TrainingTypeManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainingTypeManagement.aspx.designer.cs">
-      <DependentUpon>TrainingTypeManagement.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TrainingUnAssign.aspx.cs">
-      <DependentUpon>TrainingUnAssign.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainingUnAssign.aspx.designer.cs">
-      <DependentUpon>TrainingUnAssign.aspx</DependentUpon>
     </Compile>
     <Compile Include="BatchLifecycle.ascx.cs">
       <DependentUpon>BatchLifecycle.ascx</DependentUpon>
@@ -1446,6 +1337,12 @@
       <DependentUpon>Forget_Password.aspx</DependentUpon>
     </Compile>
     <Compile Include="MobileNumberValidator.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CertificateVerification.aspx.cs">
       <DependentUpon>CertificateVerification.aspx</DependentUpon>
@@ -2000,6 +1897,10 @@
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\Training.dll.config" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\Training.csproj.CopyComplete" />
+    <Content Include="obj\Debug\Training.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\Training.csprojAssemblyReference.cache" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <Content Include="SuperAdminMaster.Master" />

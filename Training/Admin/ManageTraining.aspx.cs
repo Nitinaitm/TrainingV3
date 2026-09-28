@@ -229,7 +229,8 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
                 SqlCommand cmd = new SqlCommand(@"SELECT HostelRequiredTrainee,TrainerHostelRequired,TraineeHostelRequired,TrainingStatus,WorkflowStatus,CertificateRequired FROM TrainingDetails WHERE TrainingID=@TrainingID", con);
                 cmd.Parameters.AddWithValue("@TrainingID", TrainingID); con.Open(); SqlDataReader dr = cmd.ExecuteReader();
                 if (!dr.Read()) return;
-                lblStatus.Text = dr["TrainingStatus"].ToString(); workflow = dr["WorkflowStatus"].ToString(); certificateRequired = Convert.ToBoolean(dr["CertificateRequired"]);
+                //lblStatus.Text = dr["TrainingStatus"].ToString();
+                workflow = dr["WorkflowStatus"].ToString(); certificateRequired = Convert.ToBoolean(dr["CertificateRequired"]);
                 bool th = dr["TrainerHostelRequired"] != DBNull.Value && Convert.ToBoolean(dr["TrainerHostelRequired"]);
                 bool trh = dr["TraineeHostelRequired"] != DBNull.Value && Convert.ToBoolean(dr["TraineeHostelRequired"]);
                 bool legacy = string.Equals(dr["HostelRequiredTrainee"].ToString(), "Yes", StringComparison.OrdinalIgnoreCase);
@@ -242,8 +243,8 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnUpdateTraining.Visible = true;
             btnAssignSession.Visible = true;
             btnAssignTrainee.Visible = true;
-            btnRequirements.Visible = string.Equals(lblStatus.Text, "InProgress", StringComparison.OrdinalIgnoreCase) || string.Equals(lblStatus.Text, "AttendanceCompleted", StringComparison.OrdinalIgnoreCase);
-            btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
+            //btnRequirements.Visible = string.Equals(lblStatus.Text, "InProgress", StringComparison.OrdinalIgnoreCase) || string.Equals(lblStatus.Text, "AttendanceCompleted", StringComparison.OrdinalIgnoreCase);
+            //btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
             btnAssignFeedback.Visible = fr;
             btnAssignFeedback.Enabled = fr;
             btnAssignFeedback.Text = fa ? "Feedback Template ✓" : "Feedback Template";
