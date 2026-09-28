@@ -29,7 +29,7 @@ namespace Training.Trainer
             {
                 if (!LoadResult())
                 {
-                    Response.Redirect("~/Trainer/ExamResultReport.aspx");
+                    Response.Redirect("~/Trainer/SessionAnswerReport.aspx");
                     return;
                 }
 
@@ -97,6 +97,6 @@ namespace Training.Trainer
             return sb.ToString();
         }
 
-        protected void btnBack_Click(object sender, EventArgs e) { Response.Redirect("~/Trainer/ExamResultReport.aspx"); }
+        protected void btnBack_Click(object sender, EventArgs e) { Response.Redirect("~/Trainer/SessionAnswerReport.aspx"); }
     }
 }
