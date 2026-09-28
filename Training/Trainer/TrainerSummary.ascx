@@ -7,7 +7,7 @@
     background: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 10px;
-    padding: 15px;
+    padding: 5px;
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -61,7 +61,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
+        <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
 
             <span class="summary-label">
                 Training ID :
@@ -74,7 +74,7 @@
             </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Course :
@@ -87,7 +87,7 @@
              </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Course Category :
@@ -100,7 +100,7 @@
             </span>
         </div>
 
-        <div class="col-lg-2 col-md-2 col-sm-12 mb-4">
+        <div class="col-lg-2 col-md-2 col-sm-12 mb-2">
 
             <span class="summary-label">
                 Training Status :
@@ -119,7 +119,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Location :
@@ -132,7 +132,7 @@
              </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Training Type :
@@ -145,7 +145,7 @@
             </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Organizer :
@@ -157,7 +157,7 @@
             </span>
         </div>
 
-        <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Batch :
@@ -176,7 +176,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Training Duration :
@@ -189,7 +189,7 @@
              </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 No. Of Days :
@@ -202,7 +202,7 @@
             </span>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Planned Hours :
@@ -215,7 +215,7 @@
             </span>
         </div>
 
-        <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+        <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Batch Strength :
@@ -234,7 +234,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-4 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Total Sessions :
@@ -247,7 +247,7 @@
             </span>
         </div>
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Completed :
@@ -260,7 +260,7 @@
               </span>
         </div>
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Pending :
@@ -273,7 +273,7 @@
                 </span>
         </div>
 
-        <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-2">
 
             <span class="summary-label">
                 Today :
@@ -293,7 +293,7 @@
     <!-- ================= Row-5 ================= -->
 
     <div class="row">
-         <div class="col-lg-4 col-md-8 col-sm-12 mb-4">
+         <div class="col-lg-4 col-md-8 col-sm-12 mb-2">
 
             <span class="summary-label">
                 Attendance Completion :
@@ -305,7 +305,7 @@
                 </span>
 
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 mb-4">
+        <div class="col-lg-8 col-md-8 col-sm-12 mb-2">
 
            
 

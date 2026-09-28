@@ -1,28 +1,97 @@
-﻿<%@ Page Title="Session Details"
-    Language="C#"
-    MasterPageFile="~/TrainerMaster.Master"
-    AutoEventWireup="true"
-    CodeBehind="SessionDetails.aspx.cs"
-    Inherits="Training.Trainer.SessionDetails" %>
+﻿<%@ page title="Session Details"
+    language="C#"
+    masterpagefile="~/TrainerMaster.Master"
+    autoeventwireup="true"
+    codebehind="SessionDetails.aspx.cs"
+    inherits="Training.Trainer.SessionDetails" MaintainScrollPositionOnPostback="true"  %>
 
-<%@ Register Src="~/Trainer/TrainerSummary.ascx" TagPrefix="uc" TagName="TrainerSummary" %>
-<%@ Register Src="~/Trainer/SessionSummary.ascx" TagPrefix="uc" TagName="SessionSummary" %>
-<%@ Register Src="~/BatchLifecycle.ascx" TagPrefix="uc2" TagName="BatchLifecycle" %>
+<%@ register src="~/Trainer/TrainerSummary.ascx" tagprefix="uc" tagname="TrainerSummary" %>
+<%@ register src="~/Trainer/SessionSummary.ascx" tagprefix="uc" tagname="SessionSummary" %>
+<%@ register src="~/BatchLifecycle.ascx" tagprefix="uc2" tagname="BatchLifecycle" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-        .main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin-top:20px}.page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}.summary-card{background:#f8f9fa;border:1px solid #dee2e6;border-radius:10px;padding:20px}.summary-label{font-weight:bold;color:#0d6efd}.info-box{margin-bottom:12px}.action-card{margin-top:20px;background:#fff;border:1px solid #dee2e6;border-radius:10px;padding:20px}.btn-action{min-width:180px;margin-right:10px;margin-bottom:10px}.status-badge{font-size:16px;padding:8px 15px}.skip-card{margin-top:20px;background:#fff;border:1px solid #dee2e6;border-radius:10px;padding:20px}.skip-row{border-bottom:1px solid #eee;padding:12px 0}.skip-row:last-child{border-bottom:0}.reason{max-width:520px}
+        .main-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #d9d9d9;
+            margin-top: 20px
+        }
+
+        .page-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 20px
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px
+        }
+
+        .summary-label {
+            font-weight: bold;
+            color: #0d6efd
+        }
+
+        .info-box {
+            margin-bottom: 12px
+        }
+
+        .action-card {
+            margin-top: 20px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px
+        }
+
+        .btn-action {
+            min-width: 180px;
+            margin-right: 10px;
+            margin-bottom: 10px
+        }
+
+        .status-badge {
+            font-size: 16px;
+            padding: 8px 15px
+        }
+
+        .skip-card {
+            margin-top: 20px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px
+        }
+
+        .skip-row {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0
+        }
+
+            .skip-row:last-child {
+                border-bottom: 0
+            }
+
+        .reason {
+            max-width: 520px
+        }
     </style>
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">
         <div class="main-card">
             <div class="page-heading">Session Details</div>
             <uc:TrainerSummary ID="TrainerSummary1" runat="server" />
             <uc:SessionSummary ID="SessionSummary1" runat="server" />
-            <uc2:BatchLifecycle ID="BatchLifecycle1" runat="server" />
+           
 
             <div class="action-card">
                 <div class="action-title">Trainer Actions</div>
@@ -34,7 +103,7 @@
                 <asp:Button ID="btnPostTest" runat="server" Text="Post Training Test" CssClass="btn btn-dark btn-action" OnClick="btnPostTest_Click" />
                 <asp:Button ID="btnTestResult" runat="server" Text="Test Result" CssClass="btn btn-success btn-action" OnClick="btnTestResult_Click" />
             </div>
-
+             <uc2:BatchLifecycle ID="BatchLifecycle1" runat="server" />
             <asp:Panel ID="pnlSkip" runat="server" CssClass="skip-card">
                 <h5>Session Requirement Skip</h5>
                 <p class="text-muted mb-2">Trainer can skip Attendance, Pre-Test or Post-Test for this session. Skip reason is mandatory. Trainer cannot unskip.</p>
@@ -70,4 +139,4 @@
             </div>
         </div>
     </div>
-</asp:Content>
+</asp:content>
