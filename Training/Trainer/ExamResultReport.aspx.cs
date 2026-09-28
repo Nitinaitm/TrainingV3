@@ -186,7 +186,7 @@ namespace Training.Trainer
             )
             {
                 query +=
-                    " AND SessionID=@SessionID";
+                    " AND TM.SessionID=@SessionID";
             }
 
             if
@@ -630,13 +630,6 @@ namespace Training.Trainer
                         ddlTest.SelectedValue)
                     ? (object)DBNull.Value
                     : ddlTest.SelectedValue),
-
-                new SqlParameter(
-                    "@SessionID",
-                    String.IsNullOrWhiteSpace(
-                        ddlTraining.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTraining.SelectedValue),
 
                 new SqlParameter(
                     "@Trainee",
