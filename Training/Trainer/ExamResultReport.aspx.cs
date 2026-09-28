@@ -47,6 +47,11 @@ namespace Training.Trainer
                     ddlTraining.SelectedValue = Session["SessionID"].ToString();
                 }
 
+                if (Session["SessionReportTestType"] != null && ddlTestType.Items.FindByValue(Session["SessionReportTestType"].ToString()) != null)
+                {
+                    ddlTestType.SelectedValue = Session["SessionReportTestType"].ToString();
+                }
+
                 BindTest();
 
                 LoadReport();
