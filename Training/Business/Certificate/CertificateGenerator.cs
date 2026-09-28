@@ -376,7 +376,22 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawSingleSignature(PdfWriter writer, Document document, DataRow dr, string imagePath, string name, string designation, float xDesign, float yDesign)
         {
-            PdfContentByte canvas = writer.DirectContent; float x = DesignToPdfX(xDesign, document, dr); float yTop = PdfYFromTop(yDesign, document, dr); float imageWidth = DesignToPdfX(180f, document, dr); float imageHeight = DesignToPdfY(70f, document, dr); if (!String.IsNullOrWhiteSpace(imagePath)) { string filePath = HttpContext.Current.Server.MapPath(imagePath); if (File.Exists(filePath)) { Image img = Image.GetInstance(filePath); img.ScaleToFit(imageWidth, imageHeight); img.SetAbsolutePosition(x, yTop - img.ScaledHeight); canvas.AddImage(img); } } Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); float centerX = x + (imageWidth / 2f); float nameY = yTop - imageHeight - 10f; float designationY = nameY - 17f; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), centerX, nameY, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), centerX, designationY, 0);
+            PdfContentByte canvas = writer.DirectContent; float x = DesignToPdfX(xDesign, document, dr); float yTop = PdfYFromTop(yDesign, document, dr); float imageWidth = DesignToPdfX(180f, document, dr); float imageHeight = DesignToPdfY(70f, document, dr); float centerX = x + (imageWidth / 2f); float actualImageHeight = 0f;
+            if (!String.IsNullOrWhiteSpace(imagePath))
+            {
+                string filePath = HttpContext.Current.Server.MapPath(imagePath);
+                if (File.Exists(filePath))
+                {
+                    Image img = Image.GetInstance(filePath);
+                    img.ScaleToFit(imageWidth, imageHeight);
+                    float imageX = centerX - (img.ScaledWidth / 2f);
+                    float imageY = yTop - img.ScaledHeight;
+                    img.SetAbsolutePosition(imageX, imageY);
+                    canvas.AddImage(img);
+                    actualImageHeight = img.ScaledHeight;
+                }
+            }
+            Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); float nameY = yTop - Math.Max(imageHeight, actualImageHeight) - 10f; float designationY = nameY - 17f; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), centerX, nameY, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), centerX, designationY, 0);
         }
         private void DrawFooter(PdfWriter writer, Document document, DataRow dr) { PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(dr["FooterText"].ToString(), GetFooterFont(dr)), document.PageSize.Width / 2, PdfYFromTop(Convert.ToSingle(dr["FooterY"]), document, dr), 0); }
 
