@@ -162,7 +162,7 @@ namespace Training.Business.Certificate
 SELECT TCT.TrainingID,@EmpID AS EmpID,TCT.TemplateID,TCT.CourseTitle,
 TCT.LeftSignature,TCT.LeftName,TCT.LeftDesignation,TCT.RightSignature,TCT.RightName,TCT.RightDesignation,
 CTM.TemplateName,CTM.HeaderText,CTM.FooterText,CTM.BackgroundImage,CTM.LogoImage,
-CTM.HeaderFontSize,CTM.FooterFontSize,CTM.CourseTitleFontSize,CTM.BodyFontSize,
+CTM.HeaderFontSize,CTM.FooterFontSize,CTM.CourseTitleFontSize,CTM.BodyFontSize,CTM.NameFontSize,
 CTM.Orientation,CTM.PaperSize,CTM.PageWidth,CTM.PageHeight,CTM.LogoX,CTM.LogoY,CTM.HeaderY,CTM.TitleY,CTM.BodyY,
 CTM.LeftSignatureX,CTM.RightSignatureX,CTM.SignatureY,CTM.FooterY,
 TD.DateFrom,TD.DateTo,CM.CourseName,ISNULL(EBM.EmpName,TME.TraineeName) AS EmpName
