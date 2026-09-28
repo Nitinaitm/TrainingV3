@@ -19,7 +19,7 @@ namespace Training.Trainer
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(Request.QueryString["ResultID"]))
+            if (Session["TrainerAnswerResultID"] == null || String.IsNullOrWhiteSpace(Session["TrainerAnswerResultID"].ToString()))
             {
                 Response.Redirect("~/Trainer/ExamResultReport.aspx");
                 return;
@@ -37,17 +37,17 @@ namespace Training.Trainer
             }
         }
 
-        private string ResultID { get { return Request.QueryString["ResultID"].Trim(); } }
+        private string ResultID { get { return Session["TrainerAnswerResultID"].ToString().Trim(); } }
         private string TrainerID { get { return Session["TrainerID"].ToString(); } }
 
         private bool LoadResult()
         {
-            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND TM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID";
+            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation,TME.TraineeName FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND TM.TrainerID=@TrainerID";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
             if (dt.Rows.Count == 0) return false;
             DataRow dr = dt.Rows[0];
             lblEmpID.Text = dr["EmpID"].ToString();
-            lblEmpName.Text = String.IsNullOrWhiteSpace(dr["EmpName"].ToString()) ? dr["EmpID"].ToString() : dr["EmpName"].ToString();
+            lblEmpName.Text = !String.IsNullOrWhiteSpace(dr["EmpName"].ToString()) ? dr["EmpName"].ToString() : (!String.IsNullOrWhiteSpace(dr["TraineeName"].ToString()) ? dr["TraineeName"].ToString() : dr["EmpID"].ToString());
             lblDesignation.Text = dr["EmpDesignation"].ToString();
             lblTestID.Text = dr["TestID"].ToString();
             lblTestType.Text = dr["TestType"].ToString() == "Pre" ? "Pre Training" : dr["TestType"].ToString() == "Post" ? "Post Training" : dr["TestType"].ToString();
@@ -65,7 +65,7 @@ namespace Training.Trainer
 
         private void LoadAnswers()
         {
-            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID WHERE TA.ResultID=@ResultID AND TM.TrainerID=@TrainerID ORDER BY TA.SequenceNo";
+            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID WHERE TA.ResultID=@ResultID AND TM.TrainerID=@TrainerID AND R.ResultID=@ResultID ORDER BY TA.SequenceNo";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
             gvAnswers.DataSource = dt;
             gvAnswers.DataBind();
