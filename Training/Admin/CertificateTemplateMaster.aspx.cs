@@ -108,8 +108,7 @@ Active=@Active
                 param.Add(
                     new SqlParameter(
                     "@Active",
-                    Convert.ToBoolean(
-                    ddlSearchStatus.SelectedValue)));
+                    ddlSearchStatus.SelectedValue == "1"));
             }
 
             query +=
