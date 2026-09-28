@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
 .search-card,.grid-card{border:0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.gridview th{background:#198754;color:white;text-align:center;vertical-align:middle}.gridview td,.table td,.table th{vertical-align:middle!important}.badge-status{font-size:13px;padding:6px 10px;min-width:110px;display:inline-block;text-align:center}.page-title{font-size:24px;font-weight:600}.btn-group .btn{margin-right:4px}.btn-group{display:flex;flex-wrap:wrap;gap:4px}.progress{min-width:120px;height:20px}.btn[disabled],.btn.disabled{cursor:not-allowed;opacity:.55}
+.gridview th{background:#198754;color:white;text-align:center;vertical-align:middle}.gridview td,.table td,.table th{vertical-align:middle!important}.badge-status{font-size:13px;padding:6px 10px;min-width:110px;display:inline-block;text-align:center;color:#000!important}.page-title{font-size:24px;font-weight:600}.btn-group .btn{margin-right:4px}.btn-group{display:flex;flex-wrap:wrap;gap:4px}.progress{min-width:120px;height:20px}.btn[disabled],.btn.disabled{cursor:not-allowed;opacity:.55}
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
