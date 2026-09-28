@@ -161,6 +161,45 @@ namespace Training.Trainee
                 GetIntValue(
                     row["NoOfDays"]);
 
+            if
+            (
+                noOfDays
+                <=
+                0
+            )
+            {
+                DateTime fromDate;
+                DateTime toDate;
+
+                string dateFrom =
+                    Convert.ToString(
+                        row["DateFrom"]).Trim();
+
+                string dateTo =
+                    Convert.ToString(
+                        row["DateTo"]).Trim();
+
+                if
+                (
+                    DateTime.TryParseExact(
+                        dateFrom,
+                        "dd-MM-yyyy",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out fromDate)
+                    &&
+                    DateTime.TryParseExact(
+                        dateTo,
+                        "dd-MM-yyyy",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out toDate)
+                )
+                {
+                    noOfDays =
+                        (toDate.Date - fromDate.Date).Days + 1;
+                }
+            }
 
             if
             (
