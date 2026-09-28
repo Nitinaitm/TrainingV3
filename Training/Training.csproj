@@ -145,6 +145,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\AnswerDetails.aspx" />
     <Content Include="Admin\AreaOfExpertiseMaster.aspx" />
     <Content Include="Admin\AssignFeedback.aspx" />
     <Content Include="Admin\AssignSession.aspx" />
@@ -858,7 +859,6 @@
     <Content Include="Trainer\SessionTrainees.aspx" />
     <Content Include="Trainer\TestDetails.aspx" />
     <Content Include="Trainer\TestMaster.aspx" />
-    <Content Include="Trainer\TestResult.aspx" />
     <Content Include="Trainer\TraineeProgress.aspx" />
     <Content Include="Trainer\TrainerSummary.ascx" />
     <Content Include="Trainer\TrainingCalendar.aspx" />
@@ -892,6 +892,13 @@
     </Compile>
     <Compile Include="AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\AnswerDetails.aspx.cs">
+      <DependentUpon>AnswerDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AnswerDetails.aspx.designer.cs">
+      <DependentUpon>AnswerDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\AreaOfExpertiseMaster.aspx.cs">
       <DependentUpon>AreaOfExpertiseMaster.aspx</DependentUpon>
@@ -1812,13 +1819,6 @@
     </Compile>
     <Compile Include="Trainer\TestMaster.aspx.designer.cs">
       <DependentUpon>TestMaster.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Trainer\TestResult.aspx.cs">
-      <DependentUpon>TestResult.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Trainer\TestResult.aspx.designer.cs">
-      <DependentUpon>TestResult.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainer\TraineeProgress.aspx.cs">
       <DependentUpon>TraineeProgress.aspx</DependentUpon>

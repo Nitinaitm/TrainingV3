@@ -58,6 +58,33 @@ namespace Training.Trainer {
         protected global::System.Web.UI.WebControls.Label lblTestID;
         
         /// <summary>
+        /// lblTestType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTestType;
+        
+        /// <summary>
+        /// lblAttempt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAttempt;
+        
+        /// <summary>
+        /// lblSubmittedOn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSubmittedOn;
+        
+        /// <summary>
         /// lblTotalQ control.
         /// </summary>
         /// <remarks>
@@ -65,6 +92,15 @@ namespace Training.Trainer {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTotalQ;
+        
+        /// <summary>
+        /// lblAttempted control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAttempted;
         
         /// <summary>
         /// lblCorrect control.
@@ -101,9 +137,5 @@ namespace Training.Trainer {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBack;
-        protected global::System.Web.UI.WebControls.Label lblTestType;
-        protected global::System.Web.UI.WebControls.Label lblAttempt;
-        protected global::System.Web.UI.WebControls.Label lblSubmittedOn;
-        protected global::System.Web.UI.WebControls.Label lblAttempted;
     }
 }
