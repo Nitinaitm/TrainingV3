@@ -42,9 +42,9 @@ namespace Training.Trainer
 
                 BindTraining();
 
-                if (Session["TrainingID"] != null && ddlTraining.Items.FindByValue(Session["TrainingID"].ToString()) != null)
+                if (Session["SessionID"] != null && ddlTraining.Items.FindByValue(Session["SessionID"].ToString()) != null)
                 {
-                    ddlTraining.SelectedValue = Session["TrainingID"].ToString();
+                    ddlTraining.SelectedValue = Session["SessionID"].ToString();
                 }
 
                 BindTest();
@@ -130,7 +130,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT DISTINCT TD.TrainingID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, TD.TrainingID DESC";
+                "SELECT DISTINCT SM.SessionID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') + ' | Session ' + SM.SessionID + ' | ' + ISNULL(CONVERT(VARCHAR(10),SM.SessionDate,105),'') AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, SM.SessionID DESC";
 
             SqlParameter[] param =
             {
@@ -151,7 +151,7 @@ namespace Training.Trainer
                 "TrainingName";
 
             ddlTraining.DataValueField =
-                "TrainingID";
+                "SessionID";
 
             ddlTraining.DataBind();
 
@@ -181,7 +181,7 @@ namespace Training.Trainer
             )
             {
                 query +=
-                    " AND TrainingID=@TrainingID";
+                    " AND SessionID=@SessionID";
             }
 
             if
@@ -204,7 +204,7 @@ namespace Training.Trainer
                     trainerID),
 
                 new SqlParameter(
-                    "@TrainingID",
+                    "@SessionID",
                     String.IsNullOrWhiteSpace(
                         ddlTraining.SelectedValue)
                     ? (object)DBNull.Value
@@ -426,11 +426,6 @@ namespace Training.Trainer
             AddResultFilters(
                 ref query);
 
-            if (Session["SessionID"] != null && !String.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
-            {
-                query += " AND TM.SessionID=@SessionID";
-            }
-
             query +=
                 " ORDER BY TD.DateFrom DESC, TM.TrainingID DESC, CASE WHEN TM.TestType='Pre' THEN 1 WHEN TM.TestType='Post' THEN 2 ELSE 3 END, TM.TestTitle, TR.EmpID, TR.AttemptNo DESC";
 
@@ -478,7 +473,7 @@ namespace Training.Trainer
             )
             {
                 query +=
-                    " AND TM.TrainingID=@TrainingID";
+                    " AND TM.SessionID=@SessionID";
             }
 
             if
@@ -611,7 +606,7 @@ namespace Training.Trainer
                     trainerID),
 
                 new SqlParameter(
-                    "@TrainingID",
+                    "@SessionID",
                     String.IsNullOrWhiteSpace(
                         ddlTraining.SelectedValue)
                     ? (object)DBNull.Value
@@ -633,9 +628,10 @@ namespace Training.Trainer
 
                 new SqlParameter(
                     "@SessionID",
-                    Session["SessionID"] == null || String.IsNullOrWhiteSpace(Session["SessionID"].ToString())
+                    String.IsNullOrWhiteSpace(
+                        ddlTraining.SelectedValue)
                     ? (object)DBNull.Value
-                    : Session["SessionID"].ToString()),
+                    : ddlTraining.SelectedValue),
 
                 new SqlParameter(
                     "@Trainee",
@@ -713,7 +709,7 @@ namespace Training.Trainer
             )
             {
                 query +=
-                    " AND TM.TrainingID=@TrainingID";
+                    " AND TM.SessionID=@SessionID";
             }
 
             if
@@ -902,6 +898,23 @@ namespace Training.Trainer
             }
 
             return true;
+        }
+
+        //-------------------------------------------------------
+        // VIEW ANSWERS
+        //-------------------------------------------------------
+
+        protected void gvResult_RowCommand(
+            object sender,
+            GridViewCommandEventArgs e)
+        {
+            if (!String.Equals(e.CommandName, "ViewAnswers", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            Session["TrainerAnswerResultID"] = Convert.ToString(e.CommandArgument);
+            Response.Redirect("~/Trainer/AnswerDetails.aspx");
         }
 
         //-------------------------------------------------------
