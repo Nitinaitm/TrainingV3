@@ -151,7 +151,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT DISTINCT TD.TrainingID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') AS TrainingName, TD.DateFrom FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE FD.TrainerID=@TrainerID AND F.Submitted=1 ORDER BY TD.DateFrom DESC, TD.TrainingID DESC";
+                "SELECT DISTINCT TD.TrainingID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') AS TrainingName, TD.DateFrom FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND F.Submitted=1 ORDER BY TD.DateFrom DESC, TD.TrainingID DESC";
 
             SqlParameter[] param =
             {
@@ -232,7 +232,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT COUNT(DISTINCT FD.TrainingID) AS TrainingCount, COUNT(DISTINCT FD.FeedbackID) AS ResponseCount, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID WHERE FD.TrainerID=@TrainerID AND F.Submitted=1";
+                "SELECT COUNT(DISTINCT FD.TrainingID) AS TrainingCount, COUNT(DISTINCT FD.FeedbackID) AS ResponseCount, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND F.Submitted=1";
 
             AddFilters(
                 ref query);
@@ -332,7 +332,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT FD.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, CASE WHEN TD.DateFrom IS NULL OR TD.DateTo IS NULL THEN '' WHEN CAST(TD.DateFrom AS DATE)=CAST(TD.DateTo AS DATE) THEN CONVERT(VARCHAR(10),TD.DateFrom,105) ELSE CONVERT(VARCHAR(10),TD.DateFrom,105) + ' to ' + CONVERT(VARCHAR(10),TD.DateTo,105) END AS TrainingDuration, COUNT(DISTINCT FD.FeedbackID) AS TotalResponses, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE FD.TrainerID=@TrainerID AND F.Submitted=1";
+                "SELECT FD.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, CASE WHEN TD.DateFrom IS NULL OR TD.DateTo IS NULL THEN '' WHEN CAST(TD.DateFrom AS DATE)=CAST(TD.DateTo AS DATE) THEN CONVERT(VARCHAR(10),TD.DateFrom,105) ELSE CONVERT(VARCHAR(10),TD.DateFrom,105) + ' to ' + CONVERT(VARCHAR(10),TD.DateTo,105) END AS TrainingDuration, COUNT(DISTINCT FD.FeedbackID) AS TotalResponses, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND F.Submitted=1";
 
             AddFilters(
                 ref query);
@@ -622,7 +622,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT ISNULL(FCM.CategoryName,FD.CategoryID) AS CategoryName, FD.QuestionID, FQM.QuestionText, COUNT(DISTINCT FD.FeedbackID) AS TotalResponses, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN FeedbackQuestionMaster FQM ON FD.QuestionID=FQM.QuestionID LEFT JOIN FeedbackCategoryMaster FCM ON FD.CategoryID=FCM.CategoryID WHERE FD.TrainerID=@TrainerID AND FD.TrainingID=@TrainingID AND F.Submitted=1 AND FD.Rating IS NOT NULL GROUP BY FD.CategoryID, FCM.CategoryName, FCM.DisplayOrder, FD.QuestionID, FQM.QuestionText, FQM.DisplayOrder ORDER BY ISNULL(FCM.DisplayOrder,9999), FQM.DisplayOrder";
+                "SELECT ISNULL(FCM.CategoryName,FD.CategoryID) AS CategoryName, FD.QuestionID, FQM.QuestionText, COUNT(DISTINCT FD.FeedbackID) AS TotalResponses, CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS AverageRating FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN FeedbackQuestionMaster FQM ON FD.QuestionID=FQM.QuestionID LEFT JOIN FeedbackCategoryMaster FCM ON FD.CategoryID=FCM.CategoryID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND FD.TrainingID=@TrainingID AND F.Submitted=1 AND FD.Rating IS NOT NULL GROUP BY FD.CategoryID, FCM.CategoryName, FCM.DisplayOrder, FD.QuestionID, FQM.QuestionText, FQM.DisplayOrder ORDER BY ISNULL(FCM.DisplayOrder,9999), FQM.DisplayOrder";
 
             SqlParameter[] param =
             {
@@ -657,7 +657,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT FQM.QuestionText, FD.Answer FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN FeedbackQuestionMaster FQM ON FD.QuestionID=FQM.QuestionID LEFT JOIN FeedbackCategoryMaster FCM ON FD.CategoryID=FCM.CategoryID WHERE FD.TrainerID=@TrainerID AND FD.TrainingID=@TrainingID AND F.Submitted=1 AND ISNULL(LTRIM(RTRIM(FD.Answer)),'')<>'' ORDER BY ISNULL(FCM.DisplayOrder,9999), FQM.DisplayOrder, FD.CreatedOn";
+                "SELECT FQM.QuestionText, FD.Answer FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN FeedbackQuestionMaster FQM ON FD.QuestionID=FQM.QuestionID LEFT JOIN FeedbackCategoryMaster FCM ON FD.CategoryID=FCM.CategoryID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND FD.TrainingID=@TrainingID AND F.Submitted=1 AND ISNULL(LTRIM(RTRIM(FD.Answer)),'')<>'' ORDER BY ISNULL(FCM.DisplayOrder,9999), FQM.DisplayOrder, FD.CreatedOn";
 
             SqlParameter[] param =
             {
@@ -724,7 +724,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT FD.TrainingID AS [Training ID], ISNULL(CM.CourseName,'') AS [Course], ISNULL(TD.Batch,'') AS [Batch], CONVERT(VARCHAR(10),TD.DateFrom,105) AS [Date From], CONVERT(VARCHAR(10),TD.DateTo,105) AS [Date To], COUNT(DISTINCT FD.FeedbackID) AS [Responses], CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS [Average Rating] FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE FD.TrainerID=@TrainerID AND F.Submitted=1";
+                "SELECT FD.TrainingID AS [Training ID], ISNULL(CM.CourseName,'') AS [Course], ISNULL(TD.Batch,'') AS [Batch], CONVERT(VARCHAR(10),TD.DateFrom,105) AS [Date From], CONVERT(VARCHAR(10),TD.DateTo,105) AS [Date To], COUNT(DISTINCT FD.FeedbackID) AS [Responses], CAST(AVG(CAST(FD.Rating AS DECIMAL(10,2))) AS DECIMAL(10,2)) AS [Average Rating] FROM FeedbackDetail FD INNER JOIN Feedback F ON FD.FeedbackID=F.FeedbackID INNER JOIN TrainingDetails TD ON FD.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE EXISTS (SELECT 1 FROM SessionMaster SMF WHERE SMF.TrainingID=FD.TrainingID AND SMF.TrainerID=@TrainerID) AND F.Submitted=1";
 
             AddFilters(
                 ref query);
