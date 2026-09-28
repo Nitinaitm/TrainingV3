@@ -42,7 +42,7 @@ namespace Training.Trainer
 
         private bool LoadResult()
         {
-            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation,TME.TraineeName FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND TM.TrainerID=@TrainerID";
+            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation,TME.TraineeName FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND SM.TrainerID=@TrainerID";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
             if (dt.Rows.Count == 0) return false;
             DataRow dr = dt.Rows[0];
@@ -65,7 +65,7 @@ namespace Training.Trainer
 
         private void LoadAnswers()
         {
-            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID WHERE TA.ResultID=@ResultID AND TM.TrainerID=@TrainerID AND R.ResultID=@ResultID ORDER BY TA.SequenceNo";
+            string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE TA.ResultID=@ResultID AND SM.TrainerID=@TrainerID AND R.ResultID=@ResultID ORDER BY TA.SequenceNo";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
             gvAnswers.DataSource = dt;
             gvAnswers.DataBind();
