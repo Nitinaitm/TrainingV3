@@ -675,14 +675,6 @@
 
                     </a>
 
-                    <a href="TestResult.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-poll mr-2"></i>
-                        Test Results
-
-                    </a>
-
                     <a href="AnswerDetails.aspx"
                         class="submenu-item">
 
@@ -738,6 +730,14 @@
 
                 <div id="reportMenu"
                     class="submenu-container hide">
+
+                    <a href="SessionReport.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-layer-group mr-2"></i>
+                        Session Reports
+
+                    </a>
 
                     <a href="ExamResultReport.aspx"
                         class="submenu-item">
