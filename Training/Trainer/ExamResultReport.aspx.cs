@@ -177,7 +177,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT TestID, TestTitle, TestType FROM TestMaster WHERE TrainerID=@TrainerID";
+                "SELECT TM.TestID,TM.TestTitle,TM.TestType FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainerID=@TrainerID";
 
             if
             (
