@@ -1,0 +1,1 @@
+namespace Training.Trainer { public partial class SessionCertificateReport { protected global::System.Web.UI.WebControls.Label lblSession; protected global::System.Web.UI.WebControls.GridView gvCertificate; protected global::System.Web.UI.WebControls.Button btnBack; } }
