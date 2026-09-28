@@ -195,11 +195,11 @@ namespace Training.Trainee
 
         private bool IsAttendancePercentageEligible(string trainingID, string empID, object minimumValue)
         {
-            if (minimumValue == null || minimumValue == DBNull.Value) return false;
-            decimal minimum = Convert.ToDecimal(minimumValue);
             object totalValue = objDB.ExecuteScalar("SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(AttendanceSkipped,0)=0", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             int total = totalValue == null || totalValue == DBNull.Value ? 0 : Convert.ToInt32(totalValue);
-            if (total == 0) return false;
+            if (total == 0) return true;
+            if (minimumValue == null || minimumValue == DBNull.Value) return false;
+            decimal minimum = Convert.ToDecimal(minimumValue);
             object presentValue = objDB.ExecuteScalar("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN SessionAttendance SA ON SA.SessionID=SM.SessionID AND SA.EmpID=@EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.AttendanceSkipped,0)=0 AND SA.AttendanceStatus IN ('Present','Completed')", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@EmpID", empID) });
             int present = presentValue == null || presentValue == DBNull.Value ? 0 : Convert.ToInt32(presentValue);
             decimal percentage = present * 100m / total;
