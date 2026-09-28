@@ -52,6 +52,12 @@ namespace Training.Trainer
         }
 
         //-------------------------------------------------------
+        protected void btnBackSessionReport_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Trainer/SessionReportDetails.aspx");
+        }
+
+        //-------------------------------------------------------
         // Logged In Trainer ID
         //-------------------------------------------------------
 
