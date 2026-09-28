@@ -114,6 +114,8 @@
             font-weight: bold;
         }
 
+    
+        .feedback-back{margin-bottom:25px}.feedback-header{background:linear-gradient(135deg,#0d6efd,#4dabf7);color:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.08)}.feedback-filter{border:0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.feedback-filter .card-header{border-radius:12px 12px 0 0}.feedback-summary .summary-card{transition:transform .2s}.feedback-summary .summary-card:hover{transform:translateY(-2px)}
     </style>
 
 </asp:Content>
@@ -125,6 +127,7 @@
     runat="server">
 
     <div class="container-fluid">
+        <div class="feedback-header mb-4"><div class="h4 mb-1">Trainer Feedback Analytics</div><div>Session/training-wise trainee feedback, ratings and comments</div></div>
 
         <!-- Page Heading -->
 
@@ -150,7 +153,7 @@
 
         <!-- Trainer Information -->
 
-        <div class="card report-card">
+        <div class="card report-card feedback-filter">
 
             <div class="card-header bg-dark text-white">
 
@@ -162,7 +165,7 @@
 
             <div class="card-body">
 
-                <div class="row">
+                <div class="row feedback-summary">
 
                     <div class="col-md-4">
 
@@ -731,6 +734,8 @@
 
         </asp:Panel>
 
-    </div>
+    <div class="feedback-back text-right"><asp:Button ID="btnBackSessionReport" runat="server" Text="Back to Session Reports" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnBackSessionReport_Click" /></div>
+
+</div>
 
 </asp:Content>
