@@ -4,33 +4,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-        .main-card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px #d9d9d9;
-            margin-top: 20px
-        }
+        .main-card { background: linear-gradient(180deg,#f8fbff 0%,#ffffff 28%); padding: 25px; border-radius: 16px; box-shadow: 0 8px 28px rgba(25,60,100,.12); margin-top: 20px; border: 1px solid #e3eaf3 }
 
-        .heading {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 20px
-        }
+        .heading { font-size: 26px; font-weight: 700; margin-bottom: 20px; color: #174a7e; padding: 14px 18px; border-radius: 12px; background: linear-gradient(90deg,#e8f3ff,#f3f9ff); border-left: 6px solid #0d6efd }
 
-        .req-card {
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 20px
-        }
+        .req-card { border: 1px solid #dbe5ef; border-radius: 14px; padding: 20px; margin-bottom: 20px; background: #ffffff; box-shadow: 0 4px 16px rgba(25,60,100,.07) }
+        .req-card h5 { color: #174a7e; font-weight: 700; margin-bottom: 6px }
+        .req-card > p { font-size: 13px }
 
-        .req-box {
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 15px;
-            height: 100%
-        }
+        .req-box { border: 1px solid #dfe7f0; border-radius: 12px; padding: 16px; height: 100%; background: linear-gradient(145deg,#ffffff,#f7fbff); box-shadow: 0 3px 10px rgba(25,60,100,.05); transition: transform .15s ease,box-shadow .15s ease }
+        .req-box:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(25,60,100,.10) }
+        .req-box > b { color: #263b53; font-size: 16px }
 
         .req-status {
             display: inline-block;
@@ -45,9 +29,13 @@
             vertical-align: middle
         }
 
-        .action-btn {
-            margin: 2px 4px 2px 0
-        }
+        .action-btn { margin: 2px 4px 2px 0; border-radius: 7px; font-weight: 600 }
+        .table { border-radius: 10px; overflow: hidden; border-color: #d9e3ee !important }
+        .table thead th { background: linear-gradient(90deg,#174a7e,#2468a3); color: #fff; border-color: #174a7e; font-weight: 600 }
+        .table tbody tr:nth-child(even) { background: #f7fbff }
+        .table tbody tr:hover { background: #eef6ff }
+        .table td { padding: 10px; }
+        .req-status { padding: 6px 10px; border-radius: 20px; font-weight: 600 }
     </style>
 </asp:Content>
 <asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
