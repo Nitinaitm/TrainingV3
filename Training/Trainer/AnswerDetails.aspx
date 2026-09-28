@@ -116,7 +116,7 @@
         }
     </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">
         <div class="page-heading">Trainee Answer Details</div>
         <div class="detail-card">
@@ -186,4 +186,4 @@
             <asp:button id="btnBack" runat="server" text="Back to Exam Results" cssclass="btn btn-secondary btn-lg btn-back" onclick="btnBack_Click" />
         </div>
     </div>
-</asp:Content>
+</asp:content>

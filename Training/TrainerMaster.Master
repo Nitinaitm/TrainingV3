@@ -674,6 +674,14 @@
                         Post Training Test
 
                     </a>
+                    
+                    <a href="ExamResultReport.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-edit mr-2"></i>
+                        Test Result
+
+                    </a>
 
                 </div>
 

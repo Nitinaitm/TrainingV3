@@ -42,7 +42,7 @@ namespace Training.Trainer
 
         private bool LoadResult()
         {
-            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.Score,R.Status,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation,TME.TraineeName FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID AND SM.TrainerID=@TrainerID";
+            string query = "SELECT R.ResultID,R.TestID,R.EmpID,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.TotalMarks,R.ResultStatus,R.AttemptNo,R.SubmittedOn,R.IsFinalAttempt,TM.TestTitle,TM.TestType,E.EmpName,E.EmpDesignation,TME.TraineeName FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=R.EmpID WHERE R.ResultID=@ResultID AND SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID AND SM.TrainerID=@TrainerID";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@SessionID", Session["SessionID"].ToString()), new SqlParameter("@TrainingID", Session["TrainingID"].ToString()), new SqlParameter("@TrainerID", TrainerID) });
             if (dt.Rows.Count == 0) return false;
             DataRow dr = dt.Rows[0];
@@ -56,8 +56,8 @@ namespace Training.Trainer
             lblTotalQ.Text = dr["TotalQuestions"].ToString();
             lblAttempted.Text = dr["AttemptedQuestions"].ToString();
             lblCorrect.Text = dr["CorrectAnswers"].ToString();
-            lblScore.Text = Convert.ToDecimal(dr["Score"]).ToString("0.00") + "%";
-            string status = String.IsNullOrWhiteSpace(dr["ResultStatus"].ToString()) ? dr["Status"].ToString() : dr["ResultStatus"].ToString();
+            lblScore.Text = Convert.ToDecimal(dr["TotalMarks"]).ToString("0.00") + "%";
+            string status = String.IsNullOrWhiteSpace(dr["ResultStatus"].ToString()) ? dr["ResultStatus"].ToString() : dr["ResultStatus"].ToString();
             lblStatus.Text = status;
             lblStatus.CssClass = status.Equals("Pass", StringComparison.OrdinalIgnoreCase) || status.Equals("Passed", StringComparison.OrdinalIgnoreCase) ? "info-value result-pass" : "info-value result-fail";
             return true;
