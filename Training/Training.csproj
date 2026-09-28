@@ -473,7 +473,7 @@
     <Content Include="SuperAdmin\css\bootstrap\mixins\_border-radius.css" />
     <Content Include="SuperAdmin\css\bootstrap\mixins\_screen-reader.css" />
     <Content Include="SuperAdmin\css\bootstrap\mixins\_visibility.css" />
-    <Content Include="SuperAdmin\css\bootstrap\utilities\_stretched-link.scss" />
+    <Content Include="SuperAdmin\css\bootstrap\utilities\_stretched-link.css" />
     <Content Include="SuperAdmin\css\bootstrap\_media.css" />
     <Content Include="SuperAdmin\css\style.css" />
     <Content Include="SuperAdmin\css\StyleSheet3.css" />
