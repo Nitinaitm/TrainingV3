@@ -42,6 +42,11 @@ namespace Training.Trainer
 
                 BindTraining();
 
+                if (Session["TrainingID"] != null && ddlTraining.Items.FindByValue(Session["TrainingID"].ToString()) != null)
+                {
+                    ddlTraining.SelectedValue = Session["TrainingID"].ToString();
+                }
+
                 LoadReport();
             }
         }
