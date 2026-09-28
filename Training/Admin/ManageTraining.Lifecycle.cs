@@ -60,6 +60,8 @@ namespace Training.Admin
             }
             else
             {
+                btnRequirements.Visible = started;
+                btnRequirements.Enabled = started;
                 btnCloseTraining.Visible = started && endDateReached;
                 btnCloseTraining.Enabled = started && endDateReached;
 
