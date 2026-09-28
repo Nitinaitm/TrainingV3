@@ -1,14 +1,61 @@
-<%@ Page Title="Training Requirements" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingRequirements.aspx.cs" Inherits="Training.Admin.TrainingRequirements" %>
+<%@ page title="Training Requirements" language="C#" masterpagefile="~/AdminMaster.Master" autoeventwireup="true" codebehind="TrainingRequirements.aspx.cs" inherits="Training.Admin.TrainingRequirements" MaintainScrollPositionOnPostback="true" %>
+<%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<style>
-.main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin-top:20px}.heading{font-size:26px;font-weight:700;margin-bottom:20px}.req-card{border:1px solid #dee2e6;border-radius:10px;padding:18px;margin-bottom:20px}.req-box{border:1px solid #e5e5e5;border-radius:8px;padding:15px;height:100%}.req-status{display:inline-block;margin:6px 0 10px}.reason{max-width:500px}.table td,.table th{vertical-align:middle}.action-btn{margin:2px 4px 2px 0}
-</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .main-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #d9d9d9;
+            margin-top: 20px
+        }
+
+        .heading {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px
+        }
+
+        .req-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px
+        }
+
+        .req-box {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 15px;
+            height: 100%
+        }
+
+        .req-status {
+            display: inline-block;
+            margin: 6px 0 10px
+        }
+
+        .reason {
+            max-width: 500px
+        }
+
+        .table td, .table th {
+            vertical-align: middle
+        }
+
+        .action-btn {
+            margin: 2px 4px 2px 0
+        }
+    </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="main-card">
 <div class="heading">Training Requirements</div>
-<asp:Label ID="lblTraining" runat="server" CssClass="fw-bold" />
+        <uc:TrainingSummary ID="TrainingSummary1" runat="server" />
+
+<asp:Label ID="lblTraining" runat="server" CssClass="fw-bold" Visible="false" />
 
 <div class="req-card mt-3"><h5>Batch-wise Requirements</h5><p class="text-muted">Admin can change any requirement from Required to Not Required or from Not Required to Required after the batch is created.</p>
 <div class="row g-3">
@@ -28,4 +75,4 @@
 </Columns></asp:GridView></div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true" />
 </div></div>
-</asp:Content>
+</asp:content>

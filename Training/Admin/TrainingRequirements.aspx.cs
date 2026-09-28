@@ -26,6 +26,8 @@ namespace Training.Admin
 
             DataRow r = dt.Rows[0];
             lblTraining.Text = "Training: " + TrainingID;
+            TrainingSummary1.LoadTraining(TrainingID);
+
 
             bool ar = Convert.ToBoolean(r["AttendanceRequired"]);
             bool pr = Convert.ToBoolean(r["InitialAssessmentRequired"]);
