@@ -1433,6 +1433,19 @@ TemplateID<>@TemplateID
             (
                 e.CommandName
                 ==
+                "DeleteTemplate"
+            )
+            {
+                DeleteTemplate(
+                    e.CommandArgument.ToString());
+
+                return;
+            }
+
+            if
+            (
+                e.CommandName
+                ==
                 "EditTemplate"
                 ||
                 e.CommandName
@@ -1478,6 +1491,108 @@ TemplateID<>@TemplateID
                     "CertificatePreview.aspx");
 
                 return;
+            }
+        }
+
+        private void DeleteTemplate(
+            string templateID)
+        {
+            if (String.IsNullOrWhiteSpace(templateID))
+            {
+                lblMessage.ForeColor =
+                    System.Drawing.Color.Red;
+
+                lblMessage.Text =
+                    "Template ID is missing.";
+
+                return;
+            }
+
+            try
+            {
+                string checkQuery =
+        @"
+SELECT
+COUNT(*)
+FROM
+TrainingCertificateTemplate
+WHERE
+TemplateID=@TemplateID
+";
+
+                int usedCount =
+                    Convert.ToInt32(
+                    objDB.ExecuteScalar(
+                    checkQuery,
+                    new SqlParameter[]
+                    {
+                        new SqlParameter(
+                            "@TemplateID",
+                            templateID)
+                    }));
+
+                if (usedCount > 0)
+                {
+                    lblMessage.ForeColor =
+                        System.Drawing.Color.Red;
+
+                    lblMessage.Text =
+                        "This certificate template is already used in certificate configuration. Deactivate it instead of deleting it.";
+
+                    return;
+                }
+
+                string deleteQuery =
+        @"
+DELETE
+FROM
+CertificateTemplateMaster
+WHERE
+TemplateID=@TemplateID
+";
+
+                int result =
+                    objDB.ExecuteSql(
+                    deleteQuery,
+                    new SqlParameter[]
+                    {
+                        new SqlParameter(
+                            "@TemplateID",
+                            templateID)
+                    });
+
+                if (result > 0)
+                {
+                    hfID.Value =
+                        "";
+
+                    ResetForm();
+
+                    BindGrid();
+
+                    lblMessage.ForeColor =
+                        System.Drawing.Color.Green;
+
+                    lblMessage.Text =
+                        "Certificate template deleted successfully.";
+                }
+                else
+                {
+                    lblMessage.ForeColor =
+                        System.Drawing.Color.Red;
+
+                    lblMessage.Text =
+                        "Certificate template could not be deleted.";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.ForeColor =
+                    System.Drawing.Color.Red;
+
+                lblMessage.Text =
+                    "Unable to delete certificate template. " +
+                    ex.Message;
             }
         }
 
