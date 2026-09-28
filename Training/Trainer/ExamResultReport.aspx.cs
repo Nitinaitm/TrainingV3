@@ -90,7 +90,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT TM.TrainerID, CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(EBM.EmpName,ISNULL(TM.EmpID,TM.TrainerID)) ELSE ISNULL(TM.NameExternal,ISNULL(TM.EmpIDExternal,TM.TrainerID)) END AS TrainerName FROM TrainerMaster TM LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TM.EmpID WHERE SM.TrainerID=@TrainerID";
+                "SELECT TM.TrainerID, CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(EBM.EmpName,ISNULL(TM.EmpID,TM.TrainerID)) ELSE ISNULL(TM.NameExternal,ISNULL(TM.EmpIDExternal,TM.TrainerID)) END AS TrainerName FROM TrainerMaster TM LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TM.EmpID WHERE TM.TrainerID=@TrainerID";
 
             SqlParameter[] param =
             {
@@ -135,7 +135,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT DISTINCT SM.SessionID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') + ' | ' + ISNULL(TD.DateFrom,'') + ' to ' + ISNULL(TD.DateTo,'') + ' | Session ' + SM.SessionID AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE SM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, SM.SessionID DESC";
+                "SELECT DISTINCT SM.SessionID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') + ' | ' + ISNULL(TD.DateFrom,'') + ' to ' + ISNULL(TD.DateTo,'') + ' | Session ' + SM.SessionID AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE SM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, SM.SessionID DESC";
 
             SqlParameter[] param =
             {
