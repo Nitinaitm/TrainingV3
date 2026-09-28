@@ -85,7 +85,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT TM.TrainerID, CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(EBM.EmpName,ISNULL(TM.EmpID,TM.TrainerID)) ELSE ISNULL(TM.NameExternal,ISNULL(TM.EmpIDExternal,TM.TrainerID)) END AS TrainerName FROM TrainerMaster TM LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TM.EmpID WHERE TM.TrainerID=@TrainerID";
+                "SELECT TM.TrainerID, CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(EBM.EmpName,ISNULL(TM.EmpID,TM.TrainerID)) ELSE ISNULL(TM.NameExternal,ISNULL(TM.EmpIDExternal,TM.TrainerID)) END AS TrainerName FROM TrainerMaster TM LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TM.EmpID WHERE SM.TrainerID=@TrainerID";
 
             SqlParameter[] param =
             {
@@ -130,7 +130,7 @@ namespace Training.Trainer
                 GetTrainerID();
 
             string query =
-                "SELECT DISTINCT SM.SessionID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') + ' | ' + ISNULL(TD.DateFrom,'') + ' to ' + ISNULL(TD.DateTo,'') + ' | Session ' + SM.SessionID AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, SM.SessionID DESC";
+                "SELECT DISTINCT SM.SessionID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') + ' | ' + ISNULL(TD.DateFrom,'') + ' to ' + ISNULL(TD.DateTo,'') + ' | Session ' + SM.SessionID AS TrainingName, TD.DateFrom FROM TestMaster TM INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE SM.TrainerID=@TrainerID AND SM.TrainerID=@TrainerID ORDER BY TD.DateFrom DESC, SM.SessionID DESC";
 
             SqlParameter[] param =
             {
@@ -310,7 +310,7 @@ namespace Training.Trainer
             DateTime toDate)
         {
             string query =
-                "SELECT COUNT(*) AS TotalResults, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('PASS','PASSED') THEN 1 ELSE 0 END) AS Passed, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('FAIL','FAILED') THEN 1 ELSE 0 END) AS Failed, AVG(CAST(TR.Percentage AS DECIMAL(10,2))) AS AveragePercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.TrainerID=@TrainerID";
+                "SELECT COUNT(*) AS TotalResults, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('PASS','PASSED') THEN 1 ELSE 0 END) AS Passed, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('FAIL','FAILED') THEN 1 ELSE 0 END) AS Failed, AVG(CAST(TR.Percentage AS DECIMAL(10,2))) AS AveragePercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE SM.TrainerID=@TrainerID";
 
             AddResultFilters(
                 ref query);
@@ -454,7 +454,7 @@ namespace Training.Trainer
         private string GetResultQuery()
         {
             string query =
-                "SELECT TR.ResultID, TR.TestID, TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TM.TestType, TM.TestTitle, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, TR.AttemptNo, TR.TotalQuestions, TR.AttemptedQuestions, TR.CorrectAnswers, TR.WrongAnswers, TR.TotalMarks, TR.ObtainedMarks, TR.Percentage, TR.ResultStatus, TR.RankNo, TR.TimeTaken, TR.SubmittedOn, TR.IsFinalAttempt FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.TrainerID=@TrainerID";
+                "SELECT TR.ResultID, TR.TestID, TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TM.TestType, TM.TestTitle, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, TR.AttemptNo, TR.TotalQuestions, TR.AttemptedQuestions, TR.CorrectAnswers, TR.WrongAnswers, TR.TotalMarks, TR.ObtainedMarks, TR.Percentage, TR.ResultStatus, TR.RankNo, TR.TimeTaken, TR.SubmittedOn, TR.IsFinalAttempt FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE SM.TrainerID=@TrainerID";
 
             return query;
         }
@@ -700,7 +700,7 @@ namespace Training.Trainer
             DateTime toDate)
         {
             string query =
-                "SELECT X.TrainingID, X.CourseName, X.Batch, X.EmpID, X.TraineeName, X.PrePercentage, X.PostPercentage, CASE WHEN X.PrePercentage IS NOT NULL AND X.PostPercentage IS NOT NULL THEN X.PostPercentage-X.PrePercentage ELSE NULL END AS Improvement FROM (SELECT TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, AVG(CASE WHEN TM.TestType='Pre' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PrePercentage, AVG(CASE WHEN TM.TestType='Post' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PostPercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.TrainerID=@TrainerID AND TR.IsFinalAttempt=1 AND TM.TestType IN ('Pre','Post')";
+                "SELECT X.TrainingID, X.CourseName, X.Batch, X.EmpID, X.TraineeName, X.PrePercentage, X.PostPercentage, CASE WHEN X.PrePercentage IS NOT NULL AND X.PostPercentage IS NOT NULL THEN X.PostPercentage-X.PrePercentage ELSE NULL END AS Improvement FROM (SELECT TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, AVG(CASE WHEN TM.TestType='Pre' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PrePercentage, AVG(CASE WHEN TM.TestType='Post' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PostPercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE SM.TrainerID=@TrainerID AND TR.IsFinalAttempt=1 AND TM.TestType IN ('Pre','Post')";
 
             if
             (
@@ -1237,7 +1237,7 @@ namespace Training.Trainer
             }
 
             string query =
-                "SELECT TM.TrainingID AS [Training ID], ISNULL(CM.CourseName,'') AS [Course], ISNULL(TD.Batch,'') AS [Batch], CASE WHEN TM.TestType='Pre' THEN 'Pre Training' WHEN TM.TestType='Post' THEN 'Post Training' ELSE TM.TestType END AS [Exam], TM.TestTitle AS [Test Title], TR.EmpID AS [Trainee ID], ISNULL(EBM.EmpName,TME.TraineeName) AS [Trainee Name], TR.AttemptNo AS [Attempt], TR.TotalQuestions AS [Total Questions], TR.AttemptedQuestions AS [Attempted], TR.CorrectAnswers AS [Correct], TR.WrongAnswers AS [Wrong], TR.TotalMarks AS [Total Marks], TR.ObtainedMarks AS [Obtained Marks], TR.Percentage AS [Percentage], TR.ResultStatus AS [Result], TR.RankNo AS [Rank], TR.TimeTaken AS [Time Taken], TR.SubmittedOn AS [Submitted On], CASE WHEN TR.IsFinalAttempt=1 THEN 'Yes' ELSE 'No' END AS [Final Attempt] FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.TrainerID=@TrainerID";
+                "SELECT TM.TrainingID AS [Training ID], ISNULL(CM.CourseName,'') AS [Course], ISNULL(TD.Batch,'') AS [Batch], CASE WHEN TM.TestType='Pre' THEN 'Pre Training' WHEN TM.TestType='Post' THEN 'Post Training' ELSE TM.TestType END AS [Exam], TM.TestTitle AS [Test Title], TR.EmpID AS [Trainee ID], ISNULL(EBM.EmpName,TME.TraineeName) AS [Trainee Name], TR.AttemptNo AS [Attempt], TR.TotalQuestions AS [Total Questions], TR.AttemptedQuestions AS [Attempted], TR.CorrectAnswers AS [Correct], TR.WrongAnswers AS [Wrong], TR.TotalMarks AS [Total Marks], TR.ObtainedMarks AS [Obtained Marks], TR.Percentage AS [Percentage], TR.ResultStatus AS [Result], TR.RankNo AS [Rank], TR.TimeTaken AS [Time Taken], TR.SubmittedOn AS [Submitted On], CASE WHEN TR.IsFinalAttempt=1 THEN 'Yes' ELSE 'No' END AS [Final Attempt] FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE SM.TrainerID=@TrainerID";
 
             AddResultFilters(
                 ref query);
