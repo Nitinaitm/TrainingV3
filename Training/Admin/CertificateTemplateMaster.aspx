@@ -1041,6 +1041,18 @@
                                         CssClass="btn btn-sm btn-warning">
                                     </asp:LinkButton>
 
+                                    &nbsp;
+
+                                    <asp:LinkButton
+                                        ID="lnkDelete"
+                                        runat="server"
+                                        CommandName="DeleteTemplate"
+                                        CommandArgument='<%# Eval("TemplateID") %>'
+                                        Text="Delete"
+                                        CssClass="btn btn-sm btn-danger"
+                                        OnClientClick="return confirm('Are you sure you want to delete this certificate template?');">
+                                    </asp:LinkButton>
+
 
                                 </ItemTemplate>
 
