@@ -42,6 +42,11 @@ namespace Training.Trainer
 
                 BindTraining();
 
+                if (Session["TrainingID"] != null && ddlTraining.Items.FindByValue(Session["TrainingID"].ToString()) != null)
+                {
+                    ddlTraining.SelectedValue = Session["TrainingID"].ToString();
+                }
+
                 BindTest();
 
                 LoadReport();
@@ -421,7 +426,7 @@ namespace Training.Trainer
             AddResultFilters(
                 ref query);
 
-            if (!String.IsNullOrWhiteSpace(Request.QueryString["SessionID"]))
+            if (Session["SessionID"] != null && !String.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
             {
                 query += " AND TM.SessionID=@SessionID";
             }
@@ -547,6 +552,18 @@ namespace Training.Trainer
 
             if
             (
+                Session["SessionID"] != null
+                &&
+                !String.IsNullOrWhiteSpace(
+                    Session["SessionID"].ToString())
+            )
+            {
+                query +=
+                    " AND TM.SessionID=@SessionID";
+            }
+
+            if
+            (
                 !String.IsNullOrWhiteSpace(
                     txtBatch.Text)
             )
@@ -616,9 +633,9 @@ namespace Training.Trainer
 
                 new SqlParameter(
                     "@SessionID",
-                    String.IsNullOrWhiteSpace(Request.QueryString["SessionID"])
+                    Session["SessionID"] == null || String.IsNullOrWhiteSpace(Session["SessionID"].ToString())
                     ? (object)DBNull.Value
-                    : Request.QueryString["SessionID"]),
+                    : Session["SessionID"].ToString()),
 
                 new SqlParameter(
                     "@Trainee",
