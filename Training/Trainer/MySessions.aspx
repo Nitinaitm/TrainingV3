@@ -1,10 +1,46 @@
-<%@ Page Title="My Sessions" Language="C#" MasterPageFile="~/TrainerMaster.Master" AutoEventWireup="true" CodeBehind="MySessions.aspx.cs" Inherits="Training.Trainer.MySessions" %>
-<%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
+<%@ page title="My Sessions" language="C#" masterpagefile="~/TrainerMaster.Master" autoeventwireup="true" codebehind="MySessions.aspx.cs" inherits="Training.Trainer.MySessions" %>
+
+<%@ register src="~/Admin/TrainingSummary.ascx" tagprefix="uc" tagname="TrainingSummary" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<style>.page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}.dashboard-card{background:#fff;border-radius:10px;box-shadow:0 0 10px #d9d9d9;padding:20px;margin-bottom:20px}.gridview th{background:#198754;color:white;text-align:center;vertical-align:middle}.gridview td{vertical-align:middle}.btn-action{min-width:100px}.trainee-link{font-weight:600;text-decoration:none}</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .page-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 20px
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #d9d9d9;
+            padding: 20px;
+            margin-bottom: 20px
+        }
+
+        .gridview th {
+            background: #198754;
+            color: white;
+            text-align: center;
+            vertical-align: middle
+        }
+
+        .gridview td {
+            vertical-align: middle
+        }
+
+        .btn-action {
+            min-width: 100px
+        }
+
+        .trainee-link {
+            font-weight: 600;
+            text-decoration: none
+        }
+    </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="page-heading">My Sessions</div>
 <uc:TrainingSummary ID="TrainingSummary1" runat="server" />
 <div class="dashboard-card"><div class="row"><div class="col-md-12">
@@ -16,4 +52,4 @@
 <asp:TemplateField HeaderText="List of Trainees"><ItemTemplate><a class="trainee-link" href='<%# "SessionTrainees.aspx?SessionID=" + Server.UrlEncode(Eval("SessionID").ToString()) %>' onclick="window.open(this.href,'SessionTrainees','width=950,height=650,scrollbars=yes,resizable=yes');return false;">List of Trainees</a></ItemTemplate><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
 <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:Button ID="btnAction" runat="server" Text="View" CssClass="btn btn-info btn-sm btn-action" CommandName="ViewSession" CommandArgument='<%# Eval("SessionID") %>' /></ItemTemplate><ItemStyle HorizontalAlign="Center" Width="140px" /></asp:TemplateField>
 </Columns></asp:GridView>
-</div></div></div></div></asp:Content>
+</div></div></div></div></asp:content>
