@@ -66,7 +66,7 @@ namespace Training.Trainer
         private void LoadAnswers()
         {
             string query = "SELECT QB.Question,QB.Type,QB.OptionA,QB.OptionB,QB.OptionC,QB.OptionD,QB.Answer AS CorrectAnswer,TA.SelectedAnswer,TA.IsCorrect FROM TestAttempt TA INNER JOIN QuestionBank QB ON TA.QuestionID=QB.QuestionID INNER JOIN TestResult R ON TA.ResultID=R.ResultID INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE TA.ResultID=@ResultID AND R.ResultID=@ResultID AND SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID AND SM.TrainerID=@TrainerID ORDER BY TA.SequenceNo";
-            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@TrainerID", TrainerID) });
+            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@ResultID", ResultID), new SqlParameter("@SessionID", Session["SessionID"].ToString()), new SqlParameter("@TrainingID", Session["TrainingID"].ToString()), new SqlParameter("@TrainerID", TrainerID) });
             gvAnswers.DataSource = dt;
             gvAnswers.DataBind();
         }
