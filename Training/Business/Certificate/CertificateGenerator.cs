@@ -288,7 +288,7 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
         }
         private void DrawHeader(PdfWriter writer, Document document, DataRow dr)
         {
-            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; float headerY = Convert.ToSingle(dr["HeaderY"]); if (!String.IsNullOrWhiteSpace(dr["LogoImage"].ToString())) { float minimumHeaderY = Convert.ToSingle(dr["LogoY"]) + 110f; if (headerY < minimumHeaderY) headerY = minimumHeaderY; } PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, PdfYFromTop(headerY, document, dr), 0);
+            string header = dr["HeaderText"].ToString(); if (String.IsNullOrWhiteSpace(header)) return; float headerY = Convert.ToSingle(dr["HeaderY"]); if (!String.IsNullOrWhiteSpace(dr["LogoImage"].ToString())) { float minimumHeaderY = Convert.ToSingle(dr["LogoY"]) + 110f; if (headerY < minimumHeaderY) headerY = minimumHeaderY; if (headerY < Convert.ToSingle(dr["LogoY"]) + 130f) headerY = Convert.ToSingle(dr["LogoY"]) + 130f; } PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(header, GetHeaderFont(dr)), document.PageSize.Width / 2, PdfYFromTop(headerY, document, dr), 0);
         }
         private void DrawBody(PdfWriter writer, Document document, DataRow dr)
         {
@@ -392,7 +392,7 @@ WHERE TCT.TrainingID=@TrainingID AND TCT.TemplateID=@TemplateID AND TCT.Active=1
                     actualImageHeight = img.ScaledHeight;
                 }
             }
-            Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); float nameY = yTop - Math.Max(imageHeight, actualImageHeight) - 10f; float designationY = nameY - 17f; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), centerX, nameY, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), centerX, designationY, 0);
+            Font nameFont = new Font(GetBaseFont(), Convert.ToSingle(dr["BodyFontSize"]), Font.BOLD, BaseColor.BLACK); Font designationFont = GetFooterFont(dr); float nameY = yTop - Math.Max(imageHeight, actualImageHeight) - 18f; float designationY = nameY - 20f; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(name, nameFont), centerX, nameY, 0); ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(designation, designationFont), centerX, designationY, 0);
         }
         private void DrawFooter(PdfWriter writer, Document document, DataRow dr) { PdfContentByte canvas = writer.DirectContent; ColumnText.ShowTextAligned(canvas, Element.ALIGN_CENTER, new Phrase(dr["FooterText"].ToString(), GetFooterFont(dr)), document.PageSize.Width / 2, PdfYFromTop(Convert.ToSingle(dr["FooterY"]), document, dr), 0); }
 
