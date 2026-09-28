@@ -1,12 +1,122 @@
-﻿<%@ Page Title="Trainee Answer Details" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AnswerDetails.aspx.cs" Inherits="Training.Admin.AnswerDetails" %>
+﻿<%@ page title="Trainee Answer Details" language="C#" masterpagefile="~/AdminMaster.Master" autoeventwireup="true" codebehind="AnswerDetails.aspx.cs" inherits="Training.Admin.AnswerDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style type="text/css">
-.page-heading{font-size:24px;font-weight:700;color:#0d6efd;margin-bottom:20px}.detail-card{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px;overflow:hidden}.card-title-bar{padding:12px 18px;font-size:17px;font-weight:600;color:#fff}.info-box{background:#f8f9fa;border:1px solid #e9ecef;border-radius:8px;padding:12px 15px;margin-bottom:15px;height:100%}.info-label{display:block;font-size:12px;font-weight:600;color:#6c757d;text-transform:uppercase;margin-bottom:4px}.info-value{font-size:16px;font-weight:600;color:#212529}.question-grid th{background:#0d6efd;color:#fff;text-align:center;vertical-align:middle;white-space:nowrap}.question-grid td{vertical-align:top}.question-text{font-weight:600;line-height:1.45}.option-list{min-width:280px}.option-item{padding:7px 10px;margin:3px 0;border-radius:5px;border:1px solid #e9ecef}.option-selected{font-weight:600}.option-correct{background:#d1e7dd;border-color:#a3cfbb}.option-wrong{background:#f8d7da;border-color:#f1aeb5}.option-answer{background:#cfe2ff;border-color:#9ec5fe}.badge-soft{font-size:12px;padding:5px 8px}.btn-back{min-width:150px}.result-pass{color:#198754;font-weight:700}.result-fail{color:#dc3545;font-weight:700}
-</style>
+        .page-heading {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 20px
+        }
+
+        .detail-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+            margin-bottom: 20px;
+            overflow: hidden
+        }
+
+        .card-title-bar {
+            padding: 12px 18px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            height: 100%
+        }
+
+        .info-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 4px
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529
+        }
+
+        .question-grid th {
+            background: #0d6efd;
+            color: #fff;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap
+        }
+
+        .question-grid td {
+            vertical-align: top
+        }
+
+        .question-text {
+            font-weight: 600;
+            line-height: 1.45
+        }
+
+        .option-list {
+            min-width: 280px
+        }
+
+        .option-item {
+            padding: 7px 10px;
+            margin: 3px 0;
+            border-radius: 5px;
+            border: 1px solid #e9ecef
+        }
+
+        .option-selected {
+            font-weight: 600
+        }
+
+        .option-correct {
+            background: #d1e7dd;
+            border-color: #a3cfbb
+        }
+
+        .option-wrong {
+            background: #f8d7da;
+            border-color: #f1aeb5
+        }
+
+        .option-answer {
+            background: #cfe2ff;
+            border-color: #9ec5fe
+        }
+
+        .badge-soft {
+            font-size: 12px;
+            padding: 5px 8px
+        }
+
+        .btn-back {
+            min-width: 150px
+        }
+
+        .result-pass {
+            color: #198754;
+            font-weight: 700
+        }
+
+        .result-fail {
+            color: #dc3545;
+            font-weight: 700
+        }
+    </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">
 <div class="page-heading">Trainee Answer Details</div>
 <div class="detail-card"><div class="card-title-bar bg-primary">Trainee &amp; Examination Information</div><div class="p-3">
@@ -26,4 +136,4 @@
 </Columns></asp:GridView>
 </div></div></div>
 <div class="text-center mb-4"><asp:Button ID="btnBack" runat="server" Text="Back to Exam Results" CssClass="btn btn-secondary btn-lg btn-back" OnClick="btnBack_Click" /></div>
-</div></asp:Content>
+</div></asp:content>

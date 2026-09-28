@@ -851,10 +851,15 @@
     <Content Include="Trainer\scss\bootstrap\_utilities.scss" />
     <Content Include="Trainer\scss\bootstrap\_variables.scss" />
     <Content Include="Trainer\scss\style.scss" />
+    <Content Include="Trainer\SessionAnswerReport.aspx" />
     <Content Include="Trainer\SessionAttendance.aspx" />
+    <Content Include="Trainer\SessionAttendanceReport.aspx" />
+    <Content Include="Trainer\SessionCertificateReport.aspx" />
     <Content Include="Trainer\SessionDetails.aspx" />
     <Content Include="Trainer\SessionFeedback.aspx" />
     <Content Include="Trainer\SessionMaterials.aspx" />
+    <Content Include="Trainer\SessionReport.aspx" />
+    <Content Include="Trainer\SessionReportDetails.aspx" />
     <Content Include="Trainer\SessionSummary.ascx" />
     <Content Include="Trainer\SessionTrainees.aspx" />
     <Content Include="Trainer\TestDetails.aspx" />
@@ -1765,6 +1770,13 @@
     <Compile Include="Trainer\QuestionBankUpload.aspx.designer.cs">
       <DependentUpon>QuestionBankUpload.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Trainer\SessionAnswerReport.aspx.cs">
+      <DependentUpon>SessionAnswerReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionAnswerReport.aspx.designer.cs">
+      <DependentUpon>SessionAnswerReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Trainer\SessionAttendance.aspx.cs">
       <DependentUpon>SessionAttendance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1774,6 +1786,20 @@
     </Compile>
     <Compile Include="Trainer\SessionAttendance.Lifecycle.cs">
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionAttendanceReport.aspx.cs">
+      <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionAttendanceReport.aspx.designer.cs">
+      <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainer\SessionCertificateReport.aspx.cs">
+      <DependentUpon>SessionCertificateReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionCertificateReport.aspx.designer.cs">
+      <DependentUpon>SessionCertificateReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainer\SessionDetails.aspx.cs">
       <DependentUpon>SessionDetails.aspx</DependentUpon>
@@ -1798,6 +1824,20 @@
     </Compile>
     <Compile Include="Trainer\SessionMaterials.aspx.designer.cs">
       <DependentUpon>SessionMaterials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainer\SessionReport.aspx.cs">
+      <DependentUpon>SessionReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionReport.aspx.designer.cs">
+      <DependentUpon>SessionReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainer\SessionReportDetails.aspx.cs">
+      <DependentUpon>SessionReportDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainer\SessionReportDetails.aspx.designer.cs">
+      <DependentUpon>SessionReportDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainer\SessionSummary.ascx.cs">
       <DependentUpon>SessionSummary.ascx</DependentUpon>
