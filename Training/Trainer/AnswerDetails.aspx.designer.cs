@@ -101,5 +101,9 @@ namespace Training.Trainer {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBack;
+        protected global::System.Web.UI.WebControls.Label lblTestType;
+        protected global::System.Web.UI.WebControls.Label lblAttempt;
+        protected global::System.Web.UI.WebControls.Label lblSubmittedOn;
+        protected global::System.Web.UI.WebControls.Label lblAttempted;
     }
 }
