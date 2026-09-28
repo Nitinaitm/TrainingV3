@@ -112,24 +112,6 @@ namespace Training.Trainee {
         protected global::System.Web.UI.WebControls.Label lblDateTo;
         
         /// <summary>
-        /// lblTrainer control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainer;
-        
-        /// <summary>
-        /// lblTrainerType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainerType;
-        
-        /// <summary>
         /// lblPresent control.
         /// </summary>
         /// <remarks>

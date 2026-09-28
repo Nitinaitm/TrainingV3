@@ -34,8 +34,8 @@ namespace Training.Trainee
             LoadTrainingDetails(
                 trainingID);
 
-            LoadTrainerDetails(
-                trainingID);
+            //LoadTrainerDetails(
+            //    trainingID);
 
             LoadAttendanceSummary(
                 trainingID,
@@ -259,156 +259,156 @@ namespace Training.Trainee
          * =====================================================
          */
 
-        private void LoadTrainerDetails(
-            string trainingID)
-        {
-            string sql =
-                "SELECT DISTINCT " +
-                "TR.TrainerID," +
-                "ISNULL(TR.TrainerType,'') AS TrainerType," +
+        //private void LoadTrainerDetails(
+        //    string trainingID)
+        //{
+        //    string sql =
+        //        "SELECT DISTINCT " +
+        //        "TR.TrainerID," +
+        //        "ISNULL(TR.TrainerType,'') AS TrainerType," +
 
-                "CASE " +
-                "WHEN TR.TrainerType='Internal' " +
-                "THEN ISNULL(EB.EmpName,'') " +
-                "ELSE ISNULL(TR.NameExternal,'') " +
-                "END AS TrainerName " +
+        //        "CASE " +
+        //        "WHEN TR.TrainerType='Internal' " +
+        //        "THEN ISNULL(EB.EmpName,'') " +
+        //        "ELSE ISNULL(TR.NameExternal,'') " +
+        //        "END AS TrainerName " +
 
-                "FROM SessionMaster SM " +
+        //        "FROM SessionMaster SM " +
 
-                "INNER JOIN TrainerMaster TR " +
-                "ON SM.TrainerID=TR.TrainerID " +
+        //        "INNER JOIN TrainerMaster TR " +
+        //        "ON SM.TrainerID=TR.TrainerID " +
 
-                "LEFT JOIN EmpBasicMaster EB " +
-                "ON TR.EmpID=EB.EmpID " +
+        //        "LEFT JOIN EmpBasicMaster EB " +
+        //        "ON TR.EmpID=EB.EmpID " +
 
-                "WHERE SM.TrainingID=@TrainingID " +
+        //        "WHERE SM.TrainingID=@TrainingID " +
 
-                "ORDER BY TrainerName";
-
-
-            SqlParameter[] param =
-            {
-                new SqlParameter(
-                    "@TrainingID",
-                    trainingID)
-            };
+        //        "ORDER BY TrainerName";
 
 
-            DataTable dt =
-                objDB.GetDataTable(
-                    sql,
-                    param);
+        //    SqlParameter[] param =
+        //    {
+        //        new SqlParameter(
+        //            "@TrainingID",
+        //            trainingID)
+        //    };
 
 
-            if
-            (
-                dt.Rows.Count
-                ==
-                0
-            )
-            {
-                lblTrainer.Text =
-                    "-";
-
-                lblTrainerType.Text =
-                    "-";
-
-                return;
-            }
+        //    DataTable dt =
+        //        objDB.GetDataTable(
+        //            sql,
+        //            param);
 
 
-            List<string> trainerNames =
-                new List<string>();
+        //    if
+        //    (
+        //        dt.Rows.Count
+        //        ==
+        //        0
+        //    )
+        //    {
+        //        lblTrainer.Text =
+        //            "-";
+
+        //        lblTrainerType.Text =
+        //            "-";
+
+        //        return;
+        //    }
 
 
-            List<string> trainerTypes =
-                new List<string>();
+        //    List<string> trainerNames =
+        //        new List<string>();
 
 
-            foreach
-            (
-                DataRow row
-                in
-                dt.Rows
-            )
-            {
-                string trainerName =
-                    row["TrainerName"]
-                    .ToString();
+        //    List<string> trainerTypes =
+        //        new List<string>();
 
 
-                string trainerType =
-                    row["TrainerType"]
-                    .ToString();
+        //    foreach
+        //    (
+        //        DataRow row
+        //        in
+        //        dt.Rows
+        //    )
+        //    {
+        //        string trainerName =
+        //            row["TrainerName"]
+        //            .ToString();
 
 
-                if
-                (
-                    !string.IsNullOrWhiteSpace(
-                        trainerName)
-                    &&
-                    !trainerNames.Contains(
-                        trainerName)
-                )
-                {
-                    trainerNames.Add(
-                        trainerName);
-                }
+        //        string trainerType =
+        //            row["TrainerType"]
+        //            .ToString();
 
 
-                if
-                (
-                    !string.IsNullOrWhiteSpace(
-                        trainerType)
-                    &&
-                    !trainerTypes.Contains(
-                        trainerType)
-                )
-                {
-                    trainerTypes.Add(
-                        trainerType);
-                }
-            }
+        //        if
+        //        (
+        //            !string.IsNullOrWhiteSpace(
+        //                trainerName)
+        //            &&
+        //            !trainerNames.Contains(
+        //                trainerName)
+        //        )
+        //        {
+        //            trainerNames.Add(
+        //                trainerName);
+        //        }
 
 
-            lblTrainer.Text =
-                trainerNames.Count
-                >
-                0
-                ?
-                string.Join(
-                    ", ",
-                    trainerNames.ToArray())
-                :
-                "-";
+        //        if
+        //        (
+        //            !string.IsNullOrWhiteSpace(
+        //                trainerType)
+        //            &&
+        //            !trainerTypes.Contains(
+        //                trainerType)
+        //        )
+        //        {
+        //            trainerTypes.Add(
+        //                trainerType);
+        //        }
+        //    }
 
 
-            if
-            (
-                trainerTypes.Count
-                ==
-                0
-            )
-            {
-                lblTrainerType.Text =
-                    "-";
-            }
-            else if
-            (
-                trainerTypes.Count
-                ==
-                1
-            )
-            {
-                lblTrainerType.Text =
-                    trainerTypes[0];
-            }
-            else
-            {
-                lblTrainerType.Text =
-                    "Multiple";
-            }
-        }
+        //    lblTrainer.Text =
+        //        trainerNames.Count
+        //        >
+        //        0
+        //        ?
+        //        string.Join(
+        //            ", ",
+        //            trainerNames.ToArray())
+        //        :
+        //        "-";
+
+
+        //    if
+        //    (
+        //        trainerTypes.Count
+        //        ==
+        //        0
+        //    )
+        //    {
+        //        lblTrainerType.Text =
+        //            "-";
+        //    }
+        //    else if
+        //    (
+        //        trainerTypes.Count
+        //        ==
+        //        1
+        //    )
+        //    {
+        //        lblTrainerType.Text =
+        //            trainerTypes[0];
+        //    }
+        //    else
+        //    {
+        //        lblTrainerType.Text =
+        //            "Multiple";
+        //    }
+        //}
 
 
         /*
@@ -964,11 +964,11 @@ namespace Training.Trainee
             lblTotalSessions.Text =
                 "0";
 
-            lblTrainer.Text =
-                "-";
+            //lblTrainer.Text =
+            //    "-";
 
-            lblTrainerType.Text =
-                "-";
+            //lblTrainerType.Text =
+            //    "-";
 
             lblPresent.Text =
                 "0";

@@ -377,59 +377,7 @@
     </div>
 
 
-    <!-- =====================================================
-         TRAINER DETAILS
-         ===================================================== -->
-
-    <hr class="summary-divider" />
-
-
-    <div class="summary-section-title">
-
-        <i class="fa fa-user"></i>
-
-        Trainer Details
-
-    </div>
-
-
-    <div class="row">
-
-
-        <div class="col-lg-4 col-md-8 col-sm-12 mb-2">
-
-            <span class="summary-label">
-
-                Trainer(s) :
-
-                <asp:Label
-                    ID="lblTrainer"
-                    runat="server"
-                    CssClass="summary-value" />
-
-            </span>
-
-        </div>
-
-
-        <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-
-            <span class="summary-label">
-
-                Trainer Type :
-
-                <asp:Label
-                    ID="lblTrainerType"
-                    runat="server"
-                    CssClass="summary-value" />
-
-            </span>
-
-        </div>
-
-
-    </div>
-
+ 
 
     <!-- =====================================================
          ATTENDANCE
