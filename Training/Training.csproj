@@ -547,7 +547,6 @@
     <Content Include="SuperAdmin\scss\bootstrap\utilities\_shadows.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\utilities\_sizing.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\utilities\_spacing.scss" />
-    <Content Include="SuperAdmin\scss\bootstrap\utilities\_stretched-link.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\utilities\_text.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\utilities\_visibility.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\vendor\_rfs.scss" />
