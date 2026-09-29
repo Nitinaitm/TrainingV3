@@ -513,6 +513,17 @@
                 </a>
 
 
+                <!-- ================= MY TRAININGS ================= -->
+
+                <a href="MyTrainings.aspx"
+                    class="menu-item">
+
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>
+                    My Trainings
+
+                </a>
+
+
                 <!-- ================= MY SESSIONS ================= -->
 
                 <div class="menu-heading collapsed"
