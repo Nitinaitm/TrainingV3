@@ -30,7 +30,7 @@ namespace Training.Manager
 
         private bool HasManagerAccess()
         {
-            object value = db.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingDetails TD ON M.TrainingLocationID=L.TrainingLocationID AND L.TrainingLocation=TD.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND TD.TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@ManagerID", Session["ManagerID"].ToString()), new SqlParameter("@TrainingID", TrainingID) });
+            object value = db.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON L.TrainingLocation=TD.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND TD.TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@ManagerID", Session["ManagerID"].ToString()), new SqlParameter("@TrainingID", TrainingID) });
             return value != null && value != DBNull.Value && Convert.ToInt32(value) > 0;
         }
 
