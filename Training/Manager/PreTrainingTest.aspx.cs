@@ -25,8 +25,7 @@ namespace Training.Manager
                 Response.Redirect("~/Manager/Default.aspx", true);
                 return;
             }
-            Session["ManagerID"] = Session["ManagerID"];
-        }
+                    }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -64,7 +63,7 @@ namespace Training.Manager
             if (requiredResult == null || requiredResult == DBNull.Value || !Convert.ToBoolean(requiredResult))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "PreTrainingRequired",
-                    "alert('Pre-Training Assessment is not required for this training.');window.location='~/Manager/MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
+                    "alert('Pre-Training Assessment is not required for this training.');window.location='MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
                 return false;
             }
 
@@ -75,7 +74,7 @@ namespace Training.Manager
             if (skipped != null && skipped != DBNull.Value && Convert.ToBoolean(skipped))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "PreTrainingSkipped",
-                    "alert('Pre-Training Assessment has been skipped for this session.');window.location='~/Manager/MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
+                    "alert('Pre-Training Assessment has been skipped for this session.');window.location='MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
                 return false;
             }
 
