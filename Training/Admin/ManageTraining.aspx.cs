@@ -38,7 +38,7 @@ namespace Training.Admin
 
         private bool IsTrainingStarted()
         {
-            object value = new clsDataAccess().ExecuteScalar("SELECT CASE WHEN ISNULL(TrainingStatus,'') IN ('InProgress','AttendanceCompleted','TrainingCompleted','Completed') THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID));
+            object value = new clsDataAccess().ExecuteScalar("SELECT CASE WHEN TrainingStartedOn IS NOT NULL OR ISNULL(TrainingStatus,'') IN ('InProgress','AttendanceCompleted','TrainingCompleted','Completed') THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID));
             return value != null && value != DBNull.Value && Convert.ToInt32(value) == 1;
         }
 
@@ -369,7 +369,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             }
 
             new clsDataAccess().ExecuteSql(
-                "UPDATE TrainingDetails SET TrainingStatus='Completed',WorkflowStatus='ABCDEFGHIJ',UpdatedOn=GETDATE(),UpdatedBy=@UpdatedBy WHERE TrainingID=@TrainingID",
+                "UPDATE TrainingDetails SET TrainingStatus='Completed',WorkflowStatus='ABCDEFGHIJ',TrainingCompletedOn=ISNULL(TrainingCompletedOn,GETDATE()),UpdatedOn=GETDATE(),UpdatedBy=@UpdatedBy WHERE TrainingID=@TrainingID",
                 new SqlParameter[]
                 {
                     new SqlParameter("@UpdatedBy", Session["UserID"] == null ? "Admin" : Session["UserID"].ToString()),
