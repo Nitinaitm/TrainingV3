@@ -21,7 +21,7 @@ namespace Training.Manager
         protected global::System.Web.UI.WebControls.Label lblDetailFrom;
         protected global::System.Web.UI.WebControls.Label lblDetailTo;
         protected global::System.Web.UI.WebControls.Label lblDetailStatus;
-        protected global::System.Web.UI.WebControls.DropDownList ddlSession;
+        protected global::System.Web.UI.WebControls.GridView gvSession;
         protected global::System.Web.UI.WebControls.Button btnMaterial;
         protected global::System.Web.UI.WebControls.Button btnAttendance;
         protected global::System.Web.UI.WebControls.Button btnPreTest;
