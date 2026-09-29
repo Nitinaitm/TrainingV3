@@ -27,10 +27,6 @@ namespace Training.Admin
                 Response.Redirect("TrainingList.aspx", true);
                 return;
             }
-            if (IsTrainingCompleted())
-            {
-                Response.Redirect("ManageTraining.aspx", true);
-            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
