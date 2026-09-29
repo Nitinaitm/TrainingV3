@@ -11,14 +11,7 @@ namespace Training.Admin
     public partial class SetCertificateRules : Page
     {
         private readonly clsDataAccess db = new clsDataAccess();
-        private string TrainingID
-        {
-            get
-            {
-                if (Session["TrainingID"] != null) return Session["TrainingID"].ToString();
-                return Request.QueryString["TrainingID"] == null ? "" : Request.QueryString["TrainingID"].ToString();
-            }
-        }
+        private string TrainingID { get { return Session["TrainingID"] == null ? "" : Session["TrainingID"].ToString(); } }
         private string Actor { get { return Session["UserID"] == null ? "Admin" : Session["UserID"].ToString(); } }
 
         protected override void OnPreInit(EventArgs e)
