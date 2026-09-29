@@ -39,6 +39,7 @@ namespace Training.Manager
 
                 LoadQuestionPool();
                 CheckExistingTest();
+                ApplyPublishAvailability();
             }
         }
 
@@ -396,6 +397,14 @@ namespace Training.Manager
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "msg", "alert('" + ex.Message.Replace("'", "") + "');", true);
             }
+        }
+
+        private void ApplyPublishAvailability()
+        {
+            if (string.Equals(btnPublish.Text, "Published", StringComparison.OrdinalIgnoreCase)) return;
+            bool ready = AttendanceCompletedForSession();
+            btnPublish.Enabled = ready;
+            btnPublish.Text = ready ? "Publish Test" : "Publish (Attendance Pending)";
         }
 
         private bool AttendanceCompletedForSession()
