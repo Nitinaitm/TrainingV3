@@ -62,7 +62,9 @@ SET
 
 TrainingStatus=@Status,
 
-WorkflowStatus=@Workflow
+WorkflowStatus=@Workflow,
+
+TrainingStartedOn=CASE WHEN @Status='InProgress' THEN ISNULL(TrainingStartedOn,GETDATE()) ELSE TrainingStartedOn END
 
 WHERE TrainingID=@TrainingID
 
