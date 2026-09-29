@@ -249,17 +249,17 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnAssignFeedback.Enabled = fr;
             btnAssignFeedback.Text = fa ? "Feedback Template ✓" : "Feedback Template";
             btnStartTraining.Visible = true;
-            btnStartTraining.Enabled = !workflow.Contains("E");
+            btnStartTraining.Enabled = !IsTrainingStarted();
             btnAttendance.Visible = false;
             btnAssignHostel.Visible = hostelRequired;
             btnCertificateTemplate.Visible = certificateRequired && !certificateSkipped;
-            btnCertificateTemplate.Enabled = certificateRequired && ta && !workflow.Contains("E") && !certificateSkipped;
+            btnCertificateTemplate.Enabled = certificateRequired && ta && !IsTrainingStarted() && !certificateSkipped;
             btnAssignSession.Text = sa ? "Assign Sessions & Trainers ✓" : "Assign Sessions & Trainers";
             btnAssignTrainee.Text = ta ? "Assign Trainee ✓" : "Assign Trainee";
             if (certificateRequired && ta && !certificateSkipped) btnCertificateTemplate.Text = ct ? "Certificate Template ✓" : "Certificate Template";
             btnCertificateRules.Text = IsCertificateRuleConfigured() ? "Set Certificate Rules ✓" : "Set Certificate Rules";
 
-            if (workflow.Contains("E"))
+            if (IsTrainingStarted())
             {
                 btnUpdateTraining.Visible = false;
                 btnAssignSession.Visible = true;
@@ -317,6 +317,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
         }
         private void StartTraining()
         {
+            if (IsTrainingStarted()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Training has already started."; LoadWorkflow(); return; }
             if (IsFeedbackRequired() && !IsFeedbackAssigned()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Feedback is required. Please assign Feedback before starting training."; return; }
             if (IsCertificateRequired() && !IsCertificateTemplateConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please configure Certificate Template before starting training."; return; }
             if (IsCertificateRequired() && !IsCertificateRuleConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please set Certificate Rules before starting training."; return; }
