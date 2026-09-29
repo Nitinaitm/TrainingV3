@@ -13,6 +13,8 @@ namespace Training.Trainer
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+
             if (Session["TrainerID"] == null || String.IsNullOrWhiteSpace(Session["TrainerID"].ToString()))
             {
                 Response.Redirect("~/Default.aspx");

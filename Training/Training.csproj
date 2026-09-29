@@ -276,7 +276,7 @@
     <Content Include="Admin\js\select2.js" />
     <Content Include="Admin\LocationEntry.aspx" />
     <Content Include="Admin\Logout.aspx" />
-    <Content Include="Admin\ManagerMaster.aspx" />
+    <Content Include="Admin\ManagerEntry.aspx" />
     <Content Include="Admin\ManageTraining.aspx" />
     <Content Include="Admin\OrganizerEntry.aspx" />
     <Content Include="Admin\QualificationMaster.aspx" />
@@ -1083,12 +1083,12 @@
     <Compile Include="Admin\Logout.aspx.designer.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\ManagerMaster.aspx.cs">
-      <DependentUpon>ManagerMaster.aspx</DependentUpon>
+    <Compile Include="Admin\ManagerEntry.aspx.cs">
+      <DependentUpon>ManagerEntry.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\ManagerMaster.aspx.designer.cs">
-      <DependentUpon>ManagerMaster.aspx</DependentUpon>
+    <Compile Include="Admin\ManagerEntry.aspx.designer.cs">
+      <DependentUpon>ManagerEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\ManageTraining.aspx.cs">
       <DependentUpon>ManageTraining.aspx</DependentUpon>

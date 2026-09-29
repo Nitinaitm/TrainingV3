@@ -52,6 +52,7 @@ namespace Training.Trainer
                 if (dt.Rows.Count > 0)
                 {
                     DataRow dr = dt.Rows[0];
+                    lblTrainerName.Text = dr["TrainerID"]?.ToString() ?? "Trainer";
                     lblTrainerName.Text = dr["TrainerName"]?.ToString() ?? "Trainer";
                     lblDesignation.Text = dr["Designation"].ToString();
                 }

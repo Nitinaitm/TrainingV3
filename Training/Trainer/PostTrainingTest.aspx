@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PostTrainingTest.aspx.cs" Inherits="Training.Trainer.PostTrainingTest" MasterPageFile="~/TrainerMaster.Master" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PostTrainingTest.aspx.cs" Inherits="Training.Trainer.PostTrainingTest" MasterPageFile="~/TrainerMaster.Master" MaintainScrollPositionOnPostback="true" %>
 
 <%@ Register Src="~/Trainer/SessionSummary.ascx" TagPrefix="uc2" TagName="SessionSummary" %>
 

@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 namespace Training.Admin
 {
-    public partial class ManagerMaster : Page
+    public partial class ManagerEntry : Page
     {
         private readonly clsDataAccess objDB = new clsDataAccess();
 

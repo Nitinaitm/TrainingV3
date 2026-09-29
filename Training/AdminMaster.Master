@@ -716,6 +716,29 @@
 
                     </div>
 
+
+                    <!-- TRAINER -->
+
+                    <div class="menu-heading collapsed"
+                        onclick="toggleSubMenu('managerMasterMenu',this)">
+
+                        <i class="fas fa-chalkboard-teacher mr-2"></i>
+                        Manager Master
+
+                    </div>
+
+                    <div id="managerMasterMenu"
+                        class="submenu-container hide">
+
+                        <a href="ManagerEntry.aspx"
+                            class="submenu-item">Manager Entry
+                        </a>                     
+
+                       
+                        
+
+                    </div>
+
                 </div>
 
 

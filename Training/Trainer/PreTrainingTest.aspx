@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true"
     CodeBehind="PreTrainingTest.aspx.cs"
     Inherits="Training.Trainer.PreTrainingTest"
-    MasterPageFile="~/TrainerMaster.Master" %>
+    MasterPageFile="~/TrainerMaster.Master" MaintainScrollPositionOnPostback="true" %>
 
 <%@ Register Src="~/Trainer/SessionSummary.ascx"
     TagPrefix="uc2"
