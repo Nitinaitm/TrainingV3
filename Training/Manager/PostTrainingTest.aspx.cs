@@ -37,6 +37,7 @@ namespace Training.Manager
                 if (!CheckPostTrainingRequired()) return;
                 LoadQuestionPool();
                 CheckExistingTest();
+                ApplyPublishAvailability();
             }
         }
 
@@ -212,6 +213,14 @@ namespace Training.Manager
         {
             objDB.ExecuteSql("DELETE FROM TestQuestion WHERE TestID=@TestID",new SqlParameter[]{new SqlParameter("@TestID",ViewState["TestID"])});
             DataTable dt=ViewState["SelectedQuestions"] as DataTable;if(dt==null)return;int order=1;foreach(DataRow r in dt.Rows){string id="TQ"+Guid.NewGuid().ToString("N");objDB.ExecuteSql("INSERT INTO TestQuestion (TestQuestionID,TestID,QuestionID,QuestionOrder,Marks,CreatedOn) VALUES (@TestQuestionID,@TestID,@QuestionID,@QuestionOrder,@Marks,GETDATE())",new SqlParameter[]{new SqlParameter("@TestQuestionID",id),new SqlParameter("@TestID",ViewState["TestID"]),new SqlParameter("@QuestionID",r["QuestionID"]),new SqlParameter("@QuestionOrder",order++),new SqlParameter("@Marks",r["Marks"])});}
+        }
+
+        private void ApplyPublishAvailability()
+        {
+            if (string.Equals(btnPublish.Text, "Published", StringComparison.OrdinalIgnoreCase)) return;
+            bool ready = AttendanceCompletedForSession();
+            btnPublish.Enabled = ready;
+            btnPublish.Text = ready ? "Publish Test" : "Publish (Attendance Pending)";
         }
 
         private bool AttendanceCompletedForSession()
