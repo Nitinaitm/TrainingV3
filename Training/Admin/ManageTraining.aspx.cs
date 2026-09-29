@@ -289,13 +289,13 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
                 btnCertificateTemplate.Visible = certificateRequired && !certificateSkipped;
                 btnCertificateTemplate.Enabled = false;
                 btnCertificateTemplate.Text = ct ? "Certificate Template ✓" : "Certificate Template";
-                btnAttendance.Visible = true;
+                btnAttendance.Visible = !trainingClosed;
                 btnAttendance.Text = ac ? "Attendance ✓" : "Attendance";
                 btnRequirements.Visible = !trainingClosed;
                 btnCertificateRules.Visible = certificateRequired && !certificateSkipped;
                 btnAssignFeedback.Visible = false;
-                btnCloseTraining.Visible = true;
-                btnCloseTraining.Enabled = closeReady;
+                btnCloseTraining.Visible = !trainingClosed;
+                btnCloseTraining.Enabled = closeReady && !trainingClosed;
                 btnAssignSession.Text = sa ? "Assign Sessions & Trainers ✓" : "Assign Sessions & Trainers";
                 btnAssignTrainee.Text = ta ? "Assign Trainee ✓" : "Assign Trainee";
             }
