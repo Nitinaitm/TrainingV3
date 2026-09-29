@@ -31,13 +31,6 @@ namespace Training.Admin
             Response.Redirect("CertificateTemplate.aspx");
         }
 
-        protected override void OnPreInit(EventArgs e)
-        {
-            base.OnPreInit(e);
-            if (IsPostBack && IsTrainingCompleted())
-                Response.Redirect("TrainingList.aspx", true);
-        }
-
         protected override void OnPreRender(EventArgs e)
         {
             string trainingID = Session["TrainingID"] == null ? "" : Session["TrainingID"].ToString();
