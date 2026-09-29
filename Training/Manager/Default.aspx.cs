@@ -54,8 +54,8 @@ namespace Training.Manager
 
         private void BindSessions()
         {
-            string mapForLocation = Session["ManagerMapForLocation"] == null ? "" : Session["ManagerMapForLocation"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,SM.SessionDate,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingLocation=@TrainingLocation AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)", new SqlParameter[] { new SqlParameter("@TrainingLocation", mapForLocation) });
+            string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
+            DataTable dt = objDB.GetDataTable("SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,SM.SessionDate,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
             gvSession.DataSource = dt;
             gvSession.DataBind();
         }
@@ -83,8 +83,8 @@ namespace Training.Manager
 
         private void BindTraining()
         {
-            string mapForLocation = Session["ManagerMapForLocation"] == null ? "" : Session["ManagerMapForLocation"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT TrainingID,TrainingType,TrainingOrganizer,TrainingLocation,Batch,DateFrom,DateTo,TrainingStatus FROM TrainingDetails WHERE TrainingLocation=@TrainingLocation AND ISNULL(TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,DateFrom,105) DESC", new SqlParameter[] { new SqlParameter("@TrainingLocation", mapForLocation) });
+            string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
+            DataTable dt = objDB.GetDataTable("SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
             gvTraining.DataSource = dt;
             gvTraining.DataBind();
         }
