@@ -34,7 +34,7 @@ namespace Training.Trainer
         private bool HasManagerSessionAccess()
         {
             if (!IsManager || Session["ManagerID"] == null || Session["TrainingID"] == null || Session["SessionID"] == null) return false;
-            object value = obj.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingDetails TD ON M.MapForLocation=TD.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND TD.TrainingID=@TrainingID AND SM.SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()) });
+            object value = obj.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingDetails TD ON M.TrainingLocationID=L.TrainingLocationID AND L.TrainingLocation=TD.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND TD.TrainingID=@TrainingID AND SM.SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()) });
             return value != null && value != DBNull.Value && Convert.ToInt32(value) > 0;
         }
 
