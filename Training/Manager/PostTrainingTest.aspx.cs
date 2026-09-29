@@ -25,8 +25,7 @@ namespace Training.Manager
                 Response.Redirect("~/Manager/Default.aspx", true);
                 return;
             }
-            Session["ManagerID"] = Session["ManagerID"];
-        }
+                    }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -64,12 +63,12 @@ namespace Training.Manager
             object skipped = objDB.ExecuteScalar("SELECT ISNULL(PostAssessmentSkipped,0) FROM SessionMaster WHERE SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@SessionID", ViewState["SessionID"]) });
             if (!required)
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "PostTrainingRequired", "alert('Post-Training Assessment is not required for this training.');window.location='~/Manager/MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "PostTrainingRequired", "alert('Post-Training Assessment is not required for this training.');window.location='MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
                 return false;
             }
             if (skipped != null && skipped != DBNull.Value && Convert.ToBoolean(skipped))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "PostTrainingSkipped", "alert('Post-Training Assessment has been skipped for this session.');window.location='~/Manager/MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "PostTrainingSkipped", "alert('Post-Training Assessment has been skipped for this session.');window.location='MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
                 return false;
             }
             return true;
@@ -81,7 +80,7 @@ namespace Training.Manager
             if (skipped != null && skipped != DBNull.Value && Convert.ToBoolean(skipped)) return;
             object status = objDB.ExecuteScalar("SELECT AttendanceStatus FROM SessionMaster WHERE SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@SessionID", ViewState["SessionID"]) });
             if (status != null && status.ToString() != "Completed")
-                ScriptManager.RegisterStartupScript(this, GetType(), "Attendance", "alert('Attendance is not completed for this session.');window.location='~/Manager/MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "Attendance", "alert('Attendance is not completed for this session.');window.location='MyTrainings.aspx?SessionID=" + Server.UrlEncode(ViewState["SessionID"].ToString()) + "';", true);
         }
 
         private void CheckExistingTest()
@@ -251,7 +250,7 @@ namespace Training.Manager
             foreach(DataRow emp in employees.Rows)foreach(DataRow q in questions.Rows){string id="TCQ"+Guid.NewGuid().ToString("N");objDB.ExecuteSql("INSERT INTO TestCandidateQuestion (TestCandidateQuestionID,TestID,EmpID,QuestionID,QuestionOrder,Marks,SelectedOption,CorrectOption,IsCorrect,CreatedOn) VALUES (@ID,@TestID,@EmpID,@QuestionID,@QuestionOrder,@Marks,NULL,@CorrectOption,NULL,GETDATE())",new SqlParameter[]{new SqlParameter("@ID",id),new SqlParameter("@TestID",ViewState["TestID"]),new SqlParameter("@EmpID",emp["EmpID"]),new SqlParameter("@QuestionID",q["QuestionID"]),new SqlParameter("@QuestionOrder",q["QuestionOrder"]),new SqlParameter("@Marks",q["Marks"]),new SqlParameter("@CorrectOption",q["CorrectOption"])});}
         }
 
-        protected void btnBack_Click(object sender, EventArgs e){Response.Redirect("~/Manager/MyTrainings.aspx?SessionID="+Server.UrlEncode(Convert.ToString(ViewState["SessionID"])));}
+        protected void btnBack_Click(object sender, EventArgs e){Response.Redirect("~/Manager/MyTrainings.aspx"+Server.UrlEncode(Convert.ToString(ViewState["SessionID"])));}
 
         protected void gvQuestion_RowDataBound(object sender, GridViewRowEventArgs e){if(e.Row.RowType==DataControlRowType.DataRow){Label lbl=e.Row.FindControl("lblSlNo") as Label;if(lbl!=null)lbl.Text=(e.Row.RowIndex+1).ToString();}}
     }
