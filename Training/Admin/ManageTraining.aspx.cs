@@ -147,7 +147,7 @@ AND NOT EXISTS (
         {
             if (!IsTrainingStarted()) return false;
             if (!IsTrainingEndDateReached()) return false;
-            if (!AreAllAttendanceCompleted()) return false;
+            if (IsAttendanceRequired() && !AreAllAttendanceCompleted()) return false;
             if (IsPreTestRequired() && !AreAllTestsCompleted("Pre")) return false;
             if (IsPostTestRequired() && !AreAllTestsCompleted("Post")) return false;
             if (IsFeedbackRequired() && !IsFeedbackSubmitted()) return false;
@@ -364,7 +364,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
                 return;
             }
 
-            if (!AreAllAttendanceCompleted())
+            if (IsAttendanceRequired() && !AreAllAttendanceCompleted())
             {
                 lblMessage.ForeColor = System.Drawing.Color.Red;
                 lblMessage.Text = "Cannot close training. Required attendance is not completed.";
