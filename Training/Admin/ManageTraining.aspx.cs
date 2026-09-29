@@ -257,7 +257,8 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             //btnRequirements.Visible = string.Equals(lblStatus.Text, "InProgress", StringComparison.OrdinalIgnoreCase) || string.Equals(lblStatus.Text, "AttendanceCompleted", StringComparison.OrdinalIgnoreCase);
             //btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
             bool trainingStarted = IsTrainingStarted();
-            bool trainingClosed = GetBool("SELECT CASE WHEN ISNULL(TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", TrainingID);
+            object trainingClosedValue = new clsDataAccess().ExecuteScalar("SELECT CASE WHEN ISNULL(TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END FROM TrainingDetails WHERE TrainingID=@TrainingID", P("@TrainingID", TrainingID));
+            bool trainingClosed = trainingClosedValue != null && trainingClosedValue != DBNull.Value && Convert.ToInt32(trainingClosedValue) == 1;
             bool closeReady = IsCloseTrainingReady();
             btnRequirements.Visible = trainingStarted && !trainingClosed;
             btnAssignFeedback.Visible = fr && !trainingStarted && !trainingClosed;
