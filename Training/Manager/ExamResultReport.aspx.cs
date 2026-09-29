@@ -77,11 +77,6 @@ namespace Training.Manager
         // LOAD TRAINER DETAILS
         //-------------------------------------------------------
 
-        private string GetManagerID()
-        {
-            return Session["ManagerID"] == null ? "" : Session["ManagerID"].ToString().Trim();
-        }
-
         private bool HasManagerTrainingAccess(string trainingID)
         {
             object value = objDB.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND TD.TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@ManagerID",GetManagerID()), new SqlParameter("@TrainingID",trainingID) });
