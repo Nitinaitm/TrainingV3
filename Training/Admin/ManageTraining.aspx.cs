@@ -143,6 +143,17 @@ AND NOT EXISTS (
             return Convert.ToInt32(new clsDataAccess().ExecuteScalar(q, new SqlParameter[] { new SqlParameter("@TrainingID", TrainingID), new SqlParameter("@TestType", testType) })) == 1;
         }
 
+        private bool IsCloseTrainingReady()
+        {
+            if (!IsTrainingStarted()) return false;
+            if (!IsTrainingEndDateReached()) return false;
+            if (!AreAllAttendanceCompleted()) return false;
+            if (IsPreTestRequired() && !AreAllTestsCompleted("Pre")) return false;
+            if (IsPostTestRequired() && !AreAllTestsCompleted("Post")) return false;
+            if (IsFeedbackRequired() && !IsFeedbackSubmitted()) return false;
+            return true;
+        }
+
         private bool IsFeedbackSubmitted()
         {
             string q = @"SELECT CASE WHEN EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned')
@@ -245,12 +256,18 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             btnAssignTrainee.Visible = true;
             //btnRequirements.Visible = string.Equals(lblStatus.Text, "InProgress", StringComparison.OrdinalIgnoreCase) || string.Equals(lblStatus.Text, "AttendanceCompleted", StringComparison.OrdinalIgnoreCase);
             //btnCertificateRules.Visible = !string.Equals(lblStatus.Text, "Completed", StringComparison.OrdinalIgnoreCase) && !string.Equals(lblStatus.Text, "TrainingCompleted", StringComparison.OrdinalIgnoreCase) && workflow != "ABCDEFGHIJ";
-            btnAssignFeedback.Visible = fr;
-            btnAssignFeedback.Enabled = fr;
+            bool trainingStarted = IsTrainingStarted();
+            bool closeReady = IsCloseTrainingReady();
+            btnRequirements.Visible = !trainingStarted;
+            btnAssignFeedback.Visible = fr && !trainingStarted;
+            btnAssignFeedback.Enabled = fr && !trainingStarted;
             btnAssignFeedback.Text = fa ? "Feedback Template ✓" : "Feedback Template";
+            btnCertificateRules.Visible = certificateRequired && !certificateSkipped && !trainingStarted;
             btnStartTraining.Visible = true;
             btnStartTraining.Enabled = !IsTrainingStarted();
             btnAttendance.Visible = false;
+            btnCloseTraining.Visible = false;
+            btnCloseTraining.Enabled = false;
             btnAssignHostel.Visible = hostelRequired;
             btnCertificateTemplate.Visible = certificateRequired && !certificateSkipped;
             btnCertificateTemplate.Enabled = certificateRequired && ta && !IsTrainingStarted() && !certificateSkipped;
@@ -272,6 +289,11 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
                 btnCertificateTemplate.Text = ct ? "Certificate Template ✓" : "Certificate Template";
                 btnAttendance.Visible = true;
                 btnAttendance.Text = ac ? "Attendance ✓" : "Attendance";
+                btnRequirements.Visible = false;
+                btnCertificateRules.Visible = false;
+                btnAssignFeedback.Visible = false;
+                btnCloseTraining.Visible = true;
+                btnCloseTraining.Enabled = closeReady;
                 btnAssignSession.Text = sa ? "Assign Sessions & Trainers ✓" : "Assign Sessions & Trainers";
                 btnAssignTrainee.Text = ta ? "Assign Trainee ✓" : "Assign Trainee";
             }
