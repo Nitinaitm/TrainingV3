@@ -396,6 +396,7 @@
     <Content Include="Manager\MyTrainings.aspx" />
     <Content Include="Manager\PostTrainingTest.aspx" />
     <Content Include="Manager\PreTrainingTest.aspx" />
+    <Content Include="Manager\TrainingDetails.aspx" />
     <Content Include="Manager\TrainingMaterial.aspx" />
     <Content Include="Manager\SessionAttendance.aspx" />
     <Content Include="Manager\TrainingRequirements.aspx" />
@@ -1302,6 +1303,13 @@
     </Compile>
     <Compile Include="Manager\PreTrainingTest.aspx.designer.cs">
       <DependentUpon>PreTrainingTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\TrainingDetails.aspx.cs">
+      <DependentUpon>TrainingDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\TrainingDetails.aspx.designer.cs">
+      <DependentUpon>TrainingDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\TrainingRequirements.aspx.cs">
       <DependentUpon>TrainingRequirements.aspx</DependentUpon>
