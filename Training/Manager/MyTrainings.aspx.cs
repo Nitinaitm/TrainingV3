@@ -26,14 +26,14 @@ namespace Training.Manager
         private void BindTraining()
         {
             string trainingLocationID=GetTrainingLocationID();
-            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID";
+            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus,TRY_CONVERT(date,TD.DateFrom,105) AS SortDate FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID";
             if(!string.IsNullOrWhiteSpace(txtTrainingID.Text))sql+=" AND TD.TrainingID LIKE @TrainingID";
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
             if(!string.IsNullOrWhiteSpace(txtBatch.Text))sql+=" AND TD.Batch LIKE @Batch";
             if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND ISNULL(TD.TrainingStatus,'')=@TrainingStatus";
             if(!string.IsNullOrWhiteSpace(txtFromDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateFrom,105)>=TRY_CONVERT(date,@FromDate,105)";
             if(!string.IsNullOrWhiteSpace(txtToDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateTo,105)<=TRY_CONVERT(date,@ToDate,105)";
-            sql+=" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
+            sql+=" ORDER BY SortDate DESC";
             DataTable dt=objDB.GetDataTable(sql,new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",trainingLocationID),new SqlParameter("@TrainingID","%"+txtTrainingID.Text.Trim()+"%"),new SqlParameter("@TrainingType","%"+txtTrainingType.Text.Trim()+"%"),new SqlParameter("@Batch","%"+txtBatch.Text.Trim()+"%"),new SqlParameter("@TrainingStatus",ddlStatus.SelectedValue),new SqlParameter("@FromDate",txtFromDate.Text.Trim()),new SqlParameter("@ToDate",txtToDate.Text.Trim())});
             gvTraining.DataSource=dt;
             gvTraining.DataBind();
