@@ -2,7 +2,6 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Training.Manager
 {
@@ -19,20 +18,18 @@ namespace Training.Manager
                     Response.Redirect("~/Default.aspx");
                     return;
                 }
-                BindTraining();
-                BindSessions();
             }
         }
 
         private bool LoadManager()
         {
-            if (Session["ManagerID"] == null || Session["ManagerEmpID"] == null)
+            if (Session["ManagerID"] == null)
             {
                 return false;
             }
 
-            string managerID = Session["ManagerID"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT M.ManagerID,M.EmpID,E.EmpName,E.EmpDesignation,E.EmpPostingPlace,M.MapForLocation,M.TrainingLocationID,L.TrainingLocation FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID LEFT JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@ManagerID", managerID) });
+            string managerID = Session["ManagerID"].ToString().Trim();
+            DataTable dt = objDB.GetDataTable("SELECT TOP 1 M.ManagerID,M.EmpID,E.EmpName,E.EmpDesignation,E.EmpPostingPlace,M.MapForLocation,M.TrainingLocationID,L.TrainingLocation FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID LEFT JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@ManagerID", managerID) });
 
             if (dt.Rows.Count == 0)
             {
@@ -46,46 +43,11 @@ namespace Training.Manager
             lblPosting.Text = dt.Rows[0]["EmpPostingPlace"].ToString();
             lblMapForLocation.Text = dt.Rows[0]["MapForLocation"].ToString();
             lblTrainingLocation.Text = dt.Rows[0]["TrainingLocation"].ToString();
+
             Session["ManagerMapForLocation"] = dt.Rows[0]["MapForLocation"].ToString();
             Session["ManagerTrainingLocationID"] = dt.Rows[0]["TrainingLocationID"].ToString();
+
             return true;
-        }
-
-        private void BindSessions()
-        {
-            string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,SM.SessionDate,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
-            gvSession.DataSource = dt;
-            gvSession.DataBind();
-        }
-
-        protected void gvTraining_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName != "Requirements") return;
-            string trainingID = e.CommandArgument == null ? "" : e.CommandArgument.ToString();
-            if (string.IsNullOrWhiteSpace(trainingID)) return;
-            Session["TrainingID"] = trainingID;
-            Response.Redirect("~/Manager/TrainingRequirements.aspx");
-        }
-
-        protected void gvSession_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName != "Material" && e.CommandName != "Attendance") return;
-            GridViewRow row = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-            string sessionID = gvSession.DataKeys[row.RowIndex].Values["SessionID"].ToString();
-            string trainingID = gvSession.DataKeys[row.RowIndex].Values["TrainingID"].ToString();
-            Session["TrainingID"] = trainingID;
-            Session["SessionID"] = sessionID;
-            Session["TrainerID"] = Session["ManagerID"];
-            Response.Redirect(e.CommandName == "Material" ? "~/Manager/TrainingMaterial.aspx" : "~/Manager/SessionAttendance.aspx");
-        }
-
-        private void BindTraining()
-        {
-            string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus,TRY_CONVERT(date,TD.DateFrom,105) AS SortDate FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY SortDate DESC", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
-            gvTraining.DataSource = dt;
-            gvTraining.DataBind();
         }
     }
 }
