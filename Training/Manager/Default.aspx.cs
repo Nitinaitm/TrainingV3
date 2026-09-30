@@ -8,9 +8,16 @@ namespace Training.Manager
     public partial class Default : Page
     {
         private readonly clsDataAccess objDB = new clsDataAccess();
+        private string ManagerID { get { return Session["ManagerID"] == null ? "" : Session["ManagerID"].ToString().Trim(); } }
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(ManagerID))
+            {
+                Response.Redirect("~/Default.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 if (!LoadManager())
@@ -18,23 +25,16 @@ namespace Training.Manager
                     Response.Redirect("~/Default.aspx");
                     return;
                 }
+
+                LoadDashboard();
             }
         }
 
         private bool LoadManager()
         {
-            if (Session["ManagerID"] == null)
-            {
-                return false;
-            }
+            DataTable dt = objDB.GetDataTable("SELECT TOP 1 M.ManagerID,M.EmpID,E.EmpName,E.EmpDesignation,E.EmpPostingPlace,M.MapForLocation,M.TrainingLocationID,L.TrainingLocation FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID LEFT JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@ManagerID", ManagerID) });
 
-            string managerID = Session["ManagerID"].ToString().Trim();
-            DataTable dt = objDB.GetDataTable("SELECT TOP 1 M.ManagerID,M.EmpID,E.EmpName,E.EmpDesignation,E.EmpPostingPlace,M.MapForLocation,M.TrainingLocationID,L.TrainingLocation FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID LEFT JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@ManagerID", managerID) });
-
-            if (dt.Rows.Count == 0)
-            {
-                return false;
-            }
+            if (dt.Rows.Count == 0) return false;
 
             lblManagerID.Text = dt.Rows[0]["ManagerID"].ToString();
             lblEmpID.Text = dt.Rows[0]["EmpID"].ToString();
@@ -43,11 +43,52 @@ namespace Training.Manager
             lblPosting.Text = dt.Rows[0]["EmpPostingPlace"].ToString();
             lblMapForLocation.Text = dt.Rows[0]["MapForLocation"].ToString();
             lblTrainingLocation.Text = dt.Rows[0]["TrainingLocation"].ToString();
+            lblDashboardLocation.Text = dt.Rows[0]["TrainingLocation"].ToString();
 
             Session["ManagerMapForLocation"] = dt.Rows[0]["MapForLocation"].ToString();
             Session["ManagerTrainingLocationID"] = dt.Rows[0]["TrainingLocationID"].ToString();
 
             return true;
+        }
+
+        private string GetTrainingLocationID()
+        {
+            return Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString().Trim();
+        }
+
+        private void LoadDashboard()
+        {
+            string locationID = GetTrainingLocationID();
+            if (string.IsNullOrWhiteSpace(locationID)) return;
+
+            DataTable training = objDB.GetDataTable("SELECT COUNT(DISTINCT TD.TrainingID) TotalTrainings,SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Planned','InProgress','AttendanceCompleted') THEN 1 ELSE 0 END) ActiveTrainings,SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedTrainings,SUM(CASE WHEN ISNULL(TD.TrainingStatus,'')='Planned' THEN 1 ELSE 0 END) PlannedTrainings,SUM(CASE WHEN ISNULL(TD.TrainingStatus,'')='InProgress' THEN 1 ELSE 0 END) InProgressTrainings,SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedSummary FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+
+            if (training.Rows.Count > 0)
+            {
+                DataRow r = training.Rows[0];
+                lblTotalTrainings.Text = Convert.ToString(r["TotalTrainings"]);
+                lblActiveTrainings.Text = Convert.ToString(r["ActiveTrainings"]);
+                lblCompletedTrainings.Text = Convert.ToString(r["CompletedTrainings"]);
+                lblPlanned.Text = Convert.ToString(r["PlannedTrainings"]);
+                lblInProgress.Text = Convert.ToString(r["InProgressTrainings"]);
+                lblCompletedSummary.Text = Convert.ToString(r["CompletedSummary"]);
+            }
+
+            DataTable sessions = objDB.GetDataTable("SELECT COUNT(*) TotalSessions,SUM(CASE WHEN ISNULL(SM.AttendanceStatus,'Pending')='Completed' THEN 1 ELSE 0 END) SessionsCompleted,SUM(CASE WHEN ISNULL(SM.AttendanceStatus,'Pending')<>'Completed' THEN 1 ELSE 0 END) AttendancePending,SUM(CASE WHEN TRY_CONVERT(date,SM.SessionDate,105)>=CONVERT(date,GETDATE()) THEN 1 ELSE 0 END) UpcomingSessions FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+
+            if (sessions.Rows.Count > 0)
+            {
+                DataRow r = sessions.Rows[0];
+                lblTotalSessions.Text = Convert.ToString(r["TotalSessions"]);
+                lblSessionsCompleted.Text = Convert.ToString(r["SessionsCompleted"]);
+                lblAttendancePending.Text = Convert.ToString(r["AttendancePending"]);
+                lblUpcomingSessions.Text = Convert.ToString(r["UpcomingSessions"]);
+            }
+
+            DataTable upcoming = objDB.GetDataTable("SELECT TOP 10 TD.TrainingID,TD.Batch,SM.SessionNo,SM.SessionName,SM.SessionDate,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND TRY_CONVERT(date,SM.SessionDate,105)>=CONVERT(date,GETDATE()) ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo),SM.SessionID", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+
+            gvUpcomingSessions.DataSource = upcoming;
+            gvUpcomingSessions.DataBind();
         }
     }
 }
