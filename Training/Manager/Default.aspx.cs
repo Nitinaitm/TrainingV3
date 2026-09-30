@@ -42,7 +42,6 @@ namespace Training.Manager
             lblDesignation.Text = dt.Rows[0]["EmpDesignation"].ToString();
             lblPosting.Text = dt.Rows[0]["EmpPostingPlace"].ToString();
             lblMapForLocation.Text = dt.Rows[0]["MapForLocation"].ToString();
-            lblTrainingLocation.Text = dt.Rows[0]["TrainingLocation"].ToString();
 
             Session["ManagerMapForLocation"] = dt.Rows[0]["MapForLocation"].ToString();
             Session["ManagerTrainingLocationID"] = dt.Rows[0]["TrainingLocationID"].ToString();
