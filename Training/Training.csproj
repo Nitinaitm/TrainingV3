@@ -392,6 +392,10 @@
     <Content Include="BatchLifecycle.ascx" />
     <Content Include="ManagerMaster.Master" />
     <Content Include="Manager\Default.aspx" />
+    <Content Include="Manager\ExamResultReport.aspx" />
+    <Content Include="Manager\MyTrainings.aspx" />
+    <Content Include="Manager\PostTrainingTest.aspx" />
+    <Content Include="Manager\PreTrainingTest.aspx" />
     <Content Include="Manager\TrainingMaterial.aspx" />
     <Content Include="Manager\SessionAttendance.aspx" />
     <Content Include="Manager\TrainingRequirements.aspx" />
@@ -1270,6 +1274,34 @@
     </Compile>
     <Compile Include="Manager\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\ExamResultReport.aspx.cs">
+      <DependentUpon>ExamResultReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\ExamResultReport.aspx.designer.cs">
+      <DependentUpon>ExamResultReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\MyTrainings.aspx.cs">
+      <DependentUpon>MyTrainings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\MyTrainings.aspx.designer.cs">
+      <DependentUpon>MyTrainings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\PostTrainingTest.aspx.cs">
+      <DependentUpon>PostTrainingTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\PostTrainingTest.aspx.designer.cs">
+      <DependentUpon>PostTrainingTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\PreTrainingTest.aspx.cs">
+      <DependentUpon>PreTrainingTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\PreTrainingTest.aspx.designer.cs">
+      <DependentUpon>PreTrainingTest.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\TrainingRequirements.aspx.cs">
       <DependentUpon>TrainingRequirements.aspx</DependentUpon>
