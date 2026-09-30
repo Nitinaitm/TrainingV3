@@ -62,7 +62,7 @@
         <div class="row">
             <div class="col-md-4 mb-3"><div class="info-label">Planned</div><div class="info-value"><asp:Label ID="lblPlanned" runat="server" Text="0" /></div></div>
             <div class="col-md-4 mb-3"><div class="info-label">In Progress</div><div class="info-value"><asp:Label ID="lblInProgress" runat="server" Text="0" /></div></div>
-            <div class="col-md-4 mb-3"><div class="info-label">Completed / Training Completed</div><div class="info-value"><asp:Label ID="lblCompletedSummary" runat="server" Text="0" /></div></div>
+            <div class="col-md-4 mb-3"><div class="info-label">Completed - Training Completed</div><div class="info-value"><asp:Label ID="lblCompletedSummary" runat="server" Text="0" /></div></div>
         </div>
     </div>
 </div>
