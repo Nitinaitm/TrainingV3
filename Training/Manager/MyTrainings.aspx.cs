@@ -26,7 +26,7 @@ namespace Training.Manager
         private void BindTraining()
         {
             string trainingLocationID=Session["ManagerTrainingLocationID"]==null ? TrainingLocationID : Session["ManagerTrainingLocationID"].ToString();
-            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
+            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID";
             if(!string.IsNullOrWhiteSpace(txtTrainingID.Text))sql+=" AND TD.TrainingID LIKE @TrainingID";
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
             if(!string.IsNullOrWhiteSpace(txtBatch.Text))sql+=" AND TD.Batch LIKE @Batch";
