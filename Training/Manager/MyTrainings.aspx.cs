@@ -19,13 +19,13 @@ namespace Training.Manager
 
         protected void Page_Load(object sender,EventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(ManagerID) || Session["Role"]==null || Session["Role"].ToString()!="Manager"){Response.Redirect("~/Default.aspx");return;}
+            if(string.IsNullOrWhiteSpace(ManagerID)){Response.Redirect("~/Default.aspx");return;}
             if(!IsPostBack){BindTraining();}
         }
 
         private void BindTraining()
         {
-            string trainingLocationID=Session["ManagerTrainingLocationID"]==null ? TrainingLocationID : Session["ManagerTrainingLocationID"].ToString().Trim();
+            string trainingLocationID=Session["ManagerTrainingLocationID"]==null ? TrainingLocationID : Session["ManagerTrainingLocationID"].ToString();
             string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
             if(!string.IsNullOrWhiteSpace(txtTrainingID.Text))sql+=" AND TD.TrainingID LIKE @TrainingID";
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
