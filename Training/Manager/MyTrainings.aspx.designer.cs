@@ -12,7 +12,7 @@ namespace Training.Manager
         protected global::System.Web.UI.WebControls.Button btnReset;
         protected global::System.Web.UI.WebControls.Label lblMessage;
         protected global::System.Web.UI.WebControls.GridView gvTraining;
-        protected global::System.Web.UI.WebControls.Panel pnlDetails;
+        protected global::System.Web.UI.WebControls.Panel pnlSessions;
         protected global::System.Web.UI.WebControls.Label lblDetailTrainingID;
         protected global::System.Web.UI.WebControls.Label lblDetailType;
         protected global::System.Web.UI.WebControls.Label lblDetailOrganizer;
