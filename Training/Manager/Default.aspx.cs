@@ -51,7 +51,6 @@ namespace Training.Manager
             return true;
         }
 
-
         private void BindSessions()
         {
             string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
@@ -84,7 +83,7 @@ namespace Training.Manager
         private void BindTraining()
         {
             string trainingLocationID = Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString();
-            DataTable dt = objDB.GetDataTable("SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
+            DataTable dt = objDB.GetDataTable("SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus,TRY_CONVERT(date,TD.DateFrom,105) AS SortDate FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY SortDate DESC", new SqlParameter[] { new SqlParameter("@ManagerID",Session["ManagerID"].ToString()), new SqlParameter("@TrainingLocationID",trainingLocationID) });
             gvTraining.DataSource = dt;
             gvTraining.DataBind();
         }
