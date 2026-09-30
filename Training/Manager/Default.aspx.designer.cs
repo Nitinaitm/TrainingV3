@@ -12,5 +12,17 @@ namespace Training.Manager
         protected global::System.Web.UI.WebControls.Label lblPosting;
         protected global::System.Web.UI.WebControls.Label lblMapForLocation;
         protected global::System.Web.UI.WebControls.Label lblTrainingLocation;
+        protected global::System.Web.UI.WebControls.Label lblTotalTrainings;
+        protected global::System.Web.UI.WebControls.Label lblActiveTrainings;
+        protected global::System.Web.UI.WebControls.Label lblCompletedTrainings;
+        protected global::System.Web.UI.WebControls.Label lblTotalSessions;
+        protected global::System.Web.UI.WebControls.Label lblUpcomingSessions;
+        protected global::System.Web.UI.WebControls.Label lblAttendancePending;
+        protected global::System.Web.UI.WebControls.Label lblSessionsCompleted;
+        protected global::System.Web.UI.WebControls.Label lblDashboardLocation;
+        protected global::System.Web.UI.WebControls.GridView gvUpcomingSessions;
+        protected global::System.Web.UI.WebControls.Label lblPlanned;
+        protected global::System.Web.UI.WebControls.Label lblInProgress;
+        protected global::System.Web.UI.WebControls.Label lblCompletedSummary;
     }
 }
