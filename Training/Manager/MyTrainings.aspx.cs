@@ -25,16 +25,18 @@ namespace Training.Manager
 
         private void BindTraining()
         {
-            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND LTRIM(RTRIM(TD.TrainingLocation))=LTRIM(RTRIM(L.TrainingLocation))";
+            string trainingLocationID=Session["ManagerTrainingLocationID"]==null ? TrainingLocationID : Session["ManagerTrainingLocationID"].ToString().Trim();
+            string sql="SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
             if(!string.IsNullOrWhiteSpace(txtTrainingID.Text))sql+=" AND TD.TrainingID LIKE @TrainingID";
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
             if(!string.IsNullOrWhiteSpace(txtBatch.Text))sql+=" AND TD.Batch LIKE @Batch";
             if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND ISNULL(TD.TrainingStatus,'')=@TrainingStatus";
             if(!string.IsNullOrWhiteSpace(txtFromDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateFrom,105)>=TRY_CONVERT(date,@FromDate,105)";
             if(!string.IsNullOrWhiteSpace(txtToDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateTo,105)<=TRY_CONVERT(date,@ToDate,105)";
-            sql+=" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC,TD.TrainingID DESC";
-            DataTable dt=objDB.GetDataTable(sql,new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",TrainingLocationID),new SqlParameter("@TrainingID","%"+txtTrainingID.Text.Trim()+"%"),new SqlParameter("@TrainingType","%"+txtTrainingType.Text.Trim()+"%"),new SqlParameter("@Batch","%"+txtBatch.Text.Trim()+"%"),new SqlParameter("@TrainingStatus",ddlStatus.SelectedValue),new SqlParameter("@FromDate",txtFromDate.Text.Trim()),new SqlParameter("@ToDate",txtToDate.Text.Trim())});
-            gvTraining.DataSource=dt;gvTraining.DataBind();
+            sql+=" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
+            DataTable dt=objDB.GetDataTable(sql,new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",trainingLocationID),new SqlParameter("@TrainingID","%"+txtTrainingID.Text.Trim()+"%"),new SqlParameter("@TrainingType","%"+txtTrainingType.Text.Trim()+"%"),new SqlParameter("@Batch","%"+txtBatch.Text.Trim()+"%"),new SqlParameter("@TrainingStatus",ddlStatus.SelectedValue),new SqlParameter("@FromDate",txtFromDate.Text.Trim()),new SqlParameter("@ToDate",txtToDate.Text.Trim())});
+            gvTraining.DataSource=dt;
+            gvTraining.DataBind();
         }
 
         protected void btnSearch_Click(object sender,EventArgs e){pnlSessions.Visible=false;BindTraining();}
