@@ -26,8 +26,15 @@
 <div class="table-responsive">
 <asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Training Found" ShowHeaderWhenEmpty="true" DataKeyNames="TrainingID" OnRowCommand="gvTraining_RowCommand">
 <Columns>
-<asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex+1 %></ItemTemplate></asp:TemplateField>
-<asp:BoundField DataField="TrainingID" HeaderText="Training ID" /><asp:BoundField DataField="TrainingType" HeaderText="Training Type" /><asp:BoundField DataField="TrainingOrganizer" HeaderText="Organizer" /><asp:BoundField DataField="TrainingLocation" HeaderText="Training Location" /><asp:BoundField DataField="Batch" HeaderText="Batch" /><asp:BoundField DataField="DateFrom" HeaderText="From" /><asp:BoundField DataField="DateTo" HeaderText="To" /><asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
+<asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
+<asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+<asp:BoundField DataField="TrainingType" HeaderText="Training Type" />
+<asp:BoundField DataField="TrainingOrganizer" HeaderText="Organizer" />
+<asp:BoundField DataField="TrainingLocation" HeaderText="Training Location" />
+<asp:BoundField DataField="Batch" HeaderText="Batch" />
+<asp:BoundField DataField="DateFrom" HeaderText="From" />
+<asp:BoundField DataField="DateTo" HeaderText="To" />
+<asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
 <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:Button ID="btnView" runat="server" Text="View" CssClass="btn btn-primary btn-sm" CommandName="ViewTraining" CommandArgument='<%# Eval("TrainingID") %>' CausesValidation="false" /></ItemTemplate></asp:TemplateField>
 </Columns>
 </asp:GridView>
