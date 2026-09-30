@@ -31,13 +31,13 @@
     </div>
 
     <div class="row g-3 mb-1">
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-primary"><div class="kpi-label">Total Trainings</div><div class="kpi-value"><asp:Label ID="lblTotalTrainings" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-success"><div class="kpi-label">Active Trainings</div><div class="kpi-value"><asp:Label ID="lblActiveTrainings" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-warning text-dark"><div class="kpi-label">Completed Trainings</div><div class="kpi-value"><asp:Label ID="lblCompletedTrainings" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-info"><div class="kpi-label">Total Sessions</div><div class="kpi-value"><asp:Label ID="lblTotalSessions" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-secondary"><div class="kpi-label">Upcoming Sessions</div><div class="kpi-value"><asp:Label ID="lblUpcomingSessions" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-danger"><div class="kpi-label">Attendance Pending</div><div class="kpi-value"><asp:Label ID="lblAttendancePending" runat="server">0</asp:Label></div></div></a></div>
-        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-dark"><div class="kpi-label">Sessions Completed</div><div class="kpi-value"><asp:Label ID="lblSessionsCompleted" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-primary"><div class="kpi-label">Total Trainings</div><div class="kpi-value"><asp:Label ID="lblTotalTrainings" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-success"><div class="kpi-label">Active Trainings</div><div class="kpi-value"><asp:Label ID="lblActiveTrainings" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-warning text-dark"><div class="kpi-label">Completed Trainings</div><div class="kpi-value"><asp:Label ID="lblCompletedTrainings" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-info"><div class="kpi-label">Total Sessions</div><div class="kpi-value"><asp:Label ID="lblTotalSessions" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-secondary"><div class="kpi-label">Upcoming Sessions</div><div class="kpi-value"><asp:Label ID="lblUpcomingSessions" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-danger"><div class="kpi-label">Attendance Pending</div><div class="kpi-value"><asp:Label ID="lblAttendancePending" runat="server" Text="0" /></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-dark"><div class="kpi-label">Sessions Completed</div><div class="kpi-value"><asp:Label ID="lblSessionsCompleted" runat="server" Text="0" /></div></div></a></div>
         
     </div>
 
@@ -60,9 +60,9 @@
     <div class="dashboard-card">
         <div class="section-title">Training Status Summary</div>
         <div class="row">
-            <div class="col-md-4 mb-3"><div class="info-label">Planned</div><div class="info-value"><asp:Label ID="lblPlanned" runat="server">0</asp:Label></div></div>
-            <div class="col-md-4 mb-3"><div class="info-label">In Progress</div><div class="info-value"><asp:Label ID="lblInProgress" runat="server">0</asp:Label></div></div>
-            <div class="col-md-4 mb-3"><div class="info-label">Completed / Training Completed</div><div class="info-value"><asp:Label ID="lblCompletedSummary" runat="server">0</asp:Label></div></div>
+            <div class="col-md-4 mb-3"><div class="info-label">Planned</div><div class="info-value"><asp:Label ID="lblPlanned" runat="server" Text="0" /></div></div>
+            <div class="col-md-4 mb-3"><div class="info-label">In Progress</div><div class="info-value"><asp:Label ID="lblInProgress" runat="server" Text="0" /></div></div>
+            <div class="col-md-4 mb-3"><div class="info-label">Completed / Training Completed</div><div class="info-value"><asp:Label ID="lblCompletedSummary" runat="server" Text="0" /></div></div>
         </div>
     </div>
 </div>
