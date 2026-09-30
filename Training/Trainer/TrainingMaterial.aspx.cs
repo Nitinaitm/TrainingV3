@@ -129,7 +129,7 @@ namespace Training.Trainer
         {
             if (Session["Role"] != null && Session["Role"].ToString() == "Manager")
             {
-                Response.Redirect("~/Manager/Default.aspx");
+                Response.Redirect("~/Manager/TrainingDetails.aspx");
                 return;
             }
             Response.Redirect("~/Trainer/SessionDetails.aspx");
