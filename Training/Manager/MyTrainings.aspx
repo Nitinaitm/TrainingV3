@@ -4,7 +4,8 @@
 .card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:20px;margin-bottom:20px}
 .page-title{font-size:28px;font-weight:600;color:#1e293b;margin-bottom:20px}
 .gridview th{background:#198754;color:#fff;white-space:nowrap}.gridview td{vertical-align:middle;white-space:nowrap}
-.filter-label{font-weight:600;color:#475569;margin-bottom:5px}
+ .filter-label{font-weight:600;color:#475569;margin-bottom:5px}
+.training-id-column{width:110px;max-width:110px;white-space:nowrap;}
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -27,7 +28,7 @@
 <asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Training Found" ShowHeaderWhenEmpty="true" DataKeyNames="TrainingID" OnRowCommand="gvTraining_RowCommand">
 <Columns>
 <asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
-<asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+<asp:BoundField DataField="TrainingID" HeaderText="Training ID"><HeaderStyle CssClass="training-id-column" /><ItemStyle CssClass="training-id-column" /></asp:BoundField>
 <asp:BoundField DataField="TrainingType" HeaderText="Training Type" />
 <asp:BoundField DataField="TrainingOrganizer" HeaderText="Organizer" />
 <asp:BoundField DataField="TrainingLocation" HeaderText="Training Location" />
