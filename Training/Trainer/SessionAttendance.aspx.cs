@@ -228,7 +228,7 @@ namespace Training.Trainer
         {
             if (IsManager)
             {
-                Response.Redirect("~/Manager/Default.aspx");
+                Response.Redirect("~/Manager/TrainingDetails.aspx");
                 return;
             }
             Response.Redirect("~/Trainer/SessionDetails.aspx");

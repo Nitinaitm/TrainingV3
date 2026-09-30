@@ -45,7 +45,12 @@ namespace Training.Trainer
             if (required == null || required == DBNull.Value || !Convert.ToBoolean(required) ||
                 (skipped != null && skipped != DBNull.Value && Convert.ToBoolean(skipped)))
             {
-                Response.Redirect("SessionDetails.aspx?SessionID=" + Server.UrlEncode(Session["SessionID"].ToString()), true);
+                if (Session["Role"] != null && Session["Role"].ToString() == "Manager")
+                {
+                    Response.Redirect("~/Manager/TrainingDetails.aspx", true);
+                    return;
+                }
+                Response.Redirect("SessionDetails.aspx", true);
             }
         }
 
@@ -258,7 +263,15 @@ namespace Training.Trainer
             foreach(DataRow emp in employees.Rows)foreach(DataRow q in questions.Rows){string id="TCQ"+Guid.NewGuid().ToString("N");objDB.ExecuteSql("INSERT INTO TestCandidateQuestion (TestCandidateQuestionID,TestID,EmpID,QuestionID,QuestionOrder,Marks,SelectedOption,CorrectOption,IsCorrect,CreatedOn) VALUES (@ID,@TestID,@EmpID,@QuestionID,@QuestionOrder,@Marks,NULL,@CorrectOption,NULL,GETDATE())",new SqlParameter[]{new SqlParameter("@ID",id),new SqlParameter("@TestID",ViewState["TestID"]),new SqlParameter("@EmpID",emp["EmpID"]),new SqlParameter("@QuestionID",q["QuestionID"]),new SqlParameter("@QuestionOrder",q["QuestionOrder"]),new SqlParameter("@Marks",q["Marks"]),new SqlParameter("@CorrectOption",q["CorrectOption"])});}
         }
 
-        protected void btnBack_Click(object sender, EventArgs e){Response.Redirect("SessionDetails.aspx?SessionID="+Server.UrlEncode(Convert.ToString(ViewState["SessionID"])));}
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            if (Session["Role"] != null && Session["Role"].ToString() == "Manager")
+            {
+                Response.Redirect("~/Manager/TrainingDetails.aspx");
+                return;
+            }
+            Response.Redirect("SessionDetails.aspx");
+        }
 
         protected void gvQuestion_RowDataBound(object sender, GridViewRowEventArgs e){if(e.Row.RowType==DataControlRowType.DataRow){Label lbl=e.Row.FindControl("lblSlNo") as Label;if(lbl!=null)lbl.Text=(e.Row.RowIndex+1).ToString();}}
     }
