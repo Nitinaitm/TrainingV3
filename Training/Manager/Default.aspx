@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        .dashboard-card{background:#fff;border-radius:12px;padding:22px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+        .dashboard-card{background:linear-gradient(135deg,#ffffff,#f8fafc);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 18px rgba(15,23,42,.10);border:1px solid #e2e8f0}\n        .profile-card{background:linear-gradient(135deg,#eef6ff 0%,#ffffff 55%,#f0fdf4 100%);border:1px solid #dbeafe}\n        .profile-badge{display:inline-block;padding:6px 12px;border-radius:20px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:700;margin-bottom:12px}\n        .profile-item{background:rgba(255,255,255,.72);border:1px solid rgba(226,232,240,.9);border-radius:10px;padding:12px 14px;height:100%}
         .page-title{font-size:28px;font-weight:600;color:#1e293b;margin-bottom:20px}
         .info-label{font-size:13px;color:#64748b;font-weight:600;margin-bottom:4px}
         .info-value{font-size:16px;color:#1e2937;font-weight:500}
@@ -20,25 +20,25 @@
     <div class="dashboard-card">
         <div class="section-title">My Details</div>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Manager ID</div><div class="info-value"><asp:Label ID="lblManagerID" runat="server" /></div></div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Employee ID</div><div class="info-value"><asp:Label ID="lblEmpID" runat="server" /></div></div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Name</div><div class="info-value"><asp:Label ID="lblName" runat="server" /></div></div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Designation</div><div class="info-value"><asp:Label ID="lblDesignation" runat="server" /></div></div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Posting</div><div class="info-value"><asp:Label ID="lblPosting" runat="server" /></div></div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="info-label">Mapped Location</div><div class="info-value"><asp:Label ID="lblMapForLocation" runat="server" /></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Manager ID</div><div class="info-value"><asp:Label ID="lblManagerID" runat="server" /></div></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Employee ID</div><div class="info-value"><asp:Label ID="lblEmpID" runat="server" /></div></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Name</div><div class="info-value"><asp:Label ID="lblName" runat="server" /></div></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Designation</div><div class="info-value"><asp:Label ID="lblDesignation" runat="server" /></div></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Posting</div><div class="info-value"><asp:Label ID="lblPosting" runat="server" /></div></div></div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4"><div class="profile-item"><div class="info-label">Mapped Location</div><div class="info-value"><asp:Label ID="lblMapForLocation" runat="server" /></div></div></div>
             <div class="col-lg-6 col-md-8 col-sm-12 mb-2"><div class="info-label">Training Location</div><div class="info-value"><asp:Label ID="lblTrainingLocation" runat="server" /></div></div>
         </div>
     </div>
 
     <div class="row g-3 mb-1">
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-primary"><div class="kpi-label">Total Trainings</div><div class="kpi-value"><asp:Label ID="lblTotalTrainings" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-success"><div class="kpi-label">Active Trainings</div><div class="kpi-value"><asp:Label ID="lblActiveTrainings" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-warning text-dark"><div class="kpi-label">Completed Trainings</div><div class="kpi-value"><asp:Label ID="lblCompletedTrainings" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-info"><div class="kpi-label">Total Sessions</div><div class="kpi-value"><asp:Label ID="lblTotalSessions" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-secondary"><div class="kpi-label">Upcoming Sessions</div><div class="kpi-value"><asp:Label ID="lblUpcomingSessions" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-danger"><div class="kpi-label">Attendance Pending</div><div class="kpi-value"><asp:Label ID="lblAttendancePending" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-dark"><div class="kpi-label">Sessions Completed</div><div class="kpi-value"><asp:Label ID="lblSessionsCompleted" runat="server">0</asp:Label></div></div></div>
-        <div class="col-xl-3 col-md-6"><div class="kpi-card bg-success"><div class="kpi-label">Training Location</div><div class="kpi-value" style="font-size:18px"><asp:Label ID="lblDashboardLocation" runat="server">-</asp:Label></div></div></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-primary"><div class="kpi-label">Total Trainings</div><div class="kpi-value"><asp:Label ID="lblTotalTrainings" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-success"><div class="kpi-label">Active Trainings</div><div class="kpi-value"><asp:Label ID="lblActiveTrainings" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-warning text-dark"><div class="kpi-label">Completed Trainings</div><div class="kpi-value"><asp:Label ID="lblCompletedTrainings" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-info"><div class="kpi-label">Total Sessions</div><div class="kpi-value"><asp:Label ID="lblTotalSessions" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-secondary"><div class="kpi-label">Upcoming Sessions</div><div class="kpi-value"><asp:Label ID="lblUpcomingSessions" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-danger"><div class="kpi-label">Attendance Pending</div><div class="kpi-value"><asp:Label ID="lblAttendancePending" runat="server">0</asp:Label></div></div></a></div>
+        <div class="col-xl-3 col-md-6"><a href="MyTrainings.aspx" class="text-decoration-none"><div class="kpi-card bg-dark"><div class="kpi-label">Sessions Completed</div><div class="kpi-value"><asp:Label ID="lblSessionsCompleted" runat="server">0</asp:Label></div></div></a></div>
+        
     </div>
 
     <div class="dashboard-card mt-4">
