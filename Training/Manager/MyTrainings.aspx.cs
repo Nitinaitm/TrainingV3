@@ -14,7 +14,24 @@ namespace Training.Manager
         protected void Page_Load(object sender,EventArgs e)
         {
             if(string.IsNullOrWhiteSpace(ManagerID)){Response.Redirect("~/Default.aspx");return;}
-            if(!IsPostBack){BindTraining();}
+            if(!IsPostBack)
+            {
+                string sessionID=Request.QueryString["SessionID"];
+                if(!string.IsNullOrWhiteSpace(sessionID))
+                {
+                    DataTable sessionTable=objDB.GetDataTable("SELECT TOP 1 SM.TrainingID FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN ManagerMaster M ON M.TrainingLocationID IN (SELECT TrainingLocationID FROM TrainingLocationMaster WHERE TrainingLocation=TD.TrainingLocation) WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND SM.SessionID=@SessionID",new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@SessionID",sessionID)});
+                    if(sessionTable.Rows.Count>0)
+                    {
+                        Session["TrainingID"]=sessionTable.Rows[0]["TrainingID"].ToString();
+                        Session["SessionID"]=sessionID;
+                        Response.Redirect("~/Manager/TrainingDetails.aspx",true);
+                        return;
+                    }
+                    Response.Redirect("~/Manager/MyTrainings.aspx",true);
+                    return;
+                }
+                BindTraining();
+            }
         }
 
         private string GetTrainingLocationID()
