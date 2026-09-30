@@ -1,10 +1,10 @@
-<%@ Page Title="My Trainings" Language="C#" MasterPageFile="~/ManagerMaster.Master" AutoEventWireup="true" CodeBehind="MyTrainings.aspx.cs" Inherits="Training.Manager.MyTrainings" MaintainScrollPositionOnPostback="true" %>
+<%@ Page Title="My Trainings" Language="C#" MasterPageFile="~/ManagerMaster.Master" AutoEventWireup="true" CodeBehind="MyTrainings.aspx.cs" Inherits="Training.Manager.MyTrainings" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
 .card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:20px;margin-bottom:20px}
 .page-title{font-size:28px;font-weight:600;color:#1e293b;margin-bottom:20px}
 .gridview th{background:#198754;color:#fff;white-space:nowrap}.gridview td{vertical-align:middle;white-space:nowrap}
-.filter-label{font-weight:600;color:#475569;margin-bottom:5px}.action-btn{min-width:160px;margin:5px}
+.filter-label{font-weight:600;color:#475569;margin-bottom:5px}
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -29,41 +29,9 @@
 <asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex+1 %></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="TrainingID" HeaderText="Training ID" /><asp:BoundField DataField="TrainingType" HeaderText="Training Type" /><asp:BoundField DataField="TrainingOrganizer" HeaderText="Organizer" /><asp:BoundField DataField="TrainingLocation" HeaderText="Training Location" /><asp:BoundField DataField="Batch" HeaderText="Batch" /><asp:BoundField DataField="DateFrom" HeaderText="From" /><asp:BoundField DataField="DateTo" HeaderText="To" /><asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
 <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:Button ID="btnView" runat="server" Text="View" CssClass="btn btn-primary btn-sm" CommandName="ViewTraining" CommandArgument='<%# Eval("TrainingID") %>' CausesValidation="false" /></ItemTemplate></asp:TemplateField>
-</Columns></asp:GridView>
-</div>
-</div>
-<asp:Panel ID="pnlSessions" runat="server" Visible="false">
-<div class="card">
-<h5>Selected Training</h5>
-<div class="row">
-<div class="col-md-3"><strong>Training ID</strong><br/><asp:Label ID="lblDetailTrainingID" runat="server"/></div>
-<div class="col-md-3"><strong>Training Type</strong><br/><asp:Label ID="lblDetailType" runat="server"/></div>
-<div class="col-md-3"><strong>Organizer</strong><br/><asp:Label ID="lblDetailOrganizer" runat="server"/></div>
-<div class="col-md-3"><strong>Training Location</strong><br/><asp:Label ID="lblDetailLocation" runat="server"/></div>
-<div class="col-md-3 mt-3"><strong>Batch</strong><br/><asp:Label ID="lblDetailBatch" runat="server"/></div>
-<div class="col-md-3 mt-3"><strong>From</strong><br/><asp:Label ID="lblDetailFrom" runat="server"/></div>
-<div class="col-md-3 mt-3"><strong>To</strong><br/><asp:Label ID="lblDetailTo" runat="server"/></div>
-<div class="col-md-3 mt-3"><strong>Status</strong><br/><asp:Label ID="lblDetailStatus" runat="server"/></div>
-</div>
-<hr/>
-<h5>Sessions</h5>
-<div class="table-responsive">
-<asp:GridView ID="gvSession" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Session Found" ShowHeaderWhenEmpty="true" DataKeyNames="SessionID">
-<Columns>
-<asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex+1 %></ItemTemplate></asp:TemplateField>
-<asp:BoundField DataField="SessionID" HeaderText="Session ID"/><asp:BoundField DataField="SessionNo" HeaderText="Session No"/><asp:BoundField DataField="SessionName" HeaderText="Session Name"/><asp:BoundField DataField="SessionDate" HeaderText="Session Date"/><asp:BoundField DataField="TrainerName" HeaderText="Trainer"/>
-<asp:TemplateField HeaderText="Select"><ItemTemplate><asp:RadioButton ID="rbSession" runat="server" GroupName="ManagerSession" /></ItemTemplate></asp:TemplateField>
 </Columns>
 </asp:GridView>
 </div>
-<div class="mt-3">
-<asp:Button ID="btnMaterial" runat="server" Text="Upload Materials" CssClass="btn btn-success action-btn" OnClick="btnMaterial_Click"/>
-<asp:Button ID="btnAttendance" runat="server" Text="Attendance" CssClass="btn btn-info action-btn" OnClick="btnAttendance_Click"/>
-<asp:Button ID="btnPreTest" runat="server" Text="Pre Training Test" CssClass="btn btn-warning action-btn" OnClick="btnPreTest_Click"/>
-<asp:Button ID="btnPostTest" runat="server" Text="Post Training Test" CssClass="btn btn-dark action-btn" OnClick="btnPostTest_Click"/>
-<asp:Button ID="btnResult" runat="server" Text="Test Result" CssClass="btn btn-primary action-btn" OnClick="btnResult_Click"/>
 </div>
-</div>
-</asp:Panel>
 </div>
 </asp:Content>
