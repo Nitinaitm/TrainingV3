@@ -47,7 +47,7 @@ namespace Training.Manager
         {
             string sql = "SELECT SM.SessionID,SM.SessionName,SM.SessionDate,SM.TopicID,TM.TopicName,SM.TrainerID,ISNULL(EBM.EmpName,TMR.NameExternal) AS TrainerName,TD.TrainingID,TD.TrainingType,TD.BatchStrength FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TopicMaster TM ON SM.TopicID=TM.TopicID LEFT JOIN EmpBasicMaster EBM ON SM.TrainerID=EBM.EmpID LEFT JOIN TrainerMaster TMR ON SM.TrainerID=TMR.TrainerID WHERE SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID";
             DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { new SqlParameter("@SessionID", ViewState["SessionID"]), new SqlParameter("@TrainingID", Session["TrainingID"]) });
-            if (dt.Rows.Count == 0) { Response.Redirect("~/Manager/MyTrainings.aspx"); return; }
+            if (dt.Rows.Count == 0) { Response.Redirect("~/Manager/TrainingDetails.aspx"); return; }
 
             lblSession.Text = dt.Rows[0]["SessionName"].ToString();
             ViewState["TopicID"] = dt.Rows[0]["TopicID"].ToString();
@@ -64,7 +64,7 @@ namespace Training.Manager
             if (requiredResult == null || requiredResult == DBNull.Value || !Convert.ToBoolean(requiredResult))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "PreTrainingRequired",
-                    "alert('Pre-Training Assessment is not required for this training.');window.location='MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
+                    "alert('Pre-Training Assessment is not required for this training.');window.location='TrainingDetails.aspx';", true);
                 return false;
             }
 
@@ -75,7 +75,7 @@ namespace Training.Manager
             if (skipped != null && skipped != DBNull.Value && Convert.ToBoolean(skipped))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "PreTrainingSkipped",
-                    "alert('Pre-Training Assessment has been skipped for this session.');window.location='MyTrainings.aspx?SessionID=" + ViewState["SessionID"] + "';", true);
+                    "alert('Pre-Training Assessment has been skipped for this session.');window.location='TrainingDetails.aspx';", true);
                 return false;
             }
 
@@ -585,7 +585,7 @@ namespace Training.Manager
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("SessionDetails.aspx");
+            Response.Redirect("~/Manager/TrainingDetails.aspx");
         }
 
         protected void gvQuestion_RowDataBound(object sender, GridViewRowEventArgs e)
