@@ -1,4 +1,4 @@
-<%@ Master language="C#" autoeventwireup="true" codebehind="ManagerMaster.Master.cs" inherits="Training.ManagerMaster" %>
+<%@ master language="C#" autoeventwireup="true" codebehind="ManagerMaster.Master.cs" inherits="Training.ManagerMaster" %>
 
 <!DOCTYPE html>
 <html>
@@ -65,9 +65,9 @@
             text-decoration: none;
         }
 
-        .notification:hover {
-            color: #0d6efd;
-        }
+            .notification:hover {
+                color: #0d6efd;
+            }
 
         .notify-count {
             position: absolute;
@@ -91,10 +91,10 @@
             gap: 12px;
         }
 
-        .user-info i {
-            font-size: 38px;
-            color: #0d6efd;
-        }
+            .user-info i {
+                font-size: 38px;
+                color: #0d6efd;
+            }
 
         .user-name {
             font-size: 16px;
@@ -123,20 +123,20 @@
             transition: all .3s ease;
         }
 
-        .sidebar.collapsed {
-            width: 0;
-            min-width: 0;
-            overflow: hidden;
-        }
+            .sidebar.collapsed {
+                width: 0;
+                min-width: 0;
+                overflow: hidden;
+            }
 
-        .sidebar::-webkit-scrollbar {
-            width: 8px;
-        }
+            .sidebar::-webkit-scrollbar {
+                width: 8px;
+            }
 
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 20px;
-        }
+            .sidebar::-webkit-scrollbar-thumb {
+                background: #4b5563;
+                border-radius: 20px;
+            }
 
         .menu-heading {
             background: #111827;
@@ -151,30 +151,30 @@
             transition: .3s;
         }
 
-        .menu-heading:hover {
-            background: #1e293b;
-        }
+            .menu-heading:hover {
+                background: #1e293b;
+            }
 
-        .menu-heading:after {
-            content: '▼';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 12px;
-        }
+            .menu-heading:after {
+                content: '▼';
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 12px;
+            }
 
-        .menu-heading.collapsed:after {
-            content: '▶';
-        }
+            .menu-heading.collapsed:after {
+                content: '▶';
+            }
 
         .submenu-container {
             display: block;
         }
 
-        .submenu-container.hide {
-            display: none;
-        }
+            .submenu-container.hide {
+                display: none;
+            }
 
         .menu-item,
         .submenu-item {
@@ -191,12 +191,12 @@
             background: #273449;
         }
 
-        .menu-item:hover,
-        .submenu-item:hover {
-            background: #2563eb;
-            color: #fff;
-            text-decoration: none;
-        }
+            .menu-item:hover,
+            .submenu-item:hover {
+                background: #2563eb;
+                color: #fff;
+                text-decoration: none;
+            }
 
         .active-menu {
             background: #2563eb !important;
@@ -210,9 +210,9 @@
             font-weight: 700;
         }
 
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
+            .logout-btn:hover {
+                background: #b91c1c;
+            }
 
         .content-area {
             flex: 1;
@@ -231,9 +231,9 @@
             user-select: none;
         }
 
-        .toggle-btn:hover {
-            color: #ff9800;
-        }
+            .toggle-btn:hover {
+                color: #ff9800;
+            }
 
         .footer {
             background: #382621;
@@ -242,10 +242,10 @@
             text-align: center;
         }
 
-        .footer img {
-            height: 50px;
-            margin: 0 10px;
-        }
+            .footer img {
+                height: 50px;
+                margin: 0 10px;
+            }
 
         .footer-text {
             color: #4fc3f7;
@@ -261,10 +261,10 @@
                 gap: 8px;
             }
 
-            .top-header > div:first-child {
-                flex: 1;
-                min-width: 0;
-            }
+                .top-header > div:first-child {
+                    flex: 1;
+                    min-width: 0;
+                }
 
             .toggle-btn {
                 font-size: 24px;
@@ -294,9 +294,9 @@
                 gap: 6px;
             }
 
-            .user-info i {
-                font-size: 28px;
-            }
+                .user-info i {
+                    font-size: 28px;
+                }
 
             .user-name {
                 font-size: 13px;
@@ -319,10 +319,10 @@
                 top: 0;
             }
 
-            .sidebar.collapsed {
-                display: none;
-                width: 100%;
-            }
+                .sidebar.collapsed {
+                    display: none;
+                    width: 100%;
+                }
 
             .content-area {
                 width: 100%;
@@ -381,86 +381,96 @@
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
-<form id="form1" runat="server">
-<div class="top-header">
-<div style="display:flex;align-items:center"><span class="toggle-btn" onclick="toggleSidebar()">&#9776;</span><img src='<%= ResolveUrl("~/img/BSPHCL_Logo.jpg") %>' class="header-logo" /><span class="header-title">Manager Portal - BSPHCL</span></div>
-<div class="header-right">
-<a href='<%= ResolveUrl("~/Manager/Notifications.aspx") %>' class="notification"><i class="fas fa-bell"></i><span class="notify-count">1</span></a>
-<div class="user-info">
-<i class="fas fa-user-circle"></i>
-<div>
-<div class="user-name"><asp:Label ID="lblManagerID" runat="server" /> <asp:Label ID="lblManagerName" runat="server" /></div>
-<asp:Label ID="lblManagerDesignation" runat="server" />
-<div class="date-time"><span id="currentDate"></span> | <span id="currentTime"></span></div>
-</div>
-</div>
-</div>
-</div>
-<div class="main-layout">
-<div class="sidebar" id="trainerSidebar">
-<a href="Default.aspx" class="menu-item"><i class="fas fa-home mr-2"></i>Dashboard</a>
-<a href="MyTrainings.aspx" class="menu-item"><i class="fas fa-chalkboard-teacher mr-2"></i>My Trainings</a>
-<div class="menu-heading collapsed" onclick="toggleMenu('sessionMenu',this)"><i class="fas fa-calendar-alt mr-2"></i>My Sessions</div>
-<div id="sessionMenu" class="submenu-container hide">
-<a href="SessionDetails.aspx" class="submenu-item"><i class="fas fa-info-circle mr-2"></i>Session Details</a>
-<a href="SessionAttendance.aspx" class="submenu-item"><i class="fas fa-user-check mr-2"></i>Session Attendance</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('materialMenu',this)"><i class="fas fa-book mr-2"></i>Training Materials</div>
-<div id="materialMenu" class="submenu-container hide">
-<a href="TrainingMaterial.aspx" class="submenu-item"><i class="fas fa-book-open mr-2"></i>Training Materials</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('questionMenu',this)"><i class="fas fa-question-circle mr-2"></i>Question Bank</div>
-<div id="questionMenu" class="submenu-container hide">
-<a href="QuestionBank.aspx" class="submenu-item"><i class="fas fa-list-alt mr-2"></i>Question Bank</a>
-<a href="QuestionBankUpload.aspx" class="submenu-item"><i class="fas fa-file-excel mr-2"></i>Question Bank Upload</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('testMenu',this)"><i class="fas fa-file-alt mr-2"></i>Tests &amp; Exams</div>
-<div id="testMenu" class="submenu-container hide">
-<a href="PreTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Pre Training Test</a>
-<a href="PostTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Post Training Test</a>
-<a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Test Result</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('feedbackMenu',this)"><i class="fas fa-comment-dots mr-2"></i>Feedback</div>
-<div id="feedbackMenu" class="submenu-container hide"><a href="FeedbackReport.aspx" class="submenu-item"><i class="fas fa-chart-bar mr-2"></i>Feedback Report</a></div>
-<div class="menu-heading collapsed" onclick="toggleMenu('reportMenu',this)"><i class="fas fa-chart-line mr-2"></i>Reports</div>
-<div id="reportMenu" class="submenu-container hide">
-<a href="SessionReport.aspx" class="submenu-item"><i class="fas fa-layer-group mr-2"></i>Session Reports</a>
-<a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Exam Result Report</a>
-<a href="AttendanceReport.aspx" class="submenu-item"><i class="fas fa-clipboard-list mr-2"></i>Attendance Report</a>
-<a href="TraineeProgress.aspx" class="submenu-item"><i class="fas fa-tasks mr-2"></i>Trainee Progress</a>
-<a href="TrainingCalendar.aspx" class="submenu-item"><i class="fas fa-calendar mr-2"></i>Training Calendar</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('communicationMenu',this)"><i class="fas fa-bullhorn mr-2"></i>Communication</div>
-<div id="communicationMenu" class="submenu-container hide">
-<a href="Announcement.aspx" class="submenu-item"><i class="fas fa-bullhorn mr-2"></i>Announcements</a>
-<a href="Notifications.aspx" class="submenu-item"><i class="fas fa-bell mr-2"></i>Notifications</a>
-</div>
-<div class="menu-heading collapsed" onclick="toggleMenu('accountMenu',this)"><i class="fas fa-user-cog mr-2"></i>My Account</div>
-<div id="accountMenu" class="submenu-container hide">
-<a href="Profile.aspx" class="submenu-item"><i class="fas fa-user mr-2"></i>Profile</a>
-<a href="ChangePassword.aspx" class="submenu-item"><i class="fas fa-key mr-2"></i>Change Password</a>
-</div>
-<a href="Logout.aspx" class="menu-item logout-btn"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
-</div>
-<div class="content-area"><asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder></div>
-</div>
-<div class="footer"><div><a href="https://sbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' /></a><a href="https://nbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' /></a><a href="https://bsphcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' /></a><a href="https://www.bsptcl.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' /></a><a href="https://bspgcl.bihar.gov.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' /></a></div><br/><div><span class="footer-text">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span>. All Rights Reserved.<br/>Designed &amp; Developed by <span class="footer-text">Training Cell, BSPHCL</span></div></div>
-</form>
-<script>
-function updateDateTime(){var now=new Date();document.getElementById("currentDate").innerHTML=now.toLocaleDateString("en-GB");document.getElementById("currentTime").innerHTML=now.toLocaleTimeString();}
-updateDateTime();setInterval(updateDateTime,1000);
-function toggleSidebar(){var sidebar=document.getElementById("trainerSidebar");sidebar.classList.toggle("collapsed");localStorage.setItem("TrainerSidebar",sidebar.classList.contains("collapsed")?"Hide":"Show");}
-document.addEventListener("DOMContentLoaded",function(){if(localStorage.getItem("TrainerSidebar")=="Hide"){document.getElementById("trainerSidebar").classList.add("collapsed");}document.querySelectorAll(".submenu-container").forEach(function(menu){if(localStorage.getItem(menu.id)=="open"){menu.classList.remove("hide");var heading=menu.previousElementSibling;if(heading){heading.classList.remove("collapsed");}}});var currentPage=window.location.pathname.split("/").pop().toLowerCase();document.querySelectorAll(".submenu-item, .menu-item").forEach(function(link){var href=link.getAttribute("href");if(href&&href.toLowerCase()==currentPage){link.classList.add("active-menu");var parentMenu=link.closest(".submenu-container");if(parentMenu){parentMenu.classList.remove("hide");var heading=parentMenu.previousElementSibling;if(heading){heading.classList.remove("collapsed");}localStorage.setItem(parentMenu.id,"open");}}});});
-function toggleMenu(menuId,heading){var menu=document.getElementById(menuId);menu.classList.toggle("hide");heading.classList.toggle("collapsed");localStorage.setItem(menuId,menu.classList.contains("hide")?"":"open");}
-</script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src='<%= ResolveUrl("~/lib/easing/easing.min.js") %>'></script>
-<script src='<%= ResolveUrl("~/lib/owlcarousel/owl.carousel.min.js") %>'></script>
-<script src='<%= ResolveUrl("~/lib/isotope/isotope.pkgd.min.js") %>'></script>
-<script src='<%= ResolveUrl("~/lib/lightbox/js/lightbox.min.js") %>'></script>
-<script src='<%= ResolveUrl("~/mail/jqBootstrapValidation.min.js") %>'></script>
-<script src='<%= ResolveUrl("~/mail/contact.js") %>'></script>
-<script src='<%= ResolveUrl("~/js/main.js") %>'></script>
+    <form id="form1" runat="server">
+        <div class="top-header">
+            <div style="display: flex; align-items: center"><span class="toggle-btn" onclick="toggleSidebar()">&#9776;</span><img src='<%= ResolveUrl("~/img/BSPHCL_Logo.jpg") %>' class="header-logo" /><span class="header-title">Manager Portal - BSPHCL</span></div>
+            <div class="header-right">
+                <a href='<%= ResolveUrl("~/Manager/Notifications.aspx") %>' class="notification"><i class="fas fa-bell"></i><span class="notify-count">1</span></a>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <div class="user-name">
+                            <asp:Label ID="lblManagerID" runat="server" />
+                            <asp:Label ID="lblManagerName" runat="server" /></div>
+                        <asp:Label ID="lblManagerDesignation" runat="server" />
+                        <div class="date-time"><span id="currentDate"></span>| <span id="currentTime"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-layout">
+            <div class="sidebar" id="trainerSidebar">
+                <a href="Default.aspx" class="menu-item"><i class="fas fa-home mr-2"></i>Dashboard</a>
+                <a href="MyTrainings.aspx" class="menu-item"><i class="fas fa-chalkboard-teacher mr-2"></i>My Trainings</a>
+                <div class="menu-heading collapsed" onclick="toggleMenu('sessionMenu',this)"><i class="fas fa-calendar-alt mr-2"></i>My Sessions</div>
+                <div id="sessionMenu" class="submenu-container hide">
+                    <a href="SessionDetails.aspx" class="submenu-item"><i class="fas fa-info-circle mr-2"></i>Session Details</a>
+                    <a href="SessionAttendance.aspx" class="submenu-item"><i class="fas fa-user-check mr-2"></i>Session Attendance</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('materialMenu',this)"><i class="fas fa-book mr-2"></i>Training Materials</div>
+                <div id="materialMenu" class="submenu-container hide">
+                    <a href="TrainingMaterial.aspx" class="submenu-item"><i class="fas fa-book-open mr-2"></i>Training Materials</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('questionMenu',this)"><i class="fas fa-question-circle mr-2"></i>Question Bank</div>
+                <div id="questionMenu" class="submenu-container hide">
+                    <a href="QuestionBank.aspx" class="submenu-item"><i class="fas fa-list-alt mr-2"></i>Question Bank</a>
+                    <a href="QuestionBankUpload.aspx" class="submenu-item"><i class="fas fa-file-excel mr-2"></i>Question Bank Upload</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('testMenu',this)"><i class="fas fa-file-alt mr-2"></i>Tests &amp; Exams</div>
+                <div id="testMenu" class="submenu-container hide">
+                    <a href="PreTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Pre Training Test</a>
+                    <a href="PostTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Post Training Test</a>
+                    <a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Test Result</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('feedbackMenu',this)"><i class="fas fa-comment-dots mr-2"></i>Feedback</div>
+                <div id="feedbackMenu" class="submenu-container hide"><a href="FeedbackReport.aspx" class="submenu-item"><i class="fas fa-chart-bar mr-2"></i>Feedback Report</a></div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('reportMenu',this)"><i class="fas fa-chart-line mr-2"></i>Reports</div>
+                <div id="reportMenu" class="submenu-container hide">
+                    <a href="SessionReport.aspx" class="submenu-item"><i class="fas fa-layer-group mr-2"></i>Session Reports</a>
+                    <a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Exam Result Report</a>
+                    <a href="AttendanceReport.aspx" class="submenu-item"><i class="fas fa-clipboard-list mr-2"></i>Attendance Report</a>
+                    <a href="TraineeProgress.aspx" class="submenu-item"><i class="fas fa-tasks mr-2"></i>Trainee Progress</a>
+                    <a href="TrainingCalendar.aspx" class="submenu-item"><i class="fas fa-calendar mr-2"></i>Training Calendar</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('communicationMenu',this)"><i class="fas fa-bullhorn mr-2"></i>Communication</div>
+                <div id="communicationMenu" class="submenu-container hide">
+                    <a href="Announcement.aspx" class="submenu-item"><i class="fas fa-bullhorn mr-2"></i>Announcements</a>
+                    <a href="Notifications.aspx" class="submenu-item"><i class="fas fa-bell mr-2"></i>Notifications</a>
+                </div>
+                <div class="menu-heading collapsed" onclick="toggleMenu('accountMenu',this)"><i class="fas fa-user-cog mr-2"></i>My Account</div>
+                <div id="accountMenu" class="submenu-container hide">
+                    <a href="Profile.aspx" class="submenu-item"><i class="fas fa-user mr-2"></i>Profile</a>
+                    <a href="ChangePassword.aspx" class="submenu-item"><i class="fas fa-key mr-2"></i>Change Password</a>
+                </div>
+                <a href="Logout.aspx" class="menu-item logout-btn"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+            </div>
+            <div class="content-area">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+            </div>
+        </div>
+        <div class="footer">
+            <div><a href="https://sbpdcl.co.in/" target="_blank">
+                <img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' /></a><a href="https://nbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' /></a><a href="https://bsphcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' /></a><a href="https://www.bsptcl.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' /></a><a href="https://bspgcl.bihar.gov.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' /></a></div>
+            <br />
+            <div><span class="footer-text">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span>. All Rights Reserved.<br />
+                Designed &amp; Developed by <span class="footer-text">Training Cell, BSPHCL</span></div>
+        </div>
+    </form>
+    <script>
+        function updateDateTime() { var now = new Date(); document.getElementById("currentDate").innerHTML = now.toLocaleDateString("en-GB"); document.getElementById("currentTime").innerHTML = now.toLocaleTimeString(); }
+        updateDateTime(); setInterval(updateDateTime, 1000);
+        function toggleSidebar() { var sidebar = document.getElementById("trainerSidebar"); sidebar.classList.toggle("collapsed"); localStorage.setItem("TrainerSidebar", sidebar.classList.contains("collapsed") ? "Hide" : "Show"); }
+        document.addEventListener("DOMContentLoaded", function () { if (localStorage.getItem("TrainerSidebar") == "Hide") { document.getElementById("trainerSidebar").classList.add("collapsed"); } document.querySelectorAll(".submenu-container").forEach(function (menu) { if (localStorage.getItem(menu.id) == "open") { menu.classList.remove("hide"); var heading = menu.previousElementSibling; if (heading) { heading.classList.remove("collapsed"); } } }); var currentPage = window.location.pathname.split("/").pop().toLowerCase(); document.querySelectorAll(".submenu-item, .menu-item").forEach(function (link) { var href = link.getAttribute("href"); if (href && href.toLowerCase() == currentPage) { link.classList.add("active-menu"); var parentMenu = link.closest(".submenu-container"); if (parentMenu) { parentMenu.classList.remove("hide"); var heading = parentMenu.previousElementSibling; if (heading) { heading.classList.remove("collapsed"); } localStorage.setItem(parentMenu.id, "open"); } } }); });
+        function toggleMenu(menuId, heading) { var menu = document.getElementById(menuId); menu.classList.toggle("hide"); heading.classList.toggle("collapsed"); localStorage.setItem(menuId, menu.classList.contains("hide") ? "" : "open"); }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src='<%= ResolveUrl("~/lib/easing/easing.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/lib/owlcarousel/owl.carousel.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/lib/isotope/isotope.pkgd.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/lib/lightbox/js/lightbox.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/mail/jqBootstrapValidation.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/mail/contact.js") %>'></script>
+    <script src='<%= ResolveUrl("~/js/main.js") %>'></script>
 </body>
 </html>
