@@ -552,6 +552,11 @@ namespace Training.Trainer
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
+            if (Session["Role"] != null && Session["Role"].ToString() == "Manager")
+            {
+                Response.Redirect("~/Manager/TrainingDetails.aspx");
+                return;
+            }
             Response.Redirect("SessionDetails.aspx");
         }
 
