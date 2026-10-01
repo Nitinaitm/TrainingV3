@@ -48,7 +48,7 @@ namespace Training.Manager
 
         protected void btnBackSessionReport_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Manager/TrainingDetails.aspx");
+            Response.Redirect("~/Manager/SessionReportDetails.aspx");
         }
 
         //-------------------------------------------------------
