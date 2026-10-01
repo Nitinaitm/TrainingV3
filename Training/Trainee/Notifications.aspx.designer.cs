@@ -1,0 +1,1 @@
+namespace Training.Trainee{public partial class Notifications{protected global::System.Web.UI.WebControls.GridView gvNotifications;}}
