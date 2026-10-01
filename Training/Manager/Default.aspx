@@ -62,9 +62,18 @@
     <div class="dashboard-card status-card">
         <div class="section-title">Training Status Summary</div>
         <div class="row">
-            <div class="col-md-4 mb-3"><asp:LinkButton ID="lnkStatusPlanned" runat="server" CommandName="Planned" OnCommand="DashboardLink_Command" CssClass="dashboard-link"><div class="status-item"><div class="info-label">Planned</div><div class="info-value"><asp:Label ID="lblPlanned" runat="server" Text="0" /></div></div></asp:LinkButton></div>
-            <div class="col-md-4 mb-3"><asp:LinkButton ID="lnkStatusInProgress" runat="server" CommandName="InProgress" OnCommand="DashboardLink_Command" CssClass="dashboard-link"><div class="status-item"><div class="info-label">In Progress</div><div class="info-value"><asp:Label ID="lblInProgress" runat="server" Text="0" /></div></div></asp:LinkButton></div>
-            <div class="col-md-4 mb-3"><asp:LinkButton ID="lnkStatusCompleted" runat="server" CommandName="Completed" OnCommand="DashboardLink_Command" CssClass="dashboard-link"><div class="status-item"><div class="info-label">Completed - Training Completed</div><div class="info-value"><asp:Label ID="lblCompletedSummary" runat="server" Text="0" /></div></div></asp:LinkButton></div>
+            <asp:Repeater ID="rptTrainingStatus" runat="server">
+                <ItemTemplate>
+                    <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
+                        <asp:LinkButton ID="lnkTrainingStatus" runat="server" CommandName="TrainingStatus" CommandArgument='<%# Eval("TrainingStatus") %>' OnCommand="DashboardLink_Command" CssClass="dashboard-link">
+                            <div class="status-item">
+                                <div class="info-label"><%# Eval("TrainingStatus") %></div>
+                                <div class="info-value"><%# Eval("StatusCount") %></div>
+                            </div>
+                        </asp:LinkButton>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
         </div>
     </div>
 </div>
