@@ -42,8 +42,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">
         <div class="page-heading">Notifications</div>
-        <div class="dashboard-card">
-            <div class="row">
+        <div class="dashboard-card"><label>Notification *</label><asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" Rows="4" CssClass="form-control mb-2" /><label>PDF Attachment</label><asp:FileUpload ID="fuPdf" runat="server" CssClass="form-control mb-2" /><asp:Button ID="btnSend" runat="server" Text="Publish Notification" CssClass="btn btn-primary" OnClick="btnSend_Click" /><asp:Label ID="lblMessage" runat="server" CssClass="ms-3 fw-bold" /><hr /><div class="row">
                 <div class="col-md-12 text-end">
                     <asp:Button ID="btnMarkAllRead" runat="server" Text="Mark All as Read" CssClass="btn btn-success" OnClick="btnMarkAllRead_Click" /></div>
             </div>
@@ -56,7 +55,7 @@
                     <asp:TemplateField HeaderText="Message">
                         <ItemTemplate><%# Eval("Message") %><%# Eval("IsRead").ToString()=="False" ? " <span class='badge bg-danger'>New</span>" : "" %></ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="CreatedOn" HeaderText="Date" DataFormatString="{0:dd-MM-yyyy HH:mm}" />
+                    <asp:BoundField DataField="CreatedOn" HeaderText="Date" DataFormatString="{0:dd-MM-yyyy HH:mm}" /><asp:TemplateField HeaderText="PDF"><ItemTemplate><asp:HyperLink ID="lnkPdf" runat="server" Text="Download PDF" NavigateUrl='<%# "~/Uploads/Notifications/"+Eval("NotificationID")+".pdf" %>' Target="_blank" Visible='<%# Convert.ToBoolean(Eval("HasPdf")) %>' CssClass="btn btn-sm btn-danger" /></ItemTemplate></asp:TemplateField>
                     <asp:TemplateField HeaderText="Action">
                         <ItemTemplate>
                             <asp:LinkButton ID="lnkMarkRead" runat="server" Text="Mark Read" CssClass="btn btn-sm btn-primary" CommandName="MarkRead" CommandArgument='<%# Eval("NotificationID") %>' Visible='<%# Eval("IsRead").ToString()=="False" %>' /></ItemTemplate>
