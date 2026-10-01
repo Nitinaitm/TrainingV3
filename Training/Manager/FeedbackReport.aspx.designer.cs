@@ -1,0 +1,1 @@
+namespace Training.Manager{public partial class FeedbackReport{protected global::System.Web.UI.WebControls.TextBox txtTrainingID;protected global::System.Web.UI.WebControls.TextBox txtSessionID;protected global::System.Web.UI.WebControls.Button btnSearch;protected global::System.Web.UI.WebControls.GridView gvFeedback;}}
