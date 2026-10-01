@@ -50,13 +50,13 @@ namespace Training.Manager
             string dashboardFilter = Session["ManagerTrainingDashboardFilter"] == null ? "" : Session["ManagerTrainingDashboardFilter"].ToString();
             if(dashboardFilter=="ActiveTrainings" || dashboardFilter=="InProgress")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Planned','InProgress','AttendanceCompleted')";
             else if(dashboardFilter=="CompletedTrainings" || dashboardFilter=="Completed")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Completed','TrainingCompleted')";
-            else if(dashboardFilter=="Planned")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,'')))='Planned'";
+            else if(dashboardFilter.StartsWith("Status:"))sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,'')))=@DashboardStatus";
             else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue) && ddlStatus.SelectedValue=="Completed")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Completed','TrainingCompleted')";
             else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,'')))=@TrainingStatus";
             if(!string.IsNullOrWhiteSpace(txtFromDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateFrom,105)>=TRY_CONVERT(date,@FromDate,105)";
             if(!string.IsNullOrWhiteSpace(txtToDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateTo,105)<=TRY_CONVERT(date,@ToDate,105)";
             sql+=" ORDER BY SortDate DESC";
-            DataTable dt=objDB.GetDataTable(sql,new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",trainingLocationID),new SqlParameter("@TrainingID","%"+txtTrainingID.Text.Trim()+"%"),new SqlParameter("@TrainingType","%"+txtTrainingType.Text.Trim()+"%"),new SqlParameter("@Batch","%"+txtBatch.Text.Trim()+"%"),new SqlParameter("@TrainingStatus",ddlStatus.SelectedValue),new SqlParameter("@FromDate",txtFromDate.Text.Trim()),new SqlParameter("@ToDate",txtToDate.Text.Trim())});
+            DataTable dt=objDB.GetDataTable(sql,new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",trainingLocationID),new SqlParameter("@TrainingID","%"+txtTrainingID.Text.Trim()+"%"),new SqlParameter("@TrainingType","%"+txtTrainingType.Text.Trim()+"%"),new SqlParameter("@Batch","%"+txtBatch.Text.Trim()+"%"),new SqlParameter("@TrainingStatus",ddlStatus.SelectedValue),new SqlParameter("@DashboardStatus",dashboardFilter.StartsWith("Status:") ? dashboardFilter.Substring(7).Trim() : ""),new SqlParameter("@FromDate",txtFromDate.Text.Trim()),new SqlParameter("@ToDate",txtToDate.Text.Trim())});
             gvTraining.DataSource=dt;
             gvTraining.DataBind();
         }
