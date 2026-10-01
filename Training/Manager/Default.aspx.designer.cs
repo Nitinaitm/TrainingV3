@@ -5,6 +5,16 @@ namespace Training.Manager
 {
     public partial class Default
     {
+        protected global::System.Web.UI.WebControls.LinkButton lnkTotalTrainings;
+        protected global::System.Web.UI.WebControls.LinkButton lnkActiveTrainings;
+        protected global::System.Web.UI.WebControls.LinkButton lnkCompletedTrainings;
+        protected global::System.Web.UI.WebControls.LinkButton lnkTotalSessions;
+        protected global::System.Web.UI.WebControls.LinkButton lnkUpcomingSessions;
+        protected global::System.Web.UI.WebControls.LinkButton lnkAttendancePending;
+        protected global::System.Web.UI.WebControls.LinkButton lnkSessionsCompleted;
+        protected global::System.Web.UI.WebControls.LinkButton lnkStatusPlanned;
+        protected global::System.Web.UI.WebControls.LinkButton lnkStatusInProgress;
+        protected global::System.Web.UI.WebControls.LinkButton lnkStatusCompleted;
         protected global::System.Web.UI.WebControls.Label lblManagerID;
         protected global::System.Web.UI.WebControls.Label lblEmpID;
         protected global::System.Web.UI.WebControls.Label lblName;
