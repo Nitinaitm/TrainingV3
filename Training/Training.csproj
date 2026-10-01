@@ -393,6 +393,7 @@
     <Content Include="ManagerMaster.Master" />
     <Content Include="Manager\Default.aspx" />
     <Content Include="Manager\ExamResultReport.aspx" />
+    <Content Include="Manager\MySessions.aspx" />
     <Content Include="Manager\MyTrainings.aspx" />
     <Content Include="Manager\PostTrainingTest.aspx" />
     <Content Include="Manager\PreTrainingTest.aspx" />
@@ -1282,6 +1283,13 @@
     </Compile>
     <Compile Include="Manager\ExamResultReport.aspx.designer.cs">
       <DependentUpon>ExamResultReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\MySessions.aspx.cs">
+      <DependentUpon>MySessions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\MySessions.aspx.designer.cs">
+      <DependentUpon>MySessions.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\MyTrainings.aspx.cs">
       <DependentUpon>MyTrainings.aspx</DependentUpon>
