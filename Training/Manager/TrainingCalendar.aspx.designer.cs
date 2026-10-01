@@ -1,0 +1,1 @@
+namespace Training.Manager{public partial class TrainingCalendar{protected global::System.Web.UI.WebControls.Button btnPrev;protected global::System.Web.UI.WebControls.Label lblMonth;protected global::System.Web.UI.WebControls.Button btnNext;protected global::System.Web.UI.WebControls.Button btnToday;protected global::System.Web.UI.WebControls.GridView gvCalendar;}}
