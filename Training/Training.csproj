@@ -2026,6 +2026,41 @@
     <Folder Include="Scripts\" />
     <Folder Include="Styles\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Manager\SessionReport.aspx" />
+    <Content Include="Manager\SessionReportDetails.aspx" />
+    <Content Include="Manager\SessionAttendanceReport.aspx" />
+    <Content Include="Manager\SessionAnswerReport.aspx" />
+    <Content Include="Manager\AnswerDetails.aspx" />
+    <Content Include="Manager\SessionCertificateReport.aspx" />
+    <Content Include="Manager\Profile.aspx" />
+    <Content Include="Manager\Announcement.aspx" />
+    <Content Include="Manager\Notifications.aspx" />
+    <Compile Include="Manager\SessionReport.aspx.cs"><DependentUpon>SessionReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\SessionReport.aspx.designer.cs"><DependentUpon>SessionReport.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\SessionReportDetails.aspx.cs"><DependentUpon>SessionReportDetails.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\SessionReportDetails.aspx.designer.cs"><DependentUpon>SessionReportDetails.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\SessionAttendanceReport.aspx.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\SessionAttendanceReport.aspx.designer.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\SessionAnswerReport.aspx.cs"><DependentUpon>SessionAnswerReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\SessionAnswerReport.aspx.designer.cs"><DependentUpon>SessionAnswerReport.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\AnswerDetails.aspx.cs"><DependentUpon>AnswerDetails.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\AnswerDetails.aspx.designer.cs"><DependentUpon>AnswerDetails.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\SessionCertificateReport.aspx.cs"><DependentUpon>SessionCertificateReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\SessionCertificateReport.aspx.designer.cs"><DependentUpon>SessionCertificateReport.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\Profile.aspx.cs"><DependentUpon>Profile.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\Profile.aspx.designer.cs"><DependentUpon>Profile.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\Announcement.aspx.cs"><DependentUpon>Announcement.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\Announcement.aspx.designer.cs"><DependentUpon>Announcement.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\Notifications.aspx.cs"><DependentUpon>Notifications.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Manager\Notifications.aspx.designer.cs"><DependentUpon>Notifications.aspx</DependentUpon></Compile>
+    <Content Include="Trainee\Announcement.aspx" />
+    <Content Include="Trainee\Notifications.aspx" />
+    <Compile Include="Trainee\Announcement.aspx.cs"><DependentUpon>Announcement.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Trainee\Announcement.aspx.designer.cs"><DependentUpon>Announcement.aspx</DependentUpon></Compile>
+    <Compile Include="Trainee\Notifications.aspx.cs"><DependentUpon>Notifications.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Trainee\Notifications.aspx.designer.cs"><DependentUpon>Notifications.aspx</DependentUpon></Compile>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
