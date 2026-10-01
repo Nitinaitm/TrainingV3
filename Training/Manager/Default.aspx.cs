@@ -57,9 +57,9 @@ namespace Training.Manager
         protected void DashboardLink_Command(object sender, System.Web.UI.WebControls.CommandEventArgs e)
         {
             string command = Convert.ToString(e.CommandName);
-            if (command == "TotalTrainings" || command == "ActiveTrainings" || command == "CompletedTrainings" || command == "Planned" || command == "InProgress" || command == "Completed")
+            if (command == "TotalTrainings" || command == "ActiveTrainings" || command == "CompletedTrainings" || command == "Planned" || command == "InProgress" || command == "Completed" || command == "TrainingStatus")
             {
-                Session["ManagerTrainingDashboardFilter"] = command;
+                Session["ManagerTrainingDashboardFilter"] = command == "TrainingStatus" ? "Status:" + Convert.ToString(e.CommandArgument).Trim() : command;
                 Response.Redirect("~/Manager/MyTrainings.aspx");
                 return;
             }
@@ -73,7 +73,7 @@ namespace Training.Manager
             string locationID = GetTrainingLocationID();
             if (string.IsNullOrWhiteSpace(locationID)) return;
 
-            DataTable training = objDB.GetDataTable("SELECT COUNT(*) TotalTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Planned','InProgress','AttendanceCompleted') THEN 1 ELSE 0 END) ActiveTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,'')))='Planned' THEN 1 ELSE 0 END) PlannedTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,'')))='InProgress' THEN 1 ELSE 0 END) InProgressTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedSummary FROM (SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM TrainingDetails TD INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=@TrainingLocationID AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)) X", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+            DataTable training = objDB.GetDataTable("SELECT COUNT(*) TotalTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Planned','InProgress','AttendanceCompleted') THEN 1 ELSE 0 END) ActiveTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedTrainings,SUM(CASE WHEN LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) IN ('Completed','TrainingCompleted') THEN 1 ELSE 0 END) CompletedSummary FROM (SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM TrainingDetails TD INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=@TrainingLocationID AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)) X", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
 
             if (training.Rows.Count > 0)
             {
@@ -81,9 +81,9 @@ namespace Training.Manager
                 lblTotalTrainings.Text = Convert.ToString(r["TotalTrainings"]);
                 lblActiveTrainings.Text = Convert.ToString(r["ActiveTrainings"]);
                 lblCompletedTrainings.Text = Convert.ToString(r["CompletedTrainings"]);
-                lblPlanned.Text = Convert.ToString(r["PlannedTrainings"]);
-                lblInProgress.Text = Convert.ToString(r["InProgressTrainings"]);
-                lblCompletedSummary.Text = Convert.ToString(r["CompletedSummary"]);
+                DataTable statusSummary = objDB.GetDataTable("SELECT LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) TrainingStatus,COUNT(*) StatusCount FROM (SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.TrainingStatus FROM TrainingDetails TD INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=@TrainingLocationID AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)) X WHERE LTRIM(RTRIM(ISNULL(X.TrainingStatus,'')))<>'' GROUP BY LTRIM(RTRIM(ISNULL(X.TrainingStatus,''))) ORDER BY LTRIM(RTRIM(ISNULL(X.TrainingStatus,'')))", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+                rptTrainingStatus.DataSource = statusSummary;
+                rptTrainingStatus.DataBind();
             }
 
             DataTable sessions = objDB.GetDataTable("SELECT COUNT(DISTINCT SM.SessionID) TotalSessions,COUNT(DISTINCT CASE WHEN ISNULL(SM.AttendanceStatus,'Pending')='Completed' THEN SM.SessionID END) SessionsCompleted,COUNT(DISTINCT CASE WHEN ISNULL(SM.AttendanceStatus,'Pending')<>'Completed' THEN SM.SessionID END) AttendancePending,COUNT(DISTINCT CASE WHEN TRY_CONVERT(date,SM.SessionDate,105)>=CONVERT(date,GETDATE()) THEN SM.SessionID END) UpcomingSessions FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=@TrainingLocationID AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
