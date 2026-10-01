@@ -26,18 +26,20 @@ namespace Training.Trainee
         {
             string empID = Session["EmpID"].ToString().Trim();
 
-            string query = "SELECT DISTINCT N.NotificationID,N.Message,N.CreatedOn FROM Notification N WHERE N.TrainerID='ALL' OR N.TrainerID LIKE 'MANAGER:%' AND EXISTS (SELECT 1 FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE LTRIM(RTRIM(TA.EmpID))=LTRIM(RTRIM(@EmpID)) AND M.ManagerID=SUBSTRING(N.TrainerID,9,100) AND ISNULL(M.ActiveStatus,'Y')='Y') OR EXISTS (SELECT 1 FROM TrainingAssignment TA INNER JOIN SessionMaster SM ON TA.TrainingID=SM.TrainingID WHERE LTRIM(RTRIM(TA.EmpID))=LTRIM(RTRIM(@EmpID)) AND SM.TrainerID=N.TrainerID) ORDER BY N.CreatedOn DESC";
+            string query = "SELECT DISTINCT N.NotificationID,N.Message,N.CreatedOn FROM Notification N WHERE (N.TrainerID LIKE 'MANAGER:%' AND EXISTS (SELECT 1 FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE LTRIM(RTRIM(TA.EmpID))=LTRIM(RTRIM(@EmpID)) AND M.ManagerID=SUBSTRING(N.TrainerID,9,100) AND ISNULL(M.ActiveStatus,'Y')='Y')) OR (N.TrainerID<>'MANAGER:%' AND EXISTS (SELECT 1 FROM TrainingAssignment TA INNER JOIN SessionMaster SM ON TA.TrainingID=SM.TrainingID WHERE LTRIM(RTRIM(TA.EmpID))=LTRIM(RTRIM(@EmpID)) AND SM.TrainerID=N.TrainerID)) ORDER BY N.CreatedOn DESC";
 
-            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@EmpID", empID) });
+            query=query.Replace("N.TrainerID<>'MANAGER:%'","N.TrainerID NOT LIKE 'MANAGER:%'");
 
-            dt.Columns.Add("HasPdf", typeof(bool));
+            DataTable dt=obj.GetDataTable(query,new SqlParameter[] { new SqlParameter("@EmpID",empID) });
 
-            foreach (DataRow row in dt.Rows)
+            dt.Columns.Add("HasPdf",typeof(bool));
+
+            foreach(DataRow row in dt.Rows)
             {
-                row["HasPdf"] = System.IO.File.Exists(Server.MapPath("~/Uploads/Notifications/" + row["NotificationID"] + ".pdf"));
+                row["HasPdf"]=System.IO.File.Exists(Server.MapPath("~/Uploads/Notifications/"+row["NotificationID"]+".pdf"));
             }
 
-            gvNotifications.DataSource = dt;
+            gvNotifications.DataSource=dt;
             gvNotifications.DataBind();
         }
     }
