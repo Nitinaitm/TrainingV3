@@ -155,37 +155,22 @@
                 background: #1e293b;
             }
 
-<<<<<<< HEAD
-            .menu-heading:after {
-                content: '▼';
+.menu-heading:after {
+                content: '';
                 position: absolute;
-                right: 15px;
+                right: 18px;
                 top: 50%;
-                transform: translateY(-50%);
-                font-size: 12px;
+                width: 8px;
+                height: 8px;
+                border-right: 2px solid #ffd54f;
+                border-bottom: 2px solid #ffd54f;
+                transform: translateY(-65%) rotate(45deg);
+                transition: transform .2s ease;
             }
 
             .menu-heading.collapsed:after {
-                content: '▶';
+                transform: translateY(-50%) rotate(-45deg);
             }
-=======
-        .menu-heading:after {
-            content: '';
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            width: 8px;
-            height: 8px;
-            border-right: 2px solid #ffd54f;
-            border-bottom: 2px solid #ffd54f;
-            transform: translateY(-65%) rotate(45deg);
-            transition: transform .2s ease;
-        }
-
-        .menu-heading.collapsed:after {
-            transform: translateY(-50%) rotate(-45deg);
-        }
->>>>>>> 9b003c53254df8df999a313eddc005adf0454c15
 
         .submenu-container {
             display: block;
