@@ -1,3 +1,4 @@
+using System.Web.UI;
 using System;using System.Data;using System.Data.SqlClient;using System.Globalization;using System.Web.UI.WebControls;
 namespace Training.Manager{public partial class SessionReport:System.Web.UI.Page{clsDataAccess obj=new clsDataAccess();private string ManagerID{get{return Session["ManagerID"]==null?"":Session["ManagerID"].ToString();}}
 protected void Page_Load(object s,EventArgs e){if(string.IsNullOrWhiteSpace(ManagerID)){Response.Redirect("~/Default.aspx");return;}if(!IsPostBack)BindGrid();}
