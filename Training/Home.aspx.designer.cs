@@ -7,191 +7,209 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Training.Admin
+namespace Training
 {
 
 
-    public partial class Dashboard
+    public partial class Home
     {
 
         /// <summary>
-        /// lnkActiveTrainings control.
+        /// frmHome control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkActiveTrainings;
+        protected global::System.Web.UI.HtmlControls.HtmlForm frmHome;
 
         /// <summary>
-        /// lblActiveTrainings control.
+        /// txtSiteSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActiveTrainings;
+        protected global::System.Web.UI.WebControls.TextBox txtSiteSearch;
 
         /// <summary>
-        /// lnkStartingSoon control.
+        /// btnSiteSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkStartingSoon;
+        protected global::System.Web.UI.WebControls.Button btnSiteSearch;
 
         /// <summary>
-        /// lblStartingSoon control.
+        /// rptCarouselIndicators control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStartingSoon;
+        protected global::System.Web.UI.WebControls.Repeater rptCarouselIndicators;
 
         /// <summary>
-        /// lnkPendingConfirmation control.
+        /// rptCarousel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPendingConfirmation;
+        protected global::System.Web.UI.WebControls.Repeater rptCarousel;
 
         /// <summary>
-        /// lblPendingConfirmation control.
+        /// imgDgPhoto control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingConfirmation;
+        protected global::System.Web.UI.HtmlControls.HtmlImage imgDgPhoto;
 
         /// <summary>
-        /// lblPendingProfileCorrections control.
+        /// lblDgName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingProfileCorrections;
+        protected global::System.Web.UI.WebControls.Label lblDgName;
 
         /// <summary>
-        /// lblPendingApproval control.
+        /// lblDgDesignation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingApproval;
+        protected global::System.Web.UI.WebControls.Label lblDgDesignation;
 
         /// <summary>
-        /// lnkPendingCertificates control.
+        /// lblDgQuote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPendingCertificates;
+        protected global::System.Web.UI.WebControls.Label lblDgQuote;
 
         /// <summary>
-        /// lblPendingCertificates control.
+        /// rptLeadership control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingCertificates;
+        protected global::System.Web.UI.WebControls.Repeater rptLeadership;
 
         /// <summary>
-        /// lnkTrainingsThisMonth control.
+        /// rptTrainingCalendar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkTrainingsThisMonth;
+        protected global::System.Web.UI.WebControls.Repeater rptTrainingCalendar;
 
         /// <summary>
-        /// lblTrainingsThisMonth control.
+        /// lblNoTrainings control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainingsThisMonth;
+        protected global::System.Web.UI.WebControls.Label lblNoTrainings;
 
         /// <summary>
-        /// lblTotalConducted control.
+        /// rptTrainingActivities control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalConducted;
+        protected global::System.Web.UI.WebControls.Repeater rptTrainingActivities;
 
         /// <summary>
-        /// lblTotalTrained control.
+        /// rptMarquee control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalTrained;
+        protected global::System.Web.UI.WebControls.Repeater rptMarquee;
 
         /// <summary>
-        /// lblDrillDownTitle control.
+        /// rptNews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDrillDownTitle;
+        protected global::System.Web.UI.WebControls.Repeater rptNews;
 
         /// <summary>
-        /// gvDrillDown control.
+        /// rptCirculars control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDrillDown;
+        protected global::System.Web.UI.WebControls.Repeater rptCirculars;
 
         /// <summary>
-        /// gvNeedsAttention control.
+        /// rptGallery control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvNeedsAttention;
+        protected global::System.Web.UI.WebControls.Repeater rptGallery;
 
         /// <summary>
-        /// rptHostelStatus control.
+        /// rptBlogs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptHostelStatus;
+        protected global::System.Web.UI.WebControls.Repeater rptBlogs;
 
         /// <summary>
-        /// lblNoHostel control.
+        /// rptTestimonials control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNoHostel;
+        protected global::System.Web.UI.WebControls.Repeater rptTestimonials;
 
         /// <summary>
-        /// gvUpcoming control.
+        /// lblVisitorCount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvUpcoming;
+        protected global::System.Web.UI.WebControls.Label lblVisitorCount;
+
+        /// <summary>
+        /// lblLastUpdated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLastUpdated;
+
+        /// <summary>
+        /// lblDgFullMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDgFullMessage;
     }
 }

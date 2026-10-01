@@ -145,6 +145,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\AdminOnlineNominations.aspx" />
     <Content Include="Admin\AnswerDetails.aspx" />
     <Content Include="Admin\AreaOfExpertiseMaster.aspx" />
     <Content Include="Admin\AssignFeedback.aspx" />
@@ -154,6 +155,7 @@
     <Content Include="Admin\CertificatePreview.aspx" />
     <Content Include="Admin\CertificateTemplate.aspx" />
     <Content Include="Admin\CertificateTemplateMaster.aspx" />
+    <Content Include="Admin\CloneTest.aspx" />
     <Content Include="Admin\CourseCategoryMaster.aspx" />
     <Content Include="Admin\CourseMaster.aspx" />
     <Content Include="Admin\CreateBatch.aspx" />
@@ -166,12 +168,34 @@
     <Content Include="Admin\css\bootstrap\mixins\_visibility.css" />
     <Content Include="Admin\css\bootstrap\utilities\_stretched-link.css" />
     <Content Include="Admin\css\bootstrap\_media.css" />
+    <Content Include="Admin\css\HomePortal.css" />
     <Content Include="Admin\css\style.css" />
     <Content Include="Admin\css\StyleSheet3.css" />
     <Content Include="Admin\Dashboard.aspx" />
     <Content Include="Admin\Default.aspx" />
     <Content Include="Admin\ExternalTraineeReport.aspx" />
+    <Content Include="Admin\HomeAnnouncements.aspx" />
+    <Content Include="Admin\HomeBlogs.aspx" />
+    <Content Include="Admin\HomeDGMessage.aspx" />
+    <Content Include="Admin\HomeGallery.aspx" />
+    <Content Include="Admin\HomeLeadership.aspx" />
+    <Content Include="Admin\HomeMarquee.aspx" />
+    <Content Include="Admin\HomePageManagement.aspx" />
+    <Content Include="Admin\HomeTestimonials.aspx" />
+    <Content Include="Admin\HostelAllotment.aspx" />
+    <Content Include="Admin\HostelBedMaster.aspx" />
+    <Content Include="Admin\HostelBlockMaster.aspx" />
+    <Content Include="Admin\HostelFlatMaster.aspx" />
+    <Content Include="Admin\HostelMaster.aspx" />
+    <Content Include="Admin\HostelRoomMaster.aspx" />
+    <Content Include="Admin\HostelStatusDashboard.ascx" />
+    <Content Include="Admin\HostelStayHistoryReport.aspx" />
+    <Content Include="Admin\LMSMaterials.aspx" />
+    <Content Include="Admin\ProfileChangeRequests.aspx" />
     <Content Include="Admin\TopicMaster.aspx" />
+    <Content Include="Admin\TrainingCalenderAdmin.aspx" />
+    <Content Include="App_Data\ErrorLog.txt" />
+    <Content Include="App_Data\VisitorCount.txt" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\BouncyCastle.Cryptography.dll" />
@@ -390,13 +414,25 @@
     <Content Include="Admin\TrainingSummary.ascx" />
     <Content Include="Admin\TrainingTypeEntry.aspx" />
     <Content Include="BatchLifecycle.ascx" />
+    <Content Include="Home.aspx" />
+    <Content Include="LMS\LMSBrowse.aspx" />
     <Content Include="ManagerMaster.Master" />
+    <Content Include="Manager\Announcement.aspx" />
+    <Content Include="Manager\AttendanceReport.aspx" />
+    <Content Include="Manager\ChangePassword.aspx" />
     <Content Include="Manager\Default.aspx" />
     <Content Include="Manager\ExamResultReport.aspx" />
+    <Content Include="Manager\FeedbackReport.aspx" />
     <Content Include="Manager\MySessions.aspx" />
     <Content Include="Manager\MyTrainings.aspx" />
+    <Content Include="Manager\Notifications.aspx" />
     <Content Include="Manager\PostTrainingTest.aspx" />
     <Content Include="Manager\PreTrainingTest.aspx" />
+    <Content Include="Manager\Profile.aspx" />
+    <Content Include="Manager\SessionReport.aspx" />
+    <Content Include="Manager\SessionReportDetails.aspx" />
+    <Content Include="Manager\TraineeProgress.aspx" />
+    <Content Include="Manager\TrainingCalendar.aspx" />
     <Content Include="Manager\TrainingDetails.aspx" />
     <Content Include="Manager\TrainingMaterial.aspx" />
     <Content Include="Manager\SessionAttendance.aspx" />
@@ -601,6 +637,7 @@
     <Content Include="SuperAdmin\TrainingSearch.aspx" />
     <Content Include="SuperAdmin\TrainingUnAssign.aspx" />
     <Content Include="Admin\TopicCategoryMaster.aspx" />
+    <Content Include="Trainee\Announcement.aspx" />
     <Content Include="Trainee\Attendance.aspx" />
     <Content Include="Trainee\css\.DS_Store" />
     <Content Include="Trainee\css\bootstrap.min.css" />
@@ -631,6 +668,8 @@
     <Content Include="Trainee\MyExamResult.aspx" />
     <Content Include="Trainee\MySessions.aspx" />
     <Content Include="Trainee\MyTrainings.aspx" />
+    <Content Include="Trainee\NominateTraining.aspx" />
+    <Content Include="Trainee\Notifications.aspx" />
     <Content Include="Trainee\PostTrainingExam.aspx" />
     <Content Include="Trainee\PreTrainingExam.aspx" />
     <Content Include="Trainee\scss\.DS_Store" />
@@ -724,6 +763,8 @@
     <Content Include="Trainee\scss\bootstrap\_variables.scss" />
     <Content Include="Trainee\scss\style.scss" />
     <Content Include="Trainee\SessionSummary.ascx" />
+    <Content Include="Trainee\SubmitBlog.aspx" />
+    <Content Include="Trainee\SubmitTestimonial.aspx" />
     <Content Include="Trainee\TraineeFeedback.aspx" />
     <Content Include="Trainee\TraineeTrainingSummary.ascx" />
     <Content Include="Trainee\TrainingDetails.aspx" />
@@ -903,6 +944,13 @@
     <Compile Include="AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
     </Compile>
+    <Compile Include="Admin\AdminOnlineNominations.aspx.cs">
+      <DependentUpon>AdminOnlineNominations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminOnlineNominations.aspx.designer.cs">
+      <DependentUpon>AdminOnlineNominations.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\AnswerDetails.aspx.cs">
       <DependentUpon>AnswerDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -974,6 +1022,13 @@
     </Compile>
     <Compile Include="Admin\CertificateTemplateMaster.aspx.designer.cs">
       <DependentUpon>CertificateTemplateMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CloneTest.aspx.cs">
+      <DependentUpon>CloneTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CloneTest.aspx.designer.cs">
+      <DependentUpon>CloneTest.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\CourseCategoryMaster.aspx.cs">
       <DependentUpon>CourseCategoryMaster.aspx</DependentUpon>
@@ -1075,6 +1130,125 @@
     <Compile Include="Admin\GeneratedCertificateList.aspx.designer.cs">
       <DependentUpon>GeneratedCertificateList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\HomeAnnouncements.aspx.cs">
+      <DependentUpon>HomeAnnouncements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeAnnouncements.aspx.designer.cs">
+      <DependentUpon>HomeAnnouncements.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeBlogs.aspx.cs">
+      <DependentUpon>HomeBlogs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeBlogs.aspx.designer.cs">
+      <DependentUpon>HomeBlogs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeDGMessage.aspx.cs">
+      <DependentUpon>HomeDGMessage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeDGMessage.aspx.designer.cs">
+      <DependentUpon>HomeDGMessage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeGallery.aspx.cs">
+      <DependentUpon>HomeGallery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeGallery.aspx.designer.cs">
+      <DependentUpon>HomeGallery.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeLeadership.aspx.cs">
+      <DependentUpon>HomeLeadership.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeLeadership.aspx.designer.cs">
+      <DependentUpon>HomeLeadership.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeMarquee.aspx.cs">
+      <DependentUpon>HomeMarquee.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeMarquee.aspx.designer.cs">
+      <DependentUpon>HomeMarquee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomePageManagement.aspx.cs">
+      <DependentUpon>HomePageManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomePageManagement.aspx.designer.cs">
+      <DependentUpon>HomePageManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HomeTestimonials.aspx.cs">
+      <DependentUpon>HomeTestimonials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HomeTestimonials.aspx.designer.cs">
+      <DependentUpon>HomeTestimonials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelAllotment.aspx.cs">
+      <DependentUpon>HostelAllotment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelAllotment.aspx.designer.cs">
+      <DependentUpon>HostelAllotment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelBedMaster.aspx.cs">
+      <DependentUpon>HostelBedMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelBedMaster.aspx.designer.cs">
+      <DependentUpon>HostelBedMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelBlockMaster.aspx.cs">
+      <DependentUpon>HostelBlockMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelBlockMaster.aspx.designer.cs">
+      <DependentUpon>HostelBlockMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelFlatMaster.aspx.cs">
+      <DependentUpon>HostelFlatMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelFlatMaster.aspx.designer.cs">
+      <DependentUpon>HostelFlatMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelMaster.aspx.cs">
+      <DependentUpon>HostelMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelMaster.aspx.designer.cs">
+      <DependentUpon>HostelMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelRoomMaster.aspx.cs">
+      <DependentUpon>HostelRoomMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelRoomMaster.aspx.designer.cs">
+      <DependentUpon>HostelRoomMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelStatusDashboard.ascx.cs">
+      <DependentUpon>HostelStatusDashboard.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelStatusDashboard.ascx.designer.cs">
+      <DependentUpon>HostelStatusDashboard.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\HostelStayHistoryReport.aspx.cs">
+      <DependentUpon>HostelStayHistoryReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\HostelStayHistoryReport.aspx.designer.cs">
+      <DependentUpon>HostelStayHistoryReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LMSMaterials.aspx.cs">
+      <DependentUpon>LMSMaterials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LMSMaterials.aspx.designer.cs">
+      <DependentUpon>LMSMaterials.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\LocationEntry.aspx.cs">
       <DependentUpon>LocationEntry.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1112,6 +1286,13 @@
     </Compile>
     <Compile Include="Admin\OrganizerEntry.aspx.designer.cs">
       <DependentUpon>OrganizerEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ProfileChangeRequests.aspx.cs">
+      <DependentUpon>ProfileChangeRequests.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ProfileChangeRequests.aspx.designer.cs">
+      <DependentUpon>ProfileChangeRequests.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\QualificationMaster.aspx.cs">
       <DependentUpon>QualificationMaster.aspx</DependentUpon>
@@ -1182,6 +1363,13 @@
     </Compile>
     <Compile Include="Admin\TrainingAttendance1.aspx.designer.cs">
       <DependentUpon>TrainingAttendance1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TrainingCalenderAdmin.aspx.cs">
+      <DependentUpon>TrainingCalenderAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrainingCalenderAdmin.aspx.designer.cs">
+      <DependentUpon>TrainingCalenderAdmin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingCategoryEntry.aspx.cs">
       <DependentUpon>TrainingCategoryEntry.aspx</DependentUpon>
@@ -1263,12 +1451,48 @@
     <Compile Include="BatchLifecycle.ascx.designer.cs">
       <DependentUpon>BatchLifecycle.ascx</DependentUpon>
     </Compile>
+    <Compile Include="GenerationNominationID.cs" />
+    <Compile Include="Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LMS\LMSBrowse.aspx.cs">
+      <DependentUpon>LMSBrowse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LMS\LMSBrowse.aspx.designer.cs">
+      <DependentUpon>LMSBrowse.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ManagerMaster.Master.cs">
       <DependentUpon>ManagerMaster.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ManagerMaster.Master.designer.cs">
       <DependentUpon>ManagerMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\Announcement.aspx.cs">
+      <DependentUpon>Announcement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\Announcement.aspx.designer.cs">
+      <DependentUpon>Announcement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\AttendanceReport.aspx.cs">
+      <DependentUpon>AttendanceReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\AttendanceReport.aspx.designer.cs">
+      <DependentUpon>AttendanceReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -1284,6 +1508,13 @@
     <Compile Include="Manager\ExamResultReport.aspx.designer.cs">
       <DependentUpon>ExamResultReport.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Manager\FeedbackReport.aspx.cs">
+      <DependentUpon>FeedbackReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\FeedbackReport.aspx.designer.cs">
+      <DependentUpon>FeedbackReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Manager\MySessions.aspx.cs">
       <DependentUpon>MySessions.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1298,6 +1529,13 @@
     <Compile Include="Manager\MyTrainings.aspx.designer.cs">
       <DependentUpon>MyTrainings.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Manager\Notifications.aspx.cs">
+      <DependentUpon>Notifications.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\Notifications.aspx.designer.cs">
+      <DependentUpon>Notifications.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Manager\PostTrainingTest.aspx.cs">
       <DependentUpon>PostTrainingTest.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1311,6 +1549,41 @@
     </Compile>
     <Compile Include="Manager\PreTrainingTest.aspx.designer.cs">
       <DependentUpon>PreTrainingTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\Profile.aspx.cs">
+      <DependentUpon>Profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\Profile.aspx.designer.cs">
+      <DependentUpon>Profile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\SessionReport.aspx.cs">
+      <DependentUpon>SessionReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\SessionReport.aspx.designer.cs">
+      <DependentUpon>SessionReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\SessionReportDetails.aspx.cs">
+      <DependentUpon>SessionReportDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\SessionReportDetails.aspx.designer.cs">
+      <DependentUpon>SessionReportDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\TraineeProgress.aspx.cs">
+      <DependentUpon>TraineeProgress.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\TraineeProgress.aspx.designer.cs">
+      <DependentUpon>TraineeProgress.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\TrainingCalendar.aspx.cs">
+      <DependentUpon>TrainingCalendar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\TrainingCalendar.aspx.designer.cs">
+      <DependentUpon>TrainingCalendar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\TrainingDetails.aspx.cs">
       <DependentUpon>TrainingDetails.aspx</DependentUpon>
@@ -1586,6 +1859,13 @@
       <DependentUpon>TraineeMaster.Master</DependentUpon>
     </Compile>
     <Compile Include="Business\Certificate\CertificateGenerator.cs" />
+    <Compile Include="Trainee\Announcement.aspx.cs">
+      <DependentUpon>Announcement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\Announcement.aspx.designer.cs">
+      <DependentUpon>Announcement.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Trainee\Attendance.aspx.cs">
       <DependentUpon>Attendance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1638,6 +1918,20 @@
     <Compile Include="Trainee\MyTrainings.aspx.designer.cs">
       <DependentUpon>MyTrainings.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Trainee\NominateTraining.aspx.cs">
+      <DependentUpon>NominateTraining.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\NominateTraining.aspx.designer.cs">
+      <DependentUpon>NominateTraining.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\Notifications.aspx.cs">
+      <DependentUpon>Notifications.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\Notifications.aspx.designer.cs">
+      <DependentUpon>Notifications.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Trainee\PostTrainingExam.Access.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -1664,6 +1958,20 @@
     </Compile>
     <Compile Include="Trainee\SessionSummary.ascx.designer.cs">
       <DependentUpon>SessionSummary.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\SubmitBlog.aspx.cs">
+      <DependentUpon>SubmitBlog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\SubmitBlog.aspx.designer.cs">
+      <DependentUpon>SubmitBlog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\SubmitTestimonial.aspx.cs">
+      <DependentUpon>SubmitTestimonial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\SubmitTestimonial.aspx.designer.cs">
+      <DependentUpon>SubmitTestimonial.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainee\TraineeFeedback.aspx.cs">
       <DependentUpon>TraineeFeedback.aspx</DependentUpon>

@@ -155,7 +155,7 @@
                 background: #1e293b;
             }
 
-.menu-heading:after {
+            .menu-heading:after {
                 content: '';
                 position: absolute;
                 right: 18px;
@@ -395,7 +395,8 @@
                     <div>
                         <div class="user-name">
                             <asp:Label ID="lblManagerID" runat="server" />
-                            <asp:Label ID="lblManagerName" runat="server" /></div>
+                            <asp:Label ID="lblManagerName" runat="server" />
+                        </div>
                         <asp:Label ID="lblManagerDesignation" runat="server" />
                         <div class="date-time"><span id="currentDate"></span>| <span id="currentTime"></span></div>
                     </div>
@@ -408,26 +409,21 @@
                 <a href="MyTrainings.aspx" class="menu-item"><i class="fas fa-chalkboard-teacher mr-2"></i>My Trainings</a>
                 <div class="menu-heading collapsed" onclick="toggleMenu('sessionMenu',this)"><i class="fas fa-calendar-alt mr-2"></i>My Sessions</div>
                 <div id="sessionMenu" class="submenu-container hide">
-                    <a href="SessionDetails.aspx" class="submenu-item"><i class="fas fa-info-circle mr-2"></i>Session Details</a>
+                    <a href="MySessions.aspx" class="submenu-item"><i class="fas fa-info-circle mr-2"></i>Session Details</a>
                     <a href="SessionAttendance.aspx" class="submenu-item"><i class="fas fa-user-check mr-2"></i>Session Attendance</a>
                 </div>
                 <div class="menu-heading collapsed" onclick="toggleMenu('materialMenu',this)"><i class="fas fa-book mr-2"></i>Training Materials</div>
                 <div id="materialMenu" class="submenu-container hide">
                     <a href="TrainingMaterial.aspx" class="submenu-item"><i class="fas fa-book-open mr-2"></i>Training Materials</a>
                 </div>
-                <div class="menu-heading collapsed" onclick="toggleMenu('questionMenu',this)"><i class="fas fa-question-circle mr-2"></i>Question Bank</div>
-                <div id="questionMenu" class="submenu-container hide">
-                    <a href="QuestionBank.aspx" class="submenu-item"><i class="fas fa-list-alt mr-2"></i>Question Bank</a>
-                    <a href="QuestionBankUpload.aspx" class="submenu-item"><i class="fas fa-file-excel mr-2"></i>Question Bank Upload</a>
-                </div>
+                
                 <div class="menu-heading collapsed" onclick="toggleMenu('testMenu',this)"><i class="fas fa-file-alt mr-2"></i>Tests &amp; Exams</div>
                 <div id="testMenu" class="submenu-container hide">
                     <a href="PreTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Pre Training Test</a>
                     <a href="PostTrainingTest.aspx" class="submenu-item"><i class="fas fa-edit mr-2"></i>Post Training Test</a>
                     <a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Test Result</a>
                 </div>
-                <div class="menu-heading collapsed" onclick="toggleMenu('feedbackMenu',this)"><i class="fas fa-comment-dots mr-2"></i>Feedback</div>
-                <div id="feedbackMenu" class="submenu-container hide"><a href="FeedbackReport.aspx" class="submenu-item"><i class="fas fa-chart-bar mr-2"></i>Feedback Report</a></div>
+               
                 <div class="menu-heading collapsed" onclick="toggleMenu('reportMenu',this)"><i class="fas fa-chart-line mr-2"></i>Reports</div>
                 <div id="reportMenu" class="submenu-container hide">
                     <a href="SessionReport.aspx" class="submenu-item"><i class="fas fa-layer-group mr-2"></i>Session Reports</a>
@@ -453,11 +449,15 @@
             </div>
         </div>
         <div class="footer">
-            <div><a href="https://sbpdcl.co.in/" target="_blank">
-                <img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' /></a><a href="https://nbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' /></a><a href="https://bsphcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' /></a><a href="https://www.bsptcl.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' /></a><a href="https://bspgcl.bihar.gov.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' /></a></div>
+            <div>
+                <a href="https://sbpdcl.co.in/" target="_blank">
+                    <img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' /></a><a href="https://nbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' /></a><a href="https://bsphcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' /></a><a href="https://www.bsptcl.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' /></a><a href="https://bspgcl.bihar.gov.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' /></a>
+            </div>
             <br />
-            <div><span class="footer-text">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span>. All Rights Reserved.<br />
-                Designed &amp; Developed by <span class="footer-text">Training Cell, BSPHCL</span></div>
+            <div>
+                <span class="footer-text">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span>. All Rights Reserved.<br />
+                Designed &amp; Developed by <span class="footer-text">Training Cell, BSPHCL</span>
+            </div>
         </div>
     </form>
     <script>

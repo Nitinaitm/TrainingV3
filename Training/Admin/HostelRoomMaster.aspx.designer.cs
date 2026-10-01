@@ -7,191 +7,189 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Training.Admin
-{
-
-
-    public partial class Dashboard
-    {
-
+namespace Training.Admin {
+    
+    
+    public partial class HostelRoomMaster {
+        
         /// <summary>
-        /// lnkActiveTrainings control.
+        /// hfRoomID control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkActiveTrainings;
-
+        protected global::System.Web.UI.WebControls.HiddenField hfRoomID;
+        
         /// <summary>
-        /// lblActiveTrainings control.
+        /// ddlHostel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActiveTrainings;
-
+        protected global::System.Web.UI.WebControls.DropDownList ddlHostel;
+        
         /// <summary>
-        /// lnkStartingSoon control.
+        /// rfvHostel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkStartingSoon;
-
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHostel;
+        
         /// <summary>
-        /// lblStartingSoon control.
+        /// ddlBlock control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStartingSoon;
-
+        protected global::System.Web.UI.WebControls.DropDownList ddlBlock;
+        
         /// <summary>
-        /// lnkPendingConfirmation control.
+        /// rfvBlock control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPendingConfirmation;
-
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBlock;
+        
         /// <summary>
-        /// lblPendingConfirmation control.
+        /// ddlFlat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingConfirmation;
-
+        protected global::System.Web.UI.WebControls.DropDownList ddlFlat;
+        
         /// <summary>
-        /// lblPendingProfileCorrections control.
+        /// txtRoomNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingProfileCorrections;
-
+        protected global::System.Web.UI.WebControls.TextBox txtRoomNo;
+        
         /// <summary>
-        /// lblPendingApproval control.
+        /// rfvRoomNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingApproval;
-
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRoomNo;
+        
         /// <summary>
-        /// lnkPendingCertificates control.
+        /// txtFloorNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPendingCertificates;
-
+        protected global::System.Web.UI.WebControls.TextBox txtFloorNo;
+        
         /// <summary>
-        /// lblPendingCertificates control.
+        /// rfvFloorNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingCertificates;
-
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFloorNo;
+        
         /// <summary>
-        /// lnkTrainingsThisMonth control.
+        /// cvFloorNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkTrainingsThisMonth;
-
+        protected global::System.Web.UI.WebControls.CompareValidator cvFloorNo;
+        
         /// <summary>
-        /// lblTrainingsThisMonth control.
+        /// ddlRoomType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainingsThisMonth;
-
+        protected global::System.Web.UI.WebControls.DropDownList ddlRoomType;
+        
         /// <summary>
-        /// lblTotalConducted control.
+        /// txtCapacity control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalConducted;
-
+        protected global::System.Web.UI.WebControls.TextBox txtCapacity;
+        
         /// <summary>
-        /// lblTotalTrained control.
+        /// rfvCapacity control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalTrained;
-
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCapacity;
+        
         /// <summary>
-        /// lblDrillDownTitle control.
+        /// cvCapacity control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDrillDownTitle;
-
+        protected global::System.Web.UI.WebControls.CompareValidator cvCapacity;
+        
         /// <summary>
-        /// gvDrillDown control.
+        /// ddlIsActive control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDrillDown;
-
+        protected global::System.Web.UI.WebControls.DropDownList ddlIsActive;
+        
         /// <summary>
-        /// gvNeedsAttention control.
+        /// btnSave control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvNeedsAttention;
-
+        protected global::System.Web.UI.WebControls.Button btnSave;
+        
         /// <summary>
-        /// rptHostelStatus control.
+        /// btnReset control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptHostelStatus;
-
+        protected global::System.Web.UI.WebControls.Button btnReset;
+        
         /// <summary>
-        /// lblNoHostel control.
+        /// lblRoomMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNoHostel;
-
+        protected global::System.Web.UI.WebControls.Label lblRoomMessage;
+        
         /// <summary>
-        /// gvUpcoming control.
+        /// gvRoom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvUpcoming;
+        protected global::System.Web.UI.WebControls.GridView gvRoom;
     }
 }

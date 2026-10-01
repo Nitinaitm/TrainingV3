@@ -1,68 +1,391 @@
-<%@ Page Title="Admin Dashboard" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" Inherits="Training.Admin.Dashboard" %>
+<%@ Page Title=""
+    Language="C#"
+    MasterPageFile="~/AdminMaster.Master"
+    AutoEventWireup="true"
+    CodeBehind="Dashboard.aspx.cs"
+    Inherits="Training.Admin.Dashboard"
+    ClientIDMode="Static" %>
+
+<%--<%@ Register Src="~/Admin/HostelStatusDashboard.ascx" TagPrefix="uc" TagName="HostelStatusDashboard" %>--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <style type="text/css">
-        .dashboard-page { padding: 5px 0 30px; }
-        .dashboard-title { font-size: 28px; font-weight: 800; color: #173b67; margin: 10px 0 22px; }
-        .dashboard-subtitle { color: #6c757d; font-size: 14px; margin-top: -14px; margin-bottom: 22px; }
-        .stat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; min-height: 145px; box-shadow: 0 3px 12px rgba(0,0,0,.06); margin-bottom: 20px; transition: transform .2s ease, box-shadow .2s ease; }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(0,0,0,.09); }
-        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #edf5ff; color: #173b67; font-size: 21px; margin-bottom: 13px; }
-        .stat-value { font-size: 30px; line-height: 34px; font-weight: 800; color: #173b67; }
-        .stat-label { color: #667085; font-size: 14px; font-weight: 700; margin-top: 4px; }
-        .quick-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; box-shadow: 0 3px 12px rgba(0,0,0,.05); height: 100%; }
-        .section-title { font-size: 18px; font-weight: 800; color: #173b67; margin-bottom: 15px; }
-        .quick-link { display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; margin-bottom: 9px; border-radius: 8px; background: #f8fafc; color: #34495e; text-decoration: none; font-weight: 700; }
-        .quick-link:hover { background: #edf5ff; color: #173b67; text-decoration: none; }
-        .quick-link i { margin-right: 8px; color: #198754; }
-        @media(max-width:767px) { .dashboard-title { font-size: 23px; } .stat-card { min-height: 125px; } }
-    </style>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <style>
+    .kpi-card .card-body {
+        min-height: 130px;
+        padding: 1.25rem;
+    }
+
+    .kpi-card .kpi-value {
+        font-size: 2.1rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .kpi-card .kpi-label {
+        font-size: .85rem;
+        opacity: .85;
+    }
+
+    .kpi-card i {
+        opacity: .45;
+    }
+
+    .hostel-card .card-body {
+        min-height: 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1.25rem;
+    }
+</style>
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="container-fluid dashboard-page">
-        <div class="dashboard-title"><i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard</div>
-        <div class="dashboard-subtitle">Training Management overview and pending actions</div>
 
-        <div class="row">
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-value"><asp:Label ID="lblActiveTrainings" runat="server" Text="0" /></div><div class="stat-label">Active Trainings</div></div>
+    <h4 class="mb-3">Dashboard</h4>
+
+    <!-- ================= KPI CARDS ================= -->
+
+    <div class="row g-3 mb-4">
+
+            <div class="col-xl-2 col-md-4 col-6">
+                <asp:LinkButton ID="lnkActiveTrainings" runat="server" CssClass="text-decoration-none d-block" CommandName="DrillDown" CommandArgument="ActiveTrainings" OnCommand="Tile_Command">
+                    <div class="card kpi-card text-white bg-primary shadow-sm h-100">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="kpi-label">Active Trainings</div>
+                                <asp:Label ID="lblActiveTrainings" runat="server" CssClass="kpi-value" Text="0" />
+                            </div>
+                            <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                        </div>
+                    </div>
+                </asp:LinkButton>
             </div>
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-value"><asp:Label ID="lblStarting7Days" runat="server" Text="0" /></div><div class="stat-label">Starting in 7 Days</div></div>
+
+    <div class="col-xl-2 col-md-4 col-6">
+        <asp:LinkButton ID="lnkStartingSoon" runat="server" CssClass="text-decoration-none d-block" CommandName="DrillDown" CommandArgument="StartingSoon" OnCommand="Tile_Command">
+            <div class="card kpi-card text-white bg-info shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="kpi-label">Starting in 7 Days</div>
+                        <asp:Label ID="lblStartingSoon" runat="server" CssClass="kpi-value" Text="0" />
+                    </div>
+                    <i class="fas fa-calendar-day fa-2x"></i>
+                </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-hourglass-half"></i></div><div class="stat-value"><asp:Label ID="lblConfirmationPending" runat="server" Text="0" /></div><div class="stat-label">Confirmation Pending</div></div>
+        </asp:LinkButton>
+    </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <asp:LinkButton ID="lnkPendingConfirmation" runat="server" CssClass="text-decoration-none d-block" CommandName="DrillDown" CommandArgument="Confirmation" OnCommand="Tile_Command">
+                <div class="card kpi-card text-white bg-warning shadow-sm h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-label">Attendance Confirmation Pending from Trainees</div>
+                            <asp:Label ID="lblPendingConfirmation" runat="server" CssClass="kpi-value" Text="0" />
+                        </div>
+                        <i class="fas fa-user-clock fa-2x"></i>
+                    </div>
+                </div>
+            </asp:LinkButton>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <a href="ProfileChangeRequests.aspx" class="text-decoration-none">
+                <div class="card kpi-card text-white bg-info shadow-sm h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-label">Profile Corrections Requests Pending for Approval</div>
+                            <asp:Label ID="lblPendingProfileCorrections" runat="server" CssClass="kpi-value" Text="0" />
+                        </div>
+                        <i class="fas fa-user-edit fa-2x"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <a href="QuestionApproval.aspx" class="text-decoration-none">
+                <div class="card kpi-card text-white bg-danger shadow-sm h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-label">Questions Pending for Approval</div>
+                            <asp:Label ID="lblPendingApproval" runat="server" CssClass="kpi-value" Text="0" />
+                        </div>
+                        <i class="fas fa-question-circle fa-2x"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <asp:LinkButton ID="lnkPendingCertificates" runat="server" CssClass="text-decoration-none " CommandName="DrillDown" CommandArgument="Certificates" OnCommand="Tile_Command">
+                <div class="card kpi-card text-white bg-success shadow-sm h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-label">Certificates Pending</div>
+                            <asp:Label ID="lblPendingCertificates" runat="server" CssClass="kpi-value" Text="0" />
+                        </div>
+                        <i class="fas fa-certificate fa-2x"></i>
+                    </div>
+                </div>
+            </asp:LinkButton>
+        </div>
+
+    <div class="col-xl-2 col-md-4 col-6">
+        <asp:LinkButton ID="lnkTrainingsThisMonth" runat="server" CssClass="text-decoration-none d-block" CommandName="DrillDown" CommandArgument="ThisMonth" OnCommand="Tile_Command">
+            <div class="card kpi-card text-white bg-secondary shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="kpi-label">Trainings This Month</div>
+                        <asp:Label ID="lblTrainingsThisMonth" runat="server" CssClass="kpi-value" Text="0" />
+                    </div>
+                    <i class="fas fa-layer-group fa-2x"></i>T
+                </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-question-circle"></i></div><div class="stat-value"><asp:Label ID="lblQuestionsPending" runat="server" Text="0" /></div><div class="stat-label">Questions Pending Approval</div></div>
-            </div>
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-certificate"></i></div><div class="stat-value"><asp:Label ID="lblCertificatesPending" runat="server" Text="0" /></div><div class="stat-label">Certificates Pending</div></div>
-            </div>
-            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-value"><asp:Label ID="lblTrainingsThisMonth" runat="server" Text="0" /></div><div class="stat-label">Trainings This Month</div></div>
+        </asp:LinkButton>
+    </div>
+
+        <div class="col-xl-2 col-md-4 col-6" runat="server" visible="false">
+            <div class="card kpi-card text-white bg-dark shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="kpi-label">Total Trainings Conducted</div>
+                        <asp:Label ID="lblTotalConducted" runat="server" CssClass="kpi-value" Text="0" />
+                    </div>
+                    <i class="fas fa-graduation-cap fa-2x"></i>
+                </div>
             </div>
         </div>
 
-        <div class="row mt-2">
-            <div class="col-lg-7 mb-3">
-                <div class="quick-card">
-                    <div class="section-title"><i class="fas fa-bolt"></i>&nbsp; Quick Actions</div>
-                    <a class="quick-link" href="CreateBatch.aspx"><span><i class="fas fa-plus-circle"></i>Create Batch</span><i class="fas fa-chevron-right"></i></a>
-                    <a class="quick-link" href="TrainingList.aspx"><span><i class="fas fa-list"></i>Training List</span><i class="fas fa-chevron-right"></i></a>
-                    <a class="quick-link" href="QuestionApproval.aspx"><span><i class="fas fa-check-circle"></i>Question Approval</span><i class="fas fa-chevron-right"></i></a>
-                    <a class="quick-link" href="GeneratedCertificateList.aspx"><span><i class="fas fa-certificate"></i>Generated Certificates</span><i class="fas fa-chevron-right"></i></a>
+        <div class="col-xl-2 col-md-4 col-6"  runat="server" visible="false">
+            <div class="card kpi-card text-white bg-primary shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="kpi-label">Total Employees Trained</div>
+                        <asp:Label ID="lblTotalTrained" runat="server" CssClass="kpi-value" Text="0" />
+                    </div>
+                    <i class="fas fa-users fa-2x"></i>
                 </div>
             </div>
-            <div class="col-lg-5 mb-3">
-                <div class="quick-card">
-                    <div class="section-title"><i class="fas fa-chart-line"></i>&nbsp; Reports</div>
-                    <a class="quick-link" href="TrainingDetailsReport.aspx"><span><i class="fas fa-file-alt"></i>Training Details Report</span><i class="fas fa-chevron-right"></i></a>
-                    <a class="quick-link" href="TrainingCompletionSummaryReport.aspx"><span><i class="fas fa-chart-bar"></i>Completion Summary</span><i class="fas fa-chevron-right"></i></a>
-                    <a class="quick-link" href="TrainingSearch.aspx"><span><i class="fas fa-search"></i>Employee Training Search</span><i class="fas fa-chevron-right"></i></a>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="drillDownModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><asp:Label ID="lblDrillDownTitle" runat="server" /></h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <asp:GridView ID="gvDrillDown" runat="server" CssClass="table table-bordered table-sm" AutoGenerateColumns="true" EmptyDataText="No records found." />
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ================= NEEDS ATTENTION ================= -->
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <b>Needs Attention</b> - Ongoing/upcoming trainings with an incomplete step
+        </div>
+        <div class="card-body p-2">
+            <asp:GridView
+                ID="gvNeedsAttention"
+                runat="server"
+                AutoGenerateColumns="false"
+                CssClass="table table-bordered table-sm table-hover mb-0"
+                EmptyDataText="Nothing outstanding - every ongoing or upcoming training is fully set up."
+                OnRowCommand="gvNeedsAttention_RowCommand">
+                <Columns>
+                    <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+                    <asp:BoundField DataField="CourseName" HeaderText="Course" />
+                    <asp:BoundField DataField="Batch" HeaderText="Batch" />
+                    <asp:BoundField DataField="DateFrom" HeaderText="Starts" DataFormatString="{0:dd-MMM-yyyy}" />
+                    <asp:TemplateField HeaderText="Outstanding">
+                        <ItemTemplate>
+                            <span class="badge bg-warning text-dark"><%# Eval("Issues") %></span>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="">
+                        <ItemTemplate>
+                            <asp:LinkButton
+                                ID="lnkView"
+                                runat="server"
+                                CssClass="btn btn-sm btn-outline-primary"
+                                CommandName="ViewTraining"
+                                CommandArgument='<%# Eval("TrainingID") %>'>Open</asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+        </div>
+    </div>
+
+    <!-- ================= HOSTEL STATUS ================= -->
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <b>Hostel Status</b> - Vacant Seats Overview
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <asp:Repeater ID="rptHostelStatus" runat="server" OnItemCommand="rptHostelStatus_ItemCommand">
+                    <ItemTemplate>
+                        <div class="col-xl-3 col-md-4 col-6">
+                            <div class='<%# "card kpi-card hostel-card h-100 shadow-sm text-white " + (Convert.ToInt32(Eval("VacantBeds")) > 0 ? "bg-success" : "bg-danger") %>'>
+                                <div class="card-body">
+                                    <div class="kpi-label"><%# Eval("HostelName") %> - <%# Eval("BlockName") %></div>
+                                    <asp:LinkButton runat="server" CssClass="kpi-value text-white text-decoration-none d-block" CommandName="DrillDownHostel" CommandArgument='<%# Eval("BlockID") %>' Text='<%# Eval("VacantBeds") %>' />
+                                    <div class="kpi-label">vacant of <%# Eval("TotalBeds") %> total (<%# Eval("OccupiedBeds") %> occupied)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+            <asp:Label ID="lblNoHostel" runat="server" CssClass="text-muted" Text="No active hostels found." Visible="false" />
+        </div>
+    </div>
+
+    <!-- ================= ANALYTICS ================= -->
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-dark text-white"><b>Company-wise Employees Trained</b></div>
+                <div class="card-body">
+                    <canvas id="companyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-dark text-white"><b>Top 10 Courses by Employees Trained</b></div>
+                <div class="card-body">
+                    <canvas id="courseChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-dark text-white"><b>Year-wise Employees Trained</b></div>
+                <div class="card-body">
+                    <canvas id="yearChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script>
+            var companyChartInstance = null;
+            var courseChartInstance = null;
+            var yearChartInstance = null;
+
+            function initDashboardCharts() {
+                if (companyChartInstance) { companyChartInstance.destroy(); }
+                if (courseChartInstance) { courseChartInstance.destroy(); }
+                if (yearChartInstance) { yearChartInstance.destroy(); }
+
+                companyChartInstance = new Chart(document.getElementById('companyChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: <%= CompanyChartLabels %>,
+                    datasets: [{
+                        data: <%= CompanyChartValues %>,
+                        backgroundColor: ['#2563eb', '#7c3aed', '#f59e0b', '#16a34a', '#dc2626', '#0891b2']
+                    }]
+                }
+            });
+
+            courseChartInstance = new Chart(document.getElementById('courseChart'), {
+                type: 'bar',
+                data: {
+                    labels: <%= CourseChartLabels %>,
+                    datasets: [{
+                        label: 'Employees Trained',
+                        data: <%= CourseChartValues %>,
+                        backgroundColor: '#2563eb'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: { x: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            yearChartInstance = new Chart(document.getElementById('yearChart'), {
+                type: 'bar',
+                data: {
+                    labels: <%= YearChartLabels %>,
+                    datasets: [{
+                        label: 'Employees Trained',
+                        data: <%= YearChartValues %>,
+                        backgroundColor: '#7c3aed'
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+            }
+
+            initDashboardCharts();
+    </script>
+
+        <script>
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    if (typeof $ !== 'undefined') {
+                        $('#drillDownModal').modal('hide');
+                    }
+                    if (typeof initDashboardCharts === 'function') {
+                        initDashboardCharts();
+                    }
+                }
+            });
+        </script>
+
+    <!-- ================= UPCOMING TRAININGS ================= -->
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <b>Upcoming Trainings</b> - Next 14 days
+        </div>
+        <div class="card-body p-2">
+            <asp:GridView
+                ID="gvUpcoming"
+                runat="server"
+                AutoGenerateColumns="false"
+                CssClass="table table-bordered table-sm mb-0"
+                EmptyDataText="No trainings scheduled in the next 14 days.">
+                <Columns>
+                    <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+                    <asp:BoundField DataField="CourseName" HeaderText="Course" />
+                    <asp:BoundField DataField="Batch" HeaderText="Batch" />
+                    <asp:BoundField DataField="DateFrom" HeaderText="From" DataFormatString="{0:dd-MMM-yyyy}" />
+                    <asp:BoundField DataField="DateTo" HeaderText="To" DataFormatString="{0:dd-MMM-yyyy}" />
+                    <asp:TemplateField HeaderText="Status">
+                        <ItemTemplate>
+                            <%# Eval("WorkflowStatus").ToString().Contains("D") ? "<span class='badge bg-success'>Trainees Assigned</span>"
+                                : (Eval("WorkflowStatus").ToString().Contains("C") ? "<span class='badge bg-info'>Sessions Assigned</span>"
+                                : "<span class='badge bg-secondary'>Batch Created</span>") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+        </div>
+    </div>
+
 </asp:Content>

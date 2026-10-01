@@ -1,0 +1,2385 @@
+2026-08-24 23:39:19 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:16 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:22 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:28 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:29 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:31 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:53 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-24 23:40:55 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 10:52:16 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 10:55:33 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 10:56:32 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 10:59:39 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 11:58:27 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 12:25:41 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 12:27:11 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:04 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:12 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:16 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:17 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:18 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:19 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 15:56:21 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 16:01:15 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 16:02:19 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 16:04:17 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 16:09:47 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 17:01:07 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-25 17:01:22 | ExecuteScalar(query, param) | The SqlParameter is already contained by another SqlParameterCollection. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-28 01:03:52 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+TD.TrainingID,
+TM.CourseName,
+TD.TrainingCategory,
+TD.TrainingType,
+TD.TrainingLocation,
+TD.Batch,
+TD.DateFrom,
+TD.DateTo,
+ISNULL(TD.TrainingStatus,'Draft')
+AS TrainingStatus
+
+FROM TrainingDetails TD
+
+INNER JOIN CourseMaster TM
+ON TD.CourseID = TM.CourseID
+
+WHERE 1=1 
+
+ORDER BY TD.ID DESC
+2026-08-28 01:06:03 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT DISTINCT CM.CourseID, CM.CourseName FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TA.EmpID=@EmpID ORDER BY CM.CourseName
+2026-08-28 01:06:33 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-28 01:06:46 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+TD.TrainingID,
+TM.CourseName,
+TD.TrainingCategory,
+TD.TrainingType,
+TD.TrainingLocation,
+TD.Batch,
+TD.DateFrom,
+TD.DateTo,
+ISNULL(TD.TrainingStatus,'Draft')
+AS TrainingStatus
+
+FROM TrainingDetails TD
+
+INNER JOIN CourseMaster TM
+ON TD.CourseID = TM.CourseID
+
+WHERE 1=1 
+
+ORDER BY TD.ID DESC
+2026-08-28 01:07:16 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT DISTINCT T.TrainingID, T.TrainingID + ' | ' + TD.TrainingType + ' | ' + TD.Batch AS TrainingName, TD.CreatedOn
+                             FROM TrainingAssignment T INNER JOIN TrainingDetails TD ON T.TrainingID = TD.TrainingID
+                             ORDER BY TD.CreatedOn DESC
+2026-08-28 01:07:37 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT DISTINCT CM.CourseID, CM.CourseName FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TA.EmpID=@EmpID ORDER BY CM.CourseName
+2026-08-28 01:07:46 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT DISTINCT T.TrainingID, T.TrainingID + ' | ' + TD.TrainingType + ' | ' + TD.Batch AS TrainingName, TD.CreatedOn
+                             FROM TrainingAssignment T INNER JOIN TrainingDetails TD ON T.TrainingID = TD.TrainingID
+                             ORDER BY TD.CreatedOn DESC
+2026-08-28 01:08:07 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-28 01:09:13 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+TD.TrainingID,
+TM.CourseName,
+TD.TrainingCategory,
+TD.TrainingType,
+TD.TrainingLocation,
+TD.Batch,
+TD.DateFrom,
+TD.DateTo,
+ISNULL(TD.TrainingStatus,'Draft')
+AS TrainingStatus
+
+FROM TrainingDetails TD
+
+INNER JOIN CourseMaster TM
+ON TD.CourseID = TM.CourseID
+
+WHERE 1=1 
+
+ORDER BY TD.ID DESC
+2026-08-28 01:11:46 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-28 01:11:53 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-28 13:43:54 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 13:45:46 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 13:46:12 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 14:34:09 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 14:52:15 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:05:30 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:05:39 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:07:13 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:09:52 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:10:00 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 15:10:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 15:10:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 15:10:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 15:10:41 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 15:10:41 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 15:10:41 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 15:10:44 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 15:10:44 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 15:10:44 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 17:33:30 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 17:42:36 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 17:48:03 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 17:48:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 17:48:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 17:48:06 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 17:48:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 17:48:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 17:48:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 17:50:01 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 17:50:01 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 17:50:02 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 17:50:22 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 17:50:22 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 17:50:22 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 18:07:52 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 18:07:52 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 18:07:52 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 18:12:10 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:17:33 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:18:44 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:20:41 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:20:43 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:20:45 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:20:48 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 18:20:48 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 18:20:48 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 18:21:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 18:21:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 18:21:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-28 18:34:42 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:34:57 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-28 18:34:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-28 18:34:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-28 18:34:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:23:35 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-31 11:24:35 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-31 11:24:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:24:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:24:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:27:56 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:27:56 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:27:56 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:28:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:28:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:28:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:28:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:28:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:28:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:29:40 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:29:40 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:29:40 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:36:22 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 11:42:50 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 11:42:56 | GetDataTable(query, param) | The parameterized query '(@TestID nvarchar(4000))SELECT * FROM TestMaster WHERE TestID=@T' expects the parameter '@TestID', which was not supplied. | Query: SELECT * FROM TestMaster WHERE TestID=@TestID
+2026-08-31 11:42:56 | GetDataTable(query, param) | The parameterized query '(@TestID nvarchar(4000),@EmpID nvarchar(6))SELECT AttemptID,Atte' expects the parameter '@TestID', which was not supplied. | Query: SELECT AttemptID,AttemptNo,CurrentQuestionNo,StartTime FROM TestAttempt WHERE TestID=@TestID AND EmpID=@EmpID AND Submitted=0
+2026-08-31 11:42:59 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 11:43:38 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:43:38 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:43:38 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:48:58 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-31 11:49:03 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:49:03 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:49:04 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:49:11 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:49:11 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:49:11 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:49:41 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:49:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:49:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:54:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 11:54:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 11:54:31 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 11:59:13 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 12:01:51 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 12:13:29 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 12:18:02 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-31 12:18:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:18:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:18:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:18:21 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:18:21 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:18:21 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:19:59 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-08-31 12:20:01 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:20:02 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:20:02 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:20:05 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:20:05 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:20:05 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:22:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:22:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:22:59 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:23:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-08-31 12:23:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-08-31 12:23:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-08-31 12:26:29 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 12:31:46 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 12:38:04 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 15:21:09 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT EmpName, Gender, EmpDesignation, EmpPostingPlace, EmpCompany, MobileNo, EmailId FROM EmpBasicMaster WHERE EmpID=@EmpID
+2026-08-31 15:21:44 | ExecuteScalar(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT LastConfirmedOn FROM EmpProfileConfirmation WHERE EmpID=@EmpID
+2026-08-31 15:22:20 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT EmpID, EmpName FROM EmpBasicMaster WHERE EmpID=@EmpID
+2026-08-31 16:12:07 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 17:45:18 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 17:56:09 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 23:08:43 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-31 23:10:01 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-31 23:12:50 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-31 23:13:26 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-31 23:14:28 | GetDataTable(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: SELECT TA.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TP.AttendanceCompleted,0) AS AttendanceCompleted,ISNULL(TP.PreExamCompleted,0) AS PreExamCompleted,ISNULL(TP.PostExamCompleted,0) AS PostExamCompleted,ISNULL(TP.SessionFeedbackCompleted,0) AS SessionFeedbackCompleted,ISNULL(TP.BatchFeedbackCompleted,0) AS BatchFeedbackCompleted,ISNULL(TP.CertificateGenerated,0) AS CertificateGenerated,ISNULL(TP.WorkflowStatus,'P') AS WorkflowStatus,ISNULL(TP.AttendanceConfirmed,0) AS AttendanceConfirmed,CASE WHEN ISNULL(TP.AttendanceConfirmed,0)=0 AND DATEDIFF(DAY,GETDATE(),TRY_CONVERT(date,TD.DateFrom,105)) BETWEEN 0 AND 2 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanConfirmAttendance,CASE WHEN NOT EXISTS ( SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ( ISNULL(SM.AttendanceStatus,'')<>'Completed' OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) OR EXISTS ( SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND NOT EXISTS ( SELECT 1 FROM TestAttempt TTA WHERE TTA.TestID=TM.TestID AND TTA.EmpID=TA.EmpID AND TTA.Submitted=1 ) ) ) ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanBatchFeedback,CASE WHEN ISNULL(TP.BatchFeedbackCompleted,0)=1 THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS CanCertificate FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID LEFT JOIN TrainingProgress TP ON TP.TrainingID=TA.TrainingID AND TP.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID ORDER BY TrainingID DESC
+2026-08-31 23:23:55 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-08-31 23:25:26 | GetDataTable(query, param) | Operand data type bit is invalid for max operator. | Query: SELECT MAX(CASE WHEN TM.TestType='Pre' THEN TM.TestID END) AS PreTestID,MAX(CASE WHEN TM.TestType='Pre' THEN TM.IsPublished END) AS PrePublished,MAX(CASE WHEN TM.TestType='Post' THEN TM.TestID END) AS PostTestID,MAX(CASE WHEN TM.TestType='Post' THEN TM.IsPublished END) AS PostPublished FROM TestMaster TM WHERE TM.SessionID=@SessionID
+2026-09-01 00:02:27 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-01 01:41:10 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-01 01:41:32 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-01 01:59:46 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-01 10:01:19 | GetDataTable(query, param) | Incorrect syntax near the keyword 'order'. | Query: 
+SELECT
+FQM.QuestionID,
+FCM.CategoryName,
+FQM.QuestionText,
+FQM.AnswerType,
+FQM.DisplayOrder,
+FQM.Mandatory,
+FQM.Active,
+FQM.CreatedOn
+FROM
+FeedbackQuestionMaster FQM
+INNER JOIN
+FeedbackCategoryMaster FCM
+ON
+FQM.CategoryID=FCM.CategoryID
+WHERE
+FQM.QuestionText LIKE @Search
+ORDER BY
+FCM.DisplayOrder,
+FQM.DisplayOrder,
+FQM.QuestionText order by FCM.CategoryName ASC
+2026-09-01 10:01:35 | GetDataTable(query, param) | Incorrect syntax near the keyword 'order'. | Query: 
+SELECT
+FQM.QuestionID,
+FCM.CategoryName,
+FQM.QuestionText,
+FQM.AnswerType,
+FQM.DisplayOrder,
+FQM.Mandatory,
+FQM.Active,
+FQM.CreatedOn
+FROM
+FeedbackQuestionMaster FQM
+INNER JOIN
+FeedbackCategoryMaster FCM
+ON
+FQM.CategoryID=FCM.CategoryID
+WHERE
+FQM.QuestionText LIKE @Search
+ORDER BY
+FCM.DisplayOrder,
+FQM.DisplayOrder,
+FQM.QuestionText order by FCM.CategoryName ASC
+2026-09-01 17:09:11 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-01 17:09:32 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-01 17:09:32 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-01 17:09:32 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-03 12:37:57 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-07 10:28:40 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 10:28:58 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 10:28:58 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 10:28:58 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 10:58:51 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 10:59:19 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 10:59:28 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 10:59:28 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 10:59:28 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 10:59:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 10:59:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 10:59:54 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 12:12:42 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:12:54 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:02 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:03 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:04 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:06 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:12 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:53 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:54 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:54 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:55 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:56 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:18:56 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:19:00 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:19:01 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:19:02 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:28 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:29 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:30 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:30 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:30 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:31 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:32 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:32 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:24:32 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:25:15 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:25:25 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:25:47 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:27:09 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:27:11 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:27:14 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:27:28 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:48 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:49 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:53 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:56 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:57 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:28:58 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:37:53 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:16 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:17 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:18 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:18 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:19 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:28 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:33 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:35 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:37 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:38 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:38:39 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:50:58 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:01 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:02 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:03 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:04 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:07 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:10 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:14 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:15 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:16 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:16 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:17 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:18 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:18 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:19 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:36 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:51:49 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:52:33 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:52:34 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:52:38 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:52:39 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:55:57 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:55:59 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-07 12:56:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 12:56:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 12:56:12 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 12:56:16 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 12:56:16 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 12:56:16 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 12:57:19 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 12:57:19 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 12:57:19 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 14:34:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 14:34:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 14:34:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:11:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:11:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:11:39 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:11:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:11:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:11:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:07 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:07 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:07 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:10 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:29 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:29 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:29 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:43 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:12:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:12:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:12:49 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-07 15:13:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-07 15:13:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-07 15:13:00 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-09 15:48:50 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-10 18:00:32 | ExecuteScalar(query, param) | Incorrect syntax near the keyword 'AND'. | Query: SELECT COUNT(*) FROM SessionMaster SM
+INNER JOIN TrainingDetails TD
+ON SM.TrainingID=TD.TrainingID
+WHERE SM.TrainerID=@TrainerID
+AND AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted')
+AND SM.SessionDate=@Today
+2026-09-10 18:00:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TrainingMaterial WHERE SessionID=@SessionID AND IsActive=1
+2026-09-10 18:00:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='PRE' AND IsActive=1
+2026-09-10 18:00:42 | ExecuteScalar(query, param) | Invalid column name 'IsActive'. | Query: SELECT COUNT(*) FROM TestMaster WHERE SessionID=@SessionID AND TestType='POST' AND IsActive=1
+2026-09-18 17:56:54 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-18 17:57:50 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:20 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:29 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:29 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:29 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:33 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:33:34 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:34:15 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 10:34:24 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 11:48:59 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-25 11:54:33 | ExecuteSql(query, param) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: UPDATE EmpBasicMaster SET EmpPostingPlace=@EmpPostingPlace WHERE EmpID=@EmpID
+2026-09-25 12:06:17 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-27 19:31:50 | ExecuteSql(query, param) | Conversion failed when converting the nvarchar value 'CR000007' to data type int. | Query: INSERT INTO LMSMaterial (Title, Description, MaterialType, FilePath, VideoUrl, CourseID, Category, DisplayOrder, IsActive, CreatedOn, CreatedBy) VALUES (@Title, @Description, @MaterialType, @FilePath, @VideoUrl, @CourseID, @Category, @DisplayOrder, @IsActive, GETDATE(), @CreatedBy)
+2026-09-27 19:32:39 | ExecuteSql(query, param) | Conversion failed when converting the nvarchar value 'CR000007' to data type int. | Query: INSERT INTO LMSMaterial (Title, Description, MaterialType, FilePath, VideoUrl, CourseID, Category, DisplayOrder, IsActive, CreatedOn, CreatedBy) VALUES (@Title, @Description, @MaterialType, @FilePath, @VideoUrl, @CourseID, @Category, @DisplayOrder, @IsActive, GETDATE(), @CreatedBy)
+2026-09-27 23:02:01 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-29 22:38:36 | GetDataTable(query) | Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. | Query: 
+
+SELECT
+
+L.LoginIDUserID AS LoginID,
+
+L.CorrespondingEmpID,
+
+E.MobileNo,
+
+L.Role,
+
+'Internal' AS UserType
+
+FROM Login L
+
+INNER JOIN EmpBasicMaster E
+
+ON L.CorrespondingEmpID=E.EmpID
+
+WHERE
+L.Role IN
+(
+'Admin',
+'SuperAdmin',
+'Nodal',
+'Trainee'
+)
+
+UNION ALL
+
+SELECT
+
+TM.TrainerID AS LoginID,
+
+TM.EmpID AS CorrespondingEmpID,
+
+E.MobileNo,
+
+'Trainer' AS Role,
+
+'Internal' AS UserType
+
+FROM TrainerMaster TM
+
+INNER JOIN EmpBasicMaster E
+
+ON TM.EmpID=E.EmpID
+
+WHERE TM.TrainerType='Internal'
+
+UNION ALL
+
+SELECT
+
+TrainerID AS LoginID,
+
+TrainerID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainer' AS Role,
+
+'External' AS UserType
+
+FROM TrainerMaster
+
+WHERE TrainerType='External'
+
+UNION ALL
+
+SELECT
+
+TraineeID AS LoginID,
+
+TraineeID AS CorrespondingEmpID,
+
+MobileNo,
+
+'Trainee' AS Role,
+
+'External' AS UserType
+
+FROM TraineeMasterExternal
+
+WHERE ISNULL(MobileNo,'')<>''
+
+ORDER BY LoginID
+2026-09-30 15:28:50 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 15:52:43 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:03:43 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:10:50 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:15:54 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:16:01 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:21:23 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:55:40 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:56:33 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 16:57:15 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:15:10 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:17:53 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:25:00 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:29:34 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:36:03 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-09-30 22:50:52 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
+2026-10-01 09:53:25 | GetDataTable(query) | Ambiguous column name 'OwnerID'. | Query: SELECT DISTINCT OwnerID,OwnerID FROM QuestionBank WHERE QuestionOwnerType='Trainer' ORDER BY OwnerID
