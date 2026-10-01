@@ -1,2 +1,43 @@
-using System;using System.Data;using System.Web.UI;
-namespace Training.Trainee{public partial class Announcement:System.Web.UI.Page{clsDataAccess obj=new clsDataAccess();protected void Page_Load(object s,EventArgs e){if(Session["Role"]==null||Session["Role"].ToString()!="Emp")Response.Redirect("~/Default.aspx");if(!IsPostBack)BindGrid();}private void BindGrid(){DataTable d=obj.GetDataTable("SELECT AnnouncementID,Title,Message,CreatedOn FROM Announcement WHERE IsActive=1 ORDER BY CreatedOn DESC");d.Columns.Add("HasPdf",typeof(bool));foreach(DataRow r in d.Rows)r["HasPdf"]=System.IO.File.Exists(Server.MapPath("~/Uploads/Announcements/"+r["AnnouncementID"]+".pdf"));gvAnnouncements.DataSource=d;gvAnnouncements.DataBind();}}}
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace Training.Trainee
+{
+    public partial class Announcement : System.Web.UI.Page
+    {
+        clsDataAccess obj = new clsDataAccess();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Session["EmpID"] == null || Session["Role"] == null || !string.Equals(Session["Role"].ToString(), "Trainee", StringComparison.OrdinalIgnoreCase))
+            {
+                Response.Redirect("~/Default.aspx");
+                return;
+            }
+
+            if (!IsPostBack)
+            {
+                BindGrid();
+            }
+        }
+
+        private void BindGrid()
+        {
+            string empID = Session["EmpID"].ToString().Trim();
+            string query = "SELECT DISTINCT A.AnnouncementID,A.Title,A.Message,A.CreatedOn FROM Announcement A WHERE A.IsActive=1 AND EXISTS (SELECT 1 FROM TrainingAssignment TA INNER JOIN SessionMaster SM ON TA.TrainingID=SM.TrainingID WHERE LTRIM(RTRIM(TA.EmpID))=LTRIM(RTRIM(@EmpID)) AND SM.TrainerID=A.TrainerID) ORDER BY A.CreatedOn DESC";
+
+            DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@EmpID", empID) });
+
+            dt.Columns.Add("HasPdf", typeof(bool));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["HasPdf"] = System.IO.File.Exists(Server.MapPath("~/Uploads/Announcements/" + row["AnnouncementID"] + ".pdf"));
+            }
+
+            gvAnnouncements.DataSource = dt;
+            gvAnnouncements.DataBind();
+        }
+    }
+}
