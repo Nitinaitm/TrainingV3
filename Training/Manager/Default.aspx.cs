@@ -54,6 +54,20 @@ namespace Training.Manager
             return Session["ManagerTrainingLocationID"] == null ? "" : Session["ManagerTrainingLocationID"].ToString().Trim();
         }
 
+        protected void DashboardLink_Command(object sender, System.Web.UI.WebControls.CommandEventArgs e)
+        {
+            string command = Convert.ToString(e.CommandName);
+            if (command == "TotalTrainings" || command == "ActiveTrainings" || command == "CompletedTrainings" || command == "Planned" || command == "InProgress" || command == "Completed")
+            {
+                Session["ManagerTrainingDashboardFilter"] = command;
+                Response.Redirect("~/Manager/MyTrainings.aspx");
+                return;
+            }
+
+            Session["ManagerSessionDashboardFilter"] = command;
+            Response.Redirect("~/Manager/MySessions.aspx");
+        }
+
         private void LoadDashboard()
         {
             string locationID = GetTrainingLocationID();
