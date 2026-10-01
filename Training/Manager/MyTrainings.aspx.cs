@@ -48,10 +48,11 @@ namespace Training.Manager
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
             if(!string.IsNullOrWhiteSpace(txtBatch.Text))sql+=" AND TD.Batch LIKE @Batch";
             string dashboardFilter = Session["ManagerTrainingDashboardFilter"] == null ? "" : Session["ManagerTrainingDashboardFilter"].ToString();
-            if(dashboardFilter=="ActiveTrainings" || dashboardFilter=="InProgress")sql+=" AND ISNULL(TD.TrainingStatus,'') IN ('Planned','InProgress','AttendanceCompleted')";
-            else if(dashboardFilter=="CompletedTrainings" || dashboardFilter=="Completed")sql+=" AND ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted')";
-            else if(dashboardFilter=="Planned")sql+=" AND ISNULL(TD.TrainingStatus,'')='Planned'";
-            else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND ISNULL(TD.TrainingStatus,'')=@TrainingStatus";
+            if(dashboardFilter=="ActiveTrainings" || dashboardFilter=="InProgress")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Planned','InProgress','AttendanceCompleted')";
+            else if(dashboardFilter=="CompletedTrainings" || dashboardFilter=="Completed")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Completed','TrainingCompleted')";
+            else if(dashboardFilter=="Planned")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,'')))='Planned'";
+            else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue) && ddlStatus.SelectedValue=="Completed")sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Completed','TrainingCompleted')";
+            else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND LTRIM(RTRIM(ISNULL(TD.TrainingStatus,'')))=@TrainingStatus";
             if(!string.IsNullOrWhiteSpace(txtFromDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateFrom,105)>=TRY_CONVERT(date,@FromDate,105)";
             if(!string.IsNullOrWhiteSpace(txtToDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateTo,105)<=TRY_CONVERT(date,@ToDate,105)";
             sql+=" ORDER BY SortDate DESC";
