@@ -47,7 +47,11 @@ namespace Training.Manager
             if(!string.IsNullOrWhiteSpace(txtTrainingID.Text))sql+=" AND TD.TrainingID LIKE @TrainingID";
             if(!string.IsNullOrWhiteSpace(txtTrainingType.Text))sql+=" AND TD.TrainingType LIKE @TrainingType";
             if(!string.IsNullOrWhiteSpace(txtBatch.Text))sql+=" AND TD.Batch LIKE @Batch";
-            if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND ISNULL(TD.TrainingStatus,'')=@TrainingStatus";
+            string dashboardFilter = Session["ManagerTrainingDashboardFilter"] == null ? "" : Session["ManagerTrainingDashboardFilter"].ToString();
+            if(dashboardFilter=="ActiveTrainings" || dashboardFilter=="InProgress")sql+=" AND ISNULL(TD.TrainingStatus,'') IN ('Planned','InProgress','AttendanceCompleted')";
+            else if(dashboardFilter=="CompletedTrainings" || dashboardFilter=="Completed")sql+=" AND ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted')";
+            else if(dashboardFilter=="Planned")sql+=" AND ISNULL(TD.TrainingStatus,'')='Planned'";
+            else if(!string.IsNullOrWhiteSpace(ddlStatus.SelectedValue))sql+=" AND ISNULL(TD.TrainingStatus,'')=@TrainingStatus";
             if(!string.IsNullOrWhiteSpace(txtFromDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateFrom,105)>=TRY_CONVERT(date,@FromDate,105)";
             if(!string.IsNullOrWhiteSpace(txtToDate.Text))sql+=" AND TRY_CONVERT(date,TD.DateTo,105)<=TRY_CONVERT(date,@ToDate,105)";
             sql+=" ORDER BY SortDate DESC";
@@ -56,8 +60,8 @@ namespace Training.Manager
             gvTraining.DataBind();
         }
 
-        protected void btnSearch_Click(object sender,EventArgs e){BindTraining();}
-        protected void btnReset_Click(object sender,EventArgs e){txtTrainingID.Text="";txtTrainingType.Text="";txtBatch.Text="";txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;BindTraining();}
+        protected void btnSearch_Click(object sender,EventArgs e){Session.Remove("ManagerTrainingDashboardFilter");BindTraining();}
+        protected void btnReset_Click(object sender,EventArgs e){Session.Remove("ManagerTrainingDashboardFilter");txtTrainingID.Text="";txtTrainingType.Text="";txtBatch.Text="";txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;BindTraining();}
 
         protected void gvTraining_RowCommand(object sender,GridViewCommandEventArgs e)
         {
