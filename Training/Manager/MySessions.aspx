@@ -12,8 +12,9 @@
     <div class="page-card">
         <div class="page-title">My Sessions</div>
         <div class="table-responsive">
-            <asp:GridView ID="gvSessions" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Sessions Found">
+            <asp:GridView ID="gvSessions" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Sessions Found" DataKeyNames="SessionID" OnRowCommand="gvSessions_RowCommand">
                 <Columns>
+                    <asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
                     <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
                     <asp:BoundField DataField="Batch" HeaderText="Batch" />
                     <asp:BoundField DataField="SessionNo" HeaderText="Session" />
@@ -21,6 +22,7 @@
                     <asp:BoundField DataField="SessionDate" HeaderText="Session Date" />
                     <asp:BoundField DataField="TrainerID" HeaderText="Trainer ID" />
                     <asp:BoundField DataField="AttendanceStatus" HeaderText="Attendance" />
+                    <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:Button ID="btnView" runat="server" Text="View" CssClass="btn btn-primary btn-sm" CommandName="ViewSession" CommandArgument='<%# Eval("SessionID") %>' CausesValidation="false" /></ItemTemplate></asp:TemplateField>
                 </Columns>
             </asp:GridView>
         </div>
