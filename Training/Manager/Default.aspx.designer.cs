@@ -12,9 +12,7 @@ namespace Training.Manager
         protected global::System.Web.UI.WebControls.LinkButton lnkUpcomingSessions;
         protected global::System.Web.UI.WebControls.LinkButton lnkAttendancePending;
         protected global::System.Web.UI.WebControls.LinkButton lnkSessionsCompleted;
-        protected global::System.Web.UI.WebControls.LinkButton lnkStatusPlanned;
-        protected global::System.Web.UI.WebControls.LinkButton lnkStatusInProgress;
-        protected global::System.Web.UI.WebControls.LinkButton lnkStatusCompleted;
+        protected global::System.Web.UI.WebControls.Repeater rptTrainingStatus;
         protected global::System.Web.UI.WebControls.Label lblManagerID;
         protected global::System.Web.UI.WebControls.Label lblEmpID;
         protected global::System.Web.UI.WebControls.Label lblName;
@@ -29,8 +27,6 @@ namespace Training.Manager
         protected global::System.Web.UI.WebControls.Label lblAttendancePending;
         protected global::System.Web.UI.WebControls.Label lblSessionsCompleted;
         protected global::System.Web.UI.WebControls.GridView gvUpcomingSessions;
-        protected global::System.Web.UI.WebControls.Label lblPlanned;
-        protected global::System.Web.UI.WebControls.Label lblInProgress;
-        protected global::System.Web.UI.WebControls.Label lblCompletedSummary;
+
     }
 }
