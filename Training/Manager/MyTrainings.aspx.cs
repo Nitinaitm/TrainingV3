@@ -16,6 +16,7 @@ namespace Training.Manager
             if(string.IsNullOrWhiteSpace(ManagerID)){Response.Redirect("~/Default.aspx");return;}
             if(!IsPostBack)
             {
+                LoadStatusFilter();
                 string sessionID=Request.QueryString["SessionID"];
                 if(!string.IsNullOrWhiteSpace(sessionID))
                 {
@@ -38,6 +39,14 @@ namespace Training.Manager
         {
             DataTable dt=objDB.GetDataTable("SELECT TOP 1 TrainingLocationID FROM ManagerMaster WHERE ManagerID=@ManagerID AND ISNULL(ActiveStatus,'Y')='Y'",new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID)});
             return dt.Rows.Count==0 ? "" : dt.Rows[0]["TrainingLocationID"].ToString().Trim();
+        }
+
+        private void LoadStatusFilter()
+        {
+            DataTable statusTable=objDB.GetDataTable("SELECT DISTINCT LTRIM(RTRIM(TrainingStatus)) TrainingStatus FROM TrainingDetails TD INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND ISNULL(LTRIM(RTRIM(TrainingStatus)),'')<>'' ORDER BY LTRIM(RTRIM(TrainingStatus))",new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID)});
+            ddlStatus.Items.Clear();
+            ddlStatus.Items.Add(new ListItem("All",""));
+            foreach(DataRow row in statusTable.Rows)ddlStatus.Items.Add(new ListItem(row["TrainingStatus"].ToString(),row["TrainingStatus"].ToString()));
         }
 
         private void BindTraining()
