@@ -52,7 +52,7 @@
                     <div class="col-md-12">
                         <label>Message *</label><asp:TextBox ID="txtMessage" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4" /></div>
                 </div>
-                <div class="mt-3">
+                <div class="mt-3"><label>PDF Attachment</label><asp:FileUpload ID="fuPdf" runat="server" CssClass="form-control mb-2" />
                     <asp:Button ID="btnSend" runat="server" Text="Send Announcement" CssClass="btn btn-success" OnClick="btnSend_Click" /><asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btn btn-secondary ms-2" OnClick="btnClear_Click" /><asp:Label ID="lblMessage" runat="server" Font-Bold="true" CssClass="ms-3" /></div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         <asp:BoundField DataField="Title" HeaderText="Title" />
                         <asp:BoundField DataField="Message" HeaderText="Message" />
                         <asp:BoundField DataField="Audience" HeaderText="Audience" />
-                        <asp:BoundField DataField="CreatedOn" HeaderText="Sent On" DataFormatString="{0:dd-MM-yyyy HH:mm}" />
+                        <asp:BoundField DataField="CreatedOn" HeaderText="Sent On" DataFormatString="{0:dd-MM-yyyy HH:mm}" /><asp:TemplateField HeaderText="PDF"><ItemTemplate><asp:HyperLink ID="lnkPdf" runat="server" Text="Download PDF" NavigateUrl='<%# "~/Uploads/Announcements/"+Eval("AnnouncementID")+".pdf" %>' Target="_blank" Visible='<%# Convert.ToBoolean(Eval("HasPdf")) %>' CssClass="btn btn-sm btn-danger" /></ItemTemplate></asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
