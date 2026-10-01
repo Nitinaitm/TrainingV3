@@ -652,6 +652,7 @@
 
                 <!-- ================= LOGOUT ================= -->
 
+                <div class="menu-heading collapsed" onclick="toggleMenu('communicationMenu',this)"><i class="fas fa-bullhorn mr-2"></i>Communication</div><div id="communicationMenu" class="submenu-container hide"><a href="Announcement.aspx" class="submenu-item"><i class="fas fa-bullhorn mr-2"></i>Announcements</a><a href="Notifications.aspx" class="submenu-item"><i class="fas fa-bell mr-2"></i>Notifications</a></div>
                 <a href="Logout.aspx"
                     class="menu-item logout-btn">
 
