@@ -1,0 +1,1 @@
+namespace Training.Trainee{public partial class Announcement{protected global::System.Web.UI.WebControls.GridView gvAnnouncements;}}
