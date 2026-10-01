@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -36,6 +37,8 @@ namespace Training.Trainer
                 new SqlParameter("@Message", txtMessage.Text.Trim()),
                 new SqlParameter("@Audience", ddlAudience.SelectedValue)
             };
+            string announcementID=param[0].Value.ToString();
+            if(fuPdf.HasFile){string ext=Path.GetExtension(fuPdf.FileName).ToLower();if(ext!=".pdf"){lblMessage.Text="Only PDF file is allowed.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}string folder=Server.MapPath("~/Uploads/Announcements/");if(!Directory.Exists(folder))Directory.CreateDirectory(folder);fuPdf.SaveAs(Path.Combine(folder,announcementID+".pdf"));}
             obj.ExecuteSql(query, param);
 
             lblMessage.Text = "Announcement sent successfully!";
@@ -55,9 +58,10 @@ namespace Training.Trainer
 
         private void BindGrid()
         {
-            string query = "SELECT Title, Message, Audience, CreatedOn FROM Announcement WHERE TrainerID=@TrainerID AND IsActive=1 ORDER BY CreatedOn DESC";
+            string query = "SELECT AnnouncementID,Title, Message, Audience, CreatedOn FROM Announcement WHERE TrainerID=@TrainerID AND IsActive=1 ORDER BY CreatedOn DESC";
             SqlParameter[] param = new SqlParameter[] { new SqlParameter("@TrainerID", TrainerID) };
             DataTable dt = obj.GetDataTable(query, param);
+            dt.Columns.Add("HasPdf",typeof(bool));foreach(DataRow row in dt.Rows)row["HasPdf"]=File.Exists(Server.MapPath("~/Uploads/Announcements/"+row["AnnouncementID"]+".pdf"));
             gvAnnouncements.DataSource = dt;
             gvAnnouncements.DataBind();
         }
