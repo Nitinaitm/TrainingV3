@@ -1,0 +1,1 @@
+namespace Training.Manager{public partial class Notifications{protected global::System.Web.UI.WebControls.TextBox txtMessage;protected global::System.Web.UI.WebControls.FileUpload fuPdf;protected global::System.Web.UI.WebControls.Button btnSend;protected global::System.Web.UI.WebControls.Label lblMessage;protected global::System.Web.UI.WebControls.GridView gvNotifications;}}
