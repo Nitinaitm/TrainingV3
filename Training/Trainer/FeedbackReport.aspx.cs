@@ -23,6 +23,12 @@ namespace Training.Trainer
             object sender,
             EventArgs e)
         {
+            if (Session["SessionID"] == null || String.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
+            {
+                Response.Redirect("~/Trainer/SessionReport.aspx");
+                return;
+            }
+
             if
             (
                 Session["TrainerID"]
