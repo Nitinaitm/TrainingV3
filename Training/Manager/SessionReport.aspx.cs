@@ -57,7 +57,7 @@ namespace Training.Manager
 
         private void BindGrid()
         {
-            string query = "SELECT DISTINCT SM.SessionID,SM.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.Batch,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON LTRIM(RTRIM(L.TrainingLocation))=LTRIM(RTRIM(TD.TrainingLocation)) INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID";
+            string query = "SELECT DISTINCT TD.TrainingID,TD.Batch,SM.SessionID,SM.SessionNo,SM.SessionName,SM.SessionDate,SM.StartTime,SM.EndTime,ISNULL(CM.CourseName,'') CourseName,ISNULL(TP.TopicName,'') TopicName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE L.TrainingLocationID=(SELECT TOP 1 M.TrainingLocationID FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y') AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)";
             System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             parameters.Add(new SqlParameter("@ManagerID", ManagerID));
             if (!string.IsNullOrWhiteSpace(ddlCourse.SelectedValue))
@@ -82,7 +82,7 @@ namespace Training.Manager
                 query += " AND TRY_CONVERT(date,SM.SessionDate,105)<=@ToDate";
                 parameters.Add(new SqlParameter("@ToDate", toDate));
             }
-            query += " ORDER BY TRY_CONVERT(date,SM.SessionDate,105) DESC,TRY_CONVERT(int,SM.SessionNo),SM.SessionID DESC";
+            query += " ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo),SM.SessionID";
             gvSession.DataSource = obj.GetDataTable(query, parameters.ToArray());
             gvSession.DataBind();
         }
