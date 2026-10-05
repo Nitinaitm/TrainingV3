@@ -29,7 +29,7 @@ namespace Training.Manager {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainerID;
+        protected global::System.Web.UI.WebControls.Label lblManagerID;
         
         /// <summary>
         /// lblManagerName control.
@@ -38,7 +38,7 @@ namespace Training.Manager {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainerName;
+        protected global::System.Web.UI.WebControls.Label lblManagerName;
         
         /// <summary>
         /// lblTrainingLocation control.
@@ -47,7 +47,7 @@ namespace Training.Manager {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTrainerType;
+        protected global::System.Web.UI.WebControls.Label lblTrainingLocation;
         
         /// <summary>
         /// ddlTraining control.
