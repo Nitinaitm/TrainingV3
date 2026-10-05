@@ -14,6 +14,12 @@ namespace Training.Trainer
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["SessionID"] == null || String.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
+            {
+                Response.Redirect("~/Trainer/SessionReport.aspx");
+                return;
+            }
+
             if (Session["TrainerID"] == null) Response.Redirect("~/Default.aspx");
             if (!IsPostBack) { BindTrainings(); BindGrid(); }
         }
