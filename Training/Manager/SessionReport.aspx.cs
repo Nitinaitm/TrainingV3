@@ -57,44 +57,35 @@ namespace Training.Manager
 
         private void BindGrid()
         {
-            string query = "SELECT DISTINCT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID";
+            string query = "SELECT DISTINCT SM.SessionID,SM.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.Batch,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON LTRIM(RTRIM(L.TrainingLocation))=LTRIM(RTRIM(TD.TrainingLocation)) INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID";
             System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             parameters.Add(new SqlParameter("@ManagerID", ManagerID));
-            parameters.Add(new SqlParameter("@TrainingLocationID", GetTrainingLocationID()));
-
             if (!string.IsNullOrWhiteSpace(ddlCourse.SelectedValue))
             {
                 query += " AND TD.CourseID=@CourseID";
                 parameters.Add(new SqlParameter("@CourseID", ddlCourse.SelectedValue));
             }
-
             if (!string.IsNullOrWhiteSpace(txtBatch.Text))
             {
                 query += " AND TD.Batch LIKE @Batch";
                 parameters.Add(new SqlParameter("@Batch", "%" + txtBatch.Text.Trim() + "%"));
             }
-
             DateTime fromDate;
             DateTime toDate;
-
             if (ParseDate(txtFromDate.Text, out fromDate))
             {
                 query += " AND TRY_CONVERT(date,SM.SessionDate,105)>=@FromDate";
                 parameters.Add(new SqlParameter("@FromDate", fromDate));
             }
-
             if (ParseDate(txtToDate.Text, out toDate))
             {
                 query += " AND TRY_CONVERT(date,SM.SessionDate,105)<=@ToDate";
                 parameters.Add(new SqlParameter("@ToDate", toDate));
             }
-
             query += " ORDER BY TRY_CONVERT(date,SM.SessionDate,105) DESC,TRY_CONVERT(int,SM.SessionNo),SM.SessionID DESC";
-
             gvSession.DataSource = obj.GetDataTable(query, parameters.ToArray());
             gvSession.DataBind();
         }
-
         private bool ParseDate(string value, out DateTime date)
         {
             return DateTime.TryParseExact(value == null ? "" : value.Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
