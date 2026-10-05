@@ -20,9 +20,16 @@ namespace Training.Manager
                 Response.Redirect("~/Default.aspx");
                 return;
             }
+            if (Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()) || Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
+            {
+                Response.Redirect("~/Manager/MyTrainings.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 BindSessions();
+                if (ddlSession.Items.FindByValue(Session["SessionID"].ToString()) != null)
+                    ddlSession.SelectedValue = Session["SessionID"].ToString();
                 BindMaterials();
             }
         }
