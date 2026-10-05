@@ -1565,6 +1565,12 @@
     <Compile Include="Manager\Profile.aspx.designer.cs">
       <DependentUpon>Profile.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Manager\SessionAttendance.aspx.cs">
+      <DependentUpon>SessionAttendance.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\SessionAttendance.aspx.designer.cs">
+      <DependentUpon>SessionAttendance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Manager\SessionReport.aspx.cs">
       <DependentUpon>SessionReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
