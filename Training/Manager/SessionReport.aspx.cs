@@ -40,8 +40,8 @@ namespace Training.Manager
 
         private void BindCourse()
         {
-            string locationID = GetTrainingLocationID();
-            DataTable dt = obj.GetDataTable("SELECT DISTINCT CM.CourseID,CM.CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY CM.CourseName",new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+            string locationID=GetTrainingLocationID();
+            DataTable dt=obj.GetDataTable("SELECT DISTINCT CM.CourseID,CM.CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY CM.CourseName",new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID)});
             ddlCourse.DataSource=dt;
             ddlCourse.DataTextField="CourseName";
             ddlCourse.DataValueField="CourseID";
@@ -51,8 +51,7 @@ namespace Training.Manager
 
         private void BindStatus()
         {
-            string locationID = GetTrainingLocationID();
-            DataTable dt = obj.GetDataTable("SELECT DISTINCT LTRIM(RTRIM(ISNULL(SM.AttendanceStatus,'Pending'))) AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY LTRIM(RTRIM(ISNULL(SM.AttendanceStatus,'Pending')))",new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID),new SqlParameter("@TrainingLocationID",locationID) });
+            DataTable dt=obj.GetDataTable("SELECT DISTINCT LTRIM(RTRIM(ISNULL(SM.AttendanceStatus,'Pending'))) AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=(SELECT TOP 1 M.TrainingLocationID FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y') AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID) ORDER BY LTRIM(RTRIM(ISNULL(SM.AttendanceStatus,'Pending')))",new SqlParameter[]{new SqlParameter("@ManagerID",ManagerID)});
             ddlStatus.Items.Clear();
             ddlStatus.Items.Add(new ListItem("-- All Status --",""));
             foreach(DataRow row in dt.Rows)
@@ -65,7 +64,7 @@ namespace Training.Manager
 
         private void BindGrid()
         {
-            string query = "SELECT DISTINCT TD.TrainingID,TD.Batch,SM.SessionID,SM.SessionNo,SM.SessionName,SM.SessionDate,SM.TrainerID,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=(SELECT TOP 1 M.TrainingLocationID FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y') AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)";
+            string query="SELECT TD.TrainingID,TD.Batch,SM.SessionID,SM.SessionNo,SM.SessionName,SM.SessionDate,SM.TrainerID,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation WHERE L.TrainingLocationID=(SELECT TOP 1 M.TrainingLocationID FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y') AND EXISTS (SELECT 1 FROM ManagerMaster M WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=L.TrainingLocationID)";
             System.Collections.Generic.List<SqlParameter> parameters=new System.Collections.Generic.List<SqlParameter>();
             parameters.Add(new SqlParameter("@ManagerID",ManagerID));
 
@@ -85,7 +84,7 @@ namespace Training.Manager
                     query+=" AND (SM.AttendanceStatus IS NULL OR LTRIM(RTRIM(SM.AttendanceStatus))='Pending')";
                 else
                 {
-                    query+=" AND LTRIM(RTRIM(SM.AttendanceStatus))=@AttendanceStatus";
+                    query+=" AND LTRIM(RTRIM(ISNULL(SM.AttendanceStatus,'')))=@AttendanceStatus";
                     parameters.Add(new SqlParameter("@AttendanceStatus",ddlStatus.SelectedValue));
                 }
             }
@@ -104,7 +103,8 @@ namespace Training.Manager
             }
 
             query+=" ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo),SM.SessionID";
-            gvSession.DataSource=obj.GetDataTable(query,parameters.ToArray());
+            DataTable dt=obj.GetDataTable(query,parameters.ToArray());
+            gvSession.DataSource=dt;
             gvSession.DataBind();
         }
 
