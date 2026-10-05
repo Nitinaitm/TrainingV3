@@ -11,7 +11,7 @@ namespace Training.Manager
     {
         clsDataAccess obj = new clsDataAccess();
         private string ManagerID { get { return Session["ManagerID"] == null ? "" : Session["ManagerID"].ToString().Trim(); } }
-        private string SelectedSessionID { get { return ddlSession.SelectedValue; } }
+        private string SelectedSessionID { get { return Session["SessionID"] == null ? "" : Session["SessionID"].ToString().Trim(); } }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -20,16 +20,22 @@ namespace Training.Manager
                 Response.Redirect("~/Default.aspx");
                 return;
             }
+
             if (Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()) || Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
             {
                 Response.Redirect("~/Manager/MyTrainings.aspx");
                 return;
             }
+
+            if (!HasSessionAccess(SelectedSessionID))
+            {
+                Response.Redirect("~/Manager/MyTrainings.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
-                BindSessions();
-                if (ddlSession.Items.FindByValue(Session["SessionID"].ToString()) != null)
-                    ddlSession.SelectedValue = Session["SessionID"].ToString();
+                pnlMaterial.Visible = true;
                 BindMaterials();
             }
         }
@@ -44,26 +50,6 @@ namespace Training.Manager
         {
             object v = obj.ExecuteScalar("SELECT COUNT(*) FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND SM.SessionID=@SessionID", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID), new SqlParameter("@SessionID",sessionID) });
             return v != null && v != DBNull.Value && Convert.ToInt32(v) > 0;
-        }
-
-        private void BindSessions()
-        {
-            DataTable dt = obj.GetDataTable("SELECT SM.SessionID,SM.TrainingID,TD.Batch,SM.SessionNo,SM.SessionName,SM.SessionDate,CM.CourseName FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN TrainingDetails TD ON TD.TrainingLocation=L.TrainingLocation INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' ORDER BY TRY_CONVERT(date,SM.SessionDate,105) DESC,TRY_CONVERT(int,SM.SessionNo),SM.SessionID DESC", new SqlParameter[] { new SqlParameter("@ManagerID",ManagerID) });
-            ddlSession.Items.Clear();
-            ddlSession.Items.Add(new ListItem("-- Select Session --",""));
-            foreach (DataRow r in dt.Rows)
-            {
-                string text = r["TrainingID"] + " | " + r["CourseName"] + " | Batch " + r["Batch"] + " | Session " + r["SessionNo"] + " - " + r["SessionName"] + " | " + r["SessionDate"];
-                ddlSession.Items.Add(new ListItem(text,r["SessionID"].ToString()));
-            }
-            pnlMaterial.Visible = !string.IsNullOrWhiteSpace(SelectedSessionID) && HasSessionAccess(SelectedSessionID);
-        }
-
-        protected void ddlSession_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            lblSessionMessage.Text = "";
-            pnlMaterial.Visible = !string.IsNullOrWhiteSpace(SelectedSessionID) && HasSessionAccess(SelectedSessionID);
-            BindMaterials();
         }
 
         private void BindMaterials()
