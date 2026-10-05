@@ -100,6 +100,7 @@ namespace Training.Manager
             DropDownList ddlAttendance = (DropDownList)e.Row.FindControl("ddlAttendance");
             if (ddlAttendance == null) return;
             string attendanceStatus = DataBinder.Eval(e.Row.DataItem,"AttendanceStatus").ToString();
+            if (string.IsNullOrWhiteSpace(attendanceStatus)) attendanceStatus = "Present";
             if (ddlAttendance.Items.FindByValue(attendanceStatus) != null) ddlAttendance.SelectedValue = attendanceStatus;
             if (attendanceStatus == "Present") ddlAttendance.CssClass = "form-select border-success";
             else if (attendanceStatus == "Absent") ddlAttendance.CssClass = "form-select border-danger";
