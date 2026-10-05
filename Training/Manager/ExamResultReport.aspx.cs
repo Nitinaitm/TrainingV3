@@ -24,6 +24,7 @@ namespace Training.Manager
             EventArgs e)
         {
             if (Session["Role"] == null || Session["Role"].ToString() != "Manager" || string.IsNullOrWhiteSpace(GetManagerID())) { Response.Redirect("~/Default.aspx"); return; }
+            if (Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()) || Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString())) { Response.Redirect("~/Manager/MyTrainings.aspx"); return; }
             if (!IsPostBack)
             {
                 LoadTrainerDetails();
@@ -142,7 +143,7 @@ namespace Training.Manager
                 GetManagerID();
 
             string query =
-                "SELECT TM.TestID,TM.TestTitle,TM.TestType FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE TD.TrainingLocation IN (SELECT L.TrainingLocation FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y')";
+                "SELECT TM.TestID,TM.TestTitle,TM.TestType FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID WHERE TD.TrainingLocation IN (SELECT L.TrainingLocation FROM ManagerMaster M INNER JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y')";
 
             if
             (
