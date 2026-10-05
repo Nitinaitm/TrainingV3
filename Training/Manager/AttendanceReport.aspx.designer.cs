@@ -1,1 +1,13 @@
-namespace Training.Manager{public partial class AttendanceReport{protected global::System.Web.UI.WebControls.TextBox txtTrainingID;protected global::System.Web.UI.WebControls.TextBox txtSearch;protected global::System.Web.UI.WebControls.TextBox txtSessionID;protected global::System.Web.UI.WebControls.Button btnSearch;protected global::System.Web.UI.WebControls.GridView gvReport;}}
+namespace Training.Manager
+{
+    public partial class AttendanceReport
+    {
+        protected global::System.Web.UI.WebControls.DropDownList ddlTraining;
+        protected global::System.Web.UI.WebControls.TextBox txtFrom;
+        protected global::System.Web.UI.WebControls.TextBox txtTo;
+        protected global::System.Web.UI.WebControls.Button btnGenerate;
+        protected global::System.Web.UI.WebControls.Button btnExportPDF;
+        protected global::System.Web.UI.WebControls.Button btnExportExcel;
+        protected global::System.Web.UI.WebControls.GridView gvReport;
+    }
+}
