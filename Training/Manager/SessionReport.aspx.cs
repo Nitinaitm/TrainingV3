@@ -24,15 +24,6 @@ namespace Training.Manager
                 return;
             }
 
-            if (Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString()) || Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()))
-            {
-                Response.Redirect("~/Manager/MyTrainings.aspx");
-                return;
-            }
-
-            Response.Redirect("~/Manager/SessionReportDetails.aspx");
-            return;
-
             if (!IsPostBack)
             {
                 BindCourse();
