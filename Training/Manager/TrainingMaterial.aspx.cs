@@ -131,7 +131,7 @@ namespace Training.Manager
             if(!File.Exists(path)){lblMessage.Text="Physical file not found.";return;}
             Response.Clear();
             Response.ContentType=MimeType(Path.GetExtension(path));
-            Response.AppendHeader("Content-Disposition", "attachment; filename=\\"" + dt.Rows[0]["FileName"].ToString() + "\\"");
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + dt.Rows[0]["FileName"].ToString());
             Response.TransmitFile(path);
             Response.Flush();
             HttpContext.Current.ApplicationInstance.CompleteRequest();
