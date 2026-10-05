@@ -1,1 +1,51 @@
-<%@ Page Title="Attendance Report" Language="C#" MasterPageFile="~/ManagerMaster.Master" AutoEventWireup="true" CodeBehind="AttendanceReport.aspx.cs" Inherits="Training.Manager.AttendanceReport" %><asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server"><style>.cardx{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:20px;margin-bottom:20px}.title{font-size:26px;font-weight:700;color:#0d6efd}</style></asp:Content><asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"><div class="container-fluid"><div class="cardx"><div class="title mb-3">Attendance Report</div><div class="row"><div class="col-md-4"><label>Training ID</label><asp:TextBox ID="txtTrainingID" runat="server" CssClass="form-control"/></div><div class="col-md-4"><label>Employee ID/Name</label><asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"/></div><div class="col-md-4"><label>Session ID</label><asp:TextBox ID="txtSessionID" runat="server" CssClass="form-control"/></div></div><asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary mt-3" OnClick="btnSearch_Click"/></div><div class="cardx table-responsive"><asp:GridView ID="gvReport" runat="server" AutoGenerateColumns="true" CssClass="table table-bordered table-hover" EmptyDataText="No attendance found." /></div></div></asp:Content>
+<%@ Page Title="Attendance Report" Language="C#" MasterPageFile="~/ManagerMaster.Master" AutoEventWireup="true" CodeBehind="AttendanceReport.aspx.cs" Inherits="Training.Manager.AttendanceReport" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}
+        .dashboard-card{background:#fff;border-radius:10px;box-shadow:0 0 10px #d9d9d9;padding:20px;margin-bottom:20px}
+        .gridview th{background:#198754;color:white;text-align:center;vertical-align:middle}
+        .gridview td{vertical-align:middle}
+    </style>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<div class="container-fluid">
+    <div class="page-heading">Attendance Report</div>
+    <div class="dashboard-card">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Training ID</label>
+                <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlTraining_SelectedIndexChanged" />
+            </div>
+            <div class="col-md-3">
+                <label>From Date</label>
+                <asp:TextBox ID="txtFrom" runat="server" TextMode="Date" CssClass="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label>To Date</label>
+                <asp:TextBox ID="txtTo" runat="server" TextMode="Date" CssClass="form-control" />
+            </div>
+            <div class="col-md-3">
+                <br />
+                <asp:Button ID="btnGenerate" runat="server" Text="Generate Report" CssClass="btn btn-primary" OnClick="btnGenerate_Click" />
+            </div>
+        </div>
+        <div class="mt-3">
+            <asp:Button ID="btnExportPDF" runat="server" Text="Export PDF" CssClass="btn btn-danger" OnClick="btnExportPDF_Click" />
+            <asp:Button ID="btnExportExcel" runat="server" Text="Export Excel" CssClass="btn btn-success ml-2" OnClick="btnExportExcel_Click" />
+        </div>
+        <asp:GridView ID="gvReport" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview mt-3" EmptyDataText="No Data Found">
+            <Columns>
+                <asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><ItemStyle Width="50px" HorizontalAlign="Center" /></asp:TemplateField>
+                <asp:BoundField DataField="EmpID" HeaderText="Employee ID" />
+                <asp:BoundField DataField="EmpName" HeaderText="Employee Name" />
+                <asp:BoundField DataField="TotalSessions" HeaderText="Total Sessions" />
+                <asp:BoundField DataField="Present" HeaderText="Present" />
+                <asp:BoundField DataField="Absent" HeaderText="Absent" />
+                <asp:BoundField DataField="Percentage" HeaderText="Attendance %" />
+            </Columns>
+        </asp:GridView>
+    </div>
+</div>
+</asp:Content>
