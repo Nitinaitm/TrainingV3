@@ -75,7 +75,8 @@ namespace Training.Manager
 
         protected void btnAttendance_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Manager/SessionAttendanceReport.aspx");
+            Session["ManagerReportFromDetails"] = "AttendanceReport";
+            Response.Redirect("~/Manager/AttendanceReport.aspx");
         }
 
         protected void btnPreTest_Click(object sender, EventArgs e)
