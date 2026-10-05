@@ -89,11 +89,13 @@
                 transition: color 0.15s ease;
             }
 
-            .star-rating input[type="radio"]:checked + label {
+            .star-rating input[type="radio"]:checked + label,
+            .star-rating input[type="radio"]:checked ~ label {
                 color: #ffc107;
             }
 
-            .star-rating label:hover {
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
                 color: #ffc107;
             }
 
