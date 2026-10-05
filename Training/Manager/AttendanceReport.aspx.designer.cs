@@ -2,12 +2,12 @@ namespace Training.Manager
 {
     public partial class AttendanceReport
     {
-        protected global::System.Web.UI.WebControls.DropDownList ddlTraining;
-        protected global::System.Web.UI.WebControls.TextBox txtFrom;
-        protected global::System.Web.UI.WebControls.TextBox txtTo;
-        protected global::System.Web.UI.WebControls.Button btnGenerate;
-        protected global::System.Web.UI.WebControls.Button btnExportPDF;
-        protected global::System.Web.UI.WebControls.Button btnExportExcel;
-        protected global::System.Web.UI.WebControls.GridView gvReport;
+        protected global::System.Web.UI.WebControls.Label lblSession;
+        protected global::System.Web.UI.WebControls.Label lblTotal;
+        protected global::System.Web.UI.WebControls.Label lblPresent;
+        protected global::System.Web.UI.WebControls.Label lblAbsent;
+        protected global::System.Web.UI.WebControls.Label lblPending;
+        protected global::System.Web.UI.WebControls.GridView gvAttendance;
+        protected global::System.Web.UI.WebControls.Button btnBack;
     }
 }
