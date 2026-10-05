@@ -687,36 +687,7 @@
                 </div>
 
 
-                <!-- ================= FEEDBACK ================= -->
-
-                <div class="menu-heading collapsed"
-                    onclick="toggleMenu('feedbackMenu',this)">
-
-                    <i class="fas fa-comment-dots mr-2"></i>
-                    Feedback
-
-                </div>
-
-                <div id="feedbackMenu"
-                    class="submenu-container hide">
-
-                   <%-- <a href="SessionFeedback.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-star mr-2"></i>
-                        Session Feedback
-
-                    </a>--%>
-
-                    <a href="FeedbackReport.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-chart-bar mr-2"></i>
-                        Feedback Report
-
-                    </a>
-
-                </div>
+               
 
 
                 <!-- ================= REPORTS ================= -->
@@ -740,14 +711,7 @@
 
                     </a>
 
-                    <a href="ExamResultReport.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-poll-h mr-2"></i>
-                        Exam Result Report
-
-                    </a>
-
+                 
                     <a href="AttendanceReport.aspx"
                         class="submenu-item">
 
@@ -756,21 +720,23 @@
 
                     </a>
 
-                    <a href="TraineeProgress.aspx"
+                       <a href="ExamResultReport.aspx"
                         class="submenu-item">
 
-                        <i class="fas fa-tasks mr-2"></i>
-                        Trainee Progress
+                        <i class="fas fa-poll-h mr-2"></i>
+                        Exam Result Report
 
                     </a>
 
-                    <a href="TrainingCalendar.aspx"
+
+                   <a href="FeedbackReport.aspx"
                         class="submenu-item">
 
-                        <i class="fas fa-calendar mr-2"></i>
-                        Training Calendar
+                        <i class="fas fa-chart-bar mr-2"></i>
+                        Feedback Report
 
                     </a>
+
 
                 </div>
 
