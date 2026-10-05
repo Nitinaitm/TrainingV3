@@ -423,6 +423,7 @@
     <Content Include="Manager\Default.aspx" />
     <Content Include="Manager\ExamResultReport.aspx" />
     <Content Include="Manager\FeedbackReport.aspx" />
+    <Content Include="Manager\Logout.aspx" />
     <Content Include="Manager\MySessions.aspx" />
     <Content Include="Manager\MyTrainings.aspx" />
     <Content Include="Manager\Notifications.aspx" />
@@ -1514,6 +1515,13 @@
     </Compile>
     <Compile Include="Manager\FeedbackReport.aspx.designer.cs">
       <DependentUpon>FeedbackReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\Logout.aspx.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\Logout.aspx.designer.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
     </Compile>
     <Compile Include="Manager\MySessions.aspx.cs">
       <DependentUpon>MySessions.aspx</DependentUpon>
