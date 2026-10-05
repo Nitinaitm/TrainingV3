@@ -25,6 +25,8 @@ namespace Training.Manager
         {
             if (Session["Role"] == null || Session["Role"].ToString() != "Manager" || string.IsNullOrWhiteSpace(GetManagerID())) { Response.Redirect("~/Default.aspx"); return; }
             if (Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()) || Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString())) { Response.Redirect("~/Manager/MyTrainings.aspx"); return; }
+            if (Session["ManagerReportFromDetails"] == null || Session["ManagerReportFromDetails"].ToString() != "ExamResultReport") { Response.Redirect("~/Manager/SessionReportDetails.aspx"); return; }
+            Session.Remove("ManagerReportFromDetails");
             if (!IsPostBack)
             {
                 LoadTrainerDetails();
