@@ -245,10 +245,8 @@ namespace Training.Manager
                 lblMessage.Text = "Please mark attendance of all trainees.";
                 return;
             }
-            query = IsManager ? "UPDATE SessionMaster SET AttendanceStatus='Completed',AttendanceCompletedOn=GETDATE(),AttendanceCompletedBy=@Actor WHERE SessionID=@SessionID AND TrainingID=@TrainingID" : "UPDATE SessionMaster SET AttendanceStatus='Completed',AttendanceCompletedOn=GETDATE(),AttendanceCompletedBy=@Actor WHERE SessionID=@SessionID AND TrainingID=@TrainingID AND TrainerID=@TrainerID";
-            param = IsManager
-                ? new SqlParameter[] { new SqlParameter("@Actor",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()) }
-                : new SqlParameter[] { new SqlParameter("@Actor",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()), new SqlParameter("@TrainerID",Session["ManagerID"].ToString()) };
+            query = "UPDATE SessionMaster SET AttendanceStatus='Completed',AttendanceCompletedOn=GETDATE(),AttendanceCompletedBy=@Actor WHERE SessionID=@SessionID AND TrainingID=@TrainingID";
+            param = new SqlParameter[] { new SqlParameter("@Actor",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()) };
             obj.ExecuteSql(query,param);
             UpdateTrainingAttendanceWorkflow();
             BindGrid();
@@ -278,10 +276,8 @@ namespace Training.Manager
             if (!System.IO.Directory.Exists(folder)) System.IO.Directory.CreateDirectory(folder);
             string fileName = Session["SessionID"].ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + Guid.NewGuid().ToString("N").Substring(0,6) + ".pdf";
             fuAttendanceSheet.SaveAs(folder + fileName);
-            string query = IsManager ? "UPDATE SessionMaster SET AttendanceSheet=@AttendanceSheet WHERE SessionID=@SessionID AND TrainingID=@TrainingID" : "UPDATE SessionMaster SET AttendanceSheet=@AttendanceSheet WHERE SessionID=@SessionID AND TrainingID=@TrainingID AND TrainerID=@TrainerID";
-            SqlParameter[] param = IsManager
-                ? new SqlParameter[] { new SqlParameter("@AttendanceSheet",fileName), new SqlParameter("@SessionID",Session["SessionID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()) }
-                : new SqlParameter[] { new SqlParameter("@AttendanceSheet",fileName), new SqlParameter("@SessionID",Session["SessionID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@TrainerID",Session["ManagerID"].ToString()) };
+            string query = "UPDATE SessionMaster SET AttendanceSheet=@AttendanceSheet WHERE SessionID=@SessionID AND TrainingID=@TrainingID";
+            SqlParameter[] param = new SqlParameter[] { new SqlParameter("@AttendanceSheet",fileName), new SqlParameter("@SessionID",Session["SessionID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()) };
             obj.ExecuteSql(query,param);
             lblMessage.ForeColor = System.Drawing.Color.Green;
             lblMessage.Text = "Attendance sheet uploaded successfully.";
