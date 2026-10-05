@@ -1567,6 +1567,7 @@
     </Compile>
     <Compile Include="Manager\SessionAttendance.aspx.cs">
       <DependentUpon>SessionAttendance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Manager\SessionAttendance.aspx.designer.cs">
       <DependentUpon>SessionAttendance.aspx</DependentUpon>
