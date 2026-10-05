@@ -20,12 +20,17 @@ namespace Training.Manager
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (!IsManagerSessionValid())
+            if (Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString()) || Session["TrainingID"] == null || string.IsNullOrWhiteSpace(Session["TrainingID"].ToString()))
             {
-                Response.Redirect("~/Manager/Default.aspx", true);
+                Response.Redirect("~/Manager/MyTrainings.aspx", true);
                 return;
             }
-                    }
+            if (!IsManagerSessionValid())
+            {
+                Response.Redirect("~/Manager/MyTrainings.aspx", true);
+                return;
+            }
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
