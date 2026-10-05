@@ -14,20 +14,29 @@ namespace Training.Manager
 
         private string ManagerID
         {
-            get { return Session["ManagerID"] == null ? "" : Session["ManagerID"].ToString().Trim(); }
+            get
+            {
+                if (Session["ManagerID"] != null && !string.IsNullOrWhiteSpace(Session["ManagerID"].ToString()))
+                    return Session["ManagerID"].ToString().Trim();
+
+                if (Session["Role"] != null && Session["Role"].ToString() == "Manager" && Session["UserID"] != null)
+                    return Session["UserID"].ToString().Trim();
+
+                return "";
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(ManagerID))
-            {
-                Response.Redirect("~/Default.aspx");
-                return;
-            }
-
             if (Session["SessionID"] == null || string.IsNullOrWhiteSpace(Session["SessionID"].ToString()))
             {
                 Response.Redirect("~/Manager/SessionReport.aspx");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ManagerID))
+            {
+                Response.Redirect("~/Default.aspx");
                 return;
             }
 
