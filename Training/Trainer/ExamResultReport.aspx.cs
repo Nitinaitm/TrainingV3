@@ -25,6 +25,22 @@ namespace Training.Trainer
         {
             if
             (
+                Session["SessionID"]
+                ==
+                null
+                ||
+                String.IsNullOrWhiteSpace(
+                    Session["SessionID"].ToString())
+            )
+            {
+                Response.Redirect(
+                    "~/Trainer/SessionReport.aspx");
+
+                return;
+            }
+
+            if
+            (
                 Session["TrainerID"]
                 ==
                 null
