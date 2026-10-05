@@ -17,7 +17,7 @@ namespace Training.Manager
         {
             if (string.IsNullOrWhiteSpace(ManagerID) || Session["SessionID"] == null || Session["TrainingID"] == null)
             {
-                Response.Redirect("~/Manager/SessionReport.aspx");
+                Response.Redirect("~/Manager/MyTrainings.aspx");
                 return;
             }
 
