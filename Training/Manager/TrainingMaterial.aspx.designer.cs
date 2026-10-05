@@ -2,8 +2,6 @@ namespace Training.Manager
 {
     public partial class TrainingMaterial
     {
-        protected global::System.Web.UI.WebControls.DropDownList ddlSession;
-        protected global::System.Web.UI.WebControls.Label lblSessionMessage;
         protected global::System.Web.UI.WebControls.Panel pnlMaterial;
         protected global::System.Web.UI.WebControls.TextBox txtTitle;
         protected global::System.Web.UI.WebControls.DropDownList ddlType;
