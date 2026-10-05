@@ -45,7 +45,7 @@ namespace Training.Manager
             string locationID = GetTrainingLocationID();
 
             DataTable dt = obj.GetDataTable(
-                "SELECT DISTINCT CM.CourseID,CM.CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY CM.CourseName",
+                "SELECT DISTINCT CM.CourseID,CM.CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y' AND M.TrainingLocationID=@TrainingLocationID ORDER BY CM.CourseName",
                 new SqlParameter[] { new SqlParameter("@ManagerID", ManagerID), new SqlParameter("@TrainingLocationID", locationID) });
 
             ddlCourse.DataSource = dt;
