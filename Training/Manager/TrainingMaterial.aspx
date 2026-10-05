@@ -40,10 +40,7 @@
             <div class="page-title">Training Material Management</div>
             <div class="text-muted mt-1">Upload and manage materials for sessions available to your mapped training location.</div>
         </div>
-        <div class="material-card">
-            <div class="section-title">Select Session</div>
-            <asp:DropDownList ID="ddlSession" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlSession_SelectedIndexChanged" /><asp:Label ID="lblSessionMessage" runat="server" CssClass="text-danger" /></div>
-        <asp:Panel ID="pnlMaterial" runat="server" Visible="false">
+                <asp:Panel ID="pnlMaterial" runat="server" Visible="false">
             <div class="material-card">
                 <div class="section-title">Upload Training Material</div>
                 <div class="row">
