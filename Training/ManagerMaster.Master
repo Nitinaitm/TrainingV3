@@ -429,8 +429,8 @@
                     <a href="SessionReport.aspx" class="submenu-item"><i class="fas fa-layer-group mr-2"></i>Session Reports</a>
                     <a href="ExamResultReport.aspx" class="submenu-item"><i class="fas fa-poll-h mr-2"></i>Exam Result Report</a>
                     <a href="AttendanceReport.aspx" class="submenu-item"><i class="fas fa-clipboard-list mr-2"></i>Attendance Report</a>
-                    <a href="TraineeProgress.aspx" class="submenu-item"><i class="fas fa-tasks mr-2"></i>Trainee Progress</a>
-                    <a href="TrainingCalendar.aspx" class="submenu-item"><i class="fas fa-calendar mr-2"></i>Training Calendar</a>
+                    <%--<a href="TraineeProgress.aspx" class="submenu-item"><i class="fas fa-tasks mr-2"></i>Trainee Progress</a>
+                    <a href="TrainingCalendar.aspx" class="submenu-item"><i class="fas fa-calendar mr-2"></i>Training Calendar</a>--%>
                 </div>
                 <div class="menu-heading collapsed" onclick="toggleMenu('communicationMenu',this)"><i class="fas fa-bullhorn mr-2"></i>Communication</div>
                 <div id="communicationMenu" class="submenu-container hide">
