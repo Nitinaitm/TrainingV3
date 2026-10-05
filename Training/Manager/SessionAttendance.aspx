@@ -3,7 +3,7 @@
     MasterPageFile="~/ManagerMaster.Master"
     AutoEventWireup="true"
     CodeBehind="SessionAttendance.aspx.cs"
-    Inherits="Training.Trainer.SessionAttendance" %>
+    Inherits="Training.Manager.SessionAttendance" %>
 
 <%@ Register Src="~/Trainer/SessionSummary.ascx"
     TagPrefix="uc"
