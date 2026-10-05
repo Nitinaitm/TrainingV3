@@ -40,8 +40,8 @@ namespace Training.Admin
                 mvAllotment.ActiveViewIndex = 0;
                 BindAutoHostelDropdown();
 
-                string handoffTrainingID = Session["HostelTrainingID"] as string;
-                Session.Remove("HostelTrainingID");
+                string handoffTrainingID = Session["TrainingID"] as string;
+                Session.Remove("TrainingID");
 
                 if (!string.IsNullOrWhiteSpace(handoffTrainingID))
                 {

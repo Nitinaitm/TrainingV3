@@ -333,7 +333,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             Response.Redirect("CertificateTemplate.aspx");
         }
         protected void btnHostelNo_Click(object sender, EventArgs e) { UpdateHostelRequirement("No"); StartTraining(); }
-        protected void btnHostelYes_Click(object sender, EventArgs e) { UpdateHostelRequirement("Yes"); pnlHostelConfirmation.Visible = false; Response.Redirect("AssignHostel.aspx"); }
+        protected void btnHostelYes_Click(object sender, EventArgs e) { UpdateHostelRequirement("Yes"); pnlHostelConfirmation.Visible = false; Response.Redirect("HostelAllotment.aspx"); }
         private void UpdateHostelRequirement(string hostelRequired)
         {
             new clsDataAccess().ExecuteSql("UPDATE TrainingDetails SET HostelRequiredTrainee=@HostelRequiredTrainee,UpdatedOn=GETDATE(),UpdatedBy=@UpdatedBy WHERE TrainingID=@TrainingID", new SqlParameter[]
@@ -408,7 +408,7 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
         protected void btnCertificateRules_Click(object sender, EventArgs e) { if (string.IsNullOrWhiteSpace(TrainingID)) { Response.Redirect("TrainingList.aspx"); return; } Session["TrainingID"] = TrainingID; Response.Redirect("SetCertificateRules.aspx"); }
         protected void btnUpdateTraining_Click(object sender, EventArgs e) { Response.Redirect("CreateBatch.aspx?mode=edit"); }
         protected void btnAssignSession_Click(object sender, EventArgs e) { Response.Redirect("AssignSession.aspx"); }
-        protected void btnAssignHostel_Click(object sender, EventArgs e) { Response.Redirect("AssignHostel.aspx"); }
+        protected void btnAssignHostel_Click(object sender, EventArgs e) { Response.Redirect("HostelAllotment.aspx"); }
         protected void btnAssignTrainee_Click(object sender, EventArgs e) { Response.Redirect("AssignTrainee.aspx"); }
     }
 }

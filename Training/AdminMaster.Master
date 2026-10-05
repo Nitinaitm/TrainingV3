@@ -496,6 +496,16 @@
 
             <div class="sidebar" id="adminSidebar">
 
+                 <!-- ================= HOME PAGE MANAGEMENT ================= -->
+
+                <a href="HomePageManagement.aspx"
+                    class="menu-item">
+
+                   <i class="fas fa-newspaper mr-2"></i>
+                        Home Page Management
+
+                </a>
+
                 <!-- ================= DASHBOARD ================= -->
 
                 <a href="Dashboard.aspx"
@@ -506,7 +516,23 @@
 
                 </a>
 
+                 <a href="LMSMaterials.aspx"
+                    class="menu-item">
 
+                    <i class="fas fa-home mr-2"></i>
+                    LMS Management
+
+                </a>
+
+                <a href="../LMS/LMSBrowse.aspx"
+                    class="menu-item">
+
+                    <i class="fas fa-book mr-2"></i>
+                    Learning Resources
+
+                </a>
+
+                
                 <!-- ================= MASTER ================= -->
 
                 <div class="menu-heading collapsed"
@@ -716,7 +742,40 @@
 
                     </div>
 
+                    <!-- HOSTEL MASTER -->
+                    
+                    <div class="menu-heading collapsed"
+                        onclick="toggleSubMenu('HostelMasterMenu',this)">
 
+                        <i class="fas fa-building mr-2"></i>
+                        Hostel Master
+
+                    </div>
+
+                    <div id="HostelMasterMenu"
+                        class="submenu-container hide">
+
+                        <a href="HostelMaster.aspx"
+                            class="submenu-item">Hostel Master
+                        </a>
+
+                        <a href="HostelBlockMaster.aspx"
+                            class="submenu-item">Hostel Block Master
+                        </a>
+                        <a href="HostelFlatMaster.aspx"
+                            class="submenu-item">Hostel Flat Master
+                        </a>
+
+                        <a href="HostelRoomMaster.aspx"
+                            class="submenu-item">Hostel Room Master
+                        </a>
+                        <a href="HostelBedMaster.aspx"
+                            class="submenu-item">Hostel Bed Master
+                        </a>
+                        
+                    </div>
+
+                
                     <!-- TRAINER -->
 
                     <div class="menu-heading collapsed"
@@ -780,6 +839,32 @@
 
                 </div>
 
+              <!-- ================= HOSTEL Allotment ================= -->
+
+                <div class="menu-heading collapsed"
+                    onclick="toggleMenu('hostelAllotmentMenu',this)">
+
+                    <i class="fas fa-building mr-2"></i>
+                    Hostel Management
+
+                </div>
+
+                <div id="hostelAllotmentMenu"
+                    class="submenu-container hide">
+
+                    <a href="HostelAllotment.aspx"
+                        class="submenu-item">Hostel Allotment
+                    </a>
+
+                    <a href="TrainingAllotmentDetails.aspx"
+                        class="submenu-item">Training Allotment Details
+                    </a>
+
+                    <a href="HostelStayHistoryReport.aspx"
+                        class="submenu-item">Hostel Stay History Report
+                    </a>
+
+                </div>
 
                 <!-- ================= ATTENDANCE ================= -->
 
@@ -882,7 +967,44 @@
                     </a>
 
                 </div>
+                     <!-- ================= COMMUNITY ================= -->
 
+                <div class="menu-heading collapsed"
+                    onclick="toggleMenu('participateMenu',this)">
+
+                    <i class="fas fa-hands-helping mr-2"></i>
+                    Participate
+
+                </div>
+
+                <div id="participateMenu"
+                    class="submenu-container hide">
+
+                    <a href="NominateTraining.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Nominate for Training
+
+                    </a>
+
+                    <a href="SubmitTestimonial.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-comment-dots mr-2"></i>
+                        Submit Testimonial
+
+                    </a>
+
+                    <a href="SubmitBlog.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-blog mr-2"></i>
+                        Submit Blog Post
+
+                    </a>
+
+                </div>
 
                 <!-- ================= EXAM / TEST ================= -->
 
