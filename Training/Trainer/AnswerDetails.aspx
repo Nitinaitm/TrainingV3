@@ -173,7 +173,7 @@
                     <asp:gridview id="gvAnswers" runat="server" autogeneratecolumns="False" cssclass="table table-bordered table-hover question-grid" emptydatatext="No Answers Found" showheaderwhenempty="true"><Columns>
 <asp:TemplateField HeaderText="#"><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><ItemStyle Width="50px" HorizontalAlign="Center" /></asp:TemplateField>
 <asp:TemplateField HeaderText="Question"><ItemTemplate><div class="question-text"><%# Eval("Question") %></div></ItemTemplate></asp:TemplateField>
-<asp:BoundField DataField="Type" HeaderText="Type" />
+<asp:BoundField DataField="QuestionType" HeaderText="Type" />
 <asp:TemplateField HeaderText="Options"><ItemTemplate><%# GetOptions(Eval("OptionA"), Eval("OptionB"), Eval("OptionC"), Eval("OptionD"), Eval("SelectedAnswer"), Eval("CorrectAnswer")) %></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="Selected"><ItemTemplate><span class='<%# IsCorrect(Eval("IsCorrect")) ? "badge bg-success badge-soft" : "badge bg-danger badge-soft" %>'><%# String.IsNullOrWhiteSpace(Eval("SelectedAnswer").ToString()) ? "Not Answered" : Eval("SelectedAnswer") %></span></ItemTemplate><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
 <asp:TemplateField HeaderText="Correct"><ItemTemplate><span class="badge bg-primary badge-soft"><%# Eval("CorrectAnswer") %></span></ItemTemplate><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
