@@ -193,6 +193,15 @@
     <Content Include="Admin\LMSMaterials.aspx" />
     <Content Include="Admin\ProfileChangeRequests.aspx" />
     <Content Include="Admin\TopicMaster.aspx" />
+    <Content Include="Admin\TrainerEntry.aspx" />
+    <Compile Include="Admin\TrainerEntry.aspx.cs">
+      <DependentUpon>TrainerEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrainerEntry.aspx.designer.cs">
+      <DependentUpon>TrainerEntry.aspx</DependentUpon>
+    </Compile>
+    <Content Include="Admin\TrainingAllotmentDetails.aspx" />
     <Content Include="Admin\TrainingCalenderAdmin.aspx" />
     <Content Include="App_Data\ErrorLog.txt" />
     <Content Include="App_Data\VisitorCount.txt" />
@@ -400,7 +409,6 @@
     <Content Include="Admin\scss\style.scss" />
     <Content Include="Admin\SessionAttendance.aspx" />
     <Content Include="Admin\SetCertificateRules.aspx" />
-    <Content Include="Admin\TrainerEntry.aspx" />
     <Content Include="Admin\TrainingAttendance.aspx" />
     <Content Include="Admin\TrainingAttendance1.aspx" />
     <Content Include="Admin\TrainingCategoryEntry.aspx" />
@@ -1344,12 +1352,12 @@
     <Compile Include="Admin\TopicMaster.aspx.designer.cs">
       <DependentUpon>TopicMaster.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\TrainerEntry.aspx.cs">
-      <DependentUpon>TrainerEntry.aspx</DependentUpon>
+    <Compile Include="Admin\TrainingAllotmentDetails.aspx.cs">
+      <DependentUpon>TrainingAllotmentDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\TrainerEntry.aspx.designer.cs">
-      <DependentUpon>TrainerEntry.aspx</DependentUpon>
+    <Compile Include="Admin\TrainingAllotmentDetails.aspx.designer.cs">
+      <DependentUpon>TrainingAllotmentDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingAttendance.aspx.cs">
       <DependentUpon>TrainingAttendance.aspx</DependentUpon>
