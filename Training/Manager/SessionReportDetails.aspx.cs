@@ -17,7 +17,7 @@ namespace Training.Manager
         {
             if (string.IsNullOrWhiteSpace(ManagerID) || Session["SessionID"] == null || Session["TrainingID"] == null)
             {
-                Response.Redirect("~/Manager/SessionReport.aspx");
+                Response.Redirect("~/Manager/MyTrainings.aspx");
                 return;
             }
 
@@ -69,6 +69,7 @@ namespace Training.Manager
         private void SetReportMode(string type)
         {
             Session["SessionReportTestType"] = type;
+            Session["ManagerReportFromDetails"] = "ExamResultReport";
             Response.Redirect("~/Manager/ExamResultReport.aspx");
         }
 
@@ -90,6 +91,7 @@ namespace Training.Manager
         protected void btnTestResult_Click(object sender, EventArgs e)
         {
             Session["SessionReportTestType"] = "";
+            Session["ManagerReportFromDetails"] = "ExamResultReport";
             Response.Redirect("~/Manager/ExamResultReport.aspx");
         }
 
@@ -110,6 +112,10 @@ namespace Training.Manager
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
+            Session.Remove("SessionID");
+            Session.Remove("TrainingID");
+            Session.Remove("SessionReportTestType");
+            Session.Remove("ManagerReportFromDetails");
             Response.Redirect("~/Manager/SessionReport.aspx");
         }
     }
