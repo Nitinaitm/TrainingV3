@@ -1592,6 +1592,13 @@
     <Compile Include="Manager\TrainingDetails.aspx.designer.cs">
       <DependentUpon>TrainingDetails.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Manager\TrainingMaterial.aspx.cs">
+      <DependentUpon>TrainingMaterial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\TrainingMaterial.aspx.designer.cs">
+      <DependentUpon>TrainingMaterial.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Manager\TrainingRequirements.aspx.cs">
       <DependentUpon>TrainingRequirements.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2340,14 +2347,34 @@
     <Content Include="Manager\SessionAnswerReport.aspx" />
     <Content Include="Manager\AnswerDetails.aspx" />
     <Content Include="Manager\SessionCertificateReport.aspx" />
-    <Compile Include="Manager\SessionAttendanceReport.aspx.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
-    <Compile Include="Manager\SessionAttendanceReport.aspx.designer.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon></Compile>
-    <Compile Include="Manager\SessionAnswerReport.aspx.cs"><DependentUpon>SessionAnswerReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
-    <Compile Include="Manager\SessionAnswerReport.aspx.designer.cs"><DependentUpon>SessionAnswerReport.aspx</DependentUpon></Compile>
-    <Compile Include="Manager\AnswerDetails.aspx.cs"><DependentUpon>AnswerDetails.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
-    <Compile Include="Manager\AnswerDetails.aspx.designer.cs"><DependentUpon>AnswerDetails.aspx</DependentUpon></Compile>
-    <Compile Include="Manager\SessionCertificateReport.aspx.cs"><DependentUpon>SessionCertificateReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
-    <Compile Include="Manager\SessionCertificateReport.aspx.designer.cs"><DependentUpon>SessionCertificateReport.aspx</DependentUpon></Compile>
+    <Compile Include="Manager\SessionAttendanceReport.aspx.cs">
+      <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\SessionAttendanceReport.aspx.designer.cs">
+      <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\SessionAnswerReport.aspx.cs">
+      <DependentUpon>SessionAnswerReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\SessionAnswerReport.aspx.designer.cs">
+      <DependentUpon>SessionAnswerReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\AnswerDetails.aspx.cs">
+      <DependentUpon>AnswerDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\AnswerDetails.aspx.designer.cs">
+      <DependentUpon>AnswerDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Manager\SessionCertificateReport.aspx.cs">
+      <DependentUpon>SessionCertificateReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Manager\SessionCertificateReport.aspx.designer.cs">
+      <DependentUpon>SessionCertificateReport.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
