@@ -30,15 +30,8 @@ namespace Training.Manager
                 return;
             }
 
-            if (Session["ManagerReportFromDetails"] != null && Session["ManagerReportFromDetails"].ToString() == "SessionReport")
-            {
-                Session.Remove("ManagerReportFromDetails");
-            }
-            else
-            {
-                Response.Redirect("~/Manager/SessionReportDetails.aspx");
-                return;
-            }
+            Response.Redirect("~/Manager/SessionReportDetails.aspx");
+            return;
 
             if (!IsPostBack)
             {
