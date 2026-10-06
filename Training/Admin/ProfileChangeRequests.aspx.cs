@@ -168,7 +168,7 @@ namespace Training.Admin
 
         private string ApprovePostingHierarchy(string empID, string requestedValue, string adminID)
         {
-            string[] parts = requestedValue.Split('|');
+            string[] parts = requestedValue.Split('-');
 
             string postingPlace;
             string department = "";

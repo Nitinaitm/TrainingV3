@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AdminMaster.Master.cs" Inherits="Training.AdminMaster" %>
+﻿<%@ master language="C#" autoeventwireup="true" codebehind="AdminMaster.Master.cs" inherits="Training.AdminMaster" %>
 
 <!DOCTYPE html>
 
@@ -496,13 +496,13 @@
 
             <div class="sidebar" id="adminSidebar">
 
-                 <!-- ================= HOME PAGE MANAGEMENT ================= -->
+                <!-- ================= HOME PAGE MANAGEMENT ================= -->
 
                 <a href="HomePageManagement.aspx"
                     class="menu-item">
 
-                   <i class="fas fa-newspaper mr-2"></i>
-                        Home Page Management
+                    <i class="fas fa-newspaper mr-2"></i>
+                    Home Page Management
 
                 </a>
 
@@ -516,7 +516,7 @@
 
                 </a>
 
-                 <a href="LMSMaterials.aspx"
+                <a href="LMSMaterials.aspx"
                     class="menu-item">
 
                     <i class="fas fa-home mr-2"></i>
@@ -532,7 +532,7 @@
 
                 </a>
 
-                
+
                 <!-- ================= MASTER ================= -->
 
                 <div class="menu-heading collapsed"
@@ -563,7 +563,7 @@
                         <a href="Default.aspx"
                             class="submenu-item">Employee Management
                         </a>
-                        
+
                         <a href="EmpBasicMaster.aspx"
                             class="submenu-item">Employee Registration/ Entry
                         </a>
@@ -574,12 +574,15 @@
 
                         <a href="ExternalTraineeReport.aspx"
                             class="submenu-item">External Trainee Report
+                            <a href="ProfileChangeRequests.aspx"
+                                class="submenu-item">Profile Change Requests
+                            </a>
                         </a>
 
                     </div>
 
 
-                   
+
 
                     <!-- COURSE -->
 
@@ -598,15 +601,15 @@
                             class="submenu-item">Course Entry
                         </a>
 
-                       
-                         <a href="CourseCategoryMaster.aspx"
+
+                        <a href="CourseCategoryMaster.aspx"
                             class="submenu-item">Course Category Entry
                         </a>
 
-                      
+
                     </div>
 
-                                        
+
 
                     <!-- TOPIC -->
 
@@ -625,13 +628,13 @@
                             class="submenu-item">Topic Entry
                         </a>
 
-                        
-                          <a href="TopicCategoryMaster.aspx"
+
+                        <a href="TopicCategoryMaster.aspx"
                             class="submenu-item">Topic Category Entry
                         </a>
 
-                        
-                      
+
+
 
                     </div>
 
@@ -653,9 +656,9 @@
                             class="submenu-item">Trainer Entry
                         </a>
 
-                       
 
-                       
+
+
                         <a href="AreaOfExpertiseMaster.aspx"
                             class="submenu-item">Area of Expertise
                         </a>
@@ -673,7 +676,7 @@
                         onclick="toggleSubMenu('trainingTypeMenu',this)">
 
                         <i class="fas fa-tags mr-2"></i>
-                       Training Details Master
+                        Training Details Master
 
                     </div>
 
@@ -684,11 +687,11 @@
                             class="submenu-item">Training Type Entry
                         </a>
 
-                          <a href="TrainingCategoryEntry.aspx"
+                        <a href="TrainingCategoryEntry.aspx"
                             class="submenu-item">Training Category Entry
                         </a>
 
-                         <a href="OrganizerEntry.aspx"
+                        <a href="OrganizerEntry.aspx"
                             class="submenu-item">Organizer Entry
                         </a>
 
@@ -743,7 +746,7 @@
                     </div>
 
                     <!-- HOSTEL MASTER -->
-                    
+
                     <div class="menu-heading collapsed"
                         onclick="toggleSubMenu('HostelMasterMenu',this)">
 
@@ -772,10 +775,10 @@
                         <a href="HostelBedMaster.aspx"
                             class="submenu-item">Hostel Bed Master
                         </a>
-                        
+
                     </div>
 
-                
+
                     <!-- TRAINER -->
 
                     <div class="menu-heading collapsed"
@@ -791,10 +794,10 @@
 
                         <a href="ManagerEntry.aspx"
                             class="submenu-item">Manager Entry
-                        </a>                     
+                        </a>
 
-                       
-                        
+
+
 
                     </div>
 
@@ -826,7 +829,7 @@
                         class="submenu-item">Manage Training
                     </a>
 
-                
+
                     <a href="AssignTrainee.aspx"
                         class="submenu-item">Assign Trainee
                     </a>
@@ -839,7 +842,7 @@
 
                 </div>
 
-              <!-- ================= HOSTEL Allotment ================= -->
+                <!-- ================= HOSTEL Allotment ================= -->
 
                 <div class="menu-heading collapsed"
                     onclick="toggleMenu('hostelAllotmentMenu',this)">
@@ -916,6 +919,9 @@
                     <a href="QuestionApproval.aspx"
                         class="submenu-item">Question Approval
                     </a>
+                    <a href="CloneTest.aspx"
+                        class="submenu-item">Question Clone Reassign
+                    </a>
 
                 </div>
 
@@ -937,7 +943,7 @@
                         class="submenu-item">Assign Feedback
                     </a>
 
-                 
+
                 </div>
 
 
@@ -967,44 +973,7 @@
                     </a>
 
                 </div>
-                     <!-- ================= COMMUNITY ================= -->
-
-                <div class="menu-heading collapsed"
-                    onclick="toggleMenu('participateMenu',this)">
-
-                    <i class="fas fa-hands-helping mr-2"></i>
-                    Participate
-
-                </div>
-
-                <div id="participateMenu"
-                    class="submenu-container hide">
-
-                    <a href="NominateTraining.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-user-plus mr-2"></i>
-                        Nominate for Training
-
-                    </a>
-
-                    <a href="SubmitTestimonial.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-comment-dots mr-2"></i>
-                        Submit Testimonial
-
-                    </a>
-
-                    <a href="SubmitBlog.aspx"
-                        class="submenu-item">
-
-                        <i class="fas fa-blog mr-2"></i>
-                        Submit Blog Post
-
-                    </a>
-
-                </div>
+               
 
                 <!-- ================= EXAM / TEST ================= -->
 

@@ -648,7 +648,44 @@
                     </a>
 
                 </div>
+                 <!-- ================= COMMUNITY ================= -->
 
+                <div class="menu-heading collapsed"
+                    onclick="toggleMenu('participateMenu',this)">
+
+                    <i class="fas fa-hands-helping mr-2"></i>
+                    Participate
+
+                </div>
+
+                <div id="participateMenu"
+                    class="submenu-container hide">
+
+                    <a href="NominateTraining.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Nominate for Training
+
+                    </a>
+
+                    <a href="SubmitTestimonial.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-comment-dots mr-2"></i>
+                        Submit Testimonial
+
+                    </a>
+
+                    <a href="SubmitBlog.aspx"
+                        class="submenu-item">
+
+                        <i class="fas fa-blog mr-2"></i>
+                        Submit Blog Post
+
+                    </a>
+
+                </div>
 
                 <!-- ================= LOGOUT ================= -->
 
