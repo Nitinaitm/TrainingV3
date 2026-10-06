@@ -30,45 +30,36 @@ namespace Training.Trainee
 
         private void LoadDetails(string type)
         {
-            DataTable dt;
-            string title;
-
-            switch (type)
+            DataTable dt; string title;
+            switch(type)
             {
-                case "Training":
-                    title = "Assigned Trainings";
-                    dt = GetAssignedTrainings();
-                    break;
-                case "Attendance":
-                    title = "Attendance Completed Trainings";
-                    dt = GetAttendanceCompleted();
-                    break;
-                case "Tests":
-                    title = "Published Tests";
-                    dt = GetPublishedTests(false);
-                    break;
-                case "PendingTests":
-                    title = "Pending Tests";
-                    dt = GetPublishedTests(true);
-                    break;
-                case "Feedback":
-                    title = "Training Feedback Submitted";
-                    dt = GetFeedback();
-                    break;
-                case "Certificate":
-                    title = "Generated Certificates";
-                    dt = GetCertificates();
-                    break;
-                default:
-                    title = "Assigned Trainings";
-                    dt = GetAssignedTrainings();
-                    break;
+                case "Active": title="Active Training"; dt=GetTrainingByCategory("Active"); break;
+                case "Completed": title="Completed Training"; dt=GetTrainingByCategory("Completed"); break;
+                case "Future": title="Future Assigned Training"; dt=GetTrainingByCategory("Future"); break;
+                case "PendingTests": title="Pending Tests"; dt=GetPublishedTests(true); break;
+                case "FeedbackPending": title="Feedback Pending"; dt=GetFeedbackPending(); break;
+                case "Certificates": title="All Certificates"; dt=GetCertificates(); break;
+                case "Tests": title="Published Tests"; dt=GetPublishedTests(false); break;
+                default: title="Active Training"; dt=GetTrainingByCategory("Active"); break;
             }
+            lblTitle.Text=title; lblSummary.Text="Showing "+dt.Rows.Count.ToString()+" record(s)."; gvDetails.DataSource=dt; gvDetails.DataBind();
+        }
 
-            lblTitle.Text = title;
-            lblSummary.Text = "Showing " + dt.Rows.Count.ToString() + " record(s).";
-            gvDetails.DataSource = dt;
-            gvDetails.DataBind();
+        private DataTable GetTrainingByCategory(string category)
+        {
+            string condition=category=="Completed"
+                ? "AND ISNULL(TD.TrainingStatus,'')='Closed'"
+                : category=="Future"
+                ? "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)>CONVERT(date,GETDATE())"
+                : "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)<=CONVERT(date,GETDATE()) AND TRY_CONVERT(date,TD.DateTo,105)>=CONVERT(date,GETDATE())";
+            string sql="SELECT DISTINCT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' "+condition+" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
+            return GetTable(sql);
+        }
+
+        private DataTable GetFeedbackPending()
+        {
+            string sql="SELECT DISTINCT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,'Pending' AS FeedbackStatus FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.FeedbackRequired=1 AND ISNULL(TD.FeedbackSkipped,0)=0 AND NOT EXISTS (SELECT 1 FROM Feedback F WHERE F.TrainingID=TA.TrainingID AND F.EmpID=@EmpID AND ISNULL(F.Submitted,0)=1) ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
+            return GetTable(sql);
         }
 
         private DataTable GetAssignedTrainings()
@@ -99,7 +90,7 @@ namespace Training.Trainee
 
         private DataTable GetCertificates()
         {
-            string sql = "SELECT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
+            string sql = "SELECT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' ORDER BY TC.GeneratedOn DESC";
             return GetTable(sql);
         }
 
