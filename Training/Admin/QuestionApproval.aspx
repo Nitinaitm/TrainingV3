@@ -62,7 +62,7 @@
 
         <div class="page-title">
             Question Approval
-             <a href="Dashboard.aspx" class="btn btn-sm btn-outline-secondary">&larr; Back to Dashboard</a>
+             <a href="Dashboard.aspx" class="btn btn-sm btn-outline-secondary float-end">&larr; Back to Dashboard</a>
         </div>
 
         <div class="card-box">
