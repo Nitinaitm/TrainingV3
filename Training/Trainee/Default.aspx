@@ -540,49 +540,58 @@
 
                 <div class="col-lg-3 col-md-6 col-sm-6">
 
-                    <div class="summary-card">
+                    <asp:LinkButton
+                        ID="lnkPublishedTests"
+                        runat="server"
+                        CssClass="dashboard-link"
+                        CausesValidation="false"
+                        OnClick="lnkPublishedTests_Click">
 
-                        <div class="summary-icon icon-test">
+                        <div class="summary-card">
 
-                            <i class="fa fa-pencil-square-o"></i>
+                            <div class="summary-icon icon-test">
 
-                        </div>
+                                <i class="fa fa-pencil-square-o"></i>
 
-                        <div class="summary-value">
+                            </div>
 
-                            <asp:Label
-                                ID="lblCompletedTests"
-                                runat="server"
-                                Text="0">
-                            </asp:Label>
+                            <div class="summary-value">
 
-                            <span style="font-size:18px;color:#adb5bd;">
+                                <asp:Label
+                                    ID="lblCompletedTests"
+                                    runat="server"
+                                    Text="0">
+                                </asp:Label>
 
-                                /
+                                <span style="font-size:18px;color:#adb5bd;">
+
+                                    /
+
+                                </span>
+
+                                <asp:Label
+                                    ID="lblPublishedTests"
+                                    runat="server"
+                                    Text="0">
+                                </asp:Label>
+
+                            </div>
+
+                            <div class="summary-label">
+
+                                Published Tests Completed
+
+                            </div>
+
+                            <span class="summary-small">
+
+                                Click to view published test details
 
                             </span>
 
-                            <asp:Label
-                                ID="lblPublishedTests"
-                                runat="server"
-                                Text="0">
-                            </asp:Label>
-
                         </div>
 
-                        <div class="summary-label">
-
-                            Published Tests Completed
-
-                        </div>
-
-                        <span class="summary-small">
-
-                            Pre/Post tests currently published
-
-                        </span>
-
-                    </div>
+                    </asp:LinkButton>
 
                 </div>
 
