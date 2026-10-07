@@ -18,8 +18,18 @@
 </style>
 <script>
 function LoadSearchableDropdowns(){
-var ids=['lstCompany','lstDesignation','lstPostingPlace','lstPostingDepartment','lstAreaBoardZone','lstCircle','lstDivision','lstSubdivision','lstSection'];
-for(var i=0;i<ids.length;i++){var ddl=document.getElementById('<%= lstCompany.ClientID %>'.replace('lstCompany',ids[i]));if(ddl){var j=window.jQuery(ddl);if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:'Search / Select',closeOnSelect:false});}}
+var ids=[
+'#<%= lstCompany.ClientID %>',
+'#<%= lstDesignation.ClientID %>',
+'#<%= lstPostingPlace.ClientID %>',
+'#<%= lstPostingDepartment.ClientID %>',
+'#<%= lstAreaBoardZone.ClientID %>',
+'#<%= lstCircle.ClientID %>',
+'#<%= lstDivision.ClientID %>',
+'#<%= lstSubdivision.ClientID %>',
+'#<%= lstSection.ClientID %>'
+];
+for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:'Search / Select',closeOnSelect:false});}}
 }
 $(document).ready(function(){LoadSearchableDropdowns();});
 </script>
