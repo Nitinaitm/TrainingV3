@@ -12,6 +12,18 @@ namespace Training.Trainer
         protected global::System.Web.UI.WebControls.Label lblPendingAttendance;
         protected global::System.Web.UI.WebControls.Label lblPendingPreTest;
         protected global::System.Web.UI.WebControls.Label lblPendingPostTest;
+        protected global::System.Web.UI.WebControls.LinkButton lnkTodaySession;
+        protected global::System.Web.UI.WebControls.LinkButton lnkPendingAttendance;
+        protected global::System.Web.UI.WebControls.LinkButton lnkPendingPreTest;
+        protected global::System.Web.UI.WebControls.LinkButton lnkPendingPostTest;
+        protected global::System.Web.UI.WebControls.Label lblActiveSession;
+        protected global::System.Web.UI.WebControls.Label lblClosedSession;
+        protected global::System.Web.UI.WebControls.Label lblFutureSession;
+        protected global::System.Web.UI.WebControls.Label lblPendingSession;
+        protected global::System.Web.UI.WebControls.LinkButton lnkActiveSession;
+        protected global::System.Web.UI.WebControls.LinkButton lnkClosedSession;
+        protected global::System.Web.UI.WebControls.LinkButton lnkFutureSession;
+        protected global::System.Web.UI.WebControls.LinkButton lnkPendingSession;
         protected global::System.Web.UI.WebControls.Label lblActiveSession;
         protected global::System.Web.UI.WebControls.Label lblClosedSession;
         protected global::System.Web.UI.WebControls.Label lblFutureSession;
@@ -21,6 +33,7 @@ namespace Training.Trainer
         protected global::System.Web.UI.WebControls.TextBox txtToDate;
         protected global::System.Web.UI.WebControls.Button btnSearch;
         protected global::System.Web.UI.WebControls.Button btnReset;
+        protected global::System.Web.UI.WebControls.Label lblGridTitle;
         protected global::System.Web.UI.WebControls.GridView gvSession;
         protected global::System.Web.UI.WebControls.GridView gvClosedTraining;
     }
