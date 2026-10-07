@@ -133,7 +133,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/boo
         <div class="search-card">
 
             <div class="page-title">
-                Training Report
+                Training Overview Report
 
             </div>
 
