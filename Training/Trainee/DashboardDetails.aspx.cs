@@ -138,55 +138,29 @@ namespace Training.Trainee
             return GetTable(sql);
         }
 
-        protected void gvDetails_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName!="DownloadCertificate") return;
-            string certificateID=Convert.ToString(e.CommandArgument);
-            if (string.IsNullOrWhiteSpace(certificateID)) return;
-            DataTable dt=objDB.GetDataTable("SELECT PDFPath,PDFName FROM TrainingCertificate WHERE CertificateID=@CertificateID AND EmpID=@EmpID AND CertificateStatus='A'",new SqlParameter[] { new SqlParameter("@CertificateID",certificateID),new SqlParameter("@EmpID",EmpID) });
-            if (dt.Rows.Count==0) return;
-            string pdfPath=Convert.ToString(dt.Rows[0]["PDFPath"]);
-            if (string.IsNullOrWhiteSpace(pdfPath)) return;
-            string physicalPath=Server.MapPath(pdfPath);
-            if (!File.Exists(physicalPath)) return;
-            string pdfName=Convert.ToString(dt.Rows[0]["PDFName"]);
-            if (string.IsNullOrWhiteSpace(pdfName)) pdfName=Path.GetFileName(physicalPath);
-            Response.Clear();
-            Response.ClearHeaders();
-            Response.ClearContent();
-            Response.ContentType="application/pdf";
-            Response.AddHeader("Content-Disposition","attachment; filename=\""+pdfName+"\"");
-            Response.AddHeader("Content-Length",new FileInfo(physicalPath).Length.ToString());
-            Response.TransmitFile(physicalPath);
-            Response.Flush();
-            System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
-        }
-
         private DataTable GetTable(string sql)
         {
             return objDB.GetDataTable(sql,new SqlParameter[] { new SqlParameter("@EmpID",EmpID) });
         }
     public class CertificateDownloadTemplate : ITemplate
     {
-        private void CertificateDownloadButton_DataBinding(object sender, EventArgs e)
-        {
-            LinkButton btn=(LinkButton)sender;
-            GridViewRow row=(GridViewRow)btn.NamingContainer;
-            object value=DataBinder.Eval(row.DataItem,"CertificateID");
-            btn.CommandArgument=value == null ? "" : value.ToString();
-        }
-
         public void InstantiateIn(Control container)
         {
-            LinkButton btn=new LinkButton();
-            btn.ID="btnDownloadCertificate";
-            btn.CommandName="DownloadCertificate";
-            btn.CssClass="btn btn-sm btn-success";
-            btn.DataBinding += CertificateDownloadButton_DataBinding;
-            btn.CausesValidation=false;
-            btn.Text="Download PDF";
-            container.Controls.Add(btn);
+            HyperLink link=new HyperLink();
+            link.ID="lnkDownloadCertificate";
+            link.CssClass="btn btn-sm btn-success";
+            link.Text="Download PDF";
+            link.DataBinding += DownloadLink_DataBinding;
+            container.Controls.Add(link);
+        }
+
+        private void DownloadLink_DataBinding(object sender, EventArgs e)
+        {
+            HyperLink link=(HyperLink)sender;
+            GridViewRow row=(GridViewRow)link.NamingContainer;
+            object value=DataBinder.Eval(row.DataItem,"CertificateID");
+            string certificateID=value == null ? "" : value.ToString();
+            link.NavigateUrl="DownloadCertificate.aspx?CertificateID="+System.Web.HttpUtility.UrlEncode(certificateID);
         }
     }
 }
-
