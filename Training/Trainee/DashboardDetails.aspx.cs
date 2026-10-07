@@ -12,6 +12,68 @@ namespace Training.Trainee
         private readonly clsDataAccess objDB = new clsDataAccess();
         private string EmpID = "";
 
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            ConfigureCertificateGrid();
+        }
+
+        private void ConfigureCertificateGrid()
+        {
+            string type=Session["TraineeDashboardType"] == null ? "" : Session["TraineeDashboardType"].ToString().Trim();
+            if (!string.Equals(type,"Certificates",StringComparison.OrdinalIgnoreCase)) return;
+            gvDetails.AutoGenerateColumns=false;
+            gvDetails.DataKeyNames=new string[] { "CertificateID" };
+            gvDetails.Columns.Clear();
+            BoundField certificateID=new BoundField();
+            certificateID.DataField="CertificateID";
+            certificateID.Visible=false;
+            gvDetails.Columns.Add(certificateID);
+            BoundField certificateNo=new BoundField();
+            certificateNo.DataField="CertificateNo";
+            certificateNo.HeaderText="Certificate No.";
+            gvDetails.Columns.Add(certificateNo);
+            BoundField trainingID=new BoundField();
+            trainingID.DataField="TrainingID";
+            trainingID.HeaderText="Training ID";
+            gvDetails.Columns.Add(trainingID);
+            BoundField courseName=new BoundField();
+            courseName.DataField="CourseName";
+            courseName.HeaderText="Course Name";
+            gvDetails.Columns.Add(courseName);
+            BoundField generatedOn=new BoundField();
+            generatedOn.DataField="GeneratedOn";
+            generatedOn.HeaderText="Generated On";
+            generatedOn.DataFormatString="{0:dd-MM-yyyy hh:mm tt}";
+            gvDetails.Columns.Add(generatedOn);
+            BoundField trainingType=new BoundField();
+            trainingType.DataField="TrainingType";
+            trainingType.HeaderText="Training Type";
+            gvDetails.Columns.Add(trainingType);
+            BoundField organizer=new BoundField();
+            organizer.DataField="TrainingOrganizer";
+            organizer.HeaderText="Training Organizer";
+            gvDetails.Columns.Add(organizer);
+            BoundField batch=new BoundField();
+            batch.DataField="Batch";
+            batch.HeaderText="Batch";
+            gvDetails.Columns.Add(batch);
+            BoundField dateFrom=new BoundField();
+            dateFrom.DataField="DateFrom";
+            dateFrom.HeaderText="Date From";
+            dateFrom.DataFormatString="{0:dd-MM-yyyy}";
+            gvDetails.Columns.Add(dateFrom);
+            BoundField dateTo=new BoundField();
+            dateTo.DataField="DateTo";
+            dateTo.HeaderText="Date To";
+            dateTo.DataFormatString="{0:dd-MM-yyyy}";
+            gvDetails.Columns.Add(dateTo);
+            TemplateField action=new TemplateField();
+            action.HeaderText="Action";
+            action.ItemTemplate=new CertificateDownloadTemplate();
+            gvDetails.Columns.Add(action);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["EmpID"] == null || string.IsNullOrWhiteSpace(Session["EmpID"].ToString()) || Session["Role"] == null || !string.Equals(Session["Role"].ToString(), "Trainee", StringComparison.OrdinalIgnoreCase))
@@ -76,55 +138,6 @@ namespace Training.Trainee
             return GetTable(sql);
         }
 
-        protected void gvDetails_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            string type=Session["TraineeDashboardType"] == null ? "" : Session["TraineeDashboardType"].ToString().Trim();
-            if (!string.Equals(type,"Certificates",StringComparison.OrdinalIgnoreCase)) return;
-            if (e.Row.RowType==DataControlRowType.Header)
-            {
-                for (int i=e.Row.Cells.Count-1;i>=0;i--)
-                {
-                    if (string.Equals(e.Row.Cells[i].Text,"CertificateID",StringComparison.OrdinalIgnoreCase))
-                    {
-                        e.Row.Cells.RemoveAt(i);
-                    }
-                }
-                TableCell cell=new TableCell();
-                cell.Text="Action";
-                cell.CssClass="text-center";
-                e.Row.Cells.Add(cell);
-                return;
-            }
-            if (e.Row.RowType==DataControlRowType.DataRow)
-            {
-                string certificateID=DataBinder.Eval(e.Row.DataItem,"CertificateID")==null ? "" : DataBinder.Eval(e.Row.DataItem,"CertificateID").ToString();
-                for (int i=e.Row.Cells.Count-1;i>=0;i--)
-                {
-                    if (i==0)
-                    {
-                        e.Row.Cells.RemoveAt(i);
-                        break;
-                    }
-                }
-                TableCell actionCell=new TableCell();
-                actionCell.CssClass="text-center";
-                if (!string.IsNullOrWhiteSpace(certificateID))
-                {
-                    LinkButton btn=new LinkButton();
-                    btn.ID="btnDownloadCertificate";
-                    btn.CommandName="DownloadCertificate";
-                    btn.CommandArgument=certificateID;
-                    btn.CssClass="btn btn-sm btn-success";
-                    btn.CausesValidation=false;
-                    btn.Text="Download PDF";
-                    actionCell.Controls.Add(btn);
-                }
-                e.Row.Cells.Add(actionCell);
-                return;
-            }
-            
-        }
-
         protected void gvDetails_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName!="DownloadCertificate") return;
@@ -153,5 +166,19 @@ namespace Training.Trainee
         {
             return objDB.GetDataTable(sql,new SqlParameter[] { new SqlParameter("@EmpID",EmpID) });
         }
+    public class CertificateDownloadTemplate : ITemplate
+    {
+        public void InstantiateIn(Control container)
+        {
+            LinkButton btn=new LinkButton();
+            btn.ID="btnDownloadCertificate";
+            btn.CommandName="DownloadCertificate";
+            btn.CommandArgument='<%# Eval("CertificateID") %>';
+            btn.CssClass="btn btn-sm btn-success";
+            btn.CausesValidation=false;
+            btn.Text="Download PDF";
+            container.Controls.Add(btn);
+        }
     }
 }
+
