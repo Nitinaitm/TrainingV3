@@ -31,7 +31,10 @@ var ids=[
 ];
 for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:'Search / Select',closeOnSelect:false});}}
 }
-$(document).ready(function(){LoadSearchableDropdowns();});
+$(document).ready(function(){LoadSearchableDropdowns();initializeEmployeeGridScrollbars();setTimeout(syncEmployeeGridScrollbars,250);setTimeout(syncEmployeeGridScrollbars,750);$(window).on('resize',syncEmployeeGridScrollbars);});
+function getEmployeeGridElements(){var top=document.getElementById('<%= gridScrollTop.ClientID %>');var inner=document.getElementById('gridScrollTopInner');var bottom=document.getElementById('gridScroll');if(!top||!inner||!bottom)return null;var table=bottom.querySelector('table.gridview');if(!table)return null;return {top:top,inner:inner,bottom:bottom,table:table};}
+function syncEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!e)return;var w=Math.max(Math.ceil(e.table.scrollWidth),Math.ceil(e.bottom.scrollWidth),e.bottom.clientWidth+1);e.inner.style.width=w+'px';e.inner.style.minWidth=w+'px';if(e.top.scrollLeft!==e.bottom.scrollLeft)e.top.scrollLeft=e.bottom.scrollLeft;}
+function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!e)return;if(e.top.getAttribute('data-scroll-bound')!=='1'){e.top.setAttribute('data-scroll-bound','1');e.top.addEventListener('scroll',function(){e.bottom.scrollLeft=e.top.scrollLeft;});e.bottom.addEventListener('scroll',function(){e.top.scrollLeft=e.bottom.scrollLeft;});}syncEmployeeGridScrollbars();}
 </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
