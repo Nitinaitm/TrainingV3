@@ -25,16 +25,17 @@
             <div class="page-heading">Trainer Dashboard</div>
 
             <div class="row">
-                <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblTodaySession" runat="server" Text="0" /></div><div class="summary-label">Today's Sessions</div></div></div>
-                <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingAttendance" runat="server" Text="0" /></div><div class="summary-label">Pending Attendance</div></div></div>
-                <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingPreTest" runat="server" Text="0" /></div><div class="summary-label">Pending Pre Test</div></div></div>
-                <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingPostTest" runat="server" Text="0" /></div><div class="summary-label">Pending Post Test</div></div></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkTodaySession" runat="server" CssClass="text-decoration-none" CommandArgument="Today" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblTodaySession" runat="server" Text="0" /></div><div class="summary-label">Today's Sessions</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkPendingAttendance" runat="server" CssClass="text-decoration-none" CommandArgument="PendingAttendance" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingAttendance" runat="server" Text="0" /></div><div class="summary-label">Pending Attendance</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkPendingPreTest" runat="server" CssClass="text-decoration-none" CommandArgument="PendingPreTest" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingPreTest" runat="server" Text="0" /></div><div class="summary-label">Pending Pre Test</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkPendingPostTest" runat="server" CssClass="text-decoration-none" CommandArgument="PendingPostTest" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingPostTest" runat="server" Text="0" /></div><div class="summary-label">Pending Post Test</div></div></asp:LinkButton></div>
             </div>
 
             <div class="row">
-                <div class="col-lg-4 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblActiveSession" runat="server" Text="0" /></div><div class="summary-label">Active Session</div></div></div>
-                <div class="col-lg-4 col-md-6"><div class="summary-card closed-card"><div class="summary-value"><asp:Label ID="lblClosedSession" runat="server" Text="0" /></div><div class="summary-label">Closed Session</div></div></div>
-                <div class="col-lg-4 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblFutureSession" runat="server" Text="0" /></div><div class="summary-label">Future Session</div></div></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkActiveSession" runat="server" CssClass="text-decoration-none" CommandArgument="Active" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblActiveSession" runat="server" Text="0" /></div><div class="summary-label">Active Session</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkClosedSession" runat="server" CssClass="text-decoration-none" CommandArgument="Closed" OnClick="DashboardCard_Click"><div class="summary-card closed-card"><div class="summary-value"><asp:Label ID="lblClosedSession" runat="server" Text="0" /></div><div class="summary-label">Closed Session</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkFutureSession" runat="server" CssClass="text-decoration-none" CommandArgument="Future" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblFutureSession" runat="server" Text="0" /></div><div class="summary-label">Future Session</div></div></asp:LinkButton></div>
+                <div class="col-lg-3 col-md-6"><asp:LinkButton ID="lnkPendingSession" runat="server" CssClass="text-decoration-none" CommandArgument="PendingSession" OnClick="DashboardCard_Click"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingSession" runat="server" Text="0" /></div><div class="summary-label">Pending Session</div></div></asp:LinkButton></div>
             </div>
 
             <div class="search-card">
@@ -48,7 +49,7 @@
             </div>
 
             <div class="grid-card">
-                <div class="grid-title">Assigned Sessions</div>
+                <div class="grid-title"><asp:Label ID="lblGridTitle" runat="server" Text="Assigned Sessions" /></div>
                 <asp:GridView ID="gvSession" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" Width="100%" EmptyDataText="No Session Assigned" ShowHeaderWhenEmpty="true" DataKeyNames="SessionID,TrainingID" OnRowCommand="gvSession_RowCommand" OnRowDataBound="gvSession_RowDataBound">
                     <HeaderStyle BackColor="#198754" ForeColor="White" Font-Bold="true" />
                     <Columns>
