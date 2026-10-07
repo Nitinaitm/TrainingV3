@@ -60,7 +60,7 @@ namespace Training.Trainee
             Response.ClearHeaders();
             Response.ClearContent();
             Response.ContentType="application/pdf";
-            Response.AddHeader("Content-Disposition","attachment; filename=""+pdfName+""");
+            Response.AddHeader("Content-Disposition","attachment; filename=\"" + pdfName + "\"");
             Response.AddHeader("Content-Length",new FileInfo(physicalPath).Length.ToString());
             Response.TransmitFile(physicalPath);
             Response.Flush();
