@@ -353,7 +353,11 @@ namespace Training.Admin
             SetPostingDetailVisibility();
         }
 
-        protected void btnSearch_Click(object sender,EventArgs e){BindGrid();}
+        protected void btnAttended_Click(object sender,EventArgs e){BindGrid("Attended");}
+
+        protected void btnNotAttended_Click(object sender,EventArgs e){BindGrid("NotAttended");}
+
+        protected void btnAllEmployees_Click(object sender,EventArgs e){BindGrid("All");}
 
         protected void btnReset_Click(object sender,EventArgs e)
         {
@@ -362,10 +366,17 @@ namespace Training.Admin
             gvTraining.DataSource=null;gvTraining.DataBind();gridScrollTop.Visible=false;lblResultCount.Text="";
         }
 
-        private void BindGrid()
+        private void BindGrid(string reportType)
         {
-            DataTable dt=GetData();
-            gvTraining.DataSource=dt;gvTraining.DataBind();gridScrollTop.Visible=dt.Rows.Count>0;lblResultCount.Text=dt.Rows.Count+" trainee training record(s) found.";
+            DataTable dt=GetData(reportType);
+            gvTraining.DataSource=dt;gvTraining.DataBind();gridScrollTop.Visible=dt.Rows.Count>0;lblResultCount.Text=GetReportTitle(reportType)+" - "+dt.Rows.Count+" employee/training record(s) found.";
+        }
+
+        private string GetReportTitle(string reportType)
+        {
+            if(reportType=="Attended") return "List of Employee Attended Training";
+            if(reportType=="NotAttended") return "List of Employee Not Attended Training";
+            return "All Employee";
         }
 
         private void AddTextFilter(StringBuilder q,SqlCommand cmd,string field,string value,string parameter)
@@ -382,11 +393,11 @@ namespace Training.Admin
             if(p.Count>0)q.Append(" AND "+field+" IN ("+string.Join(",",p)+")");
         }
 
-        private DataTable GetData()
+        private DataTable GetData(string reportType)
         {
             StringBuilder q=new StringBuilder();
             SqlCommand cmd=new SqlCommand();
-            q.Append("SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,E.MobileNo,E.EmailId,ISNULL(P.EmpPostingPlace,'') [Posting Details],ISNULL(P.EmpPostingDepartment,'') [Department / Office / Cell],ISNULL(P.AreaBoardZone,'') [Area Board / Zone],ISNULL(P.Circle,'') Circle,ISNULL(P.Division,'') Division,ISNULL(P.Subdivision,'') Subdivision,ISNULL(P.Section,'') Section,TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TD.TrainingLocation,TD.NoOfDays,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus,(SELECT STUFF((SELECT DISTINCT ', '+ISNULL(TP.TopicName,'') FROM SessionMaster SX LEFT JOIN TopicMaster TP ON SX.TopicID=TP.TopicID WHERE SX.TrainingID=TD.TrainingID AND ISNULL(TP.TopicName,'')<>'' FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')) Topics FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT TOP 1 EP.EmpPostingPlace,EP.EmpPostingDepartment,EP.AreaBoardZone,EP.Circle,EP.Division,EP.Subdivision,EP.Section FROM EmpPostingDetails EP WHERE EP.EmpID=E.EmpID ORDER BY EP.ID DESC) P WHERE E.EmpType='Internal' AND ISNULL(TA.Cancelled,0)=0");
+            q.Append("SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,E.MobileNo,E.EmailId,ISNULL(P.EmpPostingPlace,'') [Posting Details],ISNULL(P.EmpPostingDepartment,'') [Department / Office / Cell],ISNULL(P.AreaBoardZone,'') [Area Board / Zone],ISNULL(P.Circle,'') Circle,ISNULL(P.Division,'') Division,ISNULL(P.Subdivision,'') Subdivision,ISNULL(P.Section,'') Section,ISNULL(TD.TrainingID,'') TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingLocation,'') TrainingLocation,ISNULL(TD.NoOfDays,0) NoOfDays,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus,CASE WHEN TD.TrainingID IS NULL THEN 'No Training' WHEN EXISTS (SELECT 1 FROM SessionAttendance SA WHERE SA.TrainingID=TD.TrainingID AND SA.EmpID=E.EmpID AND SA.AttendanceStatus='Present') THEN 'Attended' ELSE 'Not Attended' END TrainingAttendanceStatus,(SELECT STUFF((SELECT DISTINCT ', '+ISNULL(TP.TopicName,'') FROM SessionMaster SX LEFT JOIN TopicMaster TP ON SX.TopicID=TP.TopicID WHERE SX.TrainingID=TD.TrainingID AND ISNULL(TP.TopicName,'')<>'' FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')) Topics FROM EmpBasicMaster E LEFT JOIN TrainingAssignment TA ON TA.EmpID=E.EmpID AND ISNULL(TA.Cancelled,0)=0 LEFT JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT TOP 1 EP.EmpPostingPlace,EP.EmpPostingDepartment,EP.AreaBoardZone,EP.Circle,EP.Division,EP.Subdivision,EP.Section FROM EmpPostingDetails EP WHERE EP.EmpID=E.EmpID ORDER BY EP.ID DESC) P WHERE E.EmpType='Internal'");
             AddTextFilter(q,cmd,"E.EmpID",txtEmpID.Text,"@EmpID");
             AddTextFilter(q,cmd,"E.EmpName",txtEmpName.Text,"@EmpName");
             AddTextFilter(q,cmd,"E.MobileNo",txtMobile.Text,"@MobileNo");
@@ -401,15 +412,16 @@ namespace Training.Admin
             AddMultiSelectFilter(q,cmd,lstDivision,"P.Division","Division");
             AddMultiSelectFilter(q,cmd,lstSubdivision,"P.Subdivision","Subdivision");
             AddMultiSelectFilter(q,cmd,lstSection,"P.Section","Section");
+            if(reportType=="Attended") q.Append(" AND TD.TrainingID IS NOT NULL AND EXISTS (SELECT 1 FROM SessionAttendance SA2 WHERE SA2.TrainingID=TD.TrainingID AND SA2.EmpID=E.EmpID AND SA2.AttendanceStatus='Present')");
+            else if(reportType=="NotAttended") q.Append(" AND (TD.TrainingID IS NULL OR NOT EXISTS (SELECT 1 FROM SessionAttendance SA3 WHERE SA3.TrainingID=TD.TrainingID AND SA3.EmpID=E.EmpID AND SA3.AttendanceStatus='Present'))");
             q.Append(" ORDER BY E.EmpID,COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)) DESC,TD.TrainingID");
-            SqlCommand cmdFinal=cmd;
-            cmdFinal.CommandText=q.ToString();
+            cmd.CommandText=q.ToString();
             DataTable dt=new DataTable();
-            using(SqlConnection con=new SqlConnection(constr)){cmdFinal.Connection=con;using(SqlDataAdapter da=new SqlDataAdapter(cmdFinal))da.Fill(dt);}
+            using(SqlConnection con=new SqlConnection(constr)){cmd.Connection=con;using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);}
             return dt;
         }
 
-        protected void btnExport_Click(object sender,EventArgs e){ExportExcel(GetData(),"EmployeeTrainingReport.xls");}
+        protected void btnExport_Click(object sender,EventArgs e){ExportExcel(GetData("All"),"EmployeeTrainingReport.xls");}
 
         private void ExportExcel(DataTable dt,string fileName)
         {
