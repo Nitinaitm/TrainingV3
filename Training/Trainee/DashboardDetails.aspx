@@ -4,6 +4,6 @@
 <div class="container-fluid">
 <div class="d-flex justify-content-between align-items-center mb-3"><div class="page-title mb-0"><asp:Label ID="lblTitle" runat="server" /></div><asp:Button ID="btnBack" runat="server" Text="Back to Dashboard" CssClass="btn btn-secondary" CausesValidation="false" PostBackUrl="~/Trainee/Default.aspx" /></div>
 <div class="card-box"><div class="mb-3"><asp:Label ID="lblSummary" runat="server" CssClass="fw-bold" /></div>
-<asp:GridView ID="gvDetails" runat="server" AutoGenerateColumns="true" CssClass="table table-bordered table-hover grid" GridLines="None" EmptyDataText="No matching records found." OnRowCommand="gvDetails_RowCommand" OnRowDataBound="gvDetails_RowDataBound">
+<asp:GridView ID="gvDetails" runat="server" AutoGenerateColumns="true" CssClass="table table-bordered table-hover grid" GridLines="None" EmptyDataText="No matching records found." OnRowCommand="gvDetails_RowCommand">
 </asp:GridView></div></div>
 </asp:Content>
