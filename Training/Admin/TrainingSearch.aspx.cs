@@ -22,12 +22,7 @@ namespace Training.Admin
                 BindPostingPlace();
                 ClearPostingDetailControls();
                 BindPostingPlaceRadio();
-                BindPostingDepartment();
-                BindAreaBoardZone();
-                BindCircle();
-                BindDivision();
-                BindSubdivision();
-                BindSection();
+                BindAllPostingDetails();
                 SetPostingDetailVisibility();
                 gridScrollTop.Visible = false;
                 lblResultCount.Text = "";
@@ -71,6 +66,16 @@ namespace Training.Admin
                 string value = Convert.ToString(row[field]);
                 if (!string.IsNullOrWhiteSpace(value)) listBox.Items.Add(new ListItem(value,value));
             }
+        }
+
+        private void BindAllPostingDetails()
+        {
+            BindList(lstPostingDepartment,DB().GetDataTable("SELECT DISTINCT DepartmentName FROM DepartmentMaster WHERE ISNULL(DepartmentName,'')<>'' ORDER BY DepartmentName"),"DepartmentName");
+            BindList(lstAreaBoardZone,DB().GetDataTable("SELECT DISTINCT ZoneName FROM ZoneMaster WHERE ISNULL(ZoneName,'')<>'' ORDER BY ZoneName"),"ZoneName");
+            BindList(lstCircle,DB().GetDataTable("SELECT DISTINCT CircleName FROM CircleMaster WHERE ISNULL(CircleName,'')<>'' ORDER BY CircleName"),"CircleName");
+            BindList(lstDivision,DB().GetDataTable("SELECT DISTINCT DivisionName FROM DivisionMaster WHERE ISNULL(DivisionName,'')<>'' ORDER BY DivisionName"),"DivisionName");
+            BindList(lstSubdivision,DB().GetDataTable("SELECT DISTINCT SubdivisionName FROM SubdivisionMaster WHERE ISNULL(SubdivisionName,'')<>'' ORDER BY SubdivisionName"),"SubdivisionName");
+            BindList(lstSection,DB().GetDataTable("SELECT DISTINCT SectionName FROM SectionMaster WHERE ISNULL(SectionName,'')<>'' ORDER BY SectionName"),"SectionName");
         }
 
         private void ClearPostingDetailControls()
@@ -316,7 +321,7 @@ namespace Training.Admin
         protected void btnReset_Click(object sender,EventArgs e)
         {
             txtEmpID.Text="";txtEmpName.Text="";txtMobile.Text="";txtEmail.Text="";
-            ClearPostingDetailControls();BindCompany();BindDesignation();BindPostingPlace();BindPostingPlaceRadio();SetPostingDetailVisibility();
+            ClearPostingDetailControls();BindCompany();BindDesignation();BindPostingPlace();BindPostingPlaceRadio();BindAllPostingDetails();SetPostingDetailVisibility();
             gvTraining.DataSource=null;gvTraining.DataBind();gridScrollTop.Visible=false;lblResultCount.Text="";
         }
 
