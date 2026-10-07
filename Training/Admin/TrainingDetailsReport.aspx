@@ -1,6 +1,8 @@
 <%@ Page Title="Training Report" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingDetailsReport.aspx.cs" Inherits="Training.Admin.TrainingDetailsReport" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <style>
 .report-wrap{padding:22px;background:#f5f7fb}.report-card{background:#fff;border-radius:14px;box-shadow:0 3px 14px rgba(15,23,42,.08);padding:22px;margin-bottom:20px}.report-title{font-size:25px;font-weight:700;color:#17365d;margin-bottom:18px}.filter-grid{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px}.field label{display:block;font-weight:600;color:#334155;margin-bottom:6px}.input{width:100%;padding:9px 11px;border:1px solid #cbd5e1;border-radius:7px;box-sizing:border-box}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btnx{border:0;border-radius:7px;padding:9px 16px;font-weight:600;cursor:pointer}.blue{background:#2563eb;color:#fff}.gray{background:#64748b;color:#fff}.green{background:#198754;color:#fff}.orange{background:#f59e0b;color:#fff}.purple{background:#7c3aed;color:#fff}.teal{background:#0f766e;color:#fff}.red{background:#dc2626;color:#fff}.grid-wrap{overflow:auto}.grid{width:100%;min-width:1050px;border-collapse:collapse}.grid th{background:#17365d;color:#fff;padding:10px;text-align:left;white-space:nowrap}.grid td{padding:9px;border:1px solid #e2e8f0;white-space:nowrap}.grid tr:nth-child(even){background:#f8fafc}.detail-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.training-info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.info{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px}.info b{display:block;color:#64748b;font-size:12px}.info span{font-weight:600;color:#1e293b}.report-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.session-action{min-width:85px}.message{font-weight:600;color:#475569;margin:10px 0}@media(max-width:1000px){.filter-grid{grid-template-columns:repeat(2,1fr)}.training-info{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.filter-grid,.training-info{grid-template-columns:1fr}.report-wrap{padding:10px}.report-card{padding:14px}}
 </style>
@@ -14,7 +16,7 @@
 <div class="field"><label>Training Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="input" /></div>
 <div class="field"><label>Training ID</label><asp:TextBox ID="txtTrainingID" runat="server" CssClass="input" /></div>
 <div class="field"><label>Batch</label><asp:TextBox ID="txtBatch" runat="server" CssClass="input" /></div>
-<div class="field"><label>From Date</label><asp:TextBox ID="txtDateFrom" runat="server" TextMode="Date" CssClass="input" /></div>
+<div class="field"><label>From Date</label><asp:TextBox ID="txtDateFrom" runat="server" CssClass="input datepicker" placeholder="dd-mm-yyyy" /></div>
 <div class="field"><label>To Date</label><asp:TextBox ID="txtDateTo" runat="server" TextMode="Date" CssClass="input" /></div>
 </div>
 <div class="actions">
