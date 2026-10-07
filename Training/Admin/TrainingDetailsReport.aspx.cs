@@ -1,1383 +1,239 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.IO;
 using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace Training.Admin
 {
-    public partial class TrainingDetailsReport : System.Web.UI.Page
+    public partial class TrainingDetailsReport : Page
     {
-        string constr =
-        ConfigurationManager
-        .ConnectionStrings["constr"]
-        .ConnectionString;
-
+        private readonly string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                //if (
-                //   Session["InternalRedirect_Admin"] == null)
-                //{
-                //    Response.Redirect(
-                //    "~/Default.aspx");
-                //}
-                BindType();
-                BindOrganizer();
-                BindLocation();
-                BindCompany();
-
-                BindDesignation();
-                LoadData();
+                BindStatus();
+                BindTrainingList();
             }
         }
 
-        private void BindDesignation()
+        private void BindStatus()
         {
-            using (SqlConnection con =
-            new SqlConnection(constr))
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT ISNULL(TrainingStatus,'') TrainingStatus FROM TrainingDetails WHERE ISNULL(TrainingStatus,'')<>'' ORDER BY TrainingStatus", con))
             {
-                SqlDataAdapter da =
-                new SqlDataAdapter(@"
-
-SELECT DISTINCT
-EmpDesignation
-
-FROM TrainingDesignation
-
-ORDER BY EmpDesignation
-
-", con);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-                chkDesignation.DataSource = dt;
-
-                chkDesignation.DataTextField =
-                "EmpDesignation";
-
-                chkDesignation.DataValueField =
-                "EmpDesignation";
-
-                chkDesignation.DataBind();
-                //lstDesignation.DataSource =
-                //dt;
-
-                //lstDesignation.DataTextField =
-                //"EmpDesignation";
-
-                //lstDesignation.DataValueField =
-                //"EmpDesignation";
-
-                //lstDesignation.DataBind();
-            }
-        }
-        private void BindType()
-        {
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                SqlDataAdapter da =
-                new SqlDataAdapter(@"
-
-                SELECT
-                TrainingTypeID,
-                TrainingType
-
-                FROM TrainingMaster
-                ORDER BY TrainingType",
-
-                con);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-                ddlType.DataSource = dt;
-
-                ddlType.DataTextField =
-                "TrainingType";
-
-                ddlType.DataValueField =
-                "TrainingTypeID";
-
-                ddlType.DataBind();
-
-                ddlType.Items.Insert(
-                0,
-                new ListItem(
-                "All",
-                ""));
+                con.Open();
+                ddlStatus.DataSource = cmd.ExecuteReader();
+                ddlStatus.DataTextField = "TrainingStatus";
+                ddlStatus.DataValueField = "TrainingStatus";
+                ddlStatus.DataBind();
+                ddlStatus.Items.Insert(0, new ListItem("All Status", ""));
             }
         }
 
-
-        protected void ddlType_SelectedIndexChanged(
-        object sender,
-        EventArgs e)
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
-            BindOrganizer();
-
-            ddlLocation.Items.Clear();
-
-            ddlLocation.Items.Insert(
-            0,
-            new ListItem(
-            "All",
-            ""));
-
-            LoadData();
+            pnlDetails.Visible = false;
+            pnlTrainingList.Visible = true;
+            BindTrainingList();
         }
 
-        private void BindCompany()
-        {
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                SqlDataAdapter da =
-                new SqlDataAdapter(@"
-
-SELECT DISTINCT
-EmpCompany
-
-FROM EmpBasicMaster
-
-WHERE
-ISNULL(EmpCompany,'')<>''
-
-ORDER BY EmpCompany
-
-", con);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-                chkCompany.DataSource = dt;
-
-                chkCompany.DataTextField =
-                "EmpCompany";
-
-                chkCompany.DataValueField =
-                "EmpCompany";
-
-                chkCompany.DataBind();
-            }
-        }
-        private void BindOrganizer()
-        {
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                string q = @"
-
-                SELECT
-                TrainingOrganizerID,
-                TrainingOrganizer
-
-                FROM
-                TrainingOrganizerMaster
-
-                WHERE 1=1";
-
-
-                SqlCommand cmd =
-                new SqlCommand(q, con);
-
-
-                if (ddlType.SelectedValue != "")
-                {
-                    q +=
-                    " and TrainingTypeID=@id";
-
-                    cmd.CommandText = q;
-
-                    cmd.Parameters
-                    .AddWithValue(
-                    "@id",
-                    ddlType.SelectedValue);
-                }
-
-
-                SqlDataAdapter da =
-                new SqlDataAdapter(cmd);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-                ddlOrganizer.DataSource =
-                dt;
-
-                ddlOrganizer.DataTextField =
-                "TrainingOrganizer";
-
-                ddlOrganizer.DataValueField =
-                "TrainingOrganizerID";
-
-                ddlOrganizer.DataBind();
-
-                ddlOrganizer.Items.Insert(
-                0,
-                new ListItem(
-                "All",
-                ""));
-            }
-        }
-
-
-        protected void ddlOrganizer_SelectedIndexChanged(
-        object sender,
-        EventArgs e)
-        {
-            BindLocation();
-
-            LoadData();
-        }
-
-
-        private void BindLocation()
-        {
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                string q = @"
-
-                SELECT
-
-                TrainingLocationID,
-                TrainingLocation
-
-                FROM
-                TrainingLocationMaster
-
-                WHERE 1=1";
-
-
-                SqlCommand cmd =
-                new SqlCommand(q, con);
-
-
-                if (ddlOrganizer.SelectedValue != "")
-                {
-                    q +=
-                    " and TrainingOrganizerID=@id";
-
-                    cmd.CommandText = q;
-
-                    cmd.Parameters
-                    .AddWithValue(
-                    "@id",
-                    ddlOrganizer.SelectedValue);
-                }
-
-
-                SqlDataAdapter da =
-                new SqlDataAdapter(cmd);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-                ddlLocation.DataSource =
-                dt;
-
-                ddlLocation.DataTextField =
-                "TrainingLocation";
-
-                ddlLocation.DataValueField =
-                "TrainingLocationID";
-
-                ddlLocation.DataBind();
-
-                ddlLocation.Items.Insert(
-                0,
-                new ListItem(
-                "All",
-                ""));
-            }
-        }
-
-
-
-        protected void btnSearch_Click(
-        object sender,
-        EventArgs e)
-        {
-            LoadData();
-        }
-
-
-        protected void btnReset_Click(
-        object sender,
-        EventArgs e)
+        protected void btnReset_Click(object sender, EventArgs e)
         {
             txtTrainingID.Text = "";
             txtBatch.Text = "";
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
-
-            ddlType.SelectedIndex = 0;
-
-            BindOrganizer();
-            BindLocation();
-            foreach (ListItem item
-in chkCompany.Items)
-            {
-                item.Selected = false;
-            }
-            //ddlCompany.SelectedIndex = 0;
-            //            foreach (ListItem item
-            //in lstDesignation.Items)
-            //            {
-            //                item.Selected = false;
-            //            }
-            foreach (ListItem item
-            in chkDesignation.Items)
-            {
-                item.Selected = false;
-            }
-            LoadData();
+            ddlStatus.SelectedIndex = 0;
+            pnlDetails.Visible = false;
+            pnlTrainingList.Visible = true;
+            BindTrainingList();
         }
 
-        private int GetTotalEmployeeCount()
+        private void BindTrainingList()
         {
-            StringBuilder q =
-            new StringBuilder();
-
-            q.Append(@"
-
-SELECT
-COUNT(TA.EmpID)
-
-FROM TrainingDetails TD
-
-INNER JOIN TrainingAssignment TA
-ON TD.TrainingID = TA.TrainingID
-
-WHERE 1=1
-
-");
-
-            SqlCommand cmd =
-            new SqlCommand();
-
-
-            if (txtTrainingID.Text != "")
-            {
-                q.Append(
-                " AND TD.TrainingID LIKE @id");
-
-                cmd.Parameters.AddWithValue(
-                "@id",
-                "%" +
-                txtTrainingID.Text +
-                "%");
-            }
-
-
-            if (txtBatch.Text != "")
-            {
-                q.Append(
-                " AND TD.Batch LIKE @batch");
-
-                cmd.Parameters.AddWithValue(
-                "@batch",
-                "%" +
-                txtBatch.Text +
-                "%");
-            }
-
-
-            if (txtDateFrom.Text.Trim() != "")
-            {
-                DateTime fromDate =
-                DateTime.ParseExact(
-                txtDateFrom.Text,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture);
-
-                q.Append(@"
-
-AND TRY_CONVERT(
-date,
-TD.DateFrom,
-105
-) >= @from");
-
-                cmd.Parameters.AddWithValue(
-                "@from",
-                fromDate);
-            }
-
-
-            if (txtDateTo.Text.Trim() != "")
-            {
-                DateTime toDate =
-                DateTime.ParseExact(
-                txtDateTo.Text,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture);
-
-                q.Append(@"
-
-AND TRY_CONVERT(
-date,
-TD.DateTo,
-105
-) <= @to");
-
-                cmd.Parameters.AddWithValue(
-                "@to",
-                toDate);
-            }
-
-
-            if (ddlType.SelectedValue != "")
-            {
-                q.Append(
-                " AND TD.TrainingType=@type");
-
-                cmd.Parameters.AddWithValue(
-                "@type",
-                ddlType.SelectedItem.Text);
-            }
-
-
-            if (ddlOrganizer.SelectedValue != "")
-            {
-                q.Append(
-                " AND TD.TrainingOrganizer=@org");
-
-                cmd.Parameters.AddWithValue(
-                "@org",
-                ddlOrganizer.SelectedItem.Text);
-            }
-
-
-            if (ddlLocation.SelectedValue != "")
-            {
-                q.Append(
-                " AND TD.TrainingLocation=@loc");
-
-                cmd.Parameters.AddWithValue(
-                "@loc",
-                ddlLocation.SelectedItem.Text);
-            }
-
-
-            bool hasCompany = false;
-
-            foreach (ListItem item
-            in chkCompany.Items)
-            {
-                if (item.Selected)
-                {
-                    hasCompany = true;
-                    break;
-                }
-            }
-
-            //            if (hasCompany)
-            //            {
-            //                StringBuilder comp =
-            //                new StringBuilder();
-
-            //                int i = 0;
-
-            //                foreach (ListItem item
-            //                in chkCompany.Items)
-            //                {
-            //                    if (item.Selected)
-            //                    {
-            //                        if (i > 0)
-            //                            comp.Append(",");
-
-            //                        comp.Append(
-            //                        "'" +
-            //                        item.Value.Replace("'", "''")
-            //                        + "'");
-
-            //                        i++;
-            //                    }
-            //                }
-
-            //                q.Append(@"
-
-            //AND EXISTS
-            //(
-            //    SELECT 1
-
-            //    FROM TrainingAssignment TA1
-
-            //    INNER JOIN EmpBasicMaster E1
-            //    ON E1.EmpID = TA1.EmpID
-
-            //    WHERE TA1.TrainingID = TD.TrainingID
-
-            //    AND E1.EmpCompany IN
-            //    (" + comp.ToString() + @")
-            //)
-
-            //");
-            //            }
-            if (hasCompany)
-            {
-                StringBuilder comp =
-                new StringBuilder();
-
-                int i = 0;
-
-                foreach (ListItem item in chkCompany.Items)
-                {
-                    if (item.Selected)
-                    {
-                        if (i > 0)
-                            comp.Append(",");
-
-                        comp.Append(
-                        "'" +
-                        item.Value.Replace("'", "''")
-                        + "'");
-
-                        i++;
-                    }
-                }
-
-                q.Append(@"
-
-AND EXISTS
-(
-    SELECT 1
-    FROM EmpBasicMaster E1
-
-    WHERE E1.EmpID = TA.EmpID
-
-    AND E1.EmpCompany IN
-    (" + comp.ToString() + @")
-)
-
-");
-            }
-            bool hasDesignation = false;
-
-            foreach (ListItem item
-            in chkDesignation.Items)
-            {
-                if (item.Selected)
-                {
-                    hasDesignation = true;
-                    break;
-                }
-            }
-
-
-            if (hasDesignation)
-            {
-                StringBuilder desig =
-                new StringBuilder();
-
-                int i = 0;
-
-                foreach (ListItem item
-                in chkDesignation.Items)
-                {
-                    if (item.Selected)
-                    {
-                        if (i > 0)
-                            desig.Append(",");
-
-                        desig.Append(
-                        "'" +
-                        item.Value.Replace("'", "''")
-                        + "'");
-
-                        i++;
-                    }
-                }
-
-                q.Append(@"
-
-AND EXISTS
-(
-    SELECT 1
-    FROM TrainingDesignation TDES
-
-    WHERE TDES.TrainingID =
-    TD.TrainingID
-
-    AND TDES.EmpDesignation IN
-    (" + desig.ToString() + @")
-)
-
-");
-            }
-
-
-            using (SqlConnection con =
-            new SqlConnection(constr))
+            StringBuilder q = new StringBuilder();
+            q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateFrom),105) DateFrom,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateTo),105) DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
+            SqlCommand cmd = new SqlCommand();
+            if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
+            if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
+            if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
+            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateFrom)>=TRY_CONVERT(date,@DateFrom,23)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
+            if (txtDateTo.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateTo)<=TRY_CONVERT(date,@DateTo,23)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
+            q.Append(" ORDER BY TRY_CONVERT(date,TD.DateFrom),TD.TrainingID");
+            cmd.CommandText = q.ToString();
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
             {
                 cmd.Connection = con;
-
-                cmd.CommandText =
-                q.ToString();
-
-                con.Open();
-
-                return Convert.ToInt32(
-                cmd.ExecuteScalar());
-            }
-        }
-
-        private void LoadData()
-        {
-            StringBuilder q =
-            new StringBuilder();
-
-
-            q.Append(@"
-
-            SELECT
-
-            TD.TrainingID,
-            TD.TrainingType,
-            TD.TrainingOrganizer,
-            TD.TrainingLocation,
-            TD.Batch,
-            TD.DateFrom,
-            TD.DateTo,
-
-           
-COUNT(TA.EmpID)
-AS TotalAssigned,
-
-(
-    SELECT COUNT(*)
-    FROM TrainingAssignment TA2
-    WHERE TA2.TrainingID = TD.TrainingID
-)
-AS TotalBatchStrength,
-
-SUM(
-CASE
-WHEN TA.TrainingAttended='Yes'
-THEN 1
-ELSE 0
-END
-)
-AS TotalAttended
-           
-
-            FROM TrainingDetails TD
-
-            LEFT JOIN TrainingAssignment TA
-            ON TD.TrainingID=TA.TrainingID
-
-            WHERE 1=1");
-
-
-            SqlCommand cmd =
-            new SqlCommand();
-
-
-            if (txtTrainingID.Text != "")
-            {
-                q.Append(
-                " and TD.TrainingID like @id");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@id",
-                "%" +
-                txtTrainingID.Text +
-                "%");
-            }
-
-
-            if (txtBatch.Text != "")
-            {
-                q.Append(
-                " and TD.Batch like @batch");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@batch",
-                "%" +
-                txtBatch.Text +
-                "%");
-            }
-
-
-            //if (txtDateFrom.Text != "")
-            //{
-            //    q.Append(
-            //    " and TD.DateFrom>=@from");
-
-            //    cmd.Parameters
-            //    .AddWithValue(
-            //    "@from",
-            //    txtDateFrom.Text);
-            //}
-
-
-            //if (txtDateTo.Text != "")
-            //{
-            //    q.Append(
-            //    " and TD.DateTo<=@to");
-
-            //    cmd.Parameters
-            //    .AddWithValue(
-            //    "@to",
-            //    txtDateTo.Text);
-            //}
-            if (txtDateFrom.Text.Trim() != "")
-            {
-                DateTime fromDate =
-                DateTime.ParseExact(
-                txtDateFrom.Text,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture);
-
-                q.Append(@"
-
-    and
-    TRY_CONVERT(
-    date,
-    TD.DateFrom,
-    105
-    )>=@from");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@from",
-                fromDate);
-            }
-
-
-
-            if (txtDateTo.Text.Trim() != "")
-            {
-                DateTime toDate =
-                DateTime.ParseExact(
-                txtDateTo.Text,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture);
-
-                q.Append(@"
-
-    and
-    TRY_CONVERT(
-    date,
-    TD.DateTo,
-    105
-    )<=@to");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@to",
-                toDate);
-            }
-
-            if (ddlType.SelectedValue != "")
-            {
-                q.Append(
-                " and TD.TrainingType=@type");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@type",
-                ddlType.SelectedItem.Text);
-            }
-
-
-            if (ddlOrganizer.SelectedValue != "")
-            {
-                q.Append(
-                " and TD.TrainingOrganizer=@org");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@org",
-                ddlOrganizer.SelectedItem.Text);
-            }
-
-
-            if (ddlLocation.SelectedValue != "")
-            {
-                q.Append(
-                " and TD.TrainingLocation=@loc");
-
-                cmd.Parameters
-                .AddWithValue(
-                "@loc",
-                ddlLocation.SelectedItem.Text);
-            }
-
-            bool hasCompany = false;
-
-            foreach (ListItem item
-            in chkCompany.Items)
-            {
-                if (item.Selected)
-                {
-                    hasCompany = true;
-                    break;
-                }
-            }
-            if (hasCompany)
-            {
-                StringBuilder comp =
-                new StringBuilder();
-
-                int i = 0;
-
-                foreach (ListItem item in chkCompany.Items)
-                {
-                    if (item.Selected)
-                    {
-                        if (i > 0)
-                            comp.Append(",");
-
-                        comp.Append(
-                        "'" +
-                        item.Value.Replace("'", "''")
-                        + "'");
-
-                        i++;
-                    }
-                }
-
-                q.Append(@"
-
-AND EXISTS
-(
-    SELECT 1
-    FROM EmpBasicMaster E1
-
-    WHERE E1.EmpID = TA.EmpID
-
-    AND E1.EmpCompany IN
-    (" + comp.ToString() + @")
-)
-
-");
-            }
-            //            if (hasCompany)
-            //            {
-            //                StringBuilder comp =
-            //                new StringBuilder();
-
-            //                int i = 0;
-
-            //                foreach (ListItem item
-            //                in chkCompany.Items)
-            //                {
-            //                    if (item.Selected)
-            //                    {
-            //                        if (i > 0)
-            //                            comp.Append(",");
-
-            //                        comp.Append(
-            //                        "'" +
-            //                        item.Value.Replace("'", "''")
-            //                        + "'");
-
-            //                        i++;
-            //                    }
-            //                }
-
-            //                q.Append(@"
-
-            //AND EXISTS
-            //(
-            //    SELECT 1
-
-            //    FROM TrainingAssignment TA1
-
-            //    INNER JOIN EmpBasicMaster E1
-            //    ON E1.EmpID = TA1.EmpID
-
-            //    WHERE TA1.TrainingID = TD.TrainingID
-
-            //    AND E1.EmpCompany IN
-            //    (" + comp.ToString() + @")
-            //)
-
-            //");
-            //            }
-
-            bool hasDesignation = false;
-
-            foreach (ListItem item in chkDesignation.Items)
-            {
-                if (item.Selected)
-                {
-                    hasDesignation = true;
-                    break;
-                }
-            }
-
-            if (hasDesignation)
-            {
-                StringBuilder desig =
-                new StringBuilder();
-
-                int i = 0;
-
-                foreach (ListItem item
-                in chkDesignation.Items)
-                {
-                    if (item.Selected)
-                    {
-                        if (i > 0)
-                            desig.Append(",");
-
-                        desig.Append(
-                        "'" +
-                        item.Value
-                        .Replace("'", "''")
-                        + "'");
-
-                        i++;
-                    }
-                }
-
-                q.Append(@"
-
-AND EXISTS
-(
-    SELECT 1
-    FROM TrainingDesignation TDES
-    WHERE TDES.TrainingID = TD.TrainingID
-    AND TDES.EmpDesignation IN
-    (" + desig.ToString() + @")
-)
-
-");
-            }
-
-            q.Append(@"
-
-            GROUP BY
-
-            TD.TrainingID,
-            TD.TrainingType,
-            TD.TrainingOrganizer,
-            TD.TrainingLocation,
-            TD.Batch,
-            TD.DateFrom,
-            TD.DateTo
-
-            ORDER BY TD.DateFrom DESC");
-
-
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                cmd.Connection = con;
-
-                cmd.CommandText =
-                q.ToString();
-
-                SqlDataAdapter da =
-                new SqlDataAdapter(cmd);
-
-                DataTable dt =
-                new DataTable();
-
                 da.Fill(dt);
-
-                gvTraining.DataSource = dt;
-                gvTraining.DataBind();
             }
-            lblTotalEmployee.Text =
-"Total Employees : " +
-GetTotalEmployeeCount().ToString();
+            gvTraining.DataSource = dt;
+            gvTraining.DataBind();
+            lblTrainingCount.Text = dt.Rows.Count + " training(s)";
         }
 
-
-
-        protected void gvTraining_RowCommand(
-        object sender,
-        GridViewCommandEventArgs e)
+        protected void gvTraining_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            string trainingID =
-            e.CommandArgument
-            .ToString();
-
-            string q = "";
-
-
-            //if (e.CommandName == "Assigned")
-            //{
-            //    q = @"
-
-            //    SELECT
-
-            //    T.EmpID,
-
-            //    ISNULL(E.EmpName,'Not Found')
-            //    AS EmpName,
-
-            //    ISNULL(E.EmpDesignation,'Not Found')
-            //    AS EmpDesignation,
-
-            //    ISNULL(E.EmpCompany,'Not Found')
-            //    AS EmpCompany,
-
-            //    ISNULL(E.EmpPostingPlace,'Not Found')
-            //    AS EmpPostingPlace,
-
-            //    ISNULL(
-            //    T.TrainingAttended,
-            //    'Pending')
-            //    AS TrainingStatus
-
-            //    FROM TrainingAssignment T
-
-            //    LEFT JOIN EmpBasicMaster E
-
-            //    ON E.EmpID=T.EmpID
-
-            //    WHERE
-            //    T.TrainingID=@id";
-            //}
-
-            if (e.CommandName == "TotalAssigned")
-            {
-                q = @"
-
-    SELECT
-
-    T.EmpID,
-
-    ISNULL(E.EmpName,'Not Found')
-    AS EmpName,
-
-    ISNULL(E.EmpDesignation,'Not Found')
-    AS EmpDesignation,
-
-    ISNULL(E.EmpCompany,'Not Found')
-    AS EmpCompany,
-
-    ISNULL(E.EmpPostingPlace,'Not Found')
-    AS EmpPostingPlace,
-
-    ISNULL(
-    T.TrainingAttended,
-    'Pending')
-    AS TrainingStatus
-
-    FROM TrainingAssignment T
-
-    LEFT JOIN EmpBasicMaster E
-    ON E.EmpID=T.EmpID
-
-    WHERE T.TrainingID=@id";
-            }
-
-            if (e.CommandName == "FilteredAssigned")
-            {
-                StringBuilder qBuilder =
-                new StringBuilder();
-
-                qBuilder.Append(@"
-
-    SELECT
-
-    T.EmpID,
-
-    ISNULL(E.EmpName,'Not Found')
-    AS EmpName,
-
-    ISNULL(E.EmpDesignation,'Not Found')
-    AS EmpDesignation,
-
-    ISNULL(E.EmpCompany,'Not Found')
-    AS EmpCompany,
-
-    ISNULL(E.EmpPostingPlace,'Not Found')
-    AS EmpPostingPlace,
-
-    ISNULL(
-    T.TrainingAttended,
-    'Pending')
-    AS TrainingStatus
-
-    FROM TrainingAssignment T
-
-    INNER JOIN EmpBasicMaster E
-    ON E.EmpID=T.EmpID
-
-    WHERE T.TrainingID=@id
-
-    ");
-
-                if (HasCompanyFilter())
-                {
-                    qBuilder.Append(@"
-
-AND E.EmpCompany IN
-(" + GetSelectedCompanies() + @")
-
-");
-                }
-
-                if (HasDesignationFilter())
-                {
-                    qBuilder.Append(@"
-
-AND E.EmpDesignation IN
-(" + GetSelectedDesignations() + @")
-
-");
-                }
-
-                q = qBuilder.ToString();
-            }
-            if (e.CommandName == "Attended")
-            {
-                q = @"
-
-                SELECT
-
-                T.EmpID,
-
-                ISNULL(E.EmpName,'Not Found')
-                AS EmpName,
-
-                ISNULL(E.EmpDesignation,'Not Found')
-                AS EmpDesignation,
-
-                ISNULL(E.EmpCompany,'Not Found')
-                AS EmpCompany,
-
-                ISNULL(E.EmpPostingPlace,'Not Found')
-                AS EmpPostingPlace,
-
-                T.TrainingAttended
-                AS TrainingStatus
-
-                FROM TrainingAssignment T
-
-                LEFT JOIN EmpBasicMaster E
-
-                ON E.EmpID=T.EmpID
-
-                WHERE
-                T.TrainingID=@id
-
-                AND
-                T.TrainingAttended='Yes'";
-            }
-
-
-            using (SqlConnection con =
-            new SqlConnection(constr))
-            {
-                SqlCommand cmd =
-                new SqlCommand(q, con);
-
-                cmd.Parameters
-                .AddWithValue(
-                "@id",
-                trainingID);
-
-                SqlDataAdapter da =
-                new SqlDataAdapter(cmd);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-                gvEmployeeDetails.DataSource = dt;
-                gvEmployeeDetails.DataBind();
-
-                Session["PopupData"] = dt;
-            }
-
-
-            ScriptManager
-            .RegisterStartupScript(
-            this,
-            GetType(),
-            "popup",
-
-            "var m=new bootstrap.Modal(document.getElementById('empModal'));m.show();",
-
-            true);
+            if (e.CommandName != "ViewTraining") return;
+            string trainingID = e.CommandArgument.ToString();
+            ViewState["TrainingID"] = trainingID;
+            LoadTrainingHeader(trainingID);
+            BindSessions(trainingID);
+            gvReport.DataSource = null;
+            gvReport.DataBind();
+            lblDetailMessage.Text = "";
+            pnlTrainingList.Visible = false;
+            pnlDetails.Visible = true;
         }
 
+        private void LoadTrainingHeader(string trainingID)
+        {
+            DataTable dt = GetTable("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,ISNULL(TD.NoOfDays,0) NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID", new SqlParameter("@TrainingID",trainingID));
+            if (dt.Rows.Count == 0) return;
+            DataRow r = dt.Rows[0];
+            lblDetailTrainingID.Text = r["TrainingID"].ToString();
+            lblCourse.Text = r["CourseName"].ToString();
+            lblBatch.Text = r["Batch"].ToString();
+            lblStatus.Text = r["TrainingStatus"].ToString();
+            lblType.Text = r["TrainingType"].ToString();
+            lblOrganizer.Text = r["TrainingOrganizer"].ToString();
+            lblLocation.Text = r["TrainingLocation"].ToString();
+            lblDuration.Text = r["NoOfDays"].ToString() + " Day(s)";
+        }
 
+        private void BindSessions(string trainingID)
+        {
+            string q = "SELECT SM.SessionID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmpName,'') ELSE ISNULL(TM.NameExternal,'') END TrainerName,SM.SessionStatus FROM SessionMaster SM LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN TrainerMaster TM ON SM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
+            gvSessions.DataSource = GetTable(q,new SqlParameter("@TrainingID",trainingID));
+            gvSessions.DataBind();
+        }
 
-        protected void btnExport_Click(
-        object sender,
-        EventArgs e)
+        protected void gvSessions_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (ViewState["TrainingID"] == null) return;
+            string sessionID = e.CommandArgument.ToString();
+            if (e.CommandName == "Attendance") ShowAttendance(sessionID);
+            else if (e.CommandName == "PreTest") ShowTest(sessionID,"PRE");
+            else if (e.CommandName == "PostTest") ShowTest(sessionID,"POST");
+        }
+
+        private void ShowAttendance(string sessionID)
+        {
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,ISNULL(SA.AttendanceStatus,'Pending') AttendanceStatus,ISNULL(SA.Remarks,'') Remarks,SA.CreatedBy AttendanceMarkedBy,SA.CreatedOn AttendanceMarkedOn FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID LEFT JOIN SessionAttendance SA ON SA.EmpID=TA.EmpID AND SA.TrainingID=TA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@SessionID",sessionID),new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Session Attendance: trainee-wise Present / Absent / Pending with attendance marked by.";
+        }
+
+        private void ShowTest(string sessionID,string testType)
+        {
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,TM.TestID,TM.TestTitle,TM.TestStatus,ISNULL(X.Attempted,0) Attempted,ISNULL(X.Submitted,0) Submitted,ISNULL(X.ResultStatus,'') ResultStatus,ISNULL(X.Percentage,0) Percentage FROM TestMaster TM LEFT JOIN (SELECT TA.TestID,TA.EmpID,MAX(CASE WHEN TA.Submitted=1 THEN 1 ELSE 0 END) Submitted,1 Attempted,ISNULL(MAX(TR.ResultStatus),'') ResultStatus,ISNULL(MAX(TR.Percentage),0) Percentage FROM TestAttempt TA LEFT JOIN TestResult TR ON TA.AttemptID=TR.AttemptID GROUP BY TA.TestID,TA.EmpID) X ON TM.TestID=X.TestID INNER JOIN EmpBasicMaster E ON X.EmpID=E.EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@SessionID",sessionID),new SqlParameter("@TestType",testType));
+            lblDetailMessage.Text = testType == "PRE" ? "Pre Test trainee-wise attempt, submission and result." : "Post Test trainee-wise attempt, submission and result.";
+        }
+
+        protected void btnTrainees_Click(object sender, EventArgs e)
+        {
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,E.MobileNo,E.EmailId,TA.AssignmentStatus,TA.AssignedBy,TA.AssignedOn FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Assigned trainee list.";
+        }
+
+        protected void btnTrainers_Click(object sender, EventArgs e)
+        {
+            string q = "SELECT TTM.TrainerID,TM.TrainerType,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmpName ELSE TM.NameExternal END TrainerName,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmpDesignation ELSE TM.DesignationExternal END Designation,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.MobileNo ELSE TM.MobileNo END MobileNo,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmailId ELSE TM.EmailID END EmailID FROM TrainingTrainerMapping TTM INNER JOIN TrainerMaster TM ON TTM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE TTM.TrainingID=@TrainingID ORDER BY TrainerName";
+            BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Assigned trainer list.";
+        }
+
+        protected void btnFeedback_Click(object sender, EventArgs e)
+        {
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,FR.Topic,FR.Report TopicFeedback,FTR.TrainingRelatedAspects,FTR.OrganizedBy,FTR.Remarks,FTR.Grading,FO.OverallResponse FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID LEFT JOIN FeedbackReport FR ON FR.EmpID=E.EmpID AND FR.TrainingID=TA.TrainingID LEFT JOIN FeedbackTrainingRelated FTR ON FTR.EmpID=E.EmpID AND FTR.TrainingID=TA.TrainingID LEFT JOIN FeedbackOverall FO ON FO.EmpID=E.EmpID AND FO.TrainingID=TA.TrainingID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Training feedback: topic, training-related and overall response.";
+        }
+
+        protected void btnCertificates_Click(object sender, EventArgs e)
+        {
+            string q = "SELECT TC.CertificateID,TC.CertificateNo,E.EmpID,E.EmpName,E.EmpDesignation,TC.GeneratedOn,TC.CertificateStatus,TC.PDFName,TC.DownloadCount,TC.LastDownloadedOn,TC.LastDownloadedBy FROM TrainingCertificate TC INNER JOIN EmpBasicMaster E ON TC.EmpID=E.EmpID WHERE TC.TrainingID=@TrainingID ORDER BY TC.GeneratedOn DESC";
+            BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Generated certificates for this training.";
+        }
+
+        protected void btnHostel_Click(object sender, EventArgs e)
+        {
+            gvReport.DataSource = null;
+            gvReport.DataBind();
+            lblDetailMessage.Text = "Hostel report button is reserved. No hostel allocation table is currently present in the TrainingV3 database schema, so no unverified hostel query has been added.";
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            pnlDetails.Visible = false;
+            pnlTrainingList.Visible = true;
+        }
+
+        private void BindReport(string query, params SqlParameter[] parameters)
+        {
+            DataTable dt = GetTable(query,parameters);
+            gvReport.DataSource = dt;
+            gvReport.DataBind();
+        }
+
+        private DataTable GetTable(string query, params SqlParameter[] parameters)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand(query,con))
+            {
+                if (parameters != null) cmd.Parameters.AddRange(parameters);
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd)) da.Fill(dt);
+            }
+            return dt;
+        }
+
+        protected void btnExport_Click(object sender, EventArgs e)
+        {
+            DataTable dt = GetTrainingList();
+            ExportExcel(dt,"TrainingReport.xls");
+        }
+
+        private DataTable GetTrainingList()
+        {
+            StringBuilder q = new StringBuilder();
+            q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TD.DateFrom,TD.DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
+            SqlCommand cmd = new SqlCommand();
+            if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
+            if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
+            if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
+            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateFrom)>=TRY_CONVERT(date,@DateFrom,23)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
+            if (txtDateTo.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateTo)<=TRY_CONVERT(date,@DateTo,23)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
+            q.Append(" ORDER BY TRY_CONVERT(date,TD.DateFrom),TD.TrainingID");
+            cmd.CommandText = q.ToString();
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd)) { cmd.Connection = con; DataTable dt = new DataTable(); da.Fill(dt); return dt; }
+        }
+
+        private void ExportExcel(DataTable dt,string fileName)
         {
             Response.Clear();
-
             Response.Buffer = true;
-
-            Response.AddHeader(
-            "content-disposition",
-            "attachment;filename=TrainingReport.xls");
-
-            Response.ContentType =
-            "application/ms-excel";
-
-            StringWriter sw =
-            new StringWriter();
-
-            HtmlTextWriter hw =
-            new HtmlTextWriter(sw);
-
-            gvTraining.RenderControl(hw);
-
-            Response.Write(sw.ToString());
-
+            Response.AddHeader("content-disposition","attachment;filename=" + fileName);
+            Response.Charset = "";
+            Response.ContentType = "application/vnd.ms-excel";
+            StringBuilder sb = new StringBuilder();
+            foreach (DataColumn c in dt.Columns) sb.Append(c.ColumnName + "\t");
+            sb.Append("\r\n");
+            foreach (DataRow r in dt.Rows) { foreach (DataColumn c in dt.Columns) sb.Append(r[c].ToString().Replace("\t"," ") + "\t"); sb.Append("\r\n"); }
+            Response.Write(sb.ToString());
             Response.End();
         }
 
-
-
-        protected void btnPopupExport_Click(
-        object sender,
-        EventArgs e)
-        {
-            DataTable dt =
-            Session["PopupData"]
-            as DataTable;
-
-            if (dt == null)
-                return;
-
-            gvEmployeeDetails.DataSource = dt;
-            gvEmployeeDetails.DataBind();
-
-            Response.Clear();
-
-            Response.Buffer = true;
-
-            Response.AddHeader(
-            "content-disposition",
-            "attachment;filename=EmployeeDetails.xls");
-
-            Response.ContentType =
-            "application/ms-excel";
-
-            StringWriter sw =
-            new StringWriter();
-
-            HtmlTextWriter hw =
-            new HtmlTextWriter(sw);
-
-            gvEmployeeDetails.RenderControl(hw);
-
-            //Response.Write(sw.ToString());
-
-            //Response.End();
-
-            Response.Write(sw.ToString());
-
-            Response.Flush();
-
-            Response.SuppressContent = true;
-
-            HttpContext.Current.ApplicationInstance.CompleteRequest();
-        }
-
-
-        public override void VerifyRenderingInServerForm(
-        Control control)
-        {
-
-        }
-        private bool HasCompanyFilter()
-        {
-            foreach (ListItem item
-            in chkCompany.Items)
-            {
-                if (item.Selected)
-                    return true;
-            }
-
-            return false;
-        }
-        private string GetSelectedCompanies()
-        {
-            StringBuilder sb =
-            new StringBuilder();
-
-            int i = 0;
-
-            foreach (ListItem item
-            in chkCompany.Items)
-            {
-                if (item.Selected)
-                {
-                    if (i > 0)
-                        sb.Append(",");
-
-                    sb.Append("'" +
-                    item.Value.Replace("'", "''")
-                    + "'");
-
-                    i++;
-                }
-            }
-
-            return sb.ToString();
-        }
-        private bool HasDesignationFilter()
-        {
-            foreach (ListItem item
-            in chkDesignation.Items)
-            {
-                if (item.Selected)
-                    return true;
-            }
-
-            return false;
-        }
-        private string GetSelectedDesignations()
-        {
-            StringBuilder sb =
-            new StringBuilder();
-
-            int i = 0;
-
-            foreach (ListItem item
-            in chkDesignation.Items)
-            {
-                if (item.Selected)
-                {
-                    if (i > 0)
-                        sb.Append(",");
-
-                    sb.Append("'" +
-                    item.Value.Replace("'", "''")
-                    + "'");
-
-                    i++;
-                }
-            }
-
-            return sb.ToString();
-        }
-
+        public override void VerifyRenderingInServerForm(Control control) { }
     }
 }
