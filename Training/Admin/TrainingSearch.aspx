@@ -1,46 +1,54 @@
-<%@ Page Title="Employee Training History" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingSearch.aspx.cs" Inherits="Training.Admin.TrainingSearch" %>
+<%@ Page Title="Employee Training History" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingSearch.aspx.cs" Inherits="Training.Admin.TrainingSearch" MaintainScrollPositionOnPostback="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
-.emp-report{padding:22px;background:#f5f7fb}.card{background:#fff;border-radius:14px;box-shadow:0 3px 14px rgba(15,23,42,.08);padding:22px;margin-bottom:20px}.title{font-size:25px;font-weight:700;color:#17365d;margin-bottom:18px}.filter-grid{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:15px}.field label{display:block;font-weight:600;color:#334155;margin-bottom:6px;font-size:14px}.textbox{width:100%;height:40px;padding:8px 11px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box}.multi{width:100%;min-height:40px}.select2-container{width:100%!important}.select2-container--default .select2-selection--multiple{min-height:40px!important;border:1px solid #cbd5e1!important;border-radius:6px!important;padding:2px 5px!important}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btnx{border:0;border-radius:7px;padding:9px 16px;font-weight:600}.blue{background:#2563eb;color:#fff}.gray{background:#64748b;color:#fff}.green{background:#198754;color:#fff}.table-wrap{overflow:auto}.grid{width:100%;min-width:1900px;border-collapse:collapse}.grid th{background:#17365d;color:#fff;padding:10px;white-space:nowrap;text-align:left}.grid td{padding:9px;border:1px solid #e2e8f0;white-space:nowrap}.grid tr:nth-child(even){background:#f8fafc}.count{font-weight:600;color:#475569;margin-bottom:10px}@media(max-width:1100px){.filter-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.filter-grid{grid-template-columns:1fr}.emp-report{padding:10px}.card{padding:14px}}
+*{box-sizing:border-box}html,body{width:100%;max-width:100%}body{overflow-x:hidden}
+.main-container{width:100%;max-width:100%;min-width:0;padding:20px;min-height:700px}.search-card,.grid-card{width:100%;max-width:100%;min-width:0;background:#fff;border-radius:12px;padding:25px;margin-bottom:25px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.page-title{font-size:28px;font-weight:600;margin-bottom:25px;color:#1e293b}.search-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:start}.form-group{min-width:0;width:100%;position:relative;display:flex;flex-direction:column}.form-group label{display:block;margin-bottom:7px;font-weight:600;color:#334155;font-size:14px}
+.textbox{display:block;width:100%;height:40px;padding:8px 11px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;color:#334155;font-size:14px;outline:none}.textbox:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.form-control{width:100%!important;min-height:40px!important;border:1px solid #cbd5e1!important;border-radius:6px!important;background:#fff!important;color:#334155!important;font-size:14px!important}
+.select2-container{width:100%!important}.select2-container--default .select2-selection--multiple{width:100%!important;min-height:40px!important;border:1px solid #cbd5e1!important;border-radius:6px!important;background:#fff!important;padding:2px 5px!important}.select2-container--default.select2-container--focus .select2-selection--multiple{border-color:#2563eb!important;box-shadow:0 0 0 3px rgba(37,99,235,.10)}.select2-container--default .select2-selection--multiple .select2-selection__rendered{display:flex;flex-wrap:wrap;align-items:center;padding:0!important;margin:0!important}.select2-container--default .select2-selection--multiple .select2-selection__choice{margin-top:4px!important;margin-right:5px!important;padding:2px 7px 2px 20px!important;border:1px solid #bfdbfe!important;border-radius:4px!important;background:#eff6ff!important;color:#1e40af!important;font-size:12px!important}.select2-container--default .select2-selection--multiple .select2-selection__choice__remove{border-right:1px solid #bfdbfe!important;color:#1e40af!important}.select2-container--default .select2-search--inline .select2-search__field{height:27px!important;margin-top:4px!important;font-size:13px!important;min-width:100px!important}.select2-dropdown{border:1px solid #cbd5e1!important;border-radius:6px!important;box-shadow:0 5px 15px rgba(0,0,0,.12);z-index:99999!important}.select2-search--dropdown{padding:8px!important}.select2-search--dropdown .select2-search__field{width:100%!important;height:36px!important;padding:6px 9px!important;border:1px solid #cbd5e1!important;border-radius:5px!important;outline:none}.select2-results__option{padding:7px 10px!important;font-size:13px!important}
+.posting-details-card{grid-column:1/-1;border:1px solid #e2e8f0;border-radius:10px;padding:20px;background:#f8fafc;margin-top:5px}.posting-details-title{font-size:17px;font-weight:700;color:#2563eb;margin-bottom:18px}.posting-details-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:start}.posting-radio-container{min-height:40px;display:flex;align-items:center}.posting-radio{margin-top:3px}.posting-radio td{padding-right:25px;white-space:nowrap}.posting-radio input[type=radio]{margin-right:6px}.posting-radio label{display:inline-block;margin-bottom:0;font-weight:500;color:#334155;cursor:pointer}
+.button-container{margin-top:25px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.custom-btn{min-width:110px;padding:9px 22px;border:0;border-radius:6px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}.btn-search{background:#2563eb}.btn-reset{background:#64748b}.btn-export{background:#198754}
+.grid-card{overflow:hidden}.grid-scroll-top{display:block!important;width:100%;height:22px;overflow-x:scroll;overflow-y:hidden;margin-bottom:8px}.grid-scroll-top-inner{display:block;height:14px;width:100%;min-width:100%}.grid-scroll{width:100%;overflow-x:auto;overflow-y:hidden}.gridview{width:max-content;min-width:100%;border-collapse:collapse;margin:0}.gridview th{padding:12px;background:#2563eb;color:#fff;text-align:left;font-size:13px;font-weight:600;white-space:nowrap}.gridview td{padding:11px 12px;border-bottom:1px solid #e2e8f0;color:#334155;font-size:13px;white-space:nowrap}.gridview tr:nth-child(even){background:#f8fafc}.gridview tr:hover{background:#eef4ff}.count{font-weight:600;color:#475569;margin-bottom:10px}
+@media(max-width:1200px){.search-grid{grid-template-columns:repeat(3,1fr)}.posting-details-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:991px){.main-container{padding:15px}.search-grid{grid-template-columns:repeat(2,1fr)}.posting-details-grid{grid-template-columns:repeat(2,1fr)}.search-card,.grid-card{padding:20px}}@media(max-width:576px){.main-container{padding:10px}.search-card,.grid-card{padding:15px;border-radius:8px}.page-title{font-size:21px;margin-bottom:18px}.search-grid,.posting-details-grid{grid-template-columns:1fr;gap:14px}.posting-details-card{padding:15px}.button-container{flex-direction:column;width:100%}.custom-btn{width:100%}.gridview{min-width:1900px}}
 </style>
 <script>
-$(function(){
-    $('.multi').select2({placeholder:'Select / search',allowClear:true,closeOnSelect:false});
-});
+function LoadSearchableDropdowns(){
+var ids=['lstCompany','lstDesignation','lstPostingPlace','lstPostingDepartment','lstAreaBoardZone','lstCircle','lstDivision','lstSubdivision','lstSection'];
+for(var i=0;i<ids.length;i++){var ddl=document.getElementById('<%= lstCompany.ClientID %>'.replace('lstCompany',ids[i]));if(ddl){var j=window.jQuery(ddl);if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:'Search / Select',closeOnSelect:false});}}
+}
+$(document).ready(function(){LoadSearchableDropdowns();});
 </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<div class="emp-report">
-<div class="card">
-<div class="title">Employee-wise Training Report</div>
-<div class="filter-grid">
-<div class="field"><label>Emp ID</label><asp:TextBox ID="txtEmpID" runat="server" CssClass="textbox" /></div>
-<div class="field"><label>Employee Name</label><asp:TextBox ID="txtEmpName" runat="server" CssClass="textbox" /></div>
-<div class="field"><label>Mobile No</label><asp:TextBox ID="txtMobile" runat="server" CssClass="textbox" /></div>
-<div class="field"><label>Email ID</label><asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" /></div>
-<div class="field"><label>Designation</label><asp:ListBox ID="lstDesignation" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Company</label><asp:ListBox ID="lstCompany" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Posting Place (HRMS)</label><asp:ListBox ID="lstPostingPlace" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Posting Details</label><asp:ListBox ID="lstPostingDetails" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Department / Office / Cell</label><asp:ListBox ID="lstDepartment" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Area Board / Zone</label><asp:ListBox ID="lstZone" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Circle</label><asp:ListBox ID="lstCircle" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Division</label><asp:ListBox ID="lstDivision" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Subdivision</label><asp:ListBox ID="lstSubdivision" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
-<div class="field"><label>Section</label><asp:ListBox ID="lstSection" runat="server" CssClass="multi" SelectionMode="Multiple" /></div>
+<div class="main-container">
+<div class="search-card">
+<div class="page-title"><i class="fa fa-search"></i> Employee-wise Training Report</div>
+<div class="search-grid">
+<div class="form-group"><label>Employee ID</label><asp:TextBox ID="txtEmpID" runat="server" CssClass="textbox" placeholder="Enter Employee ID" /></div>
+<div class="form-group"><label>Employee Name</label><asp:TextBox ID="txtEmpName" runat="server" CssClass="textbox" placeholder="Enter Employee Name" /></div>
+<div class="form-group"><label>Mobile No</label><asp:TextBox ID="txtMobile" runat="server" CssClass="textbox" MaxLength="10" placeholder="Enter Mobile No" /></div>
+<div class="form-group"><label>Email ID</label><asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder="Enter Email ID" /></div>
+<div class="form-group"><label>Company</label><asp:ListBox ID="lstCompany" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstCompany_SelectedIndexChanged" /></div>
+<div class="form-group"><label>Designation</label><asp:ListBox ID="lstDesignation" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
+<div class="form-group"><label>Posting Place (HRMS)</label><asp:ListBox ID="lstPostingPlace" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
+<div id="grpPostingDetails" runat="server" class="posting-details-card" visible="false">
+<div class="posting-details-title">Posting Details</div><div class="posting-details-grid">
+<div id="grpPostingPlace" runat="server" class="form-group" visible="false"><label>Posting Details - Place</label><div class="posting-radio-container"><asp:RadioButtonList ID="rblPostingPlace" runat="server" RepeatDirection="Horizontal" RepeatLayout="Table" AutoPostBack="true" CssClass="posting-radio" OnSelectedIndexChanged="rblPostingPlace_SelectedIndexChanged"><asp:ListItem Text="HQ" Value="HQ" /><asp:ListItem Text="Field Office" Value="Field" /></asp:RadioButtonList></div></div>
+<div id="grpPostingDepartment" runat="server" class="form-group" visible="false"><label>Department / Office / Cell</label><asp:ListBox ID="lstPostingDepartment" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
+<div id="grpAreaBoardZone" runat="server" class="form-group" visible="false"><label>Area Board / Zone</label><asp:ListBox ID="lstAreaBoardZone" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstAreaBoardZone_SelectedIndexChanged" /></div>
+<div id="grpCircle" runat="server" class="form-group" visible="false"><label>Circle</label><asp:ListBox ID="lstCircle" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstCircle_SelectedIndexChanged" /></div>
+<div id="grpDivision" runat="server" class="form-group" visible="false"><label>Division</label><asp:ListBox ID="lstDivision" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstDivision_SelectedIndexChanged" /></div>
+<div id="grpSubdivision" runat="server" class="form-group" visible="false"><label>Subdivision</label><asp:ListBox ID="lstSubdivision" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstSubdivision_SelectedIndexChanged" /></div>
+<div id="grpSection" runat="server" class="form-group" visible="false"><label>Section</label><asp:ListBox ID="lstSection" runat="server" SelectionMode="Multiple" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="lstSection_SelectedIndexChanged" /></div>
+</div></div>
 </div>
-<div class="actions">
-<asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btnx blue" OnClick="btnSearch_Click" />
-<asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btnx gray" OnClick="btnReset_Click" />
-<asp:Button ID="btnExport" runat="server" Text="Export Excel" CssClass="btnx green" OnClick="btnExport_Click" />
+<div class="button-container"><asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="custom-btn btn-search" OnClick="btnSearch_Click" /><asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="custom-btn btn-reset" OnClick="btnReset_Click" /><asp:Button ID="btnExport" runat="server" Text="Export Excel" CssClass="custom-btn btn-export" OnClick="btnExport_Click" /></div>
 </div>
-</div>
-<div class="card">
-<div class="count"><asp:Label ID="lblResultCount" runat="server" /></div>
-<div class="table-wrap"><asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="True" CssClass="grid"><EmptyDataTemplate>No trainee training record found.</EmptyDataTemplate></asp:GridView></div>
-</div>
+<div class="grid-card"><div class="count"><asp:Label ID="lblResultCount" runat="server" /></div><div class="grid-scroll-top" id="gridScrollTop" runat="server"><div class="grid-scroll-top-inner" id="gridScrollTopInner"></div></div><div class="grid-scroll" id="gridScroll" runat="server"><asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="True" CssClass="gridview"><EmptyDataTemplate>No trainee training record found.</EmptyDataTemplate></asp:GridView></div></div>
 </div>
 </asp:Content>
