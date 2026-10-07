@@ -57,6 +57,8 @@
 <div class="info"><b>Type</b><span><asp:Label ID="lblType" runat="server" /></span></div>
 <div class="info"><b>Organizer</b><span><asp:Label ID="lblOrganizer" runat="server" /></span></div>
 <div class="info"><b>Location</b><span><asp:Label ID="lblLocation" runat="server" /></span></div>
+<div class="info"><b>From Date</b><span><asp:Label ID="lblDateFrom" runat="server" /></span></div>
+<div class="info"><b>To Date</b><span><asp:Label ID="lblDateTo" runat="server" /></span></div>
 <div class="info"><b>Duration</b><span><asp:Label ID="lblDuration" runat="server" /></span></div>
 </div>
 
