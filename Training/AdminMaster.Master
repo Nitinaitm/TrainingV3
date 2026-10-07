@@ -1033,27 +1033,38 @@
                     class="submenu-container hide">
 
                     <a href="TrainingDetailsReport.aspx"
-                        class="submenu-item">Training Details Report
+                        class="submenu-item">Training Overview
                     </a>
 
-                    <a href="TrainingReports.aspx"
-                        class="submenu-item">Training Reports
+                    <a href="SessionAttendanceReport.aspx"
+                        class="submenu-item">Session & Attendance
                     </a>
 
                     <a href="TrainingCompletionSummaryReport.aspx"
-                        class="submenu-item">Training Completion Summary
+                        class="submenu-item">Training Completion
                     </a>
 
                     <a href="TrainingNotAttendedReport.aspx"
-                        class="submenu-item">Training Not Attended
+                        class="submenu-item">Pending & Not Attended
                     </a>
 
                     <a href="TrainingSearch.aspx"
-                        class="submenu-item">Employee Training Search
+                        class="submenu-item">Employee Training History
+                    </a>
+
+                    <a href="AssessmentReport.aspx"
+                        class="submenu-item">Assessment Report
+                    </a>
+
+                    <a href="FeedbackReportAdmin.aspx"
+                        class="submenu-item">Feedback Report
+                    </a>
+
+                    <a href="CertificateReport.aspx"
+                        class="submenu-item">Certificate Report
                     </a>
 
                 </div>
-
 
                 <!-- ================= LOGOUT ================= -->
 
