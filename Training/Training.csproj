@@ -2456,4 +2456,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Business\Audit\clsAuditLog.cs" />
+    <Content Include="Database\AuditLogging.sql" />
+  </ItemGroup>
 </Project>
