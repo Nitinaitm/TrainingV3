@@ -67,6 +67,7 @@ namespace Training.Trainer
             lblActiveSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date) AND DATEADD(MINUTE,DATEDIFF(MINUTE,CAST('00:00' AS time),TRY_CONVERT(time,SM.StartTime)),CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime))<=GETDATE() AND DATEADD(MINUTE,DATEDIFF(MINUTE,CAST('00:00' AS time),TRY_CONVERT(time,SM.EndTime)),CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime))>=GETDATE()");
             lblClosedSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionStatus,'') IN ('Closed','Completed')");
             lblFutureSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)>CAST(GETDATE() AS date)");
+            lblPendingSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)<CAST(GETDATE() AS date)");
         }
 
         private string GetCount(string query)
@@ -74,6 +75,44 @@ namespace Training.Trainer
             SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
             object count = obj.ExecuteScalar(query, param);
             return count == null || count == DBNull.Value ? "0" : count.ToString();
+        }
+
+        protected void DashboardCard_Click(object sender, EventArgs e)
+        {
+            LinkButton card = (LinkButton)sender;
+            BindDashboardGrid(card.CommandArgument);
+        }
+
+        private void BindDashboardGrid(string type)
+        {
+            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0";
+            if (type=="Today") query += " AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date)";
+            else if (type=="Active") query += " AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date) AND DATEADD(MINUTE,DATEDIFF(MINUTE,CAST('00:00' AS time),TRY_CONVERT(time,SM.StartTime)),CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime))<=GETDATE() AND DATEADD(MINUTE,DATEDIFF(MINUTE,CAST('00:00' AS time),TRY_CONVERT(time,SM.EndTime)),CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime))>=GETDATE()";
+            else if (type=="Closed") query += " AND ISNULL(SM.SessionStatus,'') IN ('Closed','Completed')";
+            else if (type=="Future") query += " AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)>CAST(GETDATE() AS date)";
+            else if (type=="PendingSession") query += " AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)<CAST(GETDATE() AS date)";
+            else if (type=="PendingAttendance") query += " AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND ISNULL(SM.AttendanceStatus,'Pending')<>'Completed'";
+            else if (type=="PendingPreTest") query += " AND EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='PRE' AND ISNULL(TM.TestStatus,'Pending')='Pending')";
+            else if (type=="PendingPostTest") query += " AND EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='POST' AND ISNULL(TM.TestStatus,'Pending')='Pending')";
+            query += " ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
+            SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
+            DataTable dt = obj.GetDataTable(query, param);
+            gvSession.DataSource = dt;
+            gvSession.DataBind();
+            lblGridTitle.Text = GetDashboardGridTitle(type);
+        }
+
+        private string GetDashboardGridTitle(string type)
+        {
+            if (type=="Today") return "Today's Sessions";
+            if (type=="Active") return "Active Sessions";
+            if (type=="Closed") return "Closed Sessions";
+            if (type=="Future") return "Future Sessions";
+            if (type=="PendingSession") return "Pending Sessions";
+            if (type=="PendingAttendance") return "Sessions with Pending Attendance";
+            if (type=="PendingPreTest") return "Sessions with Pending Pre Test";
+            if (type=="PendingPostTest") return "Sessions with Pending Post Test";
+            return "Assigned Sessions";
         }
 
         private void BindGrid()
