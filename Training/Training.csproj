@@ -429,8 +429,7 @@
     <Content Include="Admin\TrainingDetailsReport.aspx" />
     <Content Include="Admin\TrainingList.aspx" />
     <Content Include="Admin\TrainingNotAttendedReport.aspx" />
-    <Content Include="Admin\TrainingReports.aspx" />
-    <Content Include="Admin\TrainingRequirements.aspx" />
+<Content Include="Admin\TrainingRequirements.aspx" />
     <Content Include="Admin\TrainingSearch.aspx" />
     <Content Include="Admin\TrainingSummary.ascx" />
     <Content Include="Admin\TrainingTypeEntry.aspx" />
@@ -1430,11 +1429,7 @@
     <Compile Include="Admin\TrainingNotAttendedReport.aspx.designer.cs">
       <DependentUpon>TrainingNotAttendedReport.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\TrainingReports.aspx.cs">
-      <DependentUpon>TrainingReports.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TrainingReports.aspx.designer.cs">
+<Compile Include="Admin\TrainingReports.aspx.designer.cs">
       <DependentUpon>TrainingReports.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TrainingRequirements.aspx.cs">
