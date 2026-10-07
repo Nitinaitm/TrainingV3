@@ -661,6 +661,7 @@
     <Content Include="Trainee\css\StyleSheet3.css" />
     <Content Include="Trainee\DashboardDetails.aspx" />
     <Content Include="Trainee\Default.aspx" />
+    <Content Include="Trainee\DownloadCertificate.aspx" />
     <Content Include="Trainee\fonts\.DS_Store" />
     <Content Include="Trainee\images\.DS_Store" />
     <Content Include="Trainee\images\header.jpg" />
@@ -1917,6 +1918,13 @@
     </Compile>
     <Compile Include="Trainee\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\DownloadCertificate.aspx.cs">
+      <DependentUpon>DownloadCertificate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trainee\DownloadCertificate.aspx.designer.cs">
+      <DependentUpon>DownloadCertificate.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainee\Logout.aspx.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
