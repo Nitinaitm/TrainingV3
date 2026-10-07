@@ -457,6 +457,7 @@ WHERE TraineeID=@TraineeID";
 
                 if (dtLogin.Rows.Count == 0)
                 {
+                    clsAuditLog.LogLogin(userID, "", "Failed", "Invalid User ID");
                     lblMsg.Text =
                         "Invalid User ID.";
 
@@ -480,6 +481,7 @@ WHERE TraineeID=@TraineeID";
                     passwordInput
                 )
                 {
+                    clsAuditLog.LogLogin(userID, row["Role"].ToString(), "Failed", "Incorrect Password");
                     lblMsg.Text =
                         "Incorrect Password.";
 
@@ -493,6 +495,7 @@ WHERE TraineeID=@TraineeID";
                     "Y"
                 )
                 {
+                    clsAuditLog.LogLogin(userID, row["Role"].ToString(), "Failed", "User Inactive");
                     lblMsg.Text =
                         "User is Inactive.";
 
@@ -802,6 +805,10 @@ WHERE TraineeID=@TraineeID";
 
                 Session.Remove(
                     "otp");
+
+                int loginHistoryID = clsAuditLog.LogLogin(Session["UserID"] == null ? "" : Session["UserID"].ToString(), Session["Role"] == null ? "" : Session["Role"].ToString(), "Success", "");
+                Session["LoginHistoryID"] = loginHistoryID;
+                clsAuditLog.LogActivity(Session["UserID"] == null ? "" : Session["UserID"].ToString(), Session["Role"] == null ? "" : Session["Role"].ToString(), "LOGIN", "Authentication", "Default.aspx", "User", Session["UserID"] == null ? "" : Session["UserID"].ToString(), "Successful login");
 
                 if
                 (
