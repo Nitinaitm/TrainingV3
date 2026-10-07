@@ -14,6 +14,8 @@ namespace Training.SuperAdmin
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
             Response.Cache.SetNoStore();
+            clsAuditLog.LogLogout(Session["LoginHistoryID"]);
+            clsAuditLog.LogActivity(Session["EmpID"] == null ? "" : Session["EmpID"].ToString(), Session["Role"] == null ? "" : Session["Role"].ToString(), "LOGOUT", "Authentication", "Logout.aspx", "User", Session["EmpID"] == null ? "" : Session["EmpID"].ToString(), "User logout");
             Session.Clear();
             Session.RemoveAll();
             Session.Abandon();
