@@ -167,9 +167,9 @@ namespace Training.Admin
 
         protected void btnHostel_Click(object sender, EventArgs e)
         {
-            gvReport.DataSource = null;
-            gvReport.DataBind();
-            lblDetailMessage.Text = "Hostel report button is reserved. No hostel allocation table is currently present in the TrainingV3 database schema, so no unverified hostel query has been added.";
+            string q = "SELECT HA.AllotmentID,E.EmpID,E.EmpName,HM.HostelName,HBM.BedNo,HRM.RoomNo,HBl.BlockName,HA.AllotmentDate,HA.VacateDate,HA.Status FROM HostelAllotment HA INNER JOIN EmpBasicMaster E ON HA.EmpID=E.EmpID INNER JOIN HostelBedMaster HBM ON HA.BedID=HBM.ID INNER JOIN HostelRoomMaster HRM ON HBM.RoomID=HRM.ID INNER JOIN HostelBlockMaster HBl ON HRM.BlockID=HBl.ID INNER JOIN HostelMaster HM ON HBl.HostelID=HM.ID WHERE HA.TrainingID=@TrainingID ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
+            lblDetailMessage.Text = "Trainee-wise hostel allotment details.";
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
