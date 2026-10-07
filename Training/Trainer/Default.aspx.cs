@@ -64,6 +64,9 @@ namespace Training.Trainer
             lblPendingAttendance.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND TD.TrainingStatus='InProgress' AND ISNULL(SM.AttendanceStatus,'Pending')<>'Completed'");
             lblPendingPreTest.Text = GetCount("SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainerID=@TrainerID AND TM.TestType='PRE' AND ISNULL(TM.TestStatus,'Pending')='Pending'");
             lblPendingPostTest.Text = GetCount("SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainerID=@TrainerID AND TM.TestType='POST' AND ISNULL(TM.TestStatus,'Pending')='Pending'");
+            lblActiveSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date) AND CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime)+CAST(TRY_CONVERT(time,SM.StartTime) AS datetime)<=GETDATE() AND CAST(TRY_CONVERT(date,SM.SessionDate,105) AS datetime)+CAST(TRY_CONVERT(time,SM.EndTime) AS datetime)>=GETDATE()");
+            lblClosedSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionStatus,'') IN ('Closed','Completed')");
+            lblFutureSession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.SessionStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,SM.SessionDate,105)>CAST(GETDATE() AS date)");
         }
 
         private string GetCount(string query)
