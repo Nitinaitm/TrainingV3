@@ -177,22 +177,22 @@ namespace Training.Admin
             if(!IsHqOnlySelection()) rblPostingPlace.Items.Add(new ListItem("Field Office","Field"));
             if(!string.IsNullOrWhiteSpace(old) && rblPostingPlace.Items.FindByValue(old)!=null) rblPostingPlace.SelectedValue=old;
             if(IsHqOnlySelection()) rblPostingPlace.SelectedValue="HQ";
-            if(!string.IsNullOrWhiteSpace(SelectedValues(lstCompany).Count.ToString()) && SelectedValues(lstCompany).Count>0 && string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue)) rblPostingPlace.SelectedValue="HQ";
+            if(HasCompanySelection() && string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue)) rblPostingPlace.SelectedValue="HQ";
         }
 
         private void SetPostingDetailVisibility()
         {
             grpPostingDetails.Visible=true;
-            grpPostingPlace.Visible=true;
+            bool hasCompany=HasCompanySelection();
+            grpPostingPlace.Visible=hasCompany;
             bool hq=rblPostingPlace.SelectedValue=="HQ";
             bool field=rblPostingPlace.SelectedValue=="Field";
-            bool none=string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue);
-            grpPostingDepartment.Visible=hq || none;
-            grpAreaBoardZone.Visible=field || none;
-            grpCircle.Visible=field || none;
-            grpDivision.Visible=field || none;
-            grpSubdivision.Visible=field || none;
-            grpSection.Visible=field || none;
+            grpPostingDepartment.Visible=hasCompany && hq;
+            grpAreaBoardZone.Visible=hasCompany && field;
+            grpCircle.Visible=hasCompany && field;
+            grpDivision.Visible=hasCompany && field;
+            grpSubdivision.Visible=hasCompany && field;
+            grpSection.Visible=hasCompany && field;
         }
 
         private void BindPostingDepartment()
