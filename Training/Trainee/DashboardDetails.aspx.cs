@@ -168,13 +168,21 @@ namespace Training.Trainee
         }
     public class CertificateDownloadTemplate : ITemplate
     {
+        private void CertificateDownloadButton_DataBinding(object sender, EventArgs e)
+        {
+            LinkButton btn=(LinkButton)sender;
+            GridViewRow row=(GridViewRow)btn.NamingContainer;
+            object value=DataBinder.Eval(row.DataItem,"CertificateID");
+            btn.CommandArgument=value == null ? "" : value.ToString();
+        }
+
         public void InstantiateIn(Control container)
         {
             LinkButton btn=new LinkButton();
             btn.ID="btnDownloadCertificate";
             btn.CommandName="DownloadCertificate";
-            btn.CommandArgument='<%# Eval("CertificateID") %>';
             btn.CssClass="btn btn-sm btn-success";
+            btn.DataBinding += CertificateDownloadButton_DataBinding;
             btn.CausesValidation=false;
             btn.Text="Download PDF";
             container.Controls.Add(btn);
