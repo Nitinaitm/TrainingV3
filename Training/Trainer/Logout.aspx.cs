@@ -14,8 +14,10 @@ namespace Training.Trainer
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
             Response.Cache.SetNoStore();
+            string auditUserID = Session["UserID"] == null ? "" : Session["UserID"].ToString();
+            string auditRole = Session["Role"] == null ? "" : Session["Role"].ToString();
             clsAuditLog.LogLogout(Session["LoginHistoryID"]);
-            clsAuditLog.LogActivity(Session["EmpID"] == null ? "" : Session["EmpID"].ToString(), Session["Role"] == null ? "" : Session["Role"].ToString(), "LOGOUT", "Authentication", "Logout.aspx", "User", Session["EmpID"] == null ? "" : Session["EmpID"].ToString(), "User logout");
+            clsAuditLog.LogActivity(auditUserID, auditRole, "LOGOUT", "Authentication", "Logout.aspx", "User", auditUserID, "User logout");
             Session.Clear();
             Session.RemoveAll();
             Session.Abandon();
