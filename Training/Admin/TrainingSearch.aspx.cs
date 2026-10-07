@@ -300,7 +300,7 @@ namespace Training.Admin
             lstSection.Items.Clear();BindSection();SetPostingDetailVisibility();
         }
 
-        protected void btnSearch_Click(object sender,EventArgs e){BindGrid();}
+        protected void lstSection_SelectedIndexChanged(object sender,EventArgs e)\n        {\n            SetPostingDetailVisibility();\n        }\n\n        protected void btnSearch_Click(object sender,EventArgs e){BindGrid();}
 
         protected void btnReset_Click(object sender,EventArgs e)
         {
