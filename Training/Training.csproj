@@ -659,6 +659,7 @@
     <Content Include="Trainee\css\bootstrap\_media.css" />
     <Content Include="Trainee\css\style.css" />
     <Content Include="Trainee\css\StyleSheet3.css" />
+    <Content Include="Trainee\DashboardDetails.aspx" />
     <Content Include="Trainee\Default.aspx" />
     <Content Include="Trainee\fonts\.DS_Store" />
     <Content Include="Trainee\images\.DS_Store" />
@@ -1902,6 +1903,12 @@
     </Compile>
     <Compile Include="Trainee\Attendance.aspx.designer.cs">
       <DependentUpon>Attendance.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\DashboardDetails.aspx.cs">
+      <DependentUpon>DashboardDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Trainee\DashboardDetails.aspx.designer.cs">
+      <DependentUpon>DashboardDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Trainee\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
