@@ -146,16 +146,16 @@ namespace Training.Admin
 
         protected void btnTrainers_Click(object sender, EventArgs e)
         {
-            string q = "SELECT TTM.TrainerID,TM.TrainerType,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmpName ELSE TM.NameExternal END TrainerName,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmpDesignation ELSE TM.DesignationExternal END Designation,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.MobileNo ELSE TM.MobileNo END MobileNo,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN E.EmailId ELSE TM.EmailID END EmailID FROM TrainingTrainerMapping TTM INNER JOIN TrainerMaster TM ON TTM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE TTM.TrainingID=@TrainingID ORDER BY TrainerName";
+            string q = "WITH AssignedTrainers AS (SELECT TrainerID FROM TrainingTrainerMapping WHERE TrainingID=@TrainingID UNION SELECT TrainerID FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(TrainerID,'')<>'' ) SELECT AT.TrainerID,ISNULL(TM.TrainerType,'') TrainerType,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmpName,'') ELSE ISNULL(TM.NameExternal,'') END TrainerName,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmpDesignation,'') ELSE ISNULL(TM.DesignationExternal,'') END Designation,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.MobileNo,'') ELSE ISNULL(TM.MobileNo,'') END MobileNo,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmailId,'') ELSE ISNULL(TM.EmailID,'') END EmailID FROM AssignedTrainers AT INNER JOIN TrainerMaster TM ON AT.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID ORDER BY TrainerName";
             BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
             lblDetailMessage.Text = "Assigned trainer list.";
         }
 
         protected void btnFeedback_Click(object sender, EventArgs e)
         {
-            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,FR.Topic,FR.Report TopicFeedback,FTR.TrainingRelatedAspects,FTR.OrganizedBy,FTR.Remarks,FTR.Grading,FO.OverallResponse FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID LEFT JOIN FeedbackReport FR ON FR.EmpID=E.EmpID AND FR.TrainingID=TA.TrainingID LEFT JOIN FeedbackTrainingRelated FTR ON FTR.EmpID=E.EmpID AND FTR.TrainingID=TA.TrainingID LEFT JOIN FeedbackOverall FO ON FO.EmpID=E.EmpID AND FO.TrainingID=TA.TrainingID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,ISNULL(F.Submitted,0) FeedbackSubmitted,F.SubmittedOn,ISNULL(FD.DetailCount,0) FeedbackDetailCount,ISNULL(FD.AverageRating,0) AverageRating,ISNULL(BF.Submitted,0) BatchFeedbackSubmitted,BF.SubmittedOn BatchFeedbackSubmittedOn FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID LEFT JOIN Feedback F ON F.TrainingID=TA.TrainingID AND F.EmpID=TA.EmpID LEFT JOIN (SELECT TrainingID,EmpID,COUNT(*) DetailCount,AVG(CAST(Rating AS decimal(10,2))) AverageRating FROM FeedbackDetail GROUP BY TrainingID,EmpID) FD ON FD.TrainingID=TA.TrainingID AND FD.EmpID=TA.EmpID LEFT JOIN BatchFeedback BF ON BF.TrainingID=TA.TrainingID AND BF.EmpID=TA.EmpID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
             BindReport(q,new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
-            lblDetailMessage.Text = "Training feedback: topic, training-related and overall response.";
+            lblDetailMessage.Text = "Trainee-wise session/topic feedback and batch feedback status.";
         }
 
         protected void btnCertificates_Click(object sender, EventArgs e)
@@ -180,6 +180,19 @@ namespace Training.Admin
 
         private void BindReport(string query, params SqlParameter[] parameters)
         {
+            ViewState["ReportQuery"] = query;
+            ViewState["ReportTrainingID"] = null;
+            ViewState["ReportSessionID"] = null;
+            ViewState["ReportTestType"] = null;
+            if (parameters != null)
+            {
+                foreach (SqlParameter p in parameters)
+                {
+                    if (p.ParameterName == "@TrainingID") ViewState["ReportTrainingID"] = p.Value.ToString();
+                    if (p.ParameterName == "@SessionID") ViewState["ReportSessionID"] = p.Value.ToString();
+                    if (p.ParameterName == "@TestType") ViewState["ReportTestType"] = p.Value.ToString();
+                }
+            }
             DataTable dt = GetTable(query,parameters);
             gvReport.DataSource = dt;
             gvReport.DataBind();
@@ -195,6 +208,23 @@ namespace Training.Admin
                 using (SqlDataAdapter da = new SqlDataAdapter(cmd)) da.Fill(dt);
             }
             return dt;
+        }
+
+        protected void btnExportReport_Click(object sender, EventArgs e)
+        {
+            string query = ViewState["ReportQuery"] == null ? "" : ViewState["ReportQuery"].ToString();
+            if (query == "") return;
+            DataTable dt = GetTable(query,GetReportParameters());
+            ExportExcel(dt,"TrainingDetailReport.xls");
+        }
+
+        private SqlParameter[] GetReportParameters()
+        {
+            System.Collections.Generic.List<SqlParameter> list = new System.Collections.Generic.List<SqlParameter>();
+            if (ViewState["ReportTrainingID"] != null) list.Add(new SqlParameter("@TrainingID",ViewState["ReportTrainingID"].ToString()));
+            if (ViewState["ReportSessionID"] != null) list.Add(new SqlParameter("@SessionID",ViewState["ReportSessionID"].ToString()));
+            if (ViewState["ReportTestType"] != null) list.Add(new SqlParameter("@TestType",ViewState["ReportTestType"].ToString()));
+            return list.ToArray();
         }
 
         protected void btnExport_Click(object sender, EventArgs e)
