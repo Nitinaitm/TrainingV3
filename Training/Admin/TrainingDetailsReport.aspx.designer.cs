@@ -30,6 +30,7 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.Button btnCertificates;
         protected global::System.Web.UI.WebControls.Button btnHostel;
         protected global::System.Web.UI.WebControls.Label lblDetailMessage;
+        protected global::System.Web.UI.WebControls.Button btnExportReport;
         protected global::System.Web.UI.WebControls.GridView gvReport;
     }
 }
