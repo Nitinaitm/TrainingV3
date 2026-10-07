@@ -22,7 +22,6 @@ namespace Training.Admin
                 BindPostingPlace();
                 ClearPostingDetailControls();
                 BindPostingPlaceRadio();
-                BindAllPostingDetails();
                 SetPostingDetailVisibility();
                 gridScrollTop.Visible = false;
                 lblResultCount.Text = "";
@@ -173,10 +172,12 @@ namespace Training.Admin
         {
             string old=rblPostingPlace.SelectedValue;
             rblPostingPlace.Items.Clear();
+            if(!HasCompanySelection()) return;
             rblPostingPlace.Items.Add(new ListItem("HQ","HQ"));
             if(!IsHqOnlySelection()) rblPostingPlace.Items.Add(new ListItem("Field Office","Field"));
             if(!string.IsNullOrWhiteSpace(old) && rblPostingPlace.Items.FindByValue(old)!=null) rblPostingPlace.SelectedValue=old;
             if(IsHqOnlySelection()) rblPostingPlace.SelectedValue="HQ";
+            if(!string.IsNullOrWhiteSpace(SelectedValues(lstCompany).Count.ToString()) && SelectedValues(lstCompany).Count>0 && string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue)) rblPostingPlace.SelectedValue="HQ";
         }
 
         private void SetPostingDetailVisibility()
@@ -275,6 +276,42 @@ namespace Training.Admin
             BindList(lstSection,DB().GetDataTable(sql,parameters.ToArray()),"SectionName");
         }
 
+        protected void btnDependency_Click(object sender,EventArgs e)
+        {
+            string dependency=hfDependency.Value;
+            if(dependency=="Company")
+            {
+                BindDesignation();
+                BindPostingPlace();
+                ClearPostingDetailControls();
+                BindPostingPlaceRadio();
+                if(rblPostingPlace.SelectedValue=="HQ") BindPostingDepartment();
+                SetPostingDetailVisibility();
+            }
+            else if(dependency=="AreaBoard")
+            {
+                lstCircle.Items.Clear();lstDivision.Items.Clear();lstSubdivision.Items.Clear();lstSection.Items.Clear();
+                BindCircle();
+            }
+            else if(dependency=="Circle")
+            {
+                lstDivision.Items.Clear();lstSubdivision.Items.Clear();lstSection.Items.Clear();
+                BindDivision();
+            }
+            else if(dependency=="Division")
+            {
+                lstSubdivision.Items.Clear();lstSection.Items.Clear();
+                BindSubdivision();
+            }
+            else if(dependency=="Subdivision")
+            {
+                lstSection.Items.Clear();
+                BindSection();
+            }
+            hfDependency.Value="";
+            SetPostingDetailVisibility();
+        }
+
         protected void lstCompany_SelectedIndexChanged(object sender,EventArgs e)
         {
             BindDesignation();BindPostingPlace();ClearPostingDetailControls();BindPostingPlaceRadio();
@@ -321,7 +358,7 @@ namespace Training.Admin
         protected void btnReset_Click(object sender,EventArgs e)
         {
             txtEmpID.Text="";txtEmpName.Text="";txtMobile.Text="";txtEmail.Text="";
-            ClearPostingDetailControls();BindCompany();BindDesignation();BindPostingPlace();BindPostingPlaceRadio();BindAllPostingDetails();SetPostingDetailVisibility();
+            ClearPostingDetailControls();BindCompany();BindDesignation();BindPostingPlace();BindPostingPlaceRadio();SetPostingDetailVisibility();
             gvTraining.DataSource=null;gvTraining.DataBind();gridScrollTop.Visible=false;lblResultCount.Text="";
         }
 
