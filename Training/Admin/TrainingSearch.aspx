@@ -206,7 +206,7 @@
         <div class="search-card">
 
             <div class="page-title">
-                Training Search Report
+                Employee Training History
             </div>
 
             <div class="search-grid">
