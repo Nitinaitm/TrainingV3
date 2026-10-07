@@ -353,17 +353,17 @@ namespace Training.Admin
             SetPostingDetailVisibility();
         }
 
-        protected void btnAttended_Click(object sender,EventArgs e){BindGrid("Attended");}
+        protected void btnAttended_Click(object sender,EventArgs e){ViewState["ReportType"]="Attended";BindGrid("Attended");}
 
-        protected void btnNotAttended_Click(object sender,EventArgs e){BindGrid("NotAttended");}
+        protected void btnNotAttended_Click(object sender,EventArgs e){ViewState["ReportType"]="NotAttended";BindGrid("NotAttended");}
 
-        protected void btnAllEmployees_Click(object sender,EventArgs e){BindGrid("All");}
+        protected void btnAllEmployees_Click(object sender,EventArgs e){ViewState["ReportType"]="All";BindGrid("All");}
 
         protected void btnReset_Click(object sender,EventArgs e)
         {
             txtEmpID.Text="";txtEmpName.Text="";txtMobile.Text="";txtEmail.Text="";
             ClearPostingDetailControls();BindCompany();BindDesignation();BindPostingPlace();BindPostingPlaceRadio();SetPostingDetailVisibility();
-            gvTraining.DataSource=null;gvTraining.DataBind();gridScrollTop.Visible=false;lblResultCount.Text="";
+            gvTraining.DataSource=null;gvTraining.DataBind();gridScrollTop.Visible=false;lblResultCount.Text="";ViewState["ReportType"]="";
         }
 
         private void BindGrid(string reportType)
@@ -421,7 +421,7 @@ namespace Training.Admin
             return dt;
         }
 
-        protected void btnExport_Click(object sender,EventArgs e){ExportExcel(GetData("All"),"EmployeeTrainingReport.xls");}
+        protected void btnExport_Click(object sender,EventArgs e){string reportType=Convert.ToString(ViewState["ReportType"]);if(string.IsNullOrWhiteSpace(reportType))reportType="All";ExportExcel(GetData(reportType),"EmployeeTrainingReport.xls");}
 
         private void ExportExcel(DataTable dt,string fileName)
         {
