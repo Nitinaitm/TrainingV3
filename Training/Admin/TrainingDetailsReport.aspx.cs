@@ -57,14 +57,14 @@ namespace Training.Admin
         private void BindTrainingList()
         {
             StringBuilder q = new StringBuilder();
-            q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateFrom),105) DateFrom,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateTo),105) DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
+            q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
             SqlCommand cmd = new SqlCommand();
             if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
             if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
             if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
-            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateFrom)>=TRY_CONVERT(date,@DateFrom,23)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
-            if (txtDateTo.Text.Trim() != "") { q.Append(" AND TRY_CONVERT(date,TD.DateTo)<=TRY_CONVERT(date,@DateTo,23)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
-            q.Append(" ORDER BY TRY_CONVERT(date,TD.DateFrom),TD.TrainingID");
+            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom))>=TRY_CONVERT(date,@DateFrom,23)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
+            if (txtDateTo.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo))<=TRY_CONVERT(date,@DateTo,23)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
+            q.Append(" ORDER BY COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),TD.TrainingID");
             cmd.CommandText = q.ToString();
             DataTable dt = new DataTable();
             using (SqlConnection con = new SqlConnection(constr))
@@ -94,7 +94,7 @@ namespace Training.Admin
 
         private void LoadTrainingHeader(string trainingID)
         {
-            DataTable dt = GetTable("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,ISNULL(TD.NoOfDays,0) NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID", new SqlParameter("@TrainingID",trainingID));
+            DataTable dt = GetTable("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,ISNULL(TD.NoOfDays,0) NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID", new SqlParameter("@TrainingID",trainingID));
             if (dt.Rows.Count == 0) return;
             DataRow r = dt.Rows[0];
             lblDetailTrainingID.Text = r["TrainingID"].ToString();
@@ -104,12 +104,14 @@ namespace Training.Admin
             lblType.Text = r["TrainingType"].ToString();
             lblOrganizer.Text = r["TrainingOrganizer"].ToString();
             lblLocation.Text = r["TrainingLocation"].ToString();
+            lblDateFrom.Text = r["DateFrom"].ToString();
+            lblDateTo.Text = r["DateTo"].ToString();
             lblDuration.Text = r["NoOfDays"].ToString() + " Day(s)";
         }
 
         private void BindSessions(string trainingID)
         {
-            string q = "SELECT SM.SessionID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmpName,'') ELSE ISNULL(TM.NameExternal,'') END TrainerName,SM.SessionStatus FROM SessionMaster SM LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN TrainerMaster TM ON SM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
+            string q = "SELECT SM.SessionID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(date,SM.SessionDate,23),TRY_CONVERT(date,SM.SessionDate)),105) SessionDate,SM.StartTime,SM.EndTime,CASE WHEN ISNULL(TM.TrainerType,'')='Internal' THEN ISNULL(E.EmpName,'') ELSE ISNULL(TM.NameExternal,'') END TrainerName,SM.SessionStatus FROM SessionMaster SM LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN TrainerMaster TM ON SM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
             gvSessions.DataSource = GetTable(q,new SqlParameter("@TrainingID",trainingID));
             gvSessions.DataBind();
         }
