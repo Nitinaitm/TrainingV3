@@ -62,8 +62,8 @@ namespace Training.Admin
             if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
             if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
             if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
-            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom))>=TRY_CONVERT(date,@DateFrom,23)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
-            if (txtDateTo.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo))<=TRY_CONVERT(date,@DateTo,23)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
+            if (txtDateFrom.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom))>=TRY_CONVERT(date,@DateFrom,105)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
+            if (txtDateTo.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo))<=TRY_CONVERT(date,@DateTo,105)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
             q.Append(" ORDER BY COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),TD.TrainingID");
             cmd.CommandText = q.ToString();
             DataTable dt = new DataTable();
