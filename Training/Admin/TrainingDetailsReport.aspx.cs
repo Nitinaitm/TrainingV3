@@ -132,8 +132,8 @@ namespace Training.Admin
 
         private void ShowTest(string sessionID,string testType)
         {
-            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,TM.TestID,TM.TestTitle,TM.TestStatus,ISNULL(X.Attempted,0) Attempted,ISNULL(X.Submitted,0) Submitted,ISNULL(X.ResultStatus,'') ResultStatus,ISNULL(X.Percentage,0) Percentage FROM TestMaster TM LEFT JOIN (SELECT TA.TestID,TA.EmpID,MAX(CASE WHEN TA.Submitted=1 THEN 1 ELSE 0 END) Submitted,1 Attempted,ISNULL(MAX(TR.ResultStatus),'') ResultStatus,ISNULL(MAX(TR.Percentage),0) Percentage FROM TestAttempt TA LEFT JOIN TestResult TR ON TA.AttemptID=TR.AttemptID GROUP BY TA.TestID,TA.EmpID) X ON TM.TestID=X.TestID INNER JOIN EmpBasicMaster E ON X.EmpID=E.EmpID WHERE TM.SessionID=@SessionID AND TM.TestType=@TestType ORDER BY E.EmpName";
-            BindReport(q,new SqlParameter("@SessionID",sessionID),new SqlParameter("@TestType",testType));
+            string q = "SELECT E.EmpID,E.EmpName,E.EmpDesignation,TM.TestID,TM.TestTitle,TM.TestStatus,CASE WHEN A.AttemptID IS NULL THEN 'No' ELSE 'Yes' END Attempted,CASE WHEN ISNULL(A.Submitted,0)=1 THEN 'Yes' ELSE 'No' END Submitted,A.AttemptNo,ISNULL(R.ResultStatus,'') ResultStatus,ISNULL(R.Percentage,0) Percentage FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID INNER JOIN TestMaster TM ON TM.SessionID=@SessionID AND TM.TestType=@TestType OUTER APPLY (SELECT TOP 1 TA2.AttemptID,TA2.AttemptNo,TA2.Submitted FROM TestAttempt TA2 WHERE TA2.TestID=TM.TestID AND TA2.EmpID=E.EmpID ORDER BY TA2.AttemptNo DESC,TA2.AttemptID DESC) A LEFT JOIN TestResult R ON R.AttemptID=A.AttemptID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            BindReport(q,new SqlParameter("@SessionID",sessionID),new SqlParameter("@TestType",testType),new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
             lblDetailMessage.Text = testType == "PRE" ? "Pre Test trainee-wise attempt, submission and result." : "Post Test trainee-wise attempt, submission and result.";
         }
 
