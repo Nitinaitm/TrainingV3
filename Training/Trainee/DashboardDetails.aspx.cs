@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Web.UI;
 
 namespace Training.Trainee
@@ -34,11 +35,11 @@ namespace Training.Trainee
             switch(type)
             {
                 case "Active": title="Active Training"; dt=GetTrainingByCategory("Active"); break;
+                case "Previous": title="Previous Training - Not Closed"; dt=GetTrainingByCategory("Previous"); break;
                 case "Completed": title="Completed Training"; dt=GetTrainingByCategory("Completed"); break;
                 case "Future": title="Future Assigned Training"; dt=GetTrainingByCategory("Future"); break;
                 case "Attendance": title="Attendance Completed"; dt=GetAttendanceCompleted(); break;
                 case "PendingTests": title="Pending Tests"; dt=GetPublishedTests(true); break;
-                case "FeedbackPending": title="Feedback Pending"; dt=GetFeedbackPending(); break;
                 case "Certificates": title="All Certificates"; dt=GetCertificates(); break;
                 case "Tests": title="Published Tests"; dt=GetPublishedTests(false); break;
                 default: title="Active Training"; dt=GetTrainingByCategory("Active"); break;
@@ -52,6 +53,8 @@ namespace Training.Trainee
                 ? "AND ISNULL(TD.TrainingStatus,'')='Closed'"
                 : category=="Future"
                 ? "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)>CONVERT(date,GETDATE())"
+                : category=="Previous"
+                ? "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateTo,105)<CONVERT(date,GETDATE())"
                 : "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)<=CONVERT(date,GETDATE()) AND TRY_CONVERT(date,TD.DateTo,105)>=CONVERT(date,GETDATE())";
             string sql="SELECT DISTINCT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' "+condition+" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
             return GetTable(sql);
@@ -91,8 +94,32 @@ namespace Training.Trainee
 
         private DataTable GetCertificates()
         {
-            string sql = "SELECT DISTINCT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
+            string sql = "SELECT DISTINCT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus,TC.PDFPath,TC.PDFName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
             return GetTable(sql);
+        }
+
+        protected void gvDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "DownloadCertificate") return;
+            string certificateID = Convert.ToString(e.CommandArgument);
+            if (string.IsNullOrWhiteSpace(certificateID)) return;
+            DataTable dt = objDB.GetDataTable("SELECT PDFPath,PDFName FROM TrainingCertificate WHERE CertificateID=@CertificateID AND EmpID=@EmpID AND CertificateStatus='A'", new SqlParameter[] { new SqlParameter("@CertificateID", certificateID), new SqlParameter("@EmpID", EmpID) });
+            if (dt.Rows.Count == 0) return;
+            string pdfPath = Convert.ToString(dt.Rows[0]["PDFPath"]);
+            if (string.IsNullOrWhiteSpace(pdfPath)) return;
+            string physicalPath = Server.MapPath(pdfPath);
+            if (!File.Exists(physicalPath)) return;
+            string pdfName = Convert.ToString(dt.Rows[0]["PDFName"]);
+            if (string.IsNullOrWhiteSpace(pdfName)) pdfName = Path.GetFileName(physicalPath);
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("Content-Disposition", "attachment; filename=\"" + pdfName + "\"");
+            Response.AddHeader("Content-Length", new FileInfo(physicalPath).Length.ToString());
+            Response.TransmitFile(physicalPath);
+            Response.Flush();
+            System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         private DataTable GetTable(string sql)
