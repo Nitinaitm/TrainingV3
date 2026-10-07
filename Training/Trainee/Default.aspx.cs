@@ -158,22 +158,38 @@ namespace Training.Trainee
 
         private void LoadProgress()
         {
-            int attendanceCompleted = GetLabelValue(lblAttendance.Text);
-            int publishedTests = GetLabelValue(lblPublishedTests.Text);
-            int completedTests = GetLabelValue(lblCompletedTests.Text);
-            int feedbackCompleted = GetLabelValue(lblBatchFeedback.Text);
-            int certificateGenerated = GetLabelValue(lblCertificate.Text);
-            int requiredAttendance = Session["DashboardRequiredAttendance"] == null ? 0 : GetIntValue(Session["DashboardRequiredAttendance"]);
-            int requiredFeedback = Session["DashboardRequiredFeedback"] == null ? 0 : GetIntValue(Session["DashboardRequiredFeedback"]);
-            int requiredCertificate = Session["DashboardRequiredCertificate"] == null ? 0 : GetIntValue(Session["DashboardRequiredCertificate"]);
-            lblProgressAttendance.Text = attendanceCompleted + "/" + requiredAttendance;
-            SetProgressBar(barAttendance, attendanceCompleted, requiredAttendance);
-            lblProgressTests.Text = completedTests + "/" + publishedTests;
-            SetProgressBar(barTests, completedTests, publishedTests);
-            lblProgressFeedback.Text = feedbackCompleted + "/" + requiredFeedback;
-            SetProgressBar(barFeedback, feedbackCompleted, requiredFeedback);
-            lblProgressCertificate.Text = certificateGenerated + "/" + requiredCertificate;
-            SetProgressBar(barCertificate, certificateGenerated, requiredCertificate);
+            string attendanceTotalSql = "SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.AttendanceRequired=1 AND ISNULL(SM.AttendanceSkipped,0)=0";
+            string attendanceDoneSql = "SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN SessionAttendance SA ON SA.SessionID=SM.SessionID AND SA.EmpID=TA.EmpID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.AttendanceRequired=1 AND ISNULL(SM.AttendanceSkipped,0)=0 AND SA.AttendanceStatus IN ('Present','Completed')";
+            string testsTotalSql = "SELECT COUNT(DISTINCT TM.TestID) FROM TestMaster TM INNER JOIN SessionMaster SM ON SM.SessionID=TM.SessionID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TM.IsPublished=1 AND ((TM.TestType='Pre' AND TD.InitialAssessmentRequired=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0) OR (TM.TestType='Post' AND TD.FinalAssessmentRequired=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0))";
+            string testsDoneSql = "SELECT COUNT(DISTINCT TM.TestID) FROM TestMaster TM INNER JOIN SessionMaster SM ON SM.SessionID=TM.SessionID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID INNER JOIN TestAttempt TAT ON TAT.TestID=TM.TestID AND TAT.EmpID=TA.EmpID AND TAT.Submitted=1 WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TM.IsPublished=1 AND ((TM.TestType='Pre' AND TD.InitialAssessmentRequired=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0) OR (TM.TestType='Post' AND TD.FinalAssessmentRequired=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0))";
+            string feedbackTotalSql = "SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.FeedbackRequired=1 AND ISNULL(TD.FeedbackSkipped,0)=0";
+            string feedbackDoneSql = "SELECT COUNT(DISTINCT F.TrainingID) FROM Feedback F INNER JOIN TrainingAssignment TA ON TA.TrainingID=F.TrainingID AND TA.EmpID=F.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=F.TrainingID WHERE F.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.FeedbackRequired=1 AND ISNULL(TD.FeedbackSkipped,0)=0 AND ISNULL(F.Submitted,0)=1";
+            string certificateTotalSql = "SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.CertificateRequired=1 AND ISNULL(TD.CertificateSkipped,0)=0";
+            string certificateDoneSql = "SELECT COUNT(DISTINCT TC.TrainingID) FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID WHERE TC.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TC.CertificateStatus='A'";
+
+            int attendanceTotal = GetCount(attendanceTotalSql);
+            int attendanceDone = GetCount(attendanceDoneSql);
+            int testsTotal = GetCount(testsTotalSql);
+            int testsDone = GetCount(testsDoneSql);
+            int feedbackTotal = GetCount(feedbackTotalSql);
+            int feedbackDone = GetCount(feedbackDoneSql);
+            int certificateTotal = GetCount(certificateTotalSql);
+            int certificateDone = GetCount(certificateDoneSql);
+
+            lblProgressAttendance.Text = attendanceDone + "/" + attendanceTotal;
+            SetProgressBar(barAttendance, attendanceDone, attendanceTotal);
+            lblProgressTests.Text = testsDone + "/" + testsTotal;
+            SetProgressBar(barTests, testsDone, testsTotal);
+            lblProgressFeedback.Text = feedbackDone + "/" + feedbackTotal;
+            SetProgressBar(barFeedback, feedbackDone, feedbackTotal);
+            lblProgressCertificate.Text = certificateDone + "/" + certificateTotal;
+            SetProgressBar(barCertificate, certificateDone, certificateTotal);
+        }
+
+        private int GetCount(string sql)
+        {
+            object value = objDB.ExecuteScalar(sql, new SqlParameter[] { new SqlParameter("@EmpID", EmpID) });
+            return GetIntValue(value);
         }
 
         private void SetProgressBar(Panel panel, int completed, int total)
