@@ -51,7 +51,7 @@ namespace Training.Trainee
 
         private DataTable GetTrainingByCategory(string category)
         {
-            string condition=category=="Completed" ? "AND ISNULL(TD.TrainingStatus,'')='Closed'" : category=="Future" ? "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)>CONVERT(date,GETDATE())" : category=="Previous" ? "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateTo,105)<CONVERT(date,GETDATE())" : "AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)<=CONVERT(date,GETDATE()) AND TRY_CONVERT(date,TD.DateTo,105)>=CONVERT(date,GETDATE())";
+            string condition=category=="Completed" ? "AND ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed')" : category=="Future" ? "AND ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,TD.DateFrom,105)>CONVERT(date,GETDATE())" : category=="Previous" ? "AND ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,TD.DateTo,105)<CONVERT(date,GETDATE())" : "AND ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed') AND TRY_CONVERT(date,TD.DateFrom,105)<=CONVERT(date,GETDATE()) AND TRY_CONVERT(date,TD.DateTo,105)>=CONVERT(date,GETDATE())";
             string sql="SELECT DISTINCT TD.TrainingID,CM.CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' "+condition+" ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
             return GetTable(sql);
         }
@@ -72,7 +72,7 @@ namespace Training.Trainee
 
         private DataTable GetCertificates()
         {
-            string sql="SELECT DISTINCT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus,TC.PDFPath,TC.PDFName,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
+            string sql="SELECT DISTINCT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,TRY_CONVERT(date,TD.DateFrom,105) AS DateFrom,TRY_CONVERT(date,TD.DateTo,105) AS DateTo,ISNULL(TD.TrainingStatus,'') AS TrainingStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
             return GetTable(sql);
         }
 
