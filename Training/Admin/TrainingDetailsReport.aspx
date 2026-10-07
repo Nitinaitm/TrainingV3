@@ -89,6 +89,7 @@
 <asp:Button ID="btnFeedback" runat="server" Text="Feedback" CssClass="btnx purple" OnClick="btnFeedback_Click" />
 <asp:Button ID="btnCertificates" runat="server" Text="Certificates" CssClass="btnx green" OnClick="btnCertificates_Click" />
 <asp:Button ID="btnHostel" runat="server" Text="Hostel for Trainees" CssClass="btnx orange" OnClick="btnHostel_Click" />
+<asp:Button ID="btnExportReport" runat="server" Text="Export Current Report" CssClass="btnx green" OnClick="btnExportReport_Click" />
 </div>
 <asp:Label ID="lblDetailMessage" runat="server" CssClass="message" />
 <div class="grid-wrap"><asp:GridView ID="gvReport" runat="server" AutoGenerateColumns="True" CssClass="grid"><EmptyDataTemplate><div class="message">No records found.</div></EmptyDataTemplate></asp:GridView></div>
