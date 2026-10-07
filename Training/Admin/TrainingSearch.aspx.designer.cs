@@ -24,6 +24,8 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.ListBox lstSubdivision;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl grpSection;
         protected global::System.Web.UI.WebControls.ListBox lstSection;
+        protected global::System.Web.UI.WebControls.HiddenField hfDependency;
+        protected global::System.Web.UI.WebControls.Button btnDependency;
         protected global::System.Web.UI.WebControls.Button btnSearch;
         protected global::System.Web.UI.WebControls.Button btnReset;
         protected global::System.Web.UI.WebControls.Button btnExport;
