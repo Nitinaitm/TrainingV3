@@ -202,6 +202,19 @@
       <DependentUpon>TrainerEntry.aspx</DependentUpon>
     </Compile>
     <Content Include="Admin\TrainingAllotmentDetails.aspx" />
+    <Content Include="Admin\SessionAttendanceReport.aspx" />
+    <Content Include="Admin\AssessmentReport.aspx" />
+    <Content Include="Admin\FeedbackReportAdmin.aspx" />
+    <Content Include="Admin\CertificateReport.aspx" />
+    <Compile Include="Admin\SessionAttendanceReport.aspx.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Admin\SessionAttendanceReport.aspx.designer.cs"><DependentUpon>SessionAttendanceReport.aspx</DependentUpon></Compile>
+    <Compile Include="Admin\AssessmentReport.aspx.cs"><DependentUpon>AssessmentReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Admin\AssessmentReport.aspx.designer.cs"><DependentUpon>AssessmentReport.aspx</DependentUpon></Compile>
+    <Compile Include="Admin\FeedbackReportAdmin.aspx.cs"><DependentUpon>FeedbackReportAdmin.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Admin\FeedbackReportAdmin.aspx.designer.cs"><DependentUpon>FeedbackReportAdmin.aspx</DependentUpon></Compile>
+    <Compile Include="Admin\CertificateReport.aspx.cs"><DependentUpon>CertificateReport.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+    <Compile Include="Admin\CertificateReport.aspx.designer.cs"><DependentUpon>CertificateReport.aspx</DependentUpon></Compile>
+
     <Content Include="Admin\TrainingCalenderAdmin.aspx" />
     <Content Include="App_Data\ErrorLog.txt" />
     <Content Include="App_Data\VisitorCount.txt" />
