@@ -29,7 +29,7 @@ var ids=[
 '#<%= lstSubdivision.ClientID %>',
 '#<%= lstSection.ClientID %>'
 ];
-for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:'Search / Select',closeOnSelect:false});}}
+var placeholders=['Search / Select Company','Search / Select Designation','Search / Select HRMS Posting Place','Search / Select Department / Office / Cell','Search / Select Area Board / Zone','Search / Select Circle','Search / Select Division','Search / Select Subdivision','Search / Select Section'];for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:placeholders[i],closeOnSelect:false});}}
 }
 $(document).ready(function(){LoadSearchableDropdowns();initializeEmployeeGridScrollbars();setTimeout(syncEmployeeGridScrollbars,250);setTimeout(syncEmployeeGridScrollbars,750);$(window).on('resize',syncEmployeeGridScrollbars);});
 function getEmployeeGridElements(){var top=document.getElementById('<%= gridScrollTop.ClientID %>');var inner=document.getElementById('gridScrollTopInner');var bottom=document.getElementById('gridScroll');if(!top||!inner||!bottom)return null;var table=bottom.querySelector('table.gridview');if(!table)return null;return {top:top,inner:inner,bottom:bottom,table:table};}
