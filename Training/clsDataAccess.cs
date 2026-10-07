@@ -22,7 +22,7 @@ public class clsDataAccess
         try
         {
             if (HttpContext.Current == null || con.State != ConnectionState.Open) return;
-            string userID = HttpContext.Current.Session == null || HttpContext.Current.Session["EmpID"] == null ? "" : HttpContext.Current.Session["EmpID"].ToString();
+            string userID = HttpContext.Current.Session == null ? "" : (HttpContext.Current.Session["UserID"] ?? HttpContext.Current.Session["EmpID"] ?? "").ToString();
             string role = HttpContext.Current.Session == null || HttpContext.Current.Session["Role"] == null ? "" : HttpContext.Current.Session["Role"].ToString();
             string sessionID = HttpContext.Current.Session == null ? "" : HttpContext.Current.Session.SessionID;
             string ip = HttpContext.Current.Request.UserHostAddress ?? "";
