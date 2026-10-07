@@ -23,7 +23,7 @@ namespace Training.Trainee
 
             if (!IsPostBack)
             {
-                string type = Request.QueryString["Type"] == null ? "Training" : Request.QueryString["Type"].Trim();
+                string type = Session["TraineeDashboardType"] == null ? "Active" : Session["TraineeDashboardType"].ToString().Trim();
                 LoadDetails(type);
             }
         }
@@ -90,7 +90,7 @@ namespace Training.Trainee
 
         private DataTable GetCertificates()
         {
-            string sql = "SELECT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' ORDER BY TC.GeneratedOn DESC";
+            string sql = "SELECT DISTINCT TC.CertificateID,TC.CertificateNo,TC.TrainingID,CM.CourseName,TC.GeneratedOn,TC.CertificateStatus FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID AND TA.EmpID=TC.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TC.TrainingID INNER JOIN CourseMaster CM ON CM.CourseID=TD.CourseID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.AssignmentStatus='Assigned' ORDER BY TC.GeneratedOn DESC";
             return GetTable(sql);
         }
 
