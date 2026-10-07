@@ -1470,6 +1470,17 @@ EventArgs e)
 
                 db.Commit();
 
+                clsAuditLog.LogActivity(
+                    Session["UserID"] == null ? "" : Session["UserID"].ToString(),
+                    Session["Role"] == null ? "" : Session["Role"].ToString(),
+                    "DELETE",
+                    "Admin",
+                    "Admin/Default.aspx",
+                    "Employee",
+                    empID,
+                    "Employee deleted"
+                );
+
                 BindEmployee();
 
                 LoadPlugins();
