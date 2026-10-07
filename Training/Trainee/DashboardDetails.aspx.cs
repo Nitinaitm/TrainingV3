@@ -82,28 +82,47 @@ namespace Training.Trainee
             if (!string.Equals(type,"Certificates",StringComparison.OrdinalIgnoreCase)) return;
             if (e.Row.RowType==DataControlRowType.Header)
             {
+                for (int i=e.Row.Cells.Count-1;i>=0;i--)
+                {
+                    if (string.Equals(e.Row.Cells[i].Text,"CertificateID",StringComparison.OrdinalIgnoreCase))
+                    {
+                        e.Row.Cells.RemoveAt(i);
+                    }
+                }
                 TableCell cell=new TableCell();
                 cell.Text="Action";
                 cell.CssClass="text-center";
                 e.Row.Cells.Add(cell);
                 return;
             }
-            if (e.Row.RowType!=DataControlRowType.DataRow) return;
-            string certificateID=DataBinder.Eval(e.Row.DataItem,"CertificateID")==null ? "" : DataBinder.Eval(e.Row.DataItem,"CertificateID").ToString();
-            TableCell actionCell=new TableCell();
-            actionCell.CssClass="text-center";
-            if (!string.IsNullOrWhiteSpace(certificateID))
+            if (e.Row.RowType==DataControlRowType.DataRow)
             {
-                LinkButton btn=new LinkButton();
-                btn.ID="btnDownloadCertificate";
-                btn.CommandName="DownloadCertificate";
-                btn.CommandArgument=certificateID;
-                btn.CssClass="btn btn-sm btn-success";
-                btn.CausesValidation=false;
-                btn.Text="Download PDF";
-                actionCell.Controls.Add(btn);
+                string certificateID=DataBinder.Eval(e.Row.DataItem,"CertificateID")==null ? "" : DataBinder.Eval(e.Row.DataItem,"CertificateID").ToString();
+                for (int i=e.Row.Cells.Count-1;i>=0;i--)
+                {
+                    if (i==0)
+                    {
+                        e.Row.Cells.RemoveAt(i);
+                        break;
+                    }
+                }
+                TableCell actionCell=new TableCell();
+                actionCell.CssClass="text-center";
+                if (!string.IsNullOrWhiteSpace(certificateID))
+                {
+                    LinkButton btn=new LinkButton();
+                    btn.ID="btnDownloadCertificate";
+                    btn.CommandName="DownloadCertificate";
+                    btn.CommandArgument=certificateID;
+                    btn.CssClass="btn btn-sm btn-success";
+                    btn.CausesValidation=false;
+                    btn.Text="Download PDF";
+                    actionCell.Controls.Add(btn);
+                }
+                e.Row.Cells.Add(actionCell);
+                return;
             }
-            e.Row.Cells.Add(actionCell);
+            
         }
 
         protected void gvDetails_RowCommand(object sender, GridViewCommandEventArgs e)
