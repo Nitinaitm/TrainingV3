@@ -40,6 +40,46 @@ namespace Training.Trainee {
         protected global::System.Web.UI.WebControls.Label lblTraineeType;
         
         /// <summary>
+        /// lnkActiveTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkActiveTraining;
+
+        /// <summary>
+        /// lblActiveTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblActiveTraining;
+
+        /// <summary>
+        /// lnkCompletedTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkCompletedTraining;
+
+        /// <summary>
+        /// lblCompletedTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblCompletedTraining;
+
+        /// <summary>
+        /// lnkFutureTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkFutureTraining;
+
+        /// <summary>
+        /// lblFutureTraining control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblFutureTraining;
+
+        /// <summary>
+        /// lnkFeedbackPending control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton lnkFeedbackPending;
+
+        /// <summary>
+        /// lblFeedbackPending control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblFeedbackPending;
+
+        /// <summary>
         /// lnkMyTraining control.
         /// </summary>
         /// <remarks>
