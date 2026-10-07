@@ -12,6 +12,9 @@ namespace Training.Trainer
         protected global::System.Web.UI.WebControls.Label lblPendingAttendance;
         protected global::System.Web.UI.WebControls.Label lblPendingPreTest;
         protected global::System.Web.UI.WebControls.Label lblPendingPostTest;
+        protected global::System.Web.UI.WebControls.Label lblActiveSession;
+        protected global::System.Web.UI.WebControls.Label lblClosedSession;
+        protected global::System.Web.UI.WebControls.Label lblFutureSession;
         protected global::System.Web.UI.WebControls.DropDownList ddlCourse;
         protected global::System.Web.UI.WebControls.DropDownList ddlBatch;
         protected global::System.Web.UI.WebControls.TextBox txtFromDate;
