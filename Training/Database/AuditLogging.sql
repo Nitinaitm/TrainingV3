@@ -19,7 +19,26 @@ END
 GO
 CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
+CREATE OR ALTER TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
+BEGIN
+SET NOCOUNT ON;
+INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
+SELECT 'EmpBasicMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
+OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
+OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+END
+GO
+CREATE OR ALTER TRIGGER dbo.trg_Audit_EmpPostingDetails ON dbo.EmpPostingDetails AFTER INSERT,UPDATE,DELETE AS
+BEGIN
+SET NOCOUNT ON;
+INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
+SELECT 'EmpPostingDetails',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
+OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
+OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+END
+GO\nCREATE OR ALTER TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
