@@ -31,6 +31,12 @@
                 <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblPendingPostTest" runat="server" Text="0" /></div><div class="summary-label">Pending Post Test</div></div></div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-4 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblActiveSession" runat="server" Text="0" /></div><div class="summary-label">Active Session</div></div></div>
+                <div class="col-lg-4 col-md-6"><div class="summary-card closed-card"><div class="summary-value"><asp:Label ID="lblClosedSession" runat="server" Text="0" /></div><div class="summary-label">Closed Session</div></div></div>
+                <div class="col-lg-4 col-md-6"><div class="summary-card"><div class="summary-value"><asp:Label ID="lblFutureSession" runat="server" Text="0" /></div><div class="summary-label">Future Session</div></div></div>
+            </div>
+
             <div class="search-card">
                 <div class="row">
                     <div class="col-md-3"><label>Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" /></div>
