@@ -128,7 +128,7 @@ select{
 <div class="report-card">
 
 <div class="page-title">
-Training Completion Summary Report
+Training Completion Report
 </div>
 
 <div class="search-grid">
