@@ -55,36 +55,26 @@ namespace Training.Trainee
 
         private void LoadDashboardSummary()
         {
-            string sql = "SELECT (SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned') AS TotalTraining,(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.AttendanceRequired=1 AND EXISTS (SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ISNULL(SM.AttendanceSkipped,0)=0) AND NOT EXISTS (SELECT 1 FROM SessionMaster SM WHERE SM.TrainingID=TA.TrainingID AND ISNULL(SM.AttendanceSkipped,0)=0 AND ISNULL(SM.AttendanceStatus,'')<>'Completed')) AS AttendanceCompleted,(SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON SM.SessionID=TM.SessionID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TM.IsPublished=1 AND ((TM.TestType='Pre' AND TD.InitialAssessmentRequired=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0) OR (TM.TestType='Post' AND TD.FinalAssessmentRequired=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0))) AS PublishedTests,(SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON SM.SessionID=TM.SessionID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TM.IsPublished=1 AND ((TM.TestType='Pre' AND TD.InitialAssessmentRequired=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0) OR (TM.TestType='Post' AND TD.FinalAssessmentRequired=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0)) AND EXISTS (SELECT 1 FROM TestAttempt TAT WHERE TAT.TestID=TM.TestID AND TAT.EmpID=@EmpID AND TAT.Submitted=1)) AS CompletedTests,(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.FeedbackRequired=1 AND ISNULL(TD.FeedbackSkipped,0)=0) AS RequiredFeedback,(SELECT COUNT(DISTINCT BF.TrainingID) FROM BatchFeedback BF INNER JOIN TrainingAssignment TA ON TA.TrainingID=BF.TrainingID WHERE BF.EmpID=@EmpID AND ISNULL(BF.Submitted,0)=1 AND TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned') AS FeedbackCompleted,(SELECT COUNT(DISTINCT TC.TrainingID) FROM TrainingCertificate TC INNER JOIN TrainingAssignment TA ON TA.TrainingID=TC.TrainingID WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A' AND TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned') AS CertificateGenerated,(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.CertificateRequired=1 AND ISNULL(TD.CertificateSkipped,0)=0) AS RequiredCertificate";
+            string sql = "SELECT " +
+                "(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)<=CONVERT(date,GETDATE()) AND TRY_CONVERT(date,TD.DateTo,105)>=CONVERT(date,GETDATE())) AS ActiveTraining," +
+                "(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND ISNULL(TD.TrainingStatus,'')='Closed') AS CompletedTraining," +
+                "(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND ISNULL(TD.TrainingStatus,'')<>'Closed' AND TRY_CONVERT(date,TD.DateFrom,105)>CONVERT(date,GETDATE())) AS FutureTraining," +
+                "(SELECT COUNT(DISTINCT TM.TestID) FROM TestMaster TM INNER JOIN SessionMaster SM ON SM.SessionID=TM.SessionID INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=SM.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TM.IsPublished=1 AND ((TM.TestType='Pre' AND TD.InitialAssessmentRequired=1 AND ISNULL(SM.PreAssessmentSkipped,0)=0) OR (TM.TestType='Post' AND TD.FinalAssessmentRequired=1 AND ISNULL(SM.PostAssessmentSkipped,0)=0)) AND NOT EXISTS (SELECT 1 FROM TestAttempt TAT WHERE TAT.TestID=TM.TestID AND TAT.EmpID=@EmpID AND TAT.Submitted=1)) AS PendingTests," +
+                "(SELECT COUNT(DISTINCT TA.TrainingID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID WHERE TA.EmpID=@EmpID AND TA.AssignmentStatus='Assigned' AND TD.FeedbackRequired=1 AND ISNULL(TD.FeedbackSkipped,0)=0 AND NOT EXISTS (SELECT 1 FROM Feedback F WHERE F.TrainingID=TA.TrainingID AND F.EmpID=@EmpID AND ISNULL(F.Submitted,0)=1)) AS FeedbackPending," +
+                "(SELECT COUNT(DISTINCT TC.CertificateID) FROM TrainingCertificate TC WHERE TC.EmpID=@EmpID AND TC.CertificateStatus='A') AS CertificateCount";
             DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { new SqlParameter("@EmpID", EmpID) });
             if (dt == null || dt.Rows.Count == 0) { SetDashboardZero(); return; }
-            int totalTraining = GetIntValue(dt.Rows[0]["TotalTraining"]);
-            int attendanceCompleted = GetIntValue(dt.Rows[0]["AttendanceCompleted"]);
-            int publishedTests = GetIntValue(dt.Rows[0]["PublishedTests"]);
-            int completedTests = GetIntValue(dt.Rows[0]["CompletedTests"]);
-            int requiredFeedback = GetIntValue(dt.Rows[0]["RequiredFeedback"]);
-            int feedbackCompleted = GetIntValue(dt.Rows[0]["FeedbackCompleted"]);
-            int certificateGenerated = GetIntValue(dt.Rows[0]["CertificateGenerated"]);
-            int requiredCertificate = GetIntValue(dt.Rows[0]["RequiredCertificate"]);
-            int pendingTests = publishedTests - completedTests;
-            if (pendingTests < 0) pendingTests = 0;
-            int feedbackPending = requiredFeedback - feedbackCompleted;
-            if (feedbackPending < 0) feedbackPending = 0;
-            lblTrainingCount.Text = totalTraining.ToString();
-            lblAttendance.Text = attendanceCompleted.ToString();
-            lblPublishedTests.Text = publishedTests.ToString();
-            lblCompletedTests.Text = completedTests.ToString();
-            lblPendingTests.Text = pendingTests.ToString();
-            lblBatchFeedback.Text = feedbackCompleted.ToString();
-            lblCertificate.Text = certificateGenerated.ToString();
-            lblStatusTraining.Text = totalTraining.ToString();
-            lblStatusTests.Text = publishedTests.ToString();
-            lblStatusPendingTests.Text = pendingTests.ToString();
-            lblStatusFeedback.Text = feedbackPending.ToString();
-            lblStatusCertificate.Text = certificateGenerated.ToString();
-            Session["DashboardRequiredFeedback"] = requiredFeedback;
-            Session["DashboardRequiredCertificate"] = requiredCertificate;
-            Session["DashboardRequiredAttendance"] = GetRequiredAttendanceCount();
+            lblActiveTraining.Text = GetIntValue(dt.Rows[0]["ActiveTraining"]).ToString();
+            lblCompletedTraining.Text = GetIntValue(dt.Rows[0]["CompletedTraining"]).ToString();
+            lblFutureTraining.Text = GetIntValue(dt.Rows[0]["FutureTraining"]).ToString();
+            lblPendingTests.Text = GetIntValue(dt.Rows[0]["PendingTests"]).ToString();
+            lblFeedbackPending.Text = GetIntValue(dt.Rows[0]["FeedbackPending"]).ToString();
+            lblCertificate.Text = GetIntValue(dt.Rows[0]["CertificateCount"]).ToString();
+            lblStatusTraining.Text = lblActiveTraining.Text;
+            lblStatusTests.Text = lblPendingTests.Text;
+            lblStatusPendingTests.Text = lblPendingTests.Text;
+            lblStatusFeedback.Text = lblFeedbackPending.Text;
+            lblStatusCertificate.Text = lblCertificate.Text;
         }
 
         private void BindClosedTraining()
@@ -215,27 +205,19 @@ namespace Training.Trainee
 
         private void SetDashboardZero()
         {
-            lblTrainingCount.Text = "0";
-            lblAttendance.Text = "0";
-            lblPublishedTests.Text = "0";
-            lblCompletedTests.Text = "0";
-            lblPendingTests.Text = "0";
-            lblBatchFeedback.Text = "0";
-            lblCertificate.Text = "0";
-            lblStatusTraining.Text = "0";
-            lblStatusTests.Text = "0";
-            lblStatusPendingTests.Text = "0";
-            lblStatusFeedback.Text = "0";
-            lblStatusCertificate.Text = "0";
-            Session["DashboardRequiredAttendance"] = 0;
-            Session["DashboardRequiredFeedback"] = 0;
-            Session["DashboardRequiredCertificate"] = 0;
+            lblActiveTraining.Text="0"; lblCompletedTraining.Text="0"; lblFutureTraining.Text="0"; lblPendingTests.Text="0"; lblFeedbackPending.Text="0"; lblCertificate.Text="0";
+            lblStatusTraining.Text="0"; lblStatusTests.Text="0"; lblStatusPendingTests.Text="0"; lblStatusFeedback.Text="0"; lblStatusCertificate.Text="0";
         }
 
-        protected void lnkMyTraining_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/MyTrainings.aspx"); }
-        protected void lnkAttendance_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/Attendance.aspx"); }
-        protected void lnkBatchFeedback_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/MyTrainings.aspx"); }
-        protected void lnkCertificate_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/MyCertificate.aspx"); }
-        protected void lnkPendingTests_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/MyTrainings.aspx"); }
+        protected void lnkActiveTraining_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Active"); }
+        protected void lnkCompletedTraining_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Completed"); }
+        protected void lnkFutureTraining_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Future"); }
+        protected void lnkPendingTests_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=PendingTests"); }
+        protected void lnkFeedbackPending_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=FeedbackPending"); }
+        protected void lnkCertificate_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Certificates"); }
+        protected void lnkMyTraining_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Active"); }
+        protected void lnkAttendance_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Attendance"); }
+        protected void lnkBatchFeedback_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=FeedbackPending"); }
+        protected void lnkPublishedTests_Click(object sender, EventArgs e) { Response.Redirect("~/Trainee/DashboardDetails.aspx?Type=Tests"); }
     }
 }

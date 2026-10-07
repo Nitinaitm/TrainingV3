@@ -100,6 +100,8 @@ namespace Training.Trainee {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPublishedTests;
+
         protected global::System.Web.UI.WebControls.LinkButton lnkBatchFeedback;
         
         /// <summary>
