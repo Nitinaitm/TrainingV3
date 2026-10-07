@@ -36,6 +36,7 @@ namespace Training.Trainee
                 case "Active": title="Active Training"; dt=GetTrainingByCategory("Active"); break;
                 case "Completed": title="Completed Training"; dt=GetTrainingByCategory("Completed"); break;
                 case "Future": title="Future Assigned Training"; dt=GetTrainingByCategory("Future"); break;
+                case "Attendance": title="Attendance Completed"; dt=GetAttendanceCompleted(); break;
                 case "PendingTests": title="Pending Tests"; dt=GetPublishedTests(true); break;
                 case "FeedbackPending": title="Feedback Pending"; dt=GetFeedbackPending(); break;
                 case "Certificates": title="All Certificates"; dt=GetCertificates(); break;
