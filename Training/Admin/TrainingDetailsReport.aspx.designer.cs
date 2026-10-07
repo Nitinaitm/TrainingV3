@@ -22,6 +22,8 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.Label lblType;
         protected global::System.Web.UI.WebControls.Label lblOrganizer;
         protected global::System.Web.UI.WebControls.Label lblLocation;
+        protected global::System.Web.UI.WebControls.Label lblDateFrom;
+        protected global::System.Web.UI.WebControls.Label lblDateTo;
         protected global::System.Web.UI.WebControls.Label lblDuration;
         protected global::System.Web.UI.WebControls.GridView gvSessions;
         protected global::System.Web.UI.WebControls.Button btnTrainees;
