@@ -1448,7 +1448,6 @@
     <Compile Include="Admin\TrainingNotAttendedReport.aspx.designer.cs">
       <DependentUpon>TrainingNotAttendedReport.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\TrainingReports.aspx.designer.cs" />
     <Compile Include="Admin\TrainingRequirements.aspx.cs">
       <DependentUpon>TrainingRequirements.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
