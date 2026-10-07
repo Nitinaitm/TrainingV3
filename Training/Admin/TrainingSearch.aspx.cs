@@ -22,6 +22,12 @@ namespace Training.Admin
                 BindPostingPlace();
                 ClearPostingDetailControls();
                 BindPostingPlaceRadio();
+                BindPostingDepartment();
+                BindAreaBoardZone();
+                BindCircle();
+                BindDivision();
+                BindSubdivision();
+                BindSection();
                 SetPostingDetailVisibility();
                 gridScrollTop.Visible = false;
                 lblResultCount.Text = "";
@@ -170,17 +176,17 @@ namespace Training.Admin
 
         private void SetPostingDetailVisibility()
         {
-            bool company=HasCompanySelection();
-            grpPostingDetails.Visible=company;
-            grpPostingPlace.Visible=company;
+            grpPostingDetails.Visible=true;
+            grpPostingPlace.Visible=true;
             bool hq=rblPostingPlace.SelectedValue=="HQ";
             bool field=rblPostingPlace.SelectedValue=="Field";
-            grpPostingDepartment.Visible=company && hq;
-            grpAreaBoardZone.Visible=company && field;
-            grpCircle.Visible=company && field;
-            grpDivision.Visible=company && field;
-            grpSubdivision.Visible=company && field;
-            grpSection.Visible=company && field;
+            bool none=string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue);
+            grpPostingDepartment.Visible=hq || none;
+            grpAreaBoardZone.Visible=field || none;
+            grpCircle.Visible=field || none;
+            grpDivision.Visible=field || none;
+            grpSubdivision.Visible=field || none;
+            grpSection.Visible=field || none;
         }
 
         private void BindPostingDepartment()
