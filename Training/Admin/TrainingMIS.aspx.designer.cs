@@ -236,6 +236,7 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkPostTest;
+        protected global::System.Web.UI.WebControls.LinkButton lnkTotalManHours;
         
         /// <summary>
         /// lblPostTest control.
@@ -245,6 +246,7 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPostTest;
+        protected global::System.Web.UI.WebControls.Label lblTotalManHours;
         
         /// <summary>
         /// gvStatus control.
