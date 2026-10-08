@@ -22,7 +22,7 @@
         .exam-report-page .form-control:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
         .exam-report-page .filter-actions{display:flex;align-items:flex-end;gap:8px;height:100%}
         .exam-report-page .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-        .exam-report-page .summary-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-align:left;min-height:105px;box-shadow:0 3px 12px rgba(15,23,42,.05);position:relative;overflow:hidden}
+        .exam-report-page .summary-card-wrap{min-width:0}.exam-report-page .summary-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-align:left;min-height:105px;box-shadow:0 3px 12px rgba(15,23,42,.05);position:relative;overflow:hidden}
         .exam-report-page .summary-box:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#2563eb}
         .exam-report-page .summary-box.passed:before{background:#16a34a}
         .exam-report-page .summary-box.failed:before{background:#dc2626}
@@ -60,7 +60,7 @@
 
         <div class="exam-header">
 
-            <div class="col-md-12">
+            <div>
 
                 <span class="page-title">Exam Result Report
                 </span>
@@ -373,9 +373,9 @@
 
                 <!-- Appeared -->
 
-                <div class="col-md-3">
+                <div class="summary-card-wrap">
 
-                    <div class="summary-box passed">
+                    <div class="summary-box">
 
                         <span class="summary-title">
                             Total Results
@@ -395,9 +395,9 @@
 
                 <!-- Passed -->
 
-                <div class="col-md-3">
+                <div class="summary-card-wrap">
 
-                    <div class="summary-box failed">
+                    <div class="summary-box passed">
 
                         <span class="summary-title">
                             Passed
@@ -417,9 +417,9 @@
 
                 <!-- Failed -->
 
-                <div class="col-md-3">
+                <div class="summary-card-wrap">
 
-                    <div class="summary-box average">
+                    <div class="summary-box failed">
 
                         <span class="summary-title">
                             Failed
@@ -439,9 +439,9 @@
 
                 <!-- Average -->
 
-                <div class="col-md-3">
+                <div class="summary-card-wrap">
 
-                    <div class="summary-box">
+                    <div class="summary-box average">
 
                         <span class="summary-title">
                             Average Percentage
