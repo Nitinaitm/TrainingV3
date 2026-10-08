@@ -194,8 +194,10 @@ namespace Training.SuperAdmin
                     SetMessage("User not found.", false);
                     return;
                 }
+                DataTable oldDelete = db.GetDataTable("SELECT LoginIDUserID,Role,CorrespondingEmpID,Active FROM Login WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID", loginID) });
+                string deleteDetails = oldDelete.Rows.Count == 0 ? "User account deleted" : "Deleted values: Role=" + Convert.ToString(oldDelete.Rows[0]["Role"]) + "; Corresponding ID=" + Convert.ToString(oldDelete.Rows[0]["CorrespondingEmpID"]) + "; Active=" + Convert.ToString(oldDelete.Rows[0]["Active"]);
                 db.ExecuteSql("DELETE FROM Login WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID", loginID) });
-                clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "DELETE", "UserManagement", "UserManagement.aspx", "User", loginID, "User account deleted");
+                clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "DELETE", "UserManagement", "UserManagement.aspx", "User", loginID, deleteDetails);
                 SetMessage("User deleted successfully.", true);
                 BindUsers();
             }
@@ -217,6 +219,19 @@ namespace Training.SuperAdmin
                 SetMessage("Corresponding ID does not exist for the selected role.", false);
                 return;
             }
+
+            DataTable oldUser = db.GetDataTable("SELECT Role,CorrespondingEmpID,Active FROM Login WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID", loginID) });
+            if (oldUser.Rows.Count == 0)
+            {
+                SetMessage("User not found.", false);
+                return;
+            }
+
+            string oldRole = Convert.ToString(oldUser.Rows[0]["Role"]);
+            string oldCorrespondingID = Convert.ToString(oldUser.Rows[0]["CorrespondingEmpID"]);
+            string oldActive = Convert.ToString(oldUser.Rows[0]["Active"]);
+            string newActive = ddlActive.SelectedValue;
+
             string password = txtPassword.Text;
             string confirmPassword = txtConfirmPassword.Text;
             if (password != "" || confirmPassword != "")
@@ -227,16 +242,26 @@ namespace Training.SuperAdmin
                     return;
                 }
             }
+
+            string changes = "";
+            if (!string.Equals(oldRole, role, StringComparison.OrdinalIgnoreCase))
+                changes += "Role: " + oldRole + " -> " + role + "; ";
+            if (!string.Equals(oldCorrespondingID, correspondingID, StringComparison.OrdinalIgnoreCase))
+                changes += "Corresponding ID: " + oldCorrespondingID + " -> " + correspondingID + "; ";
+            if (!string.Equals(oldActive, newActive, StringComparison.OrdinalIgnoreCase))
+                changes += "Active: " + oldActive + " -> " + newActive + "; ";
+
             string sql = "UPDATE Login SET Role=@Role,CorrespondingEmpID=@CorrespondingID,Active=@Active";
             if (password != "")
                 sql += ",Password=@Password,re=@re";
             sql += " WHERE LoginIDUserID=@LoginID";
+
             if (password == "")
             {
                 db.ExecuteSql(sql, new SqlParameter[] {
                     new SqlParameter("@Role", role),
                     new SqlParameter("@CorrespondingID", correspondingID),
-                    new SqlParameter("@Active", ddlActive.SelectedValue),
+                    new SqlParameter("@Active", newActive),
                     new SqlParameter("@LoginID", loginID)
                 });
             }
@@ -246,7 +271,7 @@ namespace Training.SuperAdmin
                 db.ExecuteSql(sql, new SqlParameter[] {
                     new SqlParameter("@Role", role),
                     new SqlParameter("@CorrespondingID", correspondingID),
-                    new SqlParameter("@Active", ddlActive.SelectedValue),
+                    new SqlParameter("@Active", newActive),
                     new SqlParameter("@Password", encryptor.Encrypt(password)),
                     new SqlParameter("@re", encryptor.Encrypt("Y")),
                     new SqlParameter("@LoginID", loginID)
@@ -254,7 +279,9 @@ namespace Training.SuperAdmin
                 clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "PASSWORD_CHANGE", "UserManagement", "UserManagement.aspx", "User", loginID, "Password changed by SuperAdmin");
             }
 
-            clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "UPDATE", "UserManagement", "UserManagement.aspx", "User", loginID, "Updated existing user");
+            if (changes == "")
+                changes = "No profile field changed.";
+            clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "UPDATE", "UserManagement", "UserManagement.aspx", "User", loginID, "Changed fields: " + changes);
             SetMessage("User updated successfully.", true);
             editCard.Visible = false;
             BindUsers();
