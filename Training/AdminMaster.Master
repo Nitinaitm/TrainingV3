@@ -288,42 +288,6 @@
             .toggle-btn:hover {
                 color: #ff9800;
             }
-        .admin-footer {
-            width: 100%;
-            clear: both;
-            background: #382621;
-            color: #fff;
-            padding: 20px 10px;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .admin-footer-logos {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .admin-footer-logos a {
-            display: block;
-            line-height: 0;
-        }
-
-        .admin-footer-logos img {
-            width: 100px;
-            height: 80px;
-            object-fit: contain;
-            background: #fff;
-            display: block;
-        }
-
-        .admin-footer-text {
-            text-align: center !important;
-            line-height: 1.7;
-        }
-
         /* =========================
    MOBILE
 ========================= */
@@ -1101,19 +1065,63 @@
 
         </div>
 
-        <div class="admin-footer">
-            <div class="admin-footer-logos">
-                <a href="https://sbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' /></a>
-                <a href="https://nbpdcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' /></a>
-                <a href="https://bsphcl.co.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' /></a>
-                <a href="https://www.bsptcl.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' /></a>
-                <a href="https://bspgcl.bihar.gov.in/" target="_blank"><img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' /></a>
+        <hr />
+
+        <div class="container-fluid text-white py-4"
+            style="background: #382621;">
+
+            <div class="text-center">
+
+                <a href="https://sbpdcl.co.in/"
+                    target="_blank">
+                    <%-- <img src="../img/SBPDCL.png" />--%>
+                    <img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' />
+                </a>
+
+                <a href="https://nbpdcl.co.in/"
+                    target="_blank">
+                    <%-- <img src="../img/NBPDCL.png" />--%>
+                    <img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' />
+                </a>
+
+                <a href="https://bsphcl.co.in/"
+                    target="_blank">
+                    <%--<img src="../img/BSPHCL_Footer.jpg" />--%>
+                    <img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' />
+                </a>
+
+                <a href="https://www.bsptcl.in/"
+                    target="_blank">
+                    <%--<img src="../img/BSPTCL.png" />--%>
+                    <img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' />
+                </a>
+
+                <a href="https://bspgcl.bihar.gov.in/"
+                    target="_blank">
+                    <%--<img src="../img/BSPGCL.png" />--%>
+                    <img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' />
+                </a>
+
             </div>
-            <div class="admin-footer-text" style="margin-top:12px;">
-                <span style="color:#4fc3f7;font-weight:bold;">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span> . All Rights Reserved.
+
+            <br />
+
+            <div class="text-center">
+
+                <span style="color: #4fc3f7; font-weight: bold;">© <%: DateTime.Now.Year %> Training Cell BSPHCL
+                </span>
+
+                . All Rights Reserved.
+
                 <br />
-                Designed &amp; Developed by <span style="color:#4fc3f7;font-weight:bold;">Training Cell, BSPHCL</span>
+
+                Designed & Developed by
+
+                <span style="color: #4fc3f7; font-weight: bold;">Training Cell, BSPHCL
+                </span>
+
             </div>
+
         </div>
 
     </form>
