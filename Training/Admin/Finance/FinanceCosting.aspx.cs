@@ -52,7 +52,7 @@ namespace Training.Admin
 
             EnsureAutomaticBatchEntries(trainingID);
 
-            DataTable dt=objDB.GetDataTable("SELECT D.CostingDetailID,H.CostHeadName,H.CostLevel,D.CalculationMode,H.UnitType,D.Quantity,D.AppliedRate,D.CalculatedAmount,D.FinalAmount FROM FinanceCostingDetail D INNER JOIN FinanceCostHeadMaster H ON D.CostHeadID=H.CostHeadID WHERE D.TrainingID=@TrainingID AND D.CostingLevel='Batch' ORDER BY H.CostHeadName",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+            DataTable dt=objDB.GetDataTable("SELECT D.CostingDetailID,H.CostHeadName,H.CostLevel,D.CalculationMode,H.UnitType,D.Quantity,D.AppliedRate,D.CalculatedAmount,D.OverrideAmount,D.FinalAmount FROM FinanceCostingDetail D INNER JOIN FinanceCostHeadMaster H ON D.CostHeadID=H.CostHeadID WHERE D.TrainingID=@TrainingID AND D.CostingLevel='Batch' ORDER BY H.CostHeadName",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
             gvCosting.DataSource=dt;
             gvCosting.DataBind();
 
@@ -116,25 +116,25 @@ namespace Training.Admin
             catch{return 0;}
         }
 
-        protected void gvCosting_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        protected void gvCosting_RowCommand(object sender,System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
-            if (e.CommandName != "SaveOverride") return;
-            int rowIndex = Convert.ToInt32(e.CommandArgument);
-            long detailID = Convert.ToInt64(gvCosting.DataKeys[rowIndex].Value);
-            System.Web.UI.WebControls.TextBox txtOverride = (System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverride");
+            if(e.CommandName!="SaveOverride") return;
+            int rowIndex=Convert.ToInt32(e.CommandArgument);
+            long detailID=Convert.ToInt64(gvCosting.DataKeys[rowIndex].Value);
+            System.Web.UI.WebControls.TextBox txtOverride=(System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverride");
             decimal amount;
-            object value = DBNull.Value;
-            if (!string.IsNullOrWhiteSpace(txtOverride.Text))
+            object value=DBNull.Value;
+            if(!string.IsNullOrWhiteSpace(txtOverride.Text))
             {
-                if (!Decimal.TryParse(txtOverride.Text.Trim(), out amount) || amount < 0)
+                if(!Decimal.TryParse(txtOverride.Text.Trim(),out amount) || amount<0)
                 {
-                    lblMessage.Text = "Invalid override amount.";
-                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    lblMessage.Text="Invalid override amount.";
+                    lblMessage.ForeColor=System.Drawing.Color.Red;
                     return;
                 }
-                value = amount;
+                value=amount;
             }
-            objDB.ExecuteSql("UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID", new SqlParameter[] { new SqlParameter("@OverrideAmount",value),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID) });
+            objDB.ExecuteSql("UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID",new SqlParameter[]{new SqlParameter("@OverrideAmount",value),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID)});
             BindSelectedTraining();
         }
 
