@@ -59,7 +59,18 @@
         @media(max-width:760px){.exam-report-page .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-report-page .filter-wide{grid-column:span 1}}
         @media(max-width:520px){.exam-report-page .filter-grid{grid-template-columns:1fr}.exam-report-page .filter-toolbar{width:100%}.exam-report-page .filter-toolbar .btn{flex:1}}
         .exam-report-page .metric-main{font-weight:700;color:#1e293b}.exam-report-page .metric-sub{font-size:11px;color:#64748b;margin-top:2px}.exam-report-page .score-badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:4px 8px;font-weight:700}.exam-report-page .answer-btn{white-space:nowrap}
-    </style>
+            .exam-report-page .compact-filters{grid-template-columns:1.4fr 1fr 1.4fr 1fr;align-items:end}
+        .exam-report-page .filter-toolbar{display:flex;gap:8px;align-items:end}
+        .exam-report-page .result-count{margin:12px 0;font-size:13px;font-weight:700;color:#475569}
+        .exam-report-page .breadcrumb-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 3px 10px rgba(15,23,42,.05)}
+        .exam-report-page .back-link{font-weight:700;color:#2563eb;text-decoration:none}
+        .exam-report-page .report-table{width:100%;min-width:1150px;border-collapse:separate;border-spacing:0}
+        .exam-report-page .report-table th{background:#17365d;color:#fff;text-align:center;white-space:nowrap;padding:11px 9px}
+        .exam-report-page .report-table td{padding:9px;border-bottom:1px solid #e2e8f0;white-space:nowrap;background:#fff}
+        .exam-report-page .report-table tr:hover td{background:#f8fafc}
+        @media(max-width:900px){.exam-report-page .compact-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:575px){.exam-report-page .compact-filters{grid-template-columns:1fr}}
+</style>
 
 </asp:Content>
 
