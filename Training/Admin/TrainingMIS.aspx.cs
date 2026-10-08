@@ -103,6 +103,8 @@ namespace Training.Admin
             lblCertificates.Text=Scalar("SELECT COUNT(*) FROM TrainingCertificate TC INNER JOIN TrainingDetails TD ON TC.TrainingID=TD.TrainingID WHERE 1=1"+f).ToString();
             lblFeedback.Text=Scalar("SELECT COUNT(*) FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID WHERE ISNULL(F.Submitted,0)=1"+f).ToString();
             decimal post=ScalarDecimal("SELECT ISNULL(AVG(R.Percentage),0) FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE TM.TestType='POST'"+f);
+            decimal manHours=ScalarDecimal("SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+f);
+            lblTotalManHours.Text=manHours.ToString("0.00");
             lblPostTest.Text=post.ToString("0.00")+"%";
             string statusQ="SELECT ISNULL(TD.TrainingStatus,'') TrainingStatus,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingStatus,'') ORDER BY TrainingStatus";
             string typeQ="SELECT ISNULL(TD.TrainingType,'') TrainingType,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingType,'') ORDER BY TrainingType";
@@ -166,6 +168,11 @@ namespace Training.Admin
             {
                 q="SELECT F.ID,F.TrainingID,F.EmpID,E.EmpName,F.Submitted,F.SubmittedOn FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON F.EmpID=E.EmpID WHERE ISNULL(F.Submitted,0)=1"+Filter("TD")+" ORDER BY F.SubmittedOn DESC";
                 title="Feedback Submitted - "+lblFeedback.Text+" row(s)";
+            }
+            else if(type=="TotalManHours")
+            {
+                q="SELECT SM.SessionID,SM.TrainingID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,CAST(DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0 AS decimal(18,2)) SessionHours,ISNULL(TC.TraineeCount,0) TraineeCount,CAST((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) AS decimal(18,2)) ManHours,ISNULL(CM.CourseName,'') CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+","+DateExpr("SM.SessionDate");
+                title="Total Man Hours - "+lblTotalManHours.Text+" hour(s)";
             }
             else if(type=="PostTest")
             {
