@@ -20,6 +20,7 @@ namespace Training
             if(!IsPostBack)
             {
                 LoadManagerProfile();
+                LoadHeaderCounts();
             }
         }
 
@@ -31,6 +32,15 @@ namespace Training
             lblManagerID.Text=dt.Rows[0]["ManagerID"].ToString();
             lblManagerName.Text=dt.Rows[0]["EmpName"].ToString();
             lblManagerDesignation.Text=dt.Rows[0]["EmpDesignation"].ToString();
+        }
+        private void LoadHeaderCounts()
+        {
+            string managerID=Session["ManagerID"].ToString().Trim();
+            string sender="MANAGER:"+managerID;
+            DataTable a=obj.GetDataTable("SELECT COUNT(*) Cnt FROM Announcement WHERE TrainerID=@Sender AND IsActive=1",new SqlParameter[]{new SqlParameter("@Sender",sender)});
+            DataTable n=obj.GetDataTable("SELECT COUNT(*) Cnt FROM Notification WHERE TrainerID=@Sender AND ISNULL(IsRead,0)=0",new SqlParameter[]{new SqlParameter("@Sender",sender)});
+            lblAnnouncementCount.Text=a.Rows.Count==0?"0":a.Rows[0]["Cnt"].ToString();
+            lblNotificationCount.Text=n.Rows.Count==0?"0":n.Rows[0]["Cnt"].ToString();
         }
     }
 }
