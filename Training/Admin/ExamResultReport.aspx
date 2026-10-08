@@ -58,6 +58,7 @@
         @media(max-width:1100px){.exam-report-page .filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
         @media(max-width:760px){.exam-report-page .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-report-page .filter-wide{grid-column:span 1}}
         @media(max-width:520px){.exam-report-page .filter-grid{grid-template-columns:1fr}.exam-report-page .filter-toolbar{width:100%}.exam-report-page .filter-toolbar .btn{flex:1}}
+        .exam-report-page .metric-main{font-weight:700;color:#1e293b}.exam-report-page .metric-sub{font-size:11px;color:#64748b;margin-top:2px}.exam-report-page .score-badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:4px 8px;font-weight:700}.exam-report-page .answer-btn{white-space:nowrap}
     </style>
 
 </asp:Content>
@@ -310,264 +311,61 @@
                         onrowdatabound="gvResult_RowDataBound">
 
                         <Columns>
-
-
-                            <asp:TemplateField
-                                HeaderText="Sl. No.">
-
-                                <ItemTemplate>
-                                    <%# Container.DataItemIndex + 1 %>
-                                </ItemTemplate>
-
-                                <ItemStyle
-                                    HorizontalAlign="Center"
-                                    Width="65px" />
-
+                            <asp:TemplateField HeaderText="S.No.">
+                                <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" Width="55px" />
                             </asp:TemplateField>
-
-
-
-                            <asp:BoundField
-                                DataField="TrainingID"
-                                HeaderText="Training ID" />
-
-
-
-                            <asp:BoundField
-                                DataField="CourseName"
-                                HeaderText="Course" />
-
-
-
-                            <asp:BoundField
-                                DataField="Batch"
-                                HeaderText="Batch" />
-
-
-
-                            <asp:TemplateField
-                                HeaderText="Exam">
-
+                            <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+                            <asp:BoundField DataField="CourseName" HeaderText="Course" />
+                            <asp:BoundField DataField="Batch" HeaderText="Batch" />
+                            <asp:TemplateField HeaderText="Exam">
                                 <ItemTemplate>
-
-                                    <%#
-                                        Eval("TestType").ToString() == "Pre"
-                                        ? "Pre Training"
-                                        :
-                                        Eval("TestType").ToString() == "Post"
-                                        ? "Post Training"
-                                        : Eval("TestType").ToString()
-                                    %>
-
+                                    <%# Eval("TestType").ToString()=="Pre" ? "Pre Training" : Eval("TestType").ToString()=="Post" ? "Post Training" : Eval("TestType").ToString() %>
                                 </ItemTemplate>
-
                             </asp:TemplateField>
-
-
-
-                            <asp:BoundField
-                                DataField="TestTitle"
-                                HeaderText="Test Title" />
-
-
-
-                            <asp:BoundField
-                                DataField="EmpID"
-                                HeaderText="Trainee ID" />
-
-
-
-                            <asp:BoundField
-                                DataField="TraineeName"
-                                HeaderText="Trainee Name" />
-
-
-
-                            <asp:BoundField
-                                DataField="AttemptNo"
-                                HeaderText="Attempt">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
+                            <asp:BoundField DataField="TestTitle" HeaderText="Test" />
+                            <asp:BoundField DataField="EmpID" HeaderText="Trainee ID" />
+                            <asp:BoundField DataField="TraineeName" HeaderText="Trainee Name" />
+                            <asp:BoundField DataField="AttemptNo" HeaderText="Attempt">
+                                <ItemStyle HorizontalAlign="Center" />
                             </asp:BoundField>
-
-
-
-                            <asp:BoundField
-                                DataField="TotalQuestions"
-                                HeaderText="Questions">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-                            <asp:BoundField
-                                DataField="AttemptedQuestions"
-                                HeaderText="Attempted">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-                            <asp:BoundField
-                                DataField="CorrectAnswers"
-                                HeaderText="Correct">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-                            <asp:BoundField
-                                DataField="WrongAnswers"
-                                HeaderText="Wrong">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-
-                            <asp:BoundField
-                                DataField="TotalMarks"
-                                HeaderText="Total Marks">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-                            <asp:BoundField
-                                DataField="ObtainedMarks"
-                                HeaderText="Obtained">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-
-                            <asp:TemplateField
-                                HeaderText="Percentage">
-
+                            <asp:TemplateField HeaderText="Performance">
                                 <ItemTemplate>
-
-                                    <asp:Label
-                                        ID="lblPercentage"
-                                        runat="server"
-                                        CssClass="percentage-text"
-                                        Text='<%# Eval("Percentage", "{0:0.00}") + " %" %>'>
-                                    </asp:Label>
-
+                                    <div class="metric-main"><%# Eval("CorrectAnswers") %> Correct / <%# Eval("WrongAnswers") %> Wrong</div>
+                                    <div class="metric-sub"><%# Eval("AttemptedQuestions") %> / <%# Eval("TotalQuestions") %> Attempted</div>
                                 </ItemTemplate>
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
                             </asp:TemplateField>
-
-
-
-                            <asp:TemplateField
-                                HeaderText="Result">
-
+                            <asp:TemplateField HeaderText="Score">
                                 <ItemTemplate>
-
-                                    <asp:Label
-                                        ID="lblResult"
-                                        runat="server"
-                                        Text='<%# Eval("ResultStatus") %>'>
-                                    </asp:Label>
-
-                                </ItemTemplate>
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:TemplateField>
-
-
-
-                            <asp:BoundField
-                                DataField="RankNo"
-                                HeaderText="Rank">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
-                            </asp:BoundField>
-
-
-
-                            <asp:TemplateField
-                                HeaderText="Time Taken">
-
-                                <ItemTemplate>
-
-                                    <asp:Label
-                                        ID="lblTimeTaken"
-                                        runat="server"
-                                        Text='<%# FormatTimeTaken(Eval("TimeTaken")) %>'>
-                                    </asp:Label>
-
-                                </ItemTemplate>
-
-                                <ItemStyle
-                                    HorizontalAlign="Center"
-                                    Wrap="false" />
-
-                            </asp:TemplateField>
-
-
-
-                            <asp:BoundField
-                                DataField="SubmittedOn"
-                                HeaderText="Submitted On"
-                                DataFormatString="{0:dd-MM-yyyy hh:mm tt}">
-
-                                <ItemStyle
-                                    HorizontalAlign="Center"
-                                    Wrap="false" />
-
-                            </asp:BoundField>
-
-
-
-                            <asp:TemplateField HeaderText="Action">
-                                <ItemTemplate>
-                                    <asp:HyperLink ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' />
+                                    <span class="score-badge"><%# Eval("ObtainedMarks","{0:0.##}") %> / <%# Eval("TotalMarks","{0:0.##}") %></span>
                                 </ItemTemplate>
                                 <ItemStyle HorizontalAlign="Center" />
                             </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Final">
-
+                            <asp:TemplateField HeaderText="Percentage">
                                 <ItemTemplate>
-
-                                    <asp:Label
-                                        ID="lblFinalAttempt"
-                                        runat="server"
-                                        Text='<%# Convert.ToBoolean(Eval("IsFinalAttempt")) ? "Yes" : "No" %>'>
-                                    </asp:Label>
-
+                                    <asp:Label ID="lblPercentage" runat="server" CssClass="percentage-text" Text='<%# Eval("Percentage", "{0:0.00}") + " %" %>'></asp:Label>
                                 </ItemTemplate>
-
-                                <ItemStyle
-                                    HorizontalAlign="Center" />
-
+                                <ItemStyle HorizontalAlign="Center" />
                             </asp:TemplateField>
-
+                            <asp:TemplateField HeaderText="Result">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblResult" runat="server" Text='<%# Eval("ResultStatus") %>'></asp:Label>
+                                </ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="RankNo" HeaderText="Rank">
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:BoundField>
+                            <asp:BoundField DataField="SubmittedOn" HeaderText="Submitted On" DataFormatString="{0:dd-MM-yyyy hh:mm tt}">
+                                <ItemStyle HorizontalAlign="Center" Wrap="false" />
+                            </asp:BoundField>
+                            <asp:TemplateField HeaderText="Action">
+                                <ItemTemplate>
+                                    <asp:HyperLink ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary answer-btn" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' />
+                                </ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:TemplateField>
                         </Columns>
-
 
                         <EmptyDataTemplate>
 
