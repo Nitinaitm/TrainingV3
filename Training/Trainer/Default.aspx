@@ -41,7 +41,7 @@
             <div class="search-card">
                 <div class="row">
                     <div class="col-md-3"><label>Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" /></div>
-                    <div class="col-md-2"><label>Batch</label><asp:DropDownList ID="ddlBatch" runat="server" CssClass="form-select" /></div>
+                    <div class="col-md-2"><label>Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-select" /></div>
                     <div class="col-md-2"><label>From Date</label><asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" /></div>
                     <div class="col-md-2"><label>To Date</label><asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" /></div>
                     <div class="col-md-3"><label>&nbsp;</label><br /><asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-success btn-search" OnClick="btnSearch_Click" /><asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btn btn-secondary btn-search" OnClick="btnReset_Click" /></div>
