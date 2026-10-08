@@ -70,7 +70,6 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 <asp:BoundField DataField="EmpName" HeaderText="EmpName" />
 <asp:BoundField DataField="EmpDesignation" HeaderText="EmpDesignation" />
 <asp:BoundField DataField="EmpCompany" HeaderText="EmpCompany" />
-<asp:TemplateField HeaderText="EmpPostingPlace (HRMS)"><ItemTemplate><asp:LinkButton ID="lnkPosting" runat="server" CssClass="grid-link" CommandName="Posting" CommandArgument='<%# Eval("EmpID") %>'><%# Eval("EmpPostingPlace") %></asp:LinkButton></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="Posting Place"><ItemTemplate><asp:LinkButton ID="lnkPostingDetails" runat="server" CssClass="grid-link" CommandName="Posting" CommandArgument='<%# Eval("EmpID") %>'>View Details</asp:LinkButton></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="TrainingAttendanceStatus"><ItemTemplate><asp:LinkButton ID="lnkAttendance" runat="server" CssClass='<%# Convert.ToString(Eval("TrainingAttendanceStatus"))=="Attended" ? "grid-link status-attended" : "grid-link status-not-attended" %>' CommandName="Training" CommandArgument='<%# Eval("EmpID") %>'><%# Eval("TrainingAttendanceStatus") %></asp:LinkButton></ItemTemplate></asp:TemplateField>
 
