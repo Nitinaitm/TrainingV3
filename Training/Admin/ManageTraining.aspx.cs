@@ -344,23 +344,77 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
         {
             try
             {
+                DataTable training = new clsDataAccess().GetDataTable(
+                    "SELECT ISNULL(C.CourseName,'') AS CourseName,ISNULL(TD.TrainingLocation,'') AS TrainingLocation,ISNULL(TD.TrainingOrganizer,'') AS TrainingOrganizer FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID WHERE TD.TrainingID=@TrainingID",
+                    P("@TrainingID", TrainingID));
+
+                string courseName = "";
+                string trainingLocation = "";
+                string trainingOrganizer = "";
+
+                if (training.Rows.Count > 0)
+                {
+                    courseName = Convert.ToString(training.Rows[0]["CourseName"]);
+                    trainingLocation = Convert.ToString(training.Rows[0]["TrainingLocation"]);
+                    trainingOrganizer = Convert.ToString(training.Rows[0]["TrainingOrganizer"]);
+                }
+
                 DataTable trainees = new clsDataAccess().GetDataTable(
                     "SELECT DISTINCT E.MobileNo FROM TrainingAssignment A INNER JOIN EmpBasicMaster E ON A.EmpID=E.EmpID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(E.MobileNo,'')<>'' " +
                     "UNION SELECT DISTINCT T.MobileNo FROM TrainingAssignment A INNER JOIN TraineeMasterExternal T ON A.EmpID=T.TraineeID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(T.MobileNo,'')<>''",
                     P("@TrainingID", TrainingID));
 
-                DataTable trainers = new clsDataAccess().GetDataTable(
-                    "SELECT DISTINCT E.MobileNo FROM SessionMaster S INNER JOIN TrainerMaster T ON S.TrainerID=T.TrainerID INNER JOIN EmpBasicMaster E ON T.EmpID=E.EmpID WHERE S.TrainingID=@TrainingID AND T.TrainerType='Internal' AND ISNULL(E.MobileNo,'')<>'' " +
-                    "UNION SELECT DISTINCT T.MobileNo FROM SessionMaster S INNER JOIN TrainerMaster T ON S.TrainerID=T.TrainerID WHERE S.TrainingID=@TrainingID AND T.TrainerType='External' AND ISNULL(T.MobileNo,'')<>''",
+                DataTable trainerSessions = new clsDataAccess().GetDataTable(
+                    "SELECT DISTINCT S.TrainerID,CASE WHEN T.TrainerType='Internal' THEN E.MobileNo ELSE T.MobileNo END AS MobileNo,S.SessionDate " +
+                    "FROM SessionMaster S INNER JOIN TrainerMaster T ON S.TrainerID=T.TrainerID LEFT JOIN EmpBasicMaster E ON T.EmpID=E.EmpID " +
+                    "WHERE S.TrainingID=@TrainingID AND ISNULL(S.TrainerID,'')<>'' AND ISNULL(CASE WHEN T.TrainerType='Internal' THEN E.MobileNo ELSE T.MobileNo END,'')<>'' AND ISNULL(S.SessionDate,'')<>'' " +
+                    "ORDER BY S.TrainerID,TRY_CONVERT(date,S.SessionDate,105)",
                     P("@TrainingID", TrainingID));
 
-                string message = SmsService.GetTrainingStartedMessage(TrainingID, "Training");
+                string traineeMessage = SmsService.GetTrainingStartedMessage(TrainingID, courseName);
 
                 foreach (DataRow row in trainees.Rows)
-                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), traineeMessage);
 
-                foreach (DataRow row in trainers.Rows)
-                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+                Dictionary<string, List<string>> trainerDates = new Dictionary<string, List<string>>();
+                Dictionary<string, string> trainerMobiles = new Dictionary<string, string>();
+
+                foreach (DataRow row in trainerSessions.Rows)
+                {
+                    string trainerID = Convert.ToString(row["TrainerID"]);
+                    string mobileNo = Convert.ToString(row["MobileNo"]).Trim();
+                    string sessionDate = Convert.ToString(row["SessionDate"]).Trim();
+
+                    if (!trainerDates.ContainsKey(trainerID))
+                        trainerDates[trainerID] = new List<string>();
+
+                    if (!trainerDates[trainerID].Contains(sessionDate))
+                        trainerDates[trainerID].Add(sessionDate);
+
+                    if (!trainerMobiles.ContainsKey(trainerID))
+                        trainerMobiles[trainerID] = mobileNo;
+                }
+
+                foreach (KeyValuePair<string, List<string>> item in trainerDates)
+                {
+                    item.Value.Sort(delegate(string x, string y)
+                    {
+                        DateTime dx;
+                        DateTime dy;
+                        DateTime.TryParseExact(x, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dx);
+                        DateTime.TryParseExact(y, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dy);
+                        return dx.CompareTo(dy);
+                    });
+
+                    string sessionDates = string.Join(" and ", item.Value.ToArray());
+                    string trainerMessage = SmsService.GetTrainerTrainingAssignedMessage(
+                        courseName,
+                        sessionDates,
+                        trainingLocation,
+                        trainingOrganizer);
+
+                    SmsService.SendSms(trainerMobiles[item.Key], trainerMessage);
+                }
             }
             catch
             {
