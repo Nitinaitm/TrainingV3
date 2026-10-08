@@ -1765,6 +1765,7 @@
     </Compile>
     <Compile Include="SuperAdmin\ActivityLog.aspx.cs">
       <DependentUpon>ActivityLog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SuperAdmin\ActivityLog.aspx.designer.cs">
       <DependentUpon>ActivityLog.aspx</DependentUpon>
