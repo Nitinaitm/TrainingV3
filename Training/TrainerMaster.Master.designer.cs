@@ -38,6 +38,8 @@ namespace Training.Trainer {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTrainerID;
+        protected global::System.Web.UI.WebControls.Label lblAnnouncementCount;
+        protected global::System.Web.UI.WebControls.Label lblNotificationCount;
         
         /// <summary>
         /// lblTrainerName control.
