@@ -13,6 +13,13 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.Panel pnlTrainingList;
         protected global::System.Web.UI.WebControls.Label lblTrainingCount;
         protected global::System.Web.UI.WebControls.GridView gvTraining;
+        protected global::System.Web.UI.WebControls.Label lblPopupTrainingID;
+        protected global::System.Web.UI.WebControls.Label lblPopupType;
+        protected global::System.Web.UI.WebControls.Label lblPopupOrganizer;
+        protected global::System.Web.UI.WebControls.Label lblPopupLocation;
+        protected global::System.Web.UI.WebControls.Label lblPopupBatch;
+        protected global::System.Web.UI.WebControls.Label lblPopupFrom;
+        protected global::System.Web.UI.WebControls.Label lblPopupTo;
         protected global::System.Web.UI.WebControls.Panel pnlDetails;
         protected global::System.Web.UI.WebControls.Button btnBack;
         protected global::System.Web.UI.WebControls.Label lblDetailTrainingID;
