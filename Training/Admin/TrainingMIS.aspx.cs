@@ -190,6 +190,7 @@ namespace Training.Admin
             }
             if(q=="")return;
             ViewState["KpiDetailQuery"]=q;
+            ViewState["KpiDetailSummaryKey"]=null;
             DataTable dt=GetFiltered(q);
             gvKpiDetails.DataSource=dt;
             gvKpiDetails.DataBind();
@@ -268,7 +269,7 @@ namespace Training.Admin
         {
             string q=ViewState["KpiDetailQuery"] as string;
             if(string.IsNullOrWhiteSpace(q))return;
-            DataTable dt=GetFiltered(q);
+            DataTable dt=ViewState["KpiDetailSummaryKey"]==null ? GetFiltered(q) : GetFiltered(q,new SqlParameter("@SummaryKey",ViewState["KpiDetailSummaryKey"].ToString()));
             Response.Clear();
             Response.Buffer=true;
             Response.AddHeader("Content-Disposition","attachment;filename=TrainingMIS_Details.xls");
@@ -284,6 +285,19 @@ namespace Training.Admin
             }
             Response.Write(sb.ToString());
             System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+
+        private DataTable GetFiltered(string q,params SqlParameter[] p)
+        {
+            using(SqlConnection con=new SqlConnection(constr))
+            using(SqlCommand cmd=new SqlCommand(q,con))
+            {
+                AddCommon(cmd);
+                if(p!=null)cmd.Parameters.AddRange(p);
+                DataTable dt=new DataTable();
+                using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);
+                return dt;
+            }
         }
 
         private DataTable GetFiltered(string q)
