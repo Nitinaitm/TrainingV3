@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Training.Business.SMS;
 
 namespace Training.Trainer
 {
@@ -253,7 +254,34 @@ namespace Training.Trainer
 
         protected void btnPublish_Click(object sender, EventArgs e)
         {
-            if(!ValidatePublish())return;objDB.ExecuteSql("UPDATE TestMaster SET IsPublished=1,TestStatus='Published',ModifiedOn=GETDATE() WHERE TestID=@TestID",new SqlParameter[]{new SqlParameter("@TestID",ViewState["TestID"])});GenerateCandidateQuestions();btnPublish.Enabled=false;btnPublish.Text="Published";btnGenerateQuestions.Enabled=false;btnSaveDraft.Enabled=false;ScriptManager.RegisterStartupScript(this,GetType(),"msg","alert('Test Published Successfully.');",true);
+            if(!ValidatePublish())return;objDB.ExecuteSql("UPDATE TestMaster SET IsPublished=1,TestStatus='Published',ModifiedOn=GETDATE() WHERE TestID=@TestID",new SqlParameter[]{new SqlParameter("@TestID",ViewState["TestID"])});GenerateCandidateQuestions();SendTestPublishedSms();btnPublish.Enabled=false;btnPublish.Text="Published";btnGenerateQuestions.Enabled=false;btnSaveDraft.Enabled=false;ScriptManager.RegisterStartupScript(this,GetType(),"msg","alert('Test Published Successfully.');",true);
+        }
+
+        private void SendTestPublishedSms()
+        {
+            try
+            {
+                string trainingID = Convert.ToString(ViewState["TrainingID"]);
+                string sessionID = Convert.ToString(ViewState["SessionID"]);
+
+                DataTable session = objDB.GetDataTable(
+                    "SELECT SessionName FROM SessionMaster WHERE SessionID=@SessionID AND TrainingID=@TrainingID",
+                    new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TrainingID", trainingID) });
+
+                string sessionName = session.Rows.Count > 0 ? Convert.ToString(session.Rows[0]["SessionName"]) : sessionID;
+                string message = SmsService.GetPostTestPublishedMessage(trainingID, "Training", sessionName);
+
+                DataTable trainees = objDB.GetDataTable(
+                    "SELECT DISTINCT E.MobileNo FROM TrainingAssignment A INNER JOIN EmpBasicMaster E ON A.EmpID=E.EmpID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(E.MobileNo,'')<>'' " +
+                    "UNION SELECT DISTINCT T.MobileNo FROM TrainingAssignment A INNER JOIN TraineeMasterExternal T ON A.EmpID=T.TraineeID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(T.MobileNo,'')<>''",
+                    new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+
+                foreach (DataRow row in trainees.Rows)
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+            }
+            catch
+            {
+            }
         }
 
         private void GenerateCandidateQuestions()
