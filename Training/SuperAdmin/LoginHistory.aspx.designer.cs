@@ -1,0 +1,1 @@
+namespace Training.SuperAdmin { public partial class LoginHistory { protected global::System.Web.UI.WebControls.GridView gvLoginHistory; } }
