@@ -215,23 +215,6 @@ namespace Training.Admin
             }
         }
 
-        protected void gvSummary_RowDataBound(object sender,GridViewRowEventArgs e)
-        {
-            if(e.Row.RowType!=DataControlRowType.DataRow)return;
-            GridView grid=(GridView)sender;
-            string type=grid.ID=="gvStatus" ? "StatusSummary" : grid.ID=="gvType" ? "TypeSummary" : "CourseSummary";
-            int countIndex=grid.ID=="gvStatus" || grid.ID=="gvType" ? 1 : 1;
-            if(e.Row.Cells.Count<=countIndex)return;
-            string key=e.Row.Cells[0].Text;
-            LinkButton link=new LinkButton();
-            link.Text=e.Row.Cells[countIndex].Text;
-            link.CommandName=type;
-            link.CommandArgument=Server.HtmlDecode(key);
-            link.CssClass="summary-link";
-            e.Row.Cells[countIndex].Controls.Clear();
-            e.Row.Cells[countIndex].Controls.Add(link);
-        }
-
         protected void gvSummary_RowCommand(object sender,GridViewCommandEventArgs e)
         {
             if(e.CommandName=="StatusSummary" || e.CommandName=="TypeSummary" || e.CommandName=="CourseSummary")
@@ -251,8 +234,7 @@ namespace Training.Admin
                 }
                 else
                 {
-                    q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,TD.NoOfDays,ISNULL(SH.ScheduledManHours,0) ScheduledManHours,ISNULL(SH.CompletedManHours,0) CompletedManHours FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) ScheduledManHours,ISNULL(SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed') THEN (DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) ELSE 0 END),0) CompletedManHours FROM SessionMaster SM LEFT JOIN (SELECT TA.TrainingID,COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE ISNULL(TA.Cancelled,0)=0 GROUP BY TA.TrainingID) TC ON TC.TrainingID=SM.TrainingID WHERE SM.TrainingID=TD.TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL) SH WHERE ISNULL(CM.CourseName,'')=@SummaryKey"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
-                    title="Course: "+key;
+                    q="WITH TraineeCounts AS (SELECT TA.TrainingID,COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE ISNULL(TA.Cancelled,0)=0 GROUP BY TA.TrainingID), SessionHours AS (SELECT SM.TrainingID,SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)) ScheduledManHours,SUM(CASE WHEN ISNULL(TD2.TrainingStatus,'') IN ('Closed','Completed') THEN (DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) ELSE 0 END) CompletedManHours FROM SessionMaster SM INNER JOIN TrainingDetails TD2 ON SM.TrainingID=TD2.TrainingID LEFT JOIN TraineeCounts TC ON TC.TrainingID=SM.TrainingID WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL GROUP BY SM.TrainingID) SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,TD.NoOfDays,ISNULL(SH.ScheduledManHours,0) ScheduledManHours,ISNULL(SH.CompletedManHours,0) CompletedManHours FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN SessionHours SH ON SH.TrainingID=TD.TrainingID WHERE ISNULL(CM.CourseName,'')=@SummaryKey"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";                    title="Course: "+key;
                 }
                 SqlParameter p=new SqlParameter("@SummaryKey",key);
                 DataTable dt=GetFiltered(q,p);
