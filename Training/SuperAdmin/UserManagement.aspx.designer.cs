@@ -8,17 +8,16 @@ namespace Training.SuperAdmin
     public partial class UserManagement
     {
         protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.DropDownList ddlRoleFilter;
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.Button btnLoadUsers;
+        protected global::System.Web.UI.WebControls.GridView gvUsers;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl editCard;
         protected global::System.Web.UI.WebControls.TextBox txtLoginID;
         protected global::System.Web.UI.WebControls.DropDownList ddlRole;
         protected global::System.Web.UI.WebControls.TextBox txtCorrespondingID;
-        protected global::System.Web.UI.WebControls.TextBox txtPassword;
         protected global::System.Web.UI.WebControls.DropDownList ddlActive;
-        protected global::System.Web.UI.WebControls.Button btnSave;
-        protected global::System.Web.UI.WebControls.Button btnPassword;
-        protected global::System.Web.UI.WebControls.Button btnDelete;
-        protected global::System.Web.UI.WebControls.Button btnClear;
-        protected global::System.Web.UI.WebControls.GridView gvUsers;
-        protected global::System.Web.UI.WebControls.GridView gvLoginHistory;
-        protected global::System.Web.UI.WebControls.GridView gvActivity;
+        protected global::System.Web.UI.WebControls.Button btnUpdate;
+        protected global::System.Web.UI.WebControls.Button btnCancelEdit;
     }
 }
