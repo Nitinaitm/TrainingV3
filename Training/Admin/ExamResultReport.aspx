@@ -45,6 +45,19 @@
         .exam-report-page .export-btn{white-space:nowrap}
         @media(max-width:900px){.exam-report-page{padding:12px}.exam-report-page .summary-grid{grid-template-columns:repeat(2,1fr)}.exam-report-page .card-body{padding:14px}}
         @media(max-width:575px){.exam-report-page .summary-grid{grid-template-columns:1fr}.exam-report-page .page-title{font-size:22px}.exam-report-page .filter-actions{align-items:stretch}.exam-report-page .filter-actions .btn{flex:1}}
+        .exam-report-page .filter-hint{font-size:12px;opacity:.88;margin-top:3px}
+        .exam-report-page .filter-toolbar{display:flex;gap:8px;align-items:center}
+        .exam-report-page .filter-body{padding:20px}
+        .exam-report-page .filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+        .exam-report-page .filter-item{min-width:0}
+        .exam-report-page .filter-wide{grid-column:span 1}
+        .exam-report-page .exam-date{background:#fff url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22%2364758b%22 viewBox=%220 0 16 16%3E%3Cpath d=%22M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h.5A1.5 1.5 0 0 1 15 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 14.5v-12A1.5 1.5 0 0 1 2.5 1H3V.5a.5.5 0 0 1 .5-.5zM2 5v9.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V5H2z%22/%3E%3C/svg%3E') no-repeat right 12px center;background-size:16px;padding-right:38px}
+        .exam-report-page .result-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .exam-report-page .result-count{font-size:12px;opacity:.9}
+        .exam-report-page .report-table th{position:sticky;top:0;z-index:2}
+        @media(max-width:1100px){.exam-report-page .filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+        @media(max-width:760px){.exam-report-page .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-report-page .filter-wide{grid-column:span 1}}
+        @media(max-width:520px){.exam-report-page .filter-grid{grid-template-columns:1fr}.exam-report-page .filter-toolbar{width:100%}.exam-report-page .filter-toolbar .btn{flex:1}}
     </style>
 
 </asp:Content>
@@ -78,289 +91,75 @@
 
 
         <!-- ================================================= -->
-        <!-- FILTERS                                           -->
-        <!-- ================================================= -->
-
+        <!-- FILTERS -->
         <div class="card report-card">
-
             <div class="report-card-header">
-
-                <b>Search Result
-                </b>
-
+                <div>
+                    <span class="section-title">Exam Result Filters</span>
+                    <div class="filter-hint">Select the required filters and click Search. Filters are applied together.</div>
+                </div>
+                <div class="filter-toolbar">
+                    <asp:Button ID="btnSearch" runat="server" Text="Search Results" CssClass="btn btn-light btn-sm" OnClick="btnSearch_Click" />
+                    <asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btn btn-outline-light btn-sm" CausesValidation="false" OnClick="btnReset_Click" />
+                </div>
             </div>
-
-            <div class="card-body">
-
-                <div class="row">
-
-                    <!-- Training -->
-
-                    <div class="col-md-4 mb-3">
-
-                        <label class="filter-label">
-                            Training
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlTraining"
-                            runat="server"
-                            cssclass="form-control"
-                            autopostback="true"
-                            onselectedindexchanged="ddlTraining_SelectedIndexChanged">
-                        </asp:dropdownlist>
-
+            <div class="card-body filter-body">
+                <div class="filter-grid">
+                    <div class="filter-item filter-wide">
+                        <label class="filter-label">Training</label>
+                        <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
                     </div>
-
-
-                    <!-- Course -->
-
-                    <div class="col-md-4 mb-3">
-
-                        <label class="filter-label">
-                            Course
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlCourse"
-                            runat="server"
-                            cssclass="form-control">
-                        </asp:dropdownlist>
-
+                    <div class="filter-item">
+                        <label class="filter-label">Course</label>
+                        <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-control"></asp:DropDownList>
                     </div>
-
-
-                    <!-- Batch -->
-
-                    <div class="col-md-4 mb-3">
-
-                        <label class="filter-label">
-                            Batch
-                        </label>
-
-                        <asp:textbox
-                            id="txtBatch"
-                            runat="server"
-                            cssclass="form-control"
-                            maxlength="100"
-                            placeholder="Batch">
-                        </asp:textbox>
-
+                    <div class="filter-item">
+                        <label class="filter-label">Batch</label>
+                        <asp:TextBox ID="txtBatch" runat="server" CssClass="form-control" MaxLength="100" placeholder="Batch"></asp:TextBox>
                     </div>
-
+                    <div class="filter-item">
+                        <label class="filter-label">Exam Type</label>
+                        <asp:DropDownList ID="ddlTestType" runat="server" CssClass="form-control">
+                            <asp:ListItem Text="All Exam Types" Value=""></asp:ListItem>
+                            <asp:ListItem Text="Pre Training Exam" Value="Pre"></asp:ListItem>
+                            <asp:ListItem Text="Post Training Exam" Value="Post"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div class="filter-item filter-wide">
+                        <label class="filter-label">Test</label>
+                        <asp:DropDownList ID="ddlTest" runat="server" CssClass="form-control"></asp:DropDownList>
+                    </div>
+                    <div class="filter-item filter-wide">
+                        <label class="filter-label">Trainee ID / Name</label>
+                        <asp:TextBox ID="txtTrainee" runat="server" CssClass="form-control" MaxLength="150" placeholder="Enter ID or name"></asp:TextBox>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">Result</label>
+                        <asp:DropDownList ID="ddlResultStatus" runat="server" CssClass="form-control">
+                            <asp:ListItem Text="All Results" Value=""></asp:ListItem>
+                            <asp:ListItem Text="Pass" Value="PASS"></asp:ListItem>
+                            <asp:ListItem Text="Fail" Value="FAIL"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">Attempt</label>
+                        <asp:DropDownList ID="ddlAttempt" runat="server" CssClass="form-control">
+                            <asp:ListItem Text="Final Attempt" Value="Final" Selected="True"></asp:ListItem>
+                            <asp:ListItem Text="All Attempts" Value="All"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">Submitted From</label>
+                        <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control exam-date" MaxLength="10" placeholder="dd-MM-yyyy"></asp:TextBox>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">Submitted To</label>
+                        <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control exam-date" MaxLength="10" placeholder="dd-MM-yyyy"></asp:TextBox>
+                    </div>
                 </div>
-
-
-                <div class="row">
-
-                    <!-- Test Type -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Test Type
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlTestType"
-                            runat="server"
-                            cssclass="form-control"
-                            autopostback="true"
-                            onselectedindexchanged="ddlTestType_SelectedIndexChanged">
-
-                            <asp:ListItem
-                                Text="-- All Test Types --"
-                                Value="">
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Text="Pre Training Exam"
-                                Value="Pre">
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Text="Post Training Exam"
-                                Value="Post">
-                            </asp:ListItem>
-
-                        </asp:dropdownlist>
-
-                    </div>
-
-
-                    <!-- Test -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Test
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlTest"
-                            runat="server"
-                            cssclass="form-control">
-                        </asp:dropdownlist>
-
-                    </div>
-
-
-                    <!-- Trainee -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Trainee ID / Name
-                        </label>
-
-                        <asp:textbox
-                            id="txtTrainee"
-                            runat="server"
-                            cssclass="form-control"
-                            maxlength="150"
-                            placeholder="Search trainee">
-                        </asp:textbox>
-
-                    </div>
-
-
-                    <!-- Result -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Result Status
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlResultStatus"
-                            runat="server"
-                            cssclass="form-control">
-
-                            <asp:ListItem
-                                Text="-- All Results --"
-                                Value="">
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Text="Pass"
-                                Value="PASS">
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Text="Fail"
-                                Value="FAIL">
-                            </asp:ListItem>
-
-                        </asp:dropdownlist>
-
-                    </div>
-
-                </div>
-
-
-                <div class="row">
-
-                    <!-- Attempt -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Attempt
-                        </label>
-
-                        <asp:dropdownlist
-                            id="ddlAttempt"
-                            runat="server"
-                            cssclass="form-control">
-
-                            <asp:ListItem
-                                Text="Final Attempt"
-                                Value="Final"
-                                Selected="True">
-                            </asp:ListItem>
-
-                            <asp:ListItem
-                                Text="All Attempts"
-                                Value="All">
-                            </asp:ListItem>
-
-                        </asp:dropdownlist>
-
-                    </div>
-
-
-                    <!-- From Date -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Submitted From
-                        </label>
-
-                        <asp:textbox
-                            id="txtFromDate"
-                            runat="server"
-                            cssclass="form-control"
-                            maxlength="10"
-                            placeholder="dd-MM-yyyy">
-                        </asp:textbox>
-
-                    </div>
-
-
-                    <!-- To Date -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            Submitted To
-                        </label>
-
-                        <asp:textbox
-                            id="txtToDate"
-                            runat="server"
-                            cssclass="form-control"
-                            maxlength="10"
-                            placeholder="dd-MM-yyyy">
-                        </asp:textbox>
-
-                    </div>
-
-
-                    <!-- Buttons -->
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="filter-label">
-                            &nbsp;
-                        </label>
-
-                        <asp:button
-                            id="btnSearch"
-                            runat="server"
-                            text="Search"
-                            cssclass="btn btn-primary"
-                            onclick="btnSearch_Click" />
-
-                        <asp:button
-                            id="btnReset"
-                            runat="server"
-                            text="Reset"
-                            cssclass="btn btn-secondary"
-                            causesvalidation="false"
-                            onclick="btnReset_Click" />
-
-                    </div>
-
-                </div>
-
             </div>
-
         </div>
 
-
-        <!-- ================================================= -->
         <!-- SUMMARY                                           -->
         <!-- ================================================= -->
 
