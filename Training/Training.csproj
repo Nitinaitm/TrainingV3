@@ -207,14 +207,14 @@
     <Content Include="Admin\AssessmentReport.aspx" />
     <Content Include="Admin\FeedbackReportAdmin.aspx" />
     <Content Include="Admin\CertificateReport.aspx" />
-        <Compile Include="Admin\TrainingMIS.aspx.cs">
+    <Compile Include="Admin\TrainingMIS.aspx.cs">
       <DependentUpon>TrainingMIS.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TrainingMIS.aspx.designer.cs">
       <DependentUpon>TrainingMIS.aspx</DependentUpon>
     </Compile>
-<Compile Include="Admin\SessionAttendanceReport.aspx.cs">
+    <Compile Include="Admin\SessionAttendanceReport.aspx.cs">
       <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -551,11 +551,6 @@
     <Content Include="obj\Debug\Training.pdb" />
     <Content Include="Registration.aspx" />
     <Content Include="ResetPassword.aspx" />
-    <Content Include="SuperAdmin\AssignTraining.aspx" />
-    <Content Include="SuperAdmin\BasicDetailsUpdate.aspx" />
-    <Content Include="SuperAdmin\BulkExcelUpload.aspx" />
-    <Content Include="SuperAdmin\Check_Password.aspx" />
-    <Content Include="SuperAdmin\CreateTraining.aspx" />
     <Content Include="SuperAdmin\css\.DS_Store" />
     <Content Include="SuperAdmin\css\bootstrap.min.css" />
     <Content Include="SuperAdmin\css\bootstrap\.DS_Store" />
@@ -567,13 +562,7 @@
     <Content Include="SuperAdmin\css\bootstrap\_media.css" />
     <Content Include="SuperAdmin\css\style.css" />
     <Content Include="SuperAdmin\css\StyleSheet3.css" />
-    <Content Include="SuperAdmin\Default.aspx" />
-    <Content Include="SuperAdmin\EmpBasicMaster.aspx" />
-    <Content Include="SuperAdmin\FeedbackReport.aspx" />
-    <Content Include="SuperAdmin\FeedbackTrainingRelated.aspx" />
-    <Content Include="SuperAdmin\FindTrainingID.aspx" />
     <Content Include="SuperAdmin\fonts\.DS_Store" />
-    <Content Include="SuperAdmin\GeneratePassword.aspx" />
     <Content Include="SuperAdmin\images\.DS_Store" />
     <Content Include="SuperAdmin\images\header.jpg" />
     <Content Include="SuperAdmin\images\Header_BSPHCL.jpeg" />
@@ -586,7 +575,6 @@
     <Content Include="SuperAdmin\js\popper.js" />
     <Content Include="SuperAdmin\js\select2.js" />
     <Content Include="SuperAdmin\Logout.aspx" />
-    <Content Include="SuperAdmin\Registration.aspx" />
     <Content Include="SuperAdmin\scss\.DS_Store" />
     <Content Include="SuperAdmin\scss\bootstrap\.DS_Store" />
     <Content Include="SuperAdmin\scss\bootstrap\bootstrap-grid.scss" />
@@ -678,13 +666,8 @@
     <Content Include="SuperAdmin\scss\bootstrap\_utilities.scss" />
     <Content Include="SuperAdmin\scss\bootstrap\_variables.scss" />
     <Content Include="SuperAdmin\scss\style.scss" />
-    <Content Include="SuperAdmin\TrainingAttendance.aspx" />
-    <Content Include="SuperAdmin\TrainingDetailsReport.aspx" />
-    <Content Include="SuperAdmin\TrainingReAssign.aspx" />
-    <Content Include="SuperAdmin\TrainingReports.aspx" />
-    <Content Include="SuperAdmin\TrainingSearch.aspx" />
-    <Content Include="SuperAdmin\TrainingUnAssign.aspx" />
     <Content Include="Admin\TopicCategoryMaster.aspx" />
+    <Content Include="SuperAdmin\UserManagement.aspx" />
     <Content Include="Trainee\Announcement.aspx" />
     <Content Include="Trainee\Attendance.aspx" />
     <Content Include="Trainee\css\.DS_Store" />
@@ -1775,83 +1758,6 @@
     <Compile Include="SuperAdminMaster.Master.designer.cs">
       <DependentUpon>SuperAdminMaster.Master</DependentUpon>
     </Compile>
-    <Compile Include="SuperAdmin\AssignTraining.aspx.cs">
-      <DependentUpon>AssignTraining.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\AssignTraining.aspx.designer.cs">
-      <DependentUpon>AssignTraining.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\BasicDetailsUpdate.aspx.cs">
-      <DependentUpon>BasicDetailsUpdate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\BasicDetailsUpdate.aspx.designer.cs">
-      <DependentUpon>BasicDetailsUpdate.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\BulkExcelUpload.aspx.cs">
-      <DependentUpon>BulkExcelUpload.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\BulkExcelUpload.aspx.designer.cs">
-      <DependentUpon>BulkExcelUpload.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\Check_Password.aspx.cs">
-      <DependentUpon>Check_Password.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\Check_Password.aspx.designer.cs">
-      <DependentUpon>Check_Password.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\CreateTraining.aspx.cs">
-      <DependentUpon>CreateTraining.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\CreateTraining.aspx.designer.cs">
-      <DependentUpon>CreateTraining.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\EmpBasicMaster.aspx.cs">
-      <DependentUpon>EmpBasicMaster.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\EmpBasicMaster.aspx.designer.cs">
-      <DependentUpon>EmpBasicMaster.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\FeedbackReport.aspx.cs">
-      <DependentUpon>FeedbackReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\FeedbackReport.aspx.designer.cs">
-      <DependentUpon>FeedbackReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\FeedbackTrainingRelated.aspx.cs">
-      <DependentUpon>FeedbackTrainingRelated.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\FeedbackTrainingRelated.aspx.designer.cs">
-      <DependentUpon>FeedbackTrainingRelated.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\FindTrainingID.aspx.cs">
-      <DependentUpon>FindTrainingID.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\FindTrainingID.aspx.designer.cs">
-      <DependentUpon>FindTrainingID.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\GeneratePassword.aspx.cs">
-      <DependentUpon>GeneratePassword.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\GeneratePassword.aspx.designer.cs">
-      <DependentUpon>GeneratePassword.aspx</DependentUpon>
-    </Compile>
     <Compile Include="SuperAdmin\Logout.aspx.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1859,61 +1765,18 @@
     <Compile Include="SuperAdmin\Logout.aspx.designer.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SuperAdmin\Registration.aspx.cs">
-      <DependentUpon>Registration.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\Registration.aspx.designer.cs">
-      <DependentUpon>Registration.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingAttendance.aspx.cs">
-      <DependentUpon>TrainingAttendance.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingAttendance.aspx.designer.cs">
-      <DependentUpon>TrainingAttendance.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingDetailsReport.aspx.cs">
-      <DependentUpon>TrainingDetailsReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingDetailsReport.aspx.designer.cs">
-      <DependentUpon>TrainingDetailsReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingReAssign.aspx.cs">
-      <DependentUpon>TrainingReAssign.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingReAssign.aspx.designer.cs">
-      <DependentUpon>TrainingReAssign.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingReports.aspx.cs">
-      <DependentUpon>TrainingReports.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingReports.aspx.designer.cs">
-      <DependentUpon>TrainingReports.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingSearch.aspx.cs">
-      <DependentUpon>TrainingSearch.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingSearch.aspx.designer.cs">
-      <DependentUpon>TrainingSearch.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingUnAssign.aspx.cs">
-      <DependentUpon>TrainingUnAssign.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SuperAdmin\TrainingUnAssign.aspx.designer.cs">
-      <DependentUpon>TrainingUnAssign.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\TopicCategoryMaster.aspx.cs">
       <DependentUpon>TopicCategoryMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TopicCategoryMaster.aspx.designer.cs">
       <DependentUpon>TopicCategoryMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdmin\UserManagement.aspx.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdmin\UserManagement.aspx.designer.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="TraineeMaster.Master.cs">
       <DependentUpon>TraineeMaster.Master</DependentUpon>
