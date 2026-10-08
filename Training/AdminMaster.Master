@@ -1019,6 +1019,37 @@
                 </div>
 
 
+                <!-- ================= FINANCE ================= -->
+
+                <div class="menu-heading collapsed"
+                    onclick="toggleMenu('financeMenu',this)">
+
+                    <i class="fas fa-coins mr-2"></i>
+                    Finance
+
+                </div>
+
+                <div id="financeMenu"
+                    class="submenu-container hide">
+
+                    <a href="Finance/FinanceCostHeadMaster.aspx"
+                        class="submenu-item">Cost Head Master
+                    </a>
+
+                    <a href="Finance/FinanceRateMaster.aspx"
+                        class="submenu-item">Rate Master
+                    </a>
+
+                    <a href="Finance/FinanceCosting.aspx"
+                        class="submenu-item">Training Costing
+                    </a>
+
+                    <a href="Finance/FinanceSessionCosting.aspx"
+                        class="submenu-item">Session Costing
+                    </a>
+
+                </div>
+
                 <!-- ================= REPORTS ================= -->
 
                 <div class="menu-heading collapsed"
