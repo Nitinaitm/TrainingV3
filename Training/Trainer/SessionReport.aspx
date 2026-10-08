@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
 .sr-card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin:20px 0;overflow:hidden}.sr-title{font-size:24px;font-weight:700;color:#0d6efd}.sr-table th{background:#0d6efd;color:#fff;white-space:nowrap;text-align:center}.sr-table td{vertical-align:middle;white-space:nowrap}.sr-filter{background:#f8f9fa;border-bottom:1px solid #dee2e6;padding:15px}
-</style>
+.sr-filter .form-control{width:100%}@media(max-width:767px){.sr-filter .row>div{margin-bottom:10px}.sr-filter .btn{margin-bottom:5px}}</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid">
@@ -10,7 +10,7 @@
 <div class="p-3"><span class="sr-title">Session Report</span><div class="text-muted mt-1">View session-wise reports for trainings assigned to you.</div></div>
 <div class="sr-filter"><div class="row">
 <div class="col-md-3"><label>Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-control" /></div>
-<div class="col-md-3"><label>Batch</label><asp:TextBox ID="txtBatch" runat="server" CssClass="form-control" /></div>
+<div class="col-md-3"><label>Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" /></div><div class="col-md-3"><label>Batch</label><asp:TextBox ID="txtBatch" runat="server" CssClass="form-control" /></div>
 <div class="col-md-3"><label>Session Date From</label><asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" placeholder="dd-MM-yyyy" /></div>
 <div class="col-md-3"><label>Session Date To</label><asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" placeholder="dd-MM-yyyy" /></div>
 </div><div class="mt-3"><asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary" OnClick="btnSearch_Click" /><asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btn btn-secondary ml-2" CausesValidation="false" OnClick="btnReset_Click" /></div></div>
