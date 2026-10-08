@@ -2387,6 +2387,22 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Admin\Finance\FinanceCommon.cs" />
+    <Compile Include="Admin\Finance\FinanceCostHeadMaster.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceCostHeadMaster.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceRateMaster.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceRateMaster.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceCosting.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceCosting.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceSessionCosting.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceSessionCosting.aspx.designer.cs" />
+    <Content Include="Admin\Finance\FinanceCostHeadMaster.aspx" />
+    <Content Include="Admin\Finance\FinanceRateMaster.aspx" />
+    <Content Include="Admin\Finance\FinanceCosting.aspx" />
+    <Content Include="Admin\Finance\FinanceSessionCosting.aspx" />
+    <Content Include="App_Data\FinanceModule.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Business\Audit\clsAuditLog.cs" />
     <Content Include="Database\AuditLogging.sql" />
   </ItemGroup>
