@@ -1,0 +1,1 @@
+namespace Training.SuperAdmin { public partial class ActivityLog { protected global::System.Web.UI.WebControls.GridView gvActivity; } }
