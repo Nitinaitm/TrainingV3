@@ -203,10 +203,18 @@
     </Compile>
     <Content Include="Admin\TrainingAllotmentDetails.aspx" />
     <Content Include="Admin\SessionAttendanceReport.aspx" />
+    <Content Include="Admin\TrainingMIS.aspx" />
     <Content Include="Admin\AssessmentReport.aspx" />
     <Content Include="Admin\FeedbackReportAdmin.aspx" />
     <Content Include="Admin\CertificateReport.aspx" />
-    <Compile Include="Admin\SessionAttendanceReport.aspx.cs">
+        <Compile Include="Admin\TrainingMIS.aspx.cs">
+      <DependentUpon>TrainingMIS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrainingMIS.aspx.designer.cs">
+      <DependentUpon>TrainingMIS.aspx</DependentUpon>
+    </Compile>
+<Compile Include="Admin\SessionAttendanceReport.aspx.cs">
       <DependentUpon>SessionAttendanceReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
