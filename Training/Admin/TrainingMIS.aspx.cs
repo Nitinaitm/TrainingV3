@@ -201,7 +201,7 @@ namespace Training.Admin
                 sb.AppendLine();
             }
             Response.Write(sb.ToString());
-            HttpContext.Current.ApplicationInstance.CompleteRequest();
+            System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         private DataTable GetFiltered(string q)
