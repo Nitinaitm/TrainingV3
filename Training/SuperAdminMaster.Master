@@ -87,11 +87,12 @@
         <div class="sidebar" id="superAdminSidebar">
             <div class="superadmin-title"><i class="fas fa-user-shield mr-2"></i> Super Admin</div>
             <div class="superadmin-info">System-wide administration and security</div>
-            <a href='<%= ResolveUrl("~/SuperAdmin/UserManagement.aspx") %>' class="menu-item" id="lnkUserManagement" runat="server"><i class="fas fa-users-cog mr-2"></i> User Management</a>
-            <a href='<%= ResolveUrl("~/SuperAdmin/PasswordManagement.aspx") %>' class="menu-item" id="lnkPasswordManagement" runat="server"><i class="fas fa-key mr-2"></i> Password Management</a>
-            <a href='<%= ResolveUrl("~/SuperAdmin/LoginHistory.aspx") %>' class="menu-item" id="lnkLoginHistory" runat="server"><i class="fas fa-sign-in-alt mr-2"></i> Login History</a>
-            <a href='<%= ResolveUrl("~/SuperAdmin/ActivityLog.aspx") %>' class="menu-item" id="lnkActivityLog" runat="server"><i class="fas fa-history mr-2"></i> Activity Log</a>
-            <a href='<%= ResolveUrl("~/SuperAdmin/Logout.aspx") %>' class="menu-item logout-btn" id="lnkLogout" runat="server"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+            <asp:HyperLink ID="lnkCreateUser" runat="server" NavigateUrl="~/SuperAdmin/CreateUser.aspx" CssClass="menu-item"><i class="fas fa-user-plus mr-2"></i> Create User</asp:HyperLink>
+            <asp:HyperLink ID="lnkUserManagement" runat="server" NavigateUrl="~/SuperAdmin/UserManagement.aspx" CssClass="menu-item"><i class="fas fa-users-cog mr-2"></i> User Management</asp:HyperLink>
+            <asp:HyperLink ID="lnkPasswordManagement" runat="server" NavigateUrl="~/SuperAdmin/PasswordManagement.aspx" CssClass="menu-item"><i class="fas fa-key mr-2"></i> Password Management</asp:HyperLink>
+            <asp:HyperLink ID="lnkLoginHistory" runat="server" NavigateUrl="~/SuperAdmin/LoginHistory.aspx" CssClass="menu-item"><i class="fas fa-sign-in-alt mr-2"></i> Login History</asp:HyperLink>
+            <asp:HyperLink ID="lnkActivityLog" runat="server" NavigateUrl="~/SuperAdmin/ActivityLog.aspx" CssClass="menu-item"><i class="fas fa-history mr-2"></i> Activity Log</asp:HyperLink>
+            <asp:HyperLink ID="lnkLogout" runat="server" NavigateUrl="~/SuperAdmin/Logout.aspx" CssClass="menu-item logout-btn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</asp:HyperLink>
         </div>
         <div class="content-area">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
