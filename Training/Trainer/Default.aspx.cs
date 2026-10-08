@@ -60,7 +60,7 @@ namespace Training.Trainer
 
         private void BindSummary()
         {
-            lblTodaySession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND TD.TrainingStatus IN ('InProgress','AttendanceCompleted') AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date)");
+            lblTodaySession.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND TD.TrainingStatus='InProgress' AND TRY_CONVERT(date,SM.SessionDate,105)=CAST(GETDATE() AS date)");
             lblPendingAttendance.Text = GetCount("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND TD.TrainingStatus='InProgress' AND ISNULL(SM.AttendanceStatus,'Pending')<>'Completed'");
             lblPendingPreTest.Text = GetCount("SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainerID=@TrainerID AND TM.TestType='PRE' AND ISNULL(TM.TestStatus,'Pending')='Pending'");
             lblPendingPostTest.Text = GetCount("SELECT COUNT(*) FROM TestMaster TM INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainerID=@TrainerID AND TM.TestType='POST' AND ISNULL(TM.TestStatus,'Pending')='Pending'");
@@ -117,7 +117,7 @@ namespace Training.Trainer
 
         private void BindGrid()
         {
-            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
+            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
             SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
             DataTable dt = obj.GetDataTable(query, param);
             gvSession.DataSource = dt;
@@ -126,7 +126,7 @@ namespace Training.Trainer
 
         private void BindClosedTraining()
         {
-            string query = "SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateFrom,105),105) AS DateFrom,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateTo,105),105) AS DateTo FROM TrainingDetails TD INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND TD.TrainingStatus='Closed' ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
+            string query = "SELECT DISTINCT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.Batch,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateFrom,105),105) AS DateFrom,CONVERT(varchar(10),TRY_CONVERT(date,TD.DateTo,105),105) AS DateTo FROM TrainingDetails TD INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,TD.DateFrom,105) DESC";
             SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
             DataTable dt = obj.GetDataTable(query, param);
             gvClosedTraining.DataSource = dt;
@@ -135,7 +135,7 @@ namespace Training.Trainer
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed','TrainingCompleted')";
+            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
             List<SqlParameter> param = new List<SqlParameter>();
             param.Add(new SqlParameter("@TrainerID", TrainerID));
             if (!string.IsNullOrEmpty(ddlCourse.SelectedValue))
