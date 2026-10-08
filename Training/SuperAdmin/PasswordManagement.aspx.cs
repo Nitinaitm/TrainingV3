@@ -7,7 +7,7 @@ namespace Training.SuperAdmin
  public partial class PasswordManagement : Page
  {
   private readonly clsDataAccess db=new clsDataAccess();
-  protected void Page_Load(object sender,EventArgs e){if(!IsSuperAdmin()){Response.Redirect("~/Default.aspx");return;}}
+  protected void Page_Load(object sender,EventArgs e){if(!IsSuperAdmin()){Response.Redirect("~/Default.aspx");return;}if(!IsPostBack&&Session["SuperAdminPasswordLoginID"]!=null){txtLoginID.Text=Session["SuperAdminPasswordLoginID"].ToString();Session.Remove("SuperAdminPasswordLoginID");}}
   private bool IsSuperAdmin(){return Session["Role"]!=null&&string.Equals(Session["Role"].ToString(),"SuperAdmin",StringComparison.OrdinalIgnoreCase);}
   protected void btnChange_Click(object sender,EventArgs e)
   {
