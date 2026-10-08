@@ -103,12 +103,15 @@ namespace Training.Admin
             lblCertificates.Text=Scalar("SELECT COUNT(*) FROM TrainingCertificate TC INNER JOIN TrainingDetails TD ON TC.TrainingID=TD.TrainingID WHERE 1=1"+f).ToString();
             lblFeedback.Text=Scalar("SELECT COUNT(*) FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID WHERE ISNULL(F.Submitted,0)=1"+f).ToString();
             decimal post=ScalarDecimal("SELECT ISNULL(AVG(R.Percentage),0) FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE TM.TestType='POST'"+f);
-            decimal manHours=ScalarDecimal("SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+f);
-            lblTotalManHours.Text=manHours.ToString("0.00");
+            decimal scheduledManHours=ScalarDecimal("SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+f);
+            decimal completedManHours=ScalarDecimal("SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed') AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+f);
+            lblScheduledManHours.Text=scheduledManHours.ToString("0.00");
+            lblCompletedManHours.Text=completedManHours.ToString("0.00");
+            lblTotalManHours.Text=scheduledManHours.ToString("0.00");
             lblPostTest.Text=post.ToString("0.00")+"%";
             string statusQ="SELECT ISNULL(TD.TrainingStatus,'') TrainingStatus,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingStatus,'') ORDER BY TrainingStatus";
             string typeQ="SELECT ISNULL(TD.TrainingType,'') TrainingType,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingType,'') ORDER BY TrainingType";
-            string courseQ="SELECT ISNULL(CM.CourseName,'') CourseName,COUNT(*) TrainingCount,ISNULL(SUM(TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),''))),0) TotalTrainingDays FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1"+f+" GROUP BY ISNULL(CM.CourseName,'') ORDER BY TrainingCount DESC,CourseName";
+            string courseQ="SELECT ISNULL(CM.CourseName,'') CourseName,COUNT(*) TrainingCount,ISNULL(SUM(TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),''))),0) TotalTrainingDays,ISNULL(SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed') THEN TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),'')) ELSE 0 END),0) CompletedTrainingDays,ISNULL(SUM(ISNULL(SH.ScheduledManHours,0)),0) ScheduledManHours,ISNULL(SUM(ISNULL(SH.CompletedManHours,0)),0) CompletedManHours FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) ScheduledManHours,ISNULL(SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed') THEN (DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) ELSE 0 END),0) CompletedManHours FROM SessionMaster SM OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE SM.TrainingID=TD.TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL) SH WHERE 1=1"+f+" GROUP BY ISNULL(CM.CourseName,'') ORDER BY TrainingCount DESC,CourseName";
             gvStatus.DataSource=GetFiltered(statusQ);gvStatus.DataBind();
             gvType.DataSource=GetFiltered(typeQ);gvType.DataBind();
             gvCourse.DataSource=GetFiltered(courseQ);gvCourse.DataBind();
@@ -169,6 +172,12 @@ namespace Training.Admin
                 q="SELECT F.ID,F.TrainingID,F.EmpID,E.EmpName,F.Submitted,F.SubmittedOn FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON F.EmpID=E.EmpID WHERE ISNULL(F.Submitted,0)=1"+Filter("TD")+" ORDER BY F.SubmittedOn DESC";
                 title="Feedback Submitted - "+lblFeedback.Text+" row(s)";
             }
+            else if(type=="ScheduledManHours" || type=="CompletedManHours")
+            {
+                string completedCondition=type=="CompletedManHours" ? " AND ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed')" : "";
+                q="SELECT SM.SessionID,SM.TrainingID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,CAST(DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0 AS decimal(18,2)) SessionHours,ISNULL(TC.TraineeCount,0) TraineeCount,CAST((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) AS decimal(18,2)) ManHours,ISNULL(CM.CourseName,'') CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+completedCondition+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+","+DateExpr("SM.SessionDate");
+                title=(type=="CompletedManHours" ? "Man Hours - Training Completed - "+lblCompletedManHours.Text : "Man Hours - Training Scheduled - "+lblScheduledManHours.Text)+" hour(s)";
+            }
             else if(type=="TotalManHours")
             {
                 q="SELECT SM.SessionID,SM.TrainingID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,CAST(DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0 AS decimal(18,2)) SessionHours,ISNULL(TC.TraineeCount,0) TraineeCount,CAST((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) AS decimal(18,2)) ManHours,ISNULL(CM.CourseName,'') CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+","+DateExpr("SM.SessionDate");
@@ -188,6 +197,72 @@ namespace Training.Admin
             ScriptManager.RegisterStartupScript(this,GetType(),"showKpiDetails","showKpiDetails();",true);
         }
 
+
+        protected void gvKpiDetails_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType==DataControlRowType.DataRow)
+            {
+                TableCell cell=new TableCell();
+                cell.Text=(e.Row.RowIndex+1).ToString();
+                e.Row.Cells.AddAt(0,cell);
+            }
+            else if(e.Row.RowType==DataControlRowType.Header)
+            {
+                TableCell cell=new TableCell();
+                cell.Text="S.No.";
+                e.Row.Cells.AddAt(0,cell);
+            }
+        }
+
+        protected void gvSummary_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType!=DataControlRowType.DataRow)return;
+            GridView grid=(GridView)sender;
+            string type=grid.ID=="gvStatus" ? "StatusSummary" : grid.ID=="gvType" ? "TypeSummary" : "CourseSummary";
+            int countIndex=grid.ID=="gvStatus" || grid.ID=="gvType" ? 1 : 1;
+            if(e.Row.Cells.Count<=countIndex)return;
+            string key=e.Row.Cells[0].Text;
+            LinkButton link=new LinkButton();
+            link.Text=e.Row.Cells[countIndex].Text;
+            link.CommandName=type;
+            link.CommandArgument=Server.HtmlDecode(key);
+            link.CssClass="summary-link";
+            e.Row.Cells[countIndex].Controls.Clear();
+            e.Row.Cells[countIndex].Controls.Add(link);
+        }
+
+        protected void gvSummary_RowCommand(object sender,GridViewCommandEventArgs e)
+        {
+            if(e.CommandName=="StatusSummary" || e.CommandName=="TypeSummary" || e.CommandName=="CourseSummary")
+            {
+                string key=Convert.ToString(e.CommandArgument);
+                string q="";
+                string title="";
+                if(e.CommandName=="StatusSummary")
+                {
+                    q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingLocation,'') TrainingLocation,TD.NoOfDays,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(TD.TrainingStatus,'')=@SummaryKey"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                    title="Training Status: "+key;
+                }
+                else if(e.CommandName=="TypeSummary")
+                {
+                    q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingLocation,'') TrainingLocation,TD.NoOfDays,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(TD.TrainingType,'')=@SummaryKey"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                    title="Training Type: "+key;
+                }
+                else
+                {
+                    q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,TD.NoOfDays,ISNULL(SH.ScheduledManHours,0) ScheduledManHours,ISNULL(SH.CompletedManHours,0) CompletedManHours FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID OUTER APPLY (SELECT ISNULL(SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)),0) ScheduledManHours,ISNULL(SUM(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed') THEN (DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) ELSE 0 END),0) CompletedManHours FROM SessionMaster SM OUTER APPLY (SELECT COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE TA.TrainingID=SM.TrainingID AND ISNULL(TA.Cancelled,0)=0) TC WHERE SM.TrainingID=TD.TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL) SH WHERE ISNULL(CM.CourseName,'')=@SummaryKey"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                    title="Course: "+key;
+                }
+                SqlParameter p=new SqlParameter("@SummaryKey",key);
+                DataTable dt=GetFiltered(q,p);
+                ViewState["KpiDetailQuery"]=q;
+                ViewState["KpiDetailSummaryKey"]=key;
+                gvKpiDetails.DataSource=dt;
+                gvKpiDetails.DataBind();
+                lblKpiDetailsTitle.Text=title+" | "+dt.Rows.Count+" row(s)";
+                ScriptManager.RegisterStartupScript(this,GetType(),"showKpiDetails","showKpiDetails();",true);
+            }
+        }
 
         protected void btnExportKpiDetails_Click(object sender,EventArgs e)
         {
