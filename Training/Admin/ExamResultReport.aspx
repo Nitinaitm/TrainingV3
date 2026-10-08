@@ -118,7 +118,7 @@
                     <asp:GridView ID="gvTrainingList" runat="server" AutoGenerateColumns="False" CssClass="report-table" OnRowCommand="gvTrainingList_RowCommand" EmptyDataText="No training found.">
                         <Columns>
                             <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
-                            <asp:TemplateField HeaderText="Training ID"><ItemTemplate><asp:LinkButton ID="lnkTrainingInfo" runat="server" Text="<%# Eval(&quot;TrainingID&quot;) %>" CssClass="training-link" CommandName="TrainingInfo" CommandArgument="<%# Eval(&quot;TrainingID&quot;) %>" /></ItemTemplate></asp:TemplateField>
+                            <asp:TemplateField HeaderText="Training ID"><ItemTemplate><asp:LinkButton ID="lnkTrainingInfo" runat="server" Text='<%# Eval("TrainingID") %>' CssClass="training-link" CommandName="TrainingInfo" CommandArgument='<%# Eval("TrainingID") %>' /></ItemTemplate></asp:TemplateField>
                             <asp:BoundField DataField="CourseName" HeaderText="Course" />
                             <asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
                             <asp:BoundField DataField="SessionCount" HeaderText="Sessions" />
