@@ -48,12 +48,12 @@ namespace Training.Trainer
 
         private void BindStatus()
         {
-            string query = "SELECT DISTINCT ISNULL(SM.SessionStatus,'') SessionStatus FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID ORDER BY SessionStatus";
+            string query = "SELECT DISTINCT ISNULL(TD.TrainingStatus,'') TrainingStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'')<>'' ORDER BY TrainingStatus";
             SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
             DataTable dt = obj.GetDataTable(query, param);
             ddlStatus.DataSource = dt;
-            ddlStatus.DataTextField = "SessionStatus";
-            ddlStatus.DataValueField = "SessionStatus";
+            ddlStatus.DataTextField = "TrainingStatus";
+            ddlStatus.DataValueField = "TrainingStatus";
             ddlStatus.DataBind();
             ddlStatus.Items.Insert(0, new ListItem("All", ""));
         }
@@ -145,7 +145,7 @@ namespace Training.Trainer
             }
             if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
             {
-                query += " AND ISNULL(SM.SessionStatus,'')=@Status";
+                query += " AND ISNULL(TD.TrainingStatus,'')=@Status";
                 param.Add(new SqlParameter("@Status", ddlStatus.SelectedValue));
             }
             if (!string.IsNullOrEmpty(txtFromDate.Text.Trim()))
