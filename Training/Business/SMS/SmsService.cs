@@ -69,6 +69,11 @@ namespace Training.Business.SMS
             return "Training " + trainingID + " has started. Please attend the training as per the scheduled programme. - BSPHCL";
         }
 
+        public static string GetTrainerTrainingAssignedMessage(string trainingName, string sessionDates, string trainingLocation, string trainingOrganizer)
+        {
+            return "You have been assigned as Trainer for Training \"" + trainingName + "\" on date " + sessionDates + " at " + trainingLocation + " by " + trainingOrganizer + ". Please attend the assigned sessions as per schedule. - BSPHCL";
+        }
+
         public static string GetManagerAssignedMessage(string managerID, string trainingLocation)
         {
             return "You have been assigned as Training Manager" + (string.IsNullOrWhiteSpace(trainingLocation) ? "" : " for " + trainingLocation) + ". Manager ID: " + managerID + ". - BSPHCL";
