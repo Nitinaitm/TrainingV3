@@ -551,6 +551,8 @@
     <Content Include="obj\Debug\Training.pdb" />
     <Content Include="Registration.aspx" />
     <Content Include="ResetPassword.aspx" />
+    <Content Include="SuperAdmin\ActivityLog.aspx" />
+    <Content Include="SuperAdmin\CreateUser.aspx" />
     <Content Include="SuperAdmin\css\.DS_Store" />
     <Content Include="SuperAdmin\css\bootstrap.min.css" />
     <Content Include="SuperAdmin\css\bootstrap\.DS_Store" />
@@ -574,7 +576,9 @@
     <Content Include="SuperAdmin\js\main.js" />
     <Content Include="SuperAdmin\js\popper.js" />
     <Content Include="SuperAdmin\js\select2.js" />
+    <Content Include="SuperAdmin\LoginHistory.aspx" />
     <Content Include="SuperAdmin\Logout.aspx" />
+    <Content Include="SuperAdmin\PasswordManagement.aspx" />
     <Content Include="SuperAdmin\scss\.DS_Store" />
     <Content Include="SuperAdmin\scss\bootstrap\.DS_Store" />
     <Content Include="SuperAdmin\scss\bootstrap\bootstrap-grid.scss" />
@@ -1131,6 +1135,7 @@
     </Compile>
     <Compile Include="Admin\ExternalTraineeReport.aspx.cs">
       <DependentUpon>ExternalTraineeReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\ExternalTraineeReport.aspx.designer.cs">
       <DependentUpon>ExternalTraineeReport.aspx</DependentUpon>
@@ -1758,6 +1763,26 @@
     <Compile Include="SuperAdminMaster.Master.designer.cs">
       <DependentUpon>SuperAdminMaster.Master</DependentUpon>
     </Compile>
+    <Compile Include="SuperAdmin\ActivityLog.aspx.cs">
+      <DependentUpon>ActivityLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdmin\ActivityLog.aspx.designer.cs">
+      <DependentUpon>ActivityLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdmin\CreateUser.aspx.cs">
+      <DependentUpon>CreateUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuperAdmin\CreateUser.aspx.designer.cs">
+      <DependentUpon>CreateUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdmin\LoginHistory.aspx.cs">
+      <DependentUpon>LoginHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuperAdmin\LoginHistory.aspx.designer.cs">
+      <DependentUpon>LoginHistory.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SuperAdmin\Logout.aspx.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1772,8 +1797,16 @@
     <Compile Include="Admin\TopicCategoryMaster.aspx.designer.cs">
       <DependentUpon>TopicCategoryMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SuperAdmin\PasswordManagement.aspx.cs">
+      <DependentUpon>PasswordManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuperAdmin\PasswordManagement.aspx.designer.cs">
+      <DependentUpon>PasswordManagement.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SuperAdmin\UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SuperAdmin\UserManagement.aspx.designer.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
