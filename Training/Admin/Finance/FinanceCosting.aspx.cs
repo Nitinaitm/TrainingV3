@@ -111,6 +111,28 @@ namespace Training.Admin
             return 0;
         }
 
+        protected void gvCosting_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "SaveOverride") return;
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
+            long detailID = Convert.ToInt64(gvCosting.DataKeys[rowIndex].Value);
+            System.Web.UI.WebControls.TextBox txtOverride = (System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverride");
+            decimal amount;
+            object value = DBNull.Value;
+            if (!string.IsNullOrWhiteSpace(txtOverride.Text))
+            {
+                if (!Decimal.TryParse(txtOverride.Text.Trim(), out amount) || amount < 0)
+                {
+                    lblMessage.Text = "Invalid override amount.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return;
+                }
+                value = amount;
+            }
+            objDB.ExecuteSql("UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID", new SqlParameter[] { new SqlParameter("@OverrideAmount",value),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID) });
+            BindSelectedTraining();
+        }
+
         private void BindCourseSummary()
         {
             DataTable dt=objDB.GetDataTable("SELECT ISNULL(C.CourseName,'') AS CourseName,COUNT(DISTINCT TD.TrainingID) AS BatchCount,ISNULL(SUM(D.FinalAmount),0) AS CourseCost,CASE WHEN COUNT(DISTINCT TD.TrainingID)=0 THEN 0 ELSE ISNULL(SUM(D.FinalAmount),0)/COUNT(DISTINCT TD.TrainingID) END AS AverageBatchCost FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID LEFT JOIN FinanceCostingDetail D ON TD.TrainingID=D.TrainingID GROUP BY C.CourseName ORDER BY C.CourseName");
