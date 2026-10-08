@@ -1,63 +1,146 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SuperAdminMaster.master.cs" Inherits="Training.SuperAdminMaster" %>
+<%@ master language="C#" autoeventwireup="true" codebehind="SuperAdminMaster.Master.cs" inherits="Training.SuperAdminMaster" %>
 <!DOCTYPE html>
 <html>
 <head runat="server">
-    <title>Training Management - Super Admin</title>
+    <title>BSPHCL Training Management System - Super Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link href="../img/BSPHCL_Logo.jpg" rel="icon" />
-    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+    <link href='<%= ResolveUrl("~/img/BSPHCL_Logo.jpg") %>' rel="icon" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
-    <link href="/css/style.css" rel="stylesheet" />
+    <link href='<%= ResolveUrl("~/css/style.css") %>' rel="stylesheet" />
     <style>
-        .text-primary{font-size:30px}
-        .superadmin-navbar{background:#fff}
-        .superadmin-navbar .navbar-nav .nav-link{font-weight:600}
-        .superadmin-badge{font-size:12px;margin-left:6px}
-        @media(max-width:900px){.text-primary{font-size:15px;display:inline-block}}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Nunito',sans-serif;background:#f5f7fb}
+        .top-header{height:75px;background:#fff;border-bottom:1px solid #dcdcdc;display:flex;align-items:center;padding:0 20px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:9999;justify-content:space-between}
+        .header-left{display:flex;align-items:center;min-width:0}
+        .toggle-btn{font-size:28px;color:#0d6efd;cursor:pointer;margin-right:18px;user-select:none}
+        .toggle-btn:hover{color:#ff9800}
+        .header-logo{height:55px;width:auto;margin-right:15px}
+        .header-title{font-size:30px;font-weight:700;color:#0d6efd}
+        .header-right{display:flex;align-items:center;gap:30px}
+        .user-info{display:flex;align-items:center;gap:12px}
+        .user-info i{font-size:38px;color:#0d6efd}
+        .user-name{font-size:16px;font-weight:bold}
+        .date-time{font-size:12px;color:#666}
+        .main-layout{display:flex;min-height:calc(100vh - 75px)}
+        .sidebar{width:260px;background:#1f2937;color:#fff;flex-shrink:0;position:sticky;top:75px;height:calc(100vh - 75px);overflow-y:auto;transition:all .3s ease}
+        .sidebar.collapsed{width:0;min-width:0;overflow:hidden}
+        .sidebar::-webkit-scrollbar{width:8px}
+        .sidebar::-webkit-scrollbar-thumb{background:#4b5563;border-radius:20px}
+        .menu-item{display:block;color:#fff;text-decoration:none;padding:14px 18px;border-bottom:1px solid #374151;transition:.3s}
+        .menu-item:hover{background:#2563eb;color:#fff;text-decoration:none}
+        .active-menu{background:#2563eb!important;color:#fff!important;font-weight:700;border-left:4px solid #ffd54f}
+        .logout-btn{background:#dc2626;font-weight:700}
+        .logout-btn:hover{background:#b91c1c}
+        .content-area{flex:1;min-width:0;padding:20px;overflow-x:auto;background:#f8fafc;transition:all .3s ease}
+        .superadmin-title{background:#111827;color:#ffd54f;font-size:15px;font-weight:700;padding:14px 18px;border-top:1px solid #374151;border-bottom:1px solid #374151}
+        .superadmin-info{padding:14px 18px;background:#273449;color:#fff;border-bottom:1px solid #374151;font-size:13px;line-height:1.6}
+        @media(max-width:900px){
+            .top-header{height:auto;min-height:65px;padding:8px 10px;flex-wrap:wrap;gap:8px}
+            .header-left{flex:1;min-width:0}
+            .toggle-btn{font-size:24px;margin-right:10px}
+            .header-logo{height:38px;margin-right:8px}
+            .header-title{font-size:15px;line-height:18px}
+            .header-right{gap:12px;margin-left:auto}
+            .user-info{gap:6px}
+            .user-info i{font-size:28px}
+            .user-name{font-size:13px}
+            .date-time{font-size:10px}
+            .main-layout{flex-direction:column;min-height:auto}
+            .sidebar{width:100%;height:auto;max-height:none;position:relative;top:0}
+            .sidebar.collapsed{display:none;width:100%}
+            .content-area{width:100%;padding:10px;overflow-x:auto}
+        }
+        @media(max-width:576px){
+            .header-title{font-size:13px}
+            .header-logo{height:34px}
+            .header-right{width:100%;justify-content:flex-end;border-top:1px solid #eee;padding-top:5px}
+            .user-info i{font-size:25px}
+            .content-area{padding:7px}
+        }
     </style>
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
 <form id="form1" runat="server">
-    <div class="container-fluid bg-light position-relative shadow">
-        <nav class="navbar navbar-expand-lg navbar-light py-3 py-lg-0 px-2 superadmin-navbar">
-            <a href="~/SuperAdmin/Default.aspx" class="navbar-brand font-weight-bold text-secondary" runat="server">
-                <img src="../img/BSPHCL_Logo.jpg" alt="BSPHCL" />
-                <span class="text-primary">Bihar State Power Holding Co. Ltd.</span>
-            </a>
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                <div class="navbar-nav font-weight-bold mx-auto py-0">
-                    <a href="~/SuperAdmin/UserManagement.aspx" id="lnkUserManagement" class="nav-item nav-link" runat="server">
-                        <i class="fa fa-users-cog"></i> User Management
-                    </a>
-                    <a href="~/SuperAdmin/Logout.aspx" id="lnkLogout" class="nav-item nav-link" runat="server">
-                        <i class="fa fa-sign-out-alt"></i> Logout
-                    </a>
+    <div class="top-header">
+        <div class="header-left">
+            <span class="toggle-btn" onclick="toggleSidebar()">&#9776;</span>
+            <img src='<%= ResolveUrl("~/img/BSPHCL_Logo.jpg") %>' class="header-logo" alt="BSPHCL" />
+            <span class="header-title">Bihar State Power Holding Co. Ltd.</span>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <div class="user-name"><%: Session["name"] == null ? "Super Admin" : Session["name"].ToString() %></div>
+                    <div class="date-time"><span id="currentDate"></span> | <span id="currentTime"></span></div>
                 </div>
             </div>
-        </nav>
+        </div>
     </div>
 
-    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+    <div class="main-layout">
+        <div class="sidebar" id="superAdminSidebar">
+            <div class="superadmin-title"><i class="fas fa-user-shield mr-2"></i> Super Admin</div>
+            <div class="superadmin-info">System-wide user and access management</div>
+            <a href='<%= ResolveUrl("~/SuperAdmin/UserManagement.aspx") %>' class="menu-item" id="lnkUserManagement" runat="server">
+                <i class="fas fa-users-cog mr-2"></i> User Management
+            </a>
+            <a href='<%= ResolveUrl("~/SuperAdmin/Logout.aspx") %>' class="menu-item logout-btn" id="lnkLogout" runat="server">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
+        </div>
+        <div class="content-area">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </div>
+    </div>
 
-    <footer class="container-fluid text-white mt-5 py-4 px-sm-3 px-md-5" style="background:#382621;">
-        <p class="m-0 text-center">
-            <img src="../img/SBPDCL.png" alt="SBPDCL" />
-            <img src="../img/NBPDCL.png" alt="NBPDCL" />
-            <img src="../img/BSPHCL_Footer.jpg" alt="BSPHCL" />
-            <img src="../img/BSPTCL.png" alt="BSPTCL" />
-            <img src="../img/BSPGCL.png" alt="BSPGCL" />
-        </p>
-        <p class="m-0 text-center text-white">
-            &copy; Training Cell, BSPHCL. All Rights Reserved.
-        </p>
-    </footer>
+    <hr />
+    <div class="container-fluid text-white py-4" style="background:#382621;">
+        <div class="text-center">
+            <img src='<%= ResolveUrl("~/img/SBPDCL.png") %>' alt="SBPDCL" />
+            <img src='<%= ResolveUrl("~/img/NBPDCL.png") %>' alt="NBPDCL" />
+            <img src='<%= ResolveUrl("~/img/BSPHCL_Footer.jpg") %>' alt="BSPHCL" />
+            <img src='<%= ResolveUrl("~/img/BSPTCL.png") %>' alt="BSPTCL" />
+            <img src='<%= ResolveUrl("~/img/BSPGCL.png") %>' alt="BSPGCL" />
+        </div>
+        <br />
+        <div class="text-center">
+            <span style="color:#4fc3f7;font-weight:bold;">© <%: DateTime.Now.Year %> Training Cell BSPHCL</span>
+            . All Rights Reserved.
+            <br />
+            Designed &amp; Developed by <span style="color:#4fc3f7;font-weight:bold;">Training Cell, BSPHCL</span>
+        </div>
+    </div>
 </form>
 
+<script>
+function updateDateTime(){var now=new Date();document.getElementById("currentDate").innerHTML=now.toLocaleDateString("en-GB");document.getElementById("currentTime").innerHTML=now.toLocaleTimeString();}
+updateDateTime();setInterval(updateDateTime,1000);
+function toggleSidebar(){var sidebar=document.getElementById("superAdminSidebar");sidebar.classList.toggle("collapsed");localStorage.setItem("SuperAdminSidebar",sidebar.classList.contains("collapsed")?"Hide":"Show");}
+document.addEventListener("DOMContentLoaded",function(){
+    var sidebar=document.getElementById("superAdminSidebar");
+    if(localStorage.getItem("SuperAdminSidebar")=="Hide"){sidebar.classList.add("collapsed");}
+    var currentPage=window.location.pathname.split("/").pop().toLowerCase();
+    document.querySelectorAll(".menu-item").forEach(function(link){
+        var href=link.getAttribute("href");if(!href)return;
+        var linkPage=href.split("?")[0].split("/").pop().toLowerCase();
+        if(linkPage==currentPage)link.classList.add("active-menu");
+    });
+});
+</script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src='<%= ResolveUrl("~/lib/easing/easing.min.js") %>'></script>
+<script src='<%= ResolveUrl("~/lib/owlcarousel/owl.carousel.min.js") %>'></script>
+<script src='<%= ResolveUrl("~/lib/isotope/isotope.pkgd.min.js") %>'></script>
+<script src='<%= ResolveUrl("~/lib/lightbox/js/lightbox.min.js") %>'></script>
+<script src='<%= ResolveUrl("~/mail/jqBootstrapValidation.min.js") %>'></script>
+<script src='<%= ResolveUrl("~/mail/contact.js") %>'></script>
+<script src='<%= ResolveUrl("~/js/main.js") %>'></script>
 </body>
 </html>
