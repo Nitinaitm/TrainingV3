@@ -5,4 +5,18 @@
 <div><span class="sa-label">To Date</span><asp:TextBox ID="txtToDate" runat="server" CssClass="sa-input" TextMode="Date"></asp:TextBox></div>
 <div><asp:Button ID="btnFilter" runat="server" Text="Search" CssClass="sa-btn blue" OnClick="btnFilter_Click" /></div>
 </div>
-<asp:Label ID="lblMessage" runat="server" CssClass="msg"></asp:Label><div class="sa-wrap"><asp:GridView ID="gvActivity" runat="server" AutoGenerateColumns="True" CssClass="sa-table"></asp:GridView></div></div></div></asp:Content>
+<asp:Label ID="lblMessage" runat="server" CssClass="msg"></asp:Label><div class="sa-wrap"><asp:GridView ID="gvActivity" runat="server" AutoGenerateColumns="False" CssClass="sa-table" EmptyDataText="No activity found for the selected date range.">
+<Columns>
+<asp:BoundField DataField="ActivityTime" HeaderText="Date / Time" DataFormatString="{0:dd-MM-yyyy HH:mm:ss}" />
+<asp:BoundField DataField="UserID" HeaderText="User" />
+<asp:BoundField DataField="UserRole" HeaderText="Role" />
+<asp:BoundField DataField="ActionType" HeaderText="Action" />
+<asp:BoundField DataField="Module" HeaderText="Module" />
+<asp:BoundField DataField="PageName" HeaderText="Page" />
+<asp:BoundField DataField="RecordType" HeaderText="Record Type" />
+<asp:BoundField DataField="RecordID" HeaderText="Record ID" />
+<asp:BoundField DataField="Description" HeaderText="Details / Changed Values" />
+<asp:BoundField DataField="IPAddress" HeaderText="IP Address" />
+<asp:BoundField DataField="SessionID" HeaderText="Session ID" />
+</Columns>
+</asp:GridView></div></div></div></asp:Content>
