@@ -70,7 +70,7 @@
         .exam-report-page .report-table tr:hover td{background:#f8fafc}
         @media(max-width:900px){.exam-report-page .compact-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media(max-width:575px){.exam-report-page .compact-filters{grid-template-columns:1fr}}
-</style>
+.exam-report-page .training-link{color:#2563eb;font-weight:700;text-decoration:none}.exam-report-page .training-info-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.58);z-index:99999;padding:20px}.exam-report-page .training-info-box{width:100%;max-width:650px;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.28);overflow:hidden}.exam-report-page .training-info-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#17365d;color:#fff;font-size:18px;font-weight:700}.exam-report-page .training-info-close{border:0;background:transparent;color:#fff;font-size:28px;line-height:1;cursor:pointer}.exam-report-page .training-info-body{padding:18px;max-height:calc(100vh - 180px);overflow:auto}.exam-report-page .training-info-table{width:100%;border-collapse:collapse}.exam-report-page .training-info-table th{width:38%;padding:10px;background:#f8fafc;text-align:left;border-bottom:1px solid #e2e8f0}.exam-report-page .training-info-table td{padding:10px;border-bottom:1px solid #e2e8f0;color:#334155}</style>
 
 </asp:Content>
 
@@ -118,13 +118,9 @@
                     <asp:GridView ID="gvTrainingList" runat="server" AutoGenerateColumns="False" CssClass="report-table" OnRowCommand="gvTrainingList_RowCommand" EmptyDataText="No training found.">
                         <Columns>
                             <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
-                            <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
+                            <asp:TemplateField HeaderText="Training ID"><ItemTemplate><asp:LinkButton ID="lnkTrainingInfo" runat="server" Text="<%# Eval(&quot;TrainingID&quot;) %>" CssClass="training-link" CommandName="TrainingInfo" CommandArgument="<%# Eval(&quot;TrainingID&quot;) %>" /></ItemTemplate></asp:TemplateField>
                             <asp:BoundField DataField="CourseName" HeaderText="Course" />
-                            <asp:BoundField DataField="Batch" HeaderText="Batch" />
-                            <asp:BoundField DataField="TrainingType" HeaderText="Type" />
                             <asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
-                            <asp:BoundField DataField="DateFrom" HeaderText="From" />
-                            <asp:BoundField DataField="DateTo" HeaderText="To" />
                             <asp:BoundField DataField="SessionCount" HeaderText="Sessions" />
                             <asp:BoundField DataField="TraineeCount" HeaderText="Trainees" />
                             <asp:BoundField DataField="PreResultCount" HeaderText="Pre Results" />
@@ -137,7 +133,25 @@
         </div>
     </asp:Panel>
 
-    <asp:Panel ID="pnlSessionList" runat="server" Visible="false">
+    
+<asp:Panel ID="pnlTrainingInfoModal" runat="server" ClientIDMode="Static" CssClass="training-info-modal" style="display:none;">
+<div class="training-info-box">
+<div class="training-info-header"><asp:Label ID="lblTrainingInfoTitle" runat="server" Text="Training Information" /><button type="button" class="training-info-close" onclick="closeTrainingInfo();return false;">&times;</button></div>
+<div class="training-info-body">
+<table class="training-info-table">
+<tr><th>Training ID</th><td><asp:Label ID="lblInfoTrainingID" runat="server" /></td></tr>
+<tr><th>Course</th><td><asp:Label ID="lblInfoCourse" runat="server" /></td></tr>
+<tr><th>Batch</th><td><asp:Label ID="lblInfoBatch" runat="server" /></td></tr>
+<tr><th>Training Type</th><td><asp:Label ID="lblInfoType" runat="server" /></td></tr>
+<tr><th>Training Organizer</th><td><asp:Label ID="lblInfoOrganizer" runat="server" /></td></tr>
+<tr><th>Training Location</th><td><asp:Label ID="lblInfoLocation" runat="server" /></td></tr>
+<tr><th>From Date</th><td><asp:Label ID="lblInfoFrom" runat="server" /></td></tr>
+<tr><th>To Date</th><td><asp:Label ID="lblInfoTo" runat="server" /></td></tr>
+<tr><th>No. of Days</th><td><asp:Label ID="lblInfoDays" runat="server" /></td></tr>
+<tr><th>Status</th><td><asp:Label ID="lblInfoStatus" runat="server" /></td></tr>
+</table></div></div></asp:Panel>
+<script>function showTrainingInfo(){var e=document.getElementById("pnlTrainingInfoModal");if(e)e.style.display="flex";}function closeTrainingInfo(){var e=document.getElementById("pnlTrainingInfoModal");if(e)e.style.display="none";}</script>
+<asp:Panel ID="pnlSessionList" runat="server" Visible="false">
         <div class="breadcrumb-bar">
             <asp:LinkButton ID="btnBackTraining" runat="server" Text="← Training List" CssClass="back-link" OnClick="btnBackTraining_Click" />
             <span>/</span>
