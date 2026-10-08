@@ -149,7 +149,7 @@ namespace Training.Admin
             }
             else if(type=="TotalTrainees")
             {
-                q="SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,COUNT(DISTINCT TA.TrainingID) TrainingCount FROM EmpBasicMaster E INNER JOIN TrainingAssignment TA ON E.EmpID=TA.EmpID AND ISNULL(TA.Cancelled,0)=0 INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE 1=1"+Filter("TD")+" GROUP BY E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace ORDER BY E.EmpID";
+                q="SELECT TA.EmpID,ISNULL(MAX(E.EmpName),'') EmpName,ISNULL(MAX(E.EmpDesignation),'') EmpDesignation,ISNULL(MAX(E.EmpCompany),'') EmpCompany,ISNULL(MAX(E.EmpPostingPlace),'') EmpPostingPlace,COUNT(DISTINCT TA.TrainingID) TrainingCount FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID WHERE ISNULL(TA.Cancelled,0)=0"+Filter("TD")+" GROUP BY TA.EmpID ORDER BY TA.EmpID";
                 title="Total Trainees - "+lblTotalTrainees.Text+" unique trainee(s)";
             }
             else if(type=="TotalSessions")
