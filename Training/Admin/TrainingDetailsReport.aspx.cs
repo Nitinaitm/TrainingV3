@@ -80,8 +80,9 @@ namespace Training.Admin
 
         protected void gvTraining_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName != "ViewTraining") return;
             string trainingID = e.CommandArgument.ToString();
+            if (e.CommandName == "TrainingInfo") { ShowTrainingInfo(trainingID); return; }
+            if (e.CommandName != "ViewTraining") return;
             ViewState["TrainingID"] = trainingID;
             LoadTrainingHeader(trainingID);
             BindSessions(trainingID);
@@ -90,6 +91,15 @@ namespace Training.Admin
             lblDetailMessage.Text = "";
             pnlTrainingList.Visible = false;
             pnlDetails.Visible = true;
+        }
+
+        private void ShowTrainingInfo(string trainingID)
+        {
+            DataTable dt = GetTable("SELECT TD.TrainingID,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID",new SqlParameter("@TrainingID",trainingID));
+            if (dt.Rows.Count == 0) return;
+            DataRow r = dt.Rows[0];
+            lblPopupTrainingID.Text = Convert.ToString(r["TrainingID"]);lblPopupType.Text = Convert.ToString(r["TrainingType"]);lblPopupOrganizer.Text = Convert.ToString(r["TrainingOrganizer"]);lblPopupLocation.Text = Convert.ToString(r["TrainingLocation"]);lblPopupBatch.Text = Convert.ToString(r["Batch"]);lblPopupFrom.Text = Convert.ToString(r["DateFrom"]);lblPopupTo.Text = Convert.ToString(r["DateTo"]);
+            ScriptManager.RegisterStartupScript(this,GetType(),"showTrainingInfo","showTrainingInfo();",true);
         }
 
         private void LoadTrainingHeader(string trainingID)
