@@ -122,14 +122,11 @@ namespace Training.Trainee
 
         private void LoadStatus()
         {
-            DataTable dt = objDB.GetDataTable("SELECT DISTINCT ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE TA.EmpID=@EmpID AND ISNULL(TD.TrainingStatus,'')<>'' ORDER BY TrainingStatus", new SqlParameter[] { new SqlParameter("@EmpID", EmpID) });
             ddlStatus.Items.Clear();
             ddlStatus.Items.Add(new ListItem("All", ""));
-            foreach (DataRow row in dt.Rows)
-            {
-                string status = Convert.ToString(row["TrainingStatus"]).Trim();
-                if (!string.IsNullOrEmpty(status)) ddlStatus.Items.Add(new ListItem(status, status));
-            }
+            ddlStatus.Items.Add(new ListItem("Pending", "Pending"));
+            ddlStatus.Items.Add(new ListItem("In Progress", "In Progress"));
+            ddlStatus.Items.Add(new ListItem("Completed", "Completed"));
         }
 
         private void LoadCourse()
@@ -358,7 +355,7 @@ namespace Training.Trainee
             if (selectedStatus != "")
             {
                 DataView view = dt.DefaultView;
-                view.RowFilter = "TrainingStatus = '" + selectedStatus.Replace("'", "''") + "'";
+                view.RowFilter = "StatusText = '" + selectedStatus.Replace("'", "''") + "'";
                 gvTraining.DataSource = view;
             }
             else
