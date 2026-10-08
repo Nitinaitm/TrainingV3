@@ -22,7 +22,7 @@ namespace Training.Trainer
             if (!IsPostBack)
             {
                 BindCourse();
-                BindBatch();
+                BindStatus();
                 BindSummary();
                 BindGrid();
                 BindClosedTraining();
@@ -46,16 +46,16 @@ namespace Training.Trainer
             ddlCourse.Items.Insert(0, new ListItem("All", ""));
         }
 
-        private void BindBatch()
+        private void BindStatus()
         {
-            string query = "SELECT DISTINCT TD.Batch FROM TrainingDetails TD INNER JOIN SessionMaster SM ON TD.TrainingID=SM.TrainingID WHERE SM.TrainerID=@TrainerID ORDER BY TD.Batch";
+            string query = "SELECT DISTINCT ISNULL(SM.SessionStatus,'') SessionStatus FROM SessionMaster SM WHERE SM.TrainerID=@TrainerID ORDER BY SessionStatus";
             SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
             DataTable dt = obj.GetDataTable(query, param);
-            ddlBatch.DataSource = dt;
-            ddlBatch.DataTextField = "Batch";
-            ddlBatch.DataValueField = "Batch";
-            ddlBatch.DataBind();
-            ddlBatch.Items.Insert(0, new ListItem("All", ""));
+            ddlStatus.DataSource = dt;
+            ddlStatus.DataTextField = "SessionStatus";
+            ddlStatus.DataValueField = "SessionStatus";
+            ddlStatus.DataBind();
+            ddlStatus.Items.Insert(0, new ListItem("All", ""));
         }
 
         private void BindSummary()
@@ -143,10 +143,10 @@ namespace Training.Trainer
                 query += " AND TD.CourseID=@CourseID";
                 param.Add(new SqlParameter("@CourseID", ddlCourse.SelectedValue));
             }
-            if (!string.IsNullOrEmpty(ddlBatch.SelectedValue))
+            if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
             {
-                query += " AND TD.Batch=@Batch";
-                param.Add(new SqlParameter("@Batch", ddlBatch.SelectedValue));
+                query += " AND ISNULL(SM.SessionStatus,'')=@Status";
+                param.Add(new SqlParameter("@Status", ddlStatus.SelectedValue));
             }
             if (!string.IsNullOrEmpty(txtFromDate.Text.Trim()))
             {
@@ -167,7 +167,7 @@ namespace Training.Trainer
         protected void btnReset_Click(object sender, EventArgs e)
         {
             ddlCourse.SelectedIndex = 0;
-            ddlBatch.SelectedIndex = 0;
+            ddlStatus.SelectedIndex = 0;
             txtFromDate.Text = "";
             txtToDate.Text = "";
             BindGrid();
