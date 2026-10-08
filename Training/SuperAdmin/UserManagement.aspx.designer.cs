@@ -16,6 +16,8 @@ namespace Training.SuperAdmin
         protected global::System.Web.UI.WebControls.TextBox txtLoginID;
         protected global::System.Web.UI.WebControls.DropDownList ddlRole;
         protected global::System.Web.UI.WebControls.TextBox txtCorrespondingID;
+        protected global::System.Web.UI.WebControls.TextBox txtPassword;
+        protected global::System.Web.UI.WebControls.TextBox txtConfirmPassword;
         protected global::System.Web.UI.WebControls.DropDownList ddlActive;
         protected global::System.Web.UI.WebControls.Button btnUpdate;
         protected global::System.Web.UI.WebControls.Button btnCancelEdit;
