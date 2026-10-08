@@ -721,7 +721,7 @@ namespace Training.Trainee
         {
             object totalValue =
                 objDB.ExecuteScalar(
-                    "SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(AttendanceSkipped,0)=0",
+                    "SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(SessionCancelled,0)=0 AND ISNULL(AttendanceSkipped,0)=0",
                     new SqlParameter[]
                     {
                         new SqlParameter("@TrainingID", trainingID)
@@ -756,7 +756,7 @@ namespace Training.Trainee
 
             object presentValue =
                 objDB.ExecuteScalar(
-                    "SELECT COUNT(*) FROM SessionMaster SM INNER JOIN SessionAttendance SA ON SA.SessionID=SM.SessionID AND SA.EmpID=@EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.AttendanceSkipped,0)=0 AND SA.AttendanceStatus IN ('Present','Completed')",
+                    "SELECT COUNT(*) FROM SessionMaster SM INNER JOIN SessionAttendance SA ON SA.SessionID=SM.SessionID AND SA.EmpID=@EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.AttendanceSkipped,0)=0 AND SA.AttendanceStatus IN ('Present','Completed')",
                     new SqlParameter[]
                     {
                         new SqlParameter("@TrainingID", trainingID),
@@ -781,7 +781,7 @@ namespace Training.Trainee
         {
             object value =
                 objDB.ExecuteScalar(
-                    "SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.PreAssessmentSkipped,0)=0 AND (NOT EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1) OR NOT EXISTS (SELECT 1 FROM TestMaster TM INNER JOIN TestAttempt AT ON AT.TestID=TM.TestID WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND AT.EmpID=@EmpID AND AT.Submitted=1))",
+                    "SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.PreAssessmentSkipped,0)=0 AND (NOT EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1) OR NOT EXISTS (SELECT 1 FROM TestMaster TM INNER JOIN TestAttempt AT ON AT.TestID=TM.TestID WHERE TM.SessionID=SM.SessionID AND TM.TestType='Pre' AND TM.IsPublished=1 AND AT.EmpID=@EmpID AND AT.Submitted=1))",
                     new SqlParameter[]
                     {
                         new SqlParameter("@TrainingID", trainingID),
@@ -799,7 +799,7 @@ namespace Training.Trainee
         {
             object value =
                 objDB.ExecuteScalar(
-                    "SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.PostAssessmentSkipped,0)=0 AND (NOT EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1) OR NOT EXISTS (SELECT 1 FROM TestMaster TM INNER JOIN TestAttempt AT ON AT.TestID=TM.TestID WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND AT.EmpID=@EmpID AND AT.Submitted=1))",
+                    "SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.PostAssessmentSkipped,0)=0 AND (NOT EXISTS (SELECT 1 FROM TestMaster TM WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1) OR NOT EXISTS (SELECT 1 FROM TestMaster TM INNER JOIN TestAttempt AT ON AT.TestID=TM.TestID WHERE TM.SessionID=SM.SessionID AND TM.TestType='Post' AND TM.IsPublished=1 AND AT.EmpID=@EmpID AND AT.Submitted=1))",
                     new SqlParameter[]
                     {
                         new SqlParameter("@TrainingID", trainingID),
