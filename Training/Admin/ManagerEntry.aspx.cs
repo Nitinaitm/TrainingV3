@@ -125,7 +125,9 @@ namespace Training.Admin
 
             if (result > 0)
             {
-                CreateManagerLogin(empID);\n                SendManagerAssignedSms(empID);\n                ShowMessage("Manager mapping saved successfully.", System.Drawing.Color.Green);
+                CreateManagerLogin(empID);
+                SendManagerAssignedSms(empID);
+                ShowMessage("Manager mapping saved successfully.", System.Drawing.Color.Green);
                 ClearForm();
                 BindGrid();
             }
