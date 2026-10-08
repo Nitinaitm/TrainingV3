@@ -16,7 +16,7 @@
 <div><span class="sa-label">Search Login ID / Corresponding ID</span><asp:TextBox ID="txtSearch" runat="server" CssClass="sa-input"></asp:TextBox></div>
 <div><asp:Button ID="btnLoadUsers" runat="server" Text="Load Users" CssClass="sa-btn blue" OnClick="btnLoadUsers_Click" /></div>
 </div>
-<div class="note">Users are not loaded automatically. Only the selected role is fetched. Passwords are shown decrypted using the existing Encryptor2 implementation.</div>
+<div class="note">Users are not loaded automatically. Only the selected role is fetched. Password is shown in its encrypted database value.</div>
 </div>
 
 <div class="sa-card">
@@ -27,7 +27,7 @@
 <asp:BoundField DataField="LoginIDUserID" HeaderText="Login ID" />
 <asp:BoundField DataField="Role" HeaderText="Role" />
 <asp:BoundField DataField="CorrespondingEmpID" HeaderText="Corresponding ID" />
-<asp:BoundField DataField="PasswordPlain" HeaderText="Password" />
+<asp:BoundField DataField="Password" HeaderText="Encrypted Password" />
 <asp:TemplateField HeaderText="Status"><ItemTemplate><asp:Label ID="lblStatus" runat="server" Text='<%# Convert.ToString(Eval("Active"))=="Y" ? "Active" : "Inactive" %>' CssClass='<%# Convert.ToString(Eval("Active"))=="Y" ? "status-active" : "status-inactive" %>' /></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="LastLogin" HeaderText="Last Login" DataFormatString="{0:dd-MM-yyyy HH:mm}" />
 <asp:TemplateField HeaderText="Actions"><ItemTemplate>
