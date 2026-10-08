@@ -8,118 +8,43 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <style type="text/css">
-        .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #0d6efd;
-        }
-
-        .report-card {
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.10);
-            margin-bottom: 20px;
-        }
-
-        .filter-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .summary-box {
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 18px;
-            text-align: center;
-            min-height: 110px;
-            margin-bottom: 15px;
-        }
-
-        .summary-title {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #6c757d;
-            margin-bottom: 8px;
-        }
-
-        .summary-value {
-            display: block;
-            font-size: 26px;
-            font-weight: bold;
-            color: #0d6efd;
-        }
-
-        .passed-value {
-            color: #198754;
-        }
-
-        .failed-value {
-            color: #dc3545;
-        }
-
-        .average-value {
-            color: #6f42c1;
-        }
-
-        .result-pass {
-            color: #198754;
-            font-weight: bold;
-        }
-
-        .result-fail {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .improvement-positive {
-            color: #198754;
-            font-weight: bold;
-        }
-
-        .improvement-negative {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .report-table {
-            width: 100%;
-        }
-
-            .report-table th {
-                background-color: #0d6efd;
-                color: #ffffff;
-                text-align: center;
-                vertical-align: middle;
-                white-space: nowrap;
-                font-weight: 600;
-            }
-
-            .report-table td {
-                vertical-align: middle;
-            }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .empty-data {
-            text-align: center;
-            padding: 25px;
-            color: #6c757d;
-        }
-
-        .message-area {
-            display: block;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .percentage-text {
-            font-weight: bold;
-        }
+        .exam-report-page{padding:22px;background:#f5f7fb;min-height:calc(100vh - 120px);box-sizing:border-box;color:#1e293b}
+        .exam-report-page .exam-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+        .exam-report-page .page-title{font-size:26px;font-weight:700;color:#17365d;display:block}
+        .exam-report-page .page-subtitle{font-size:13px;color:#64748b;margin-top:4px}
+        .exam-report-page .report-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 4px 16px rgba(15,23,42,.07);margin-bottom:18px;overflow:hidden}
+        .exam-report-page .report-card-header{padding:14px 18px;background:linear-gradient(135deg,#17365d,#2563eb);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+        .exam-report-page .comparison-header{background:linear-gradient(135deg,#0f766e,#0891b2)}
+        .exam-report-page .section-title{font-size:18px;font-weight:700}
+        .exam-report-page .card-body{padding:18px}
+        .exam-report-page .filter-label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:6px}
+        .exam-report-page .form-control{height:40px;border:1px solid #cbd5e1;border-radius:7px;box-shadow:none}
+        .exam-report-page .form-control:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+        .exam-report-page .filter-actions{display:flex;align-items:flex-end;gap:8px;height:100%}
+        .exam-report-page .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+        .exam-report-page .summary-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-align:left;min-height:105px;box-shadow:0 3px 12px rgba(15,23,42,.05);position:relative;overflow:hidden}
+        .exam-report-page .summary-box:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#2563eb}
+        .exam-report-page .summary-box.passed:before{background:#16a34a}
+        .exam-report-page .summary-box.failed:before{background:#dc2626}
+        .exam-report-page .summary-box.average:before{background:#7c3aed}
+        .exam-report-page .summary-title{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:#64748b;margin-bottom:9px}
+        .exam-report-page .summary-value{display:block;font-size:28px;line-height:1.1;font-weight:800;color:#2563eb}
+        .exam-report-page .passed-value{color:#16a34a}.exam-report-page .failed-value{color:#dc2626}.exam-report-page .average-value{color:#7c3aed}
+        .exam-report-page .message-area{display:block;margin:0 0 12px;font-weight:600;color:#475569}
+        .exam-report-page .table-wrap{width:100%;overflow-x:auto;overflow-y:visible;border:1px solid #e2e8f0;border-radius:8px}
+        .exam-report-page .report-table{width:100%;min-width:1850px;margin:0;border-collapse:separate;border-spacing:0}
+        .exam-report-page .report-table th{background:#17365d;color:#fff;text-align:center;vertical-align:middle;white-space:nowrap;font-weight:700;padding:11px 9px;border:0;border-right:1px solid rgba(255,255,255,.16)}
+        .exam-report-page .report-table td{vertical-align:middle;padding:9px;border:0;border-bottom:1px solid #e2e8f0;white-space:nowrap;background:#fff}
+        .exam-report-page .report-table tr:hover td{background:#f8fafc}
+        .exam-report-page .comparison-table{min-width:900px}
+        .exam-report-page .empty-data{text-align:center;padding:28px;color:#64748b;font-weight:600}
+        .exam-report-page .result-pass{color:#15803d;font-weight:800;background:#dcfce7;padding:4px 9px;border-radius:20px;display:inline-block}
+        .exam-report-page .result-fail{color:#b91c1c;font-weight:800;background:#fee2e2;padding:4px 9px;border-radius:20px;display:inline-block}
+        .exam-report-page .percentage-text{font-weight:800;color:#1d4ed8}
+        .exam-report-page .improvement-positive{color:#15803d;font-weight:800}.exam-report-page .improvement-negative{color:#b91c1c;font-weight:800}
+        .exam-report-page .export-btn{white-space:nowrap}
+        @media(max-width:900px){.exam-report-page{padding:12px}.exam-report-page .summary-grid{grid-template-columns:repeat(2,1fr)}.exam-report-page .card-body{padding:14px}}
+        @media(max-width:575px){.exam-report-page .summary-grid{grid-template-columns:1fr}.exam-report-page .page-title{font-size:22px}.exam-report-page .filter-actions{align-items:stretch}.exam-report-page .filter-actions .btn{flex:1}}
     </style>
 
 </asp:Content>
@@ -127,13 +52,13 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <div class="container-fluid">
+    <div class="exam-report-page">
 
         <!-- ================================================= -->
         <!-- PAGE TITLE                                        -->
         <!-- ================================================= -->
 
-        <div class="row mb-3">
+        <div class="exam-header">
 
             <div class="col-md-12">
 
@@ -158,7 +83,7 @@
 
         <div class="card report-card">
 
-            <div class="card-header bg-primary text-white">
+            <div class="report-card-header">
 
                 <b>Search Result
                 </b>
@@ -444,13 +369,13 @@
             runat="server"
             visible="false">
 
-            <div class="row">
+            <div class="summary-grid">
 
                 <!-- Appeared -->
 
                 <div class="col-md-3">
 
-                    <div class="summary-box">
+                    <div class="summary-box passed">
 
                         <span class="summary-title">
                             Total Results
@@ -472,7 +397,7 @@
 
                 <div class="col-md-3">
 
-                    <div class="summary-box">
+                    <div class="summary-box failed">
 
                         <span class="summary-title">
                             Passed
@@ -494,7 +419,7 @@
 
                 <div class="col-md-3">
 
-                    <div class="summary-box">
+                    <div class="summary-box average">
 
                         <span class="summary-title">
                             Failed
@@ -544,7 +469,7 @@
 
         <div class="card report-card">
 
-            <div class="card-header bg-success text-white">
+            <div class="report-card-header">
 
                 <div class="row">
 
@@ -562,7 +487,7 @@
                             id="btnExportResult"
                             runat="server"
                             text="Export Excel"
-                            cssclass="btn btn-light btn-sm"
+                            cssclass="btn btn-light btn-sm export-btn"
                             causesvalidation="false"
                             onclick="btnExportResult_Click" />
 
@@ -575,7 +500,7 @@
 
             <div class="card-body">
 
-                <div class="table-responsive">
+                <div class="table-wrap">
 
                     <asp:gridview
                         id="gvResult"
@@ -868,7 +793,7 @@
 
         <div class="card report-card">
 
-            <div class="card-header bg-info text-white">
+            <div class="report-card-header comparison-header">
 
                 <div class="row">
 
@@ -899,7 +824,7 @@
 
             <div class="card-body">
 
-                <div class="table-responsive">
+                <div class="table-wrap">
 
                     <asp:gridview
                         id="gvComparison"
