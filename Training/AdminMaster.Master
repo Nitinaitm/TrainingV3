@@ -1032,19 +1032,19 @@
                 <div id="financeMenu"
                     class="submenu-container hide">
 
-                    <a href="Finance/FinanceCostHeadMaster.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceCostHeadMaster.aspx") %>'
                         class="submenu-item">Cost Head Master
                     </a>
 
-                    <a href="Finance/FinanceRateMaster.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceRateMaster.aspx") %>'
                         class="submenu-item">Rate Master
                     </a>
 
-                    <a href="Finance/FinanceCosting.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceCosting.aspx") %>'
                         class="submenu-item">Training Costing
                     </a>
 
-                    <a href="Finance/FinanceSessionCosting.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceSessionCosting.aspx") %>'
                         class="submenu-item">Session Costing
                     </a>
 
