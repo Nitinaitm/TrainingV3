@@ -16,7 +16,7 @@
 <div><span class="sa-label">Search Login ID / Corresponding ID</span><asp:TextBox ID="txtSearch" runat="server" CssClass="sa-input"></asp:TextBox></div>
 <div><asp:Button ID="btnLoadUsers" runat="server" Text="Load Users" CssClass="sa-btn blue" OnClick="btnLoadUsers_Click" /></div>
 </div>
-<div class="note">Users are not loaded automatically. Only the selected role is fetched.</div>
+<div class="note">Users are not loaded automatically. Only the selected role is fetched. Passwords are shown decrypted using the existing Encryptor2 implementation.</div>
 </div>
 
 <div class="sa-card">
@@ -27,6 +27,7 @@
 <asp:BoundField DataField="LoginIDUserID" HeaderText="Login ID" />
 <asp:BoundField DataField="Role" HeaderText="Role" />
 <asp:BoundField DataField="CorrespondingEmpID" HeaderText="Corresponding ID" />
+<asp:BoundField DataField="PasswordPlain" HeaderText="Password" />
 <asp:TemplateField HeaderText="Status"><ItemTemplate><asp:Label ID="lblStatus" runat="server" Text='<%# Convert.ToString(Eval("Active"))=="Y" ? "Active" : "Inactive" %>' CssClass='<%# Convert.ToString(Eval("Active"))=="Y" ? "status-active" : "status-inactive" %>' /></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="LastLogin" HeaderText="Last Login" DataFormatString="{0:dd-MM-yyyy HH:mm}" />
 <asp:TemplateField HeaderText="Actions"><ItemTemplate>
@@ -48,6 +49,10 @@
 <div><span class="sa-label">Corresponding ID</span><asp:TextBox ID="txtCorrespondingID" runat="server" CssClass="sa-input"></asp:TextBox></div>
 </div>
 <br />
+<div class="filter-row" style="grid-template-columns:1fr 1fr">
+<div><span class="sa-label">New Password</span><asp:TextBox ID="txtPassword" runat="server" CssClass="sa-input" TextMode="Password"></asp:TextBox></div>
+<div><span class="sa-label">Confirm Password</span><asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="sa-input" TextMode="Password"></asp:TextBox></div>
+</div><br />
 <div>
 <span class="sa-label">Account Status</span>
 <asp:DropDownList ID="ddlActive" runat="server" CssClass="sa-input" style="max-width:260px"><asp:ListItem Value="Y">Active</asp:ListItem><asp:ListItem Value="N">Inactive</asp:ListItem></asp:DropDownList>
