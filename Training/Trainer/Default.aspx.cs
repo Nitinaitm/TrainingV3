@@ -48,14 +48,11 @@ namespace Training.Trainer
 
         private void BindStatus()
         {
-            string query = "SELECT DISTINCT ISNULL(TD.TrainingStatus,'') TrainingStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'')<>'' ORDER BY TrainingStatus";
-            SqlParameter[] param = { new SqlParameter("@TrainerID", TrainerID) };
-            DataTable dt = obj.GetDataTable(query, param);
-            ddlStatus.DataSource = dt;
-            ddlStatus.DataTextField = "TrainingStatus";
-            ddlStatus.DataValueField = "TrainingStatus";
-            ddlStatus.DataBind();
-            ddlStatus.Items.Insert(0, new ListItem("All", ""));
+            ddlStatus.Items.Clear();
+            ddlStatus.Items.Add(new ListItem("All", ""));
+            ddlStatus.Items.Add(new ListItem("Draft", "Draft"));
+            ddlStatus.Items.Add(new ListItem("In Progress", "InProgress"));
+            ddlStatus.Items.Add(new ListItem("Completed", "Completed"));
         }
 
         private void BindSummary()
@@ -135,7 +132,7 @@ namespace Training.Trainer
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
+            string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID";
             List<SqlParameter> param = new List<SqlParameter>();
             param.Add(new SqlParameter("@TrainerID", TrainerID));
             if (!string.IsNullOrEmpty(ddlCourse.SelectedValue))
@@ -147,6 +144,10 @@ namespace Training.Trainer
             {
                 query += " AND ISNULL(TD.TrainingStatus,'')=@Status";
                 param.Add(new SqlParameter("@Status", ddlStatus.SelectedValue));
+            }
+            else
+            {
+                query += " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
             }
             if (!string.IsNullOrEmpty(txtFromDate.Text.Trim()))
             {
