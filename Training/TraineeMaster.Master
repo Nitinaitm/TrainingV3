@@ -82,18 +82,7 @@
             gap: 30px;
         }
 
-        .notification {
-            position: relative;
-            font-size: 24px;
-            color: #555;
-            cursor: pointer;
-        }
-
-            .notification:hover {
-                color: #0d6efd;
-            }
-
-        .notify-count {
+        .notification{position:relative;font-size:24px;color:#555;cursor:pointer;text-decoration:none}.notification:hover{color:#0d6efd}.notification .notify-count{min-width:18px;width:auto;padding:0 4px}.notification-announcement .notify-count{background:#f59e0b}.notification-notification .notify-count{background:#dc2626}.notification .notify-count:hover:after{position:absolute;top:22px;right:0;background:#111827;color:#fff;font-size:11px;padding:4px 7px;border-radius:4px;white-space:nowrap;z-index:10001}.notification-announcement .notify-count:hover:after{content:"Announcement"}.notification-notification .notify-count:hover:after{content:"Notification"}.notify-count{
             position: absolute;
             top: -8px;
             right: -8px;
@@ -454,13 +443,8 @@
 
             <div class="header-right">
 
-                <div class="notification">
-
-                    <i class="fas fa-bell"></i>
-
-                    <span class="notify-count">1</span>
-
-                </div>
+                <a href="Announcement.aspx" class="notification notification-announcement" title="Announcements"><i class="fas fa-bullhorn"></i><span class="notify-count"><asp:Label ID="lblAnnouncementCount" runat="server" Text="0" /></span></a>
+                <a href="Notifications.aspx" class="notification notification-notification" title="Notifications"><i class="fas fa-bell"></i><span class="notify-count"><asp:Label ID="lblNotificationCount" runat="server" Text="0" /></span></a>
 
                 <div class="user-info">
 
@@ -469,8 +453,7 @@
                     <div>
 
                         <div class="user-name">
-                            <asp:Label ID="lblTraineeID" runat="server" Text="Trainee" />
-                            <asp:Label ID="lblTraineeName" runat="server" Text="Trainee" />
+                            <asp:Label ID="lblTraineeID" runat="server" Text="Trainee" /><span>&nbsp;|&nbsp;</span><asp:Label ID="lblTraineeName" runat="server" Text="Trainee" />
                         </div>
                         <asp:Label ID="lblDesignation"
                             runat="server" />
