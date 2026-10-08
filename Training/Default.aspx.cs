@@ -1032,7 +1032,7 @@ startTimer();
                         true;
 
                     Response.Redirect(
-                        "~/SuperAdmin/Default.aspx");
+                        "~/SuperAdmin/UserManagement.aspx");
 
                     break;
 
