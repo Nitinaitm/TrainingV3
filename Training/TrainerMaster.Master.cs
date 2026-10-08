@@ -21,6 +21,7 @@ namespace Training.Trainer
             if (!IsPostBack)
             {
                 LoadTrainerInfo();
+                LoadHeaderCounts();
             }
 
             //try
@@ -30,6 +31,9 @@ namespace Training.Trainer
             //}
             //catch { }
         }
+
+        private void LoadHeaderCounts(){string trainerID=Session["TrainerID"]==null?"":Session["TrainerID"].ToString();if(String.IsNullOrWhiteSpace(trainerID))return;lblAnnouncementCount.Text=GetCount("SELECT COUNT(*) FROM Announcement WHERE TrainerID=@TrainerID AND IsActive=1",trainerID);lblNotificationCount.Text=GetCount("SELECT COUNT(*) FROM Notification WHERE TrainerID=@TrainerID AND ISNULL(IsRead,0)=0",trainerID);}
+        private string GetCount(string query,string trainerID){object value=obj.ExecuteScalar(query,new SqlParameter[] { new SqlParameter("@TrainerID",trainerID) });return value==null||value==DBNull.Value?"0":value.ToString();}
 
         private void LoadTrainerInfo()
         {
@@ -52,7 +56,7 @@ namespace Training.Trainer
                 if (dt.Rows.Count > 0)
                 {
                     DataRow dr = dt.Rows[0];
-                    lblTrainerName.Text = dr["TrainerID"]?.ToString() ?? "Trainer";
+                    lblTrainerID.Text = dr["TrainerID"]?.ToString() ?? "";
                     lblTrainerName.Text = dr["TrainerName"]?.ToString() ?? "Trainer";
                     lblDesignation.Text = dr["Designation"].ToString();
                 }
