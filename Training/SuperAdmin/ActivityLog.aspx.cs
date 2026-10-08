@@ -1,5 +1,6 @@
 using System;
 using System.Web.UI;
+using System.Data.SqlClient;
 namespace Training.SuperAdmin
 {
  public partial class ActivityLog : Page
@@ -8,7 +9,7 @@ namespace Training.SuperAdmin
   protected void Page_Load(object sender,EventArgs e)
   {
    if(Session["Role"]==null||!string.Equals(Session["Role"].ToString(),"SuperAdmin",StringComparison.OrdinalIgnoreCase)){Response.Redirect("~/Default.aspx");return;}
-   if(!IsPostBack){gvActivity.DataSource=db.GetDataTable("SELECT TOP 1000 ActivityID,UserID,UserRole,ActionType,Module,PageName,RecordType,RecordID,Description,ActivityTime,IPAddress,SessionID FROM UserActivityLog ORDER BY ActivityTime DESC");gvActivity.DataBind();}
+   if(!IsPostBack){gvActivity.DataSource=null;gvActivity.DataBind();}
   }
  }
 }
