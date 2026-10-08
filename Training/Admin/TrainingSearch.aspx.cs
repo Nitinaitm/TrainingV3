@@ -421,6 +421,46 @@ namespace Training.Admin
             return dt;
         }
 
+        protected void gvTraining_RowCommand(object sender,GridViewCommandEventArgs e)
+        {
+            string empID=Convert.ToString(e.CommandArgument);
+            if(string.IsNullOrWhiteSpace(empID)) return;
+            if(e.CommandName=="Posting") ShowEmployeePosting(empID);
+            if(e.CommandName=="Training") ShowEmployeeTraining(empID);
+        }
+
+        private void ShowEmployeePosting(string empID)
+        {
+            string q="SELECT TOP 1 E.EmpID,E.EmpName,E.EmpCompany,E.EmpPostingPlace,ISNULL(P.EmpPostingPlace,'') DetailPlace,ISNULL(P.EmpPostingDepartment,'') DepartmentName,ISNULL(P.AreaBoardZone,'') AreaBoardZone,ISNULL(P.Circle,'') Circle,ISNULL(P.Division,'') Division,ISNULL(P.Subdivision,'') Subdivision,ISNULL(P.Section,'') Section FROM EmpBasicMaster E OUTER APPLY (SELECT TOP 1 EP.EmpPostingPlace,EP.EmpPostingDepartment,EP.AreaBoardZone,EP.Circle,EP.Division,EP.Subdivision,EP.Section FROM EmpPostingDetails EP WHERE EP.EmpID=E.EmpID ORDER BY EP.ID DESC) P WHERE E.EmpID=@EmpID";
+            DataTable dt=new DataTable();
+            using(SqlConnection con=new SqlConnection(constr)){using(SqlCommand cmd=new SqlCommand(q,con)){cmd.Parameters.AddWithValue("@EmpID",empID);using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);}}
+            if(dt.Rows.Count==0) return;
+            DataRow r=dt.Rows[0];
+            lblPopupEmpID.Text=Convert.ToString(r["EmpID"]);
+            lblPopupEmpName.Text=Convert.ToString(r["EmpName"]);
+            lblPopupCompany.Text=Convert.ToString(r["EmpCompany"]);
+            lblPopupPostingPlace.Text=Convert.ToString(r["EmpPostingPlace"]);
+            lblPopupDetailPlace.Text=Convert.ToString(r["DetailPlace"]);
+            lblPopupDepartment.Text=Convert.ToString(r["DepartmentName"]);
+            lblPopupZone.Text=Convert.ToString(r["AreaBoardZone"]);
+            lblPopupCircle.Text=Convert.ToString(r["Circle"]);
+            lblPopupDivision.Text=Convert.ToString(r["Division"]);
+            lblPopupSubdivision.Text=Convert.ToString(r["Subdivision"]);
+            lblPopupSection.Text=Convert.ToString(r["Section"]);
+            ScriptManager.RegisterStartupScript(this,GetType(),"showPostingModal","showEmployeeModal('employeePostingModal');",true);
+        }
+
+        private void ShowEmployeeTraining(string empID)
+        {
+            string q="SELECT E.EmpID,E.EmpName,TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingLocation,'') TrainingLocation,ISNULL(TD.NoOfDays,0) NoOfDays,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus,CASE WHEN EXISTS (SELECT 1 FROM SessionAttendance SA WHERE SA.TrainingID=TD.TrainingID AND SA.EmpID=E.EmpID AND SA.AttendanceStatus='Present') THEN 'Attended' ELSE 'Not Attended' END TrainingAttendanceStatus,(SELECT STUFF((SELECT DISTINCT ', '+ISNULL(TP.TopicName,'') FROM SessionMaster SX LEFT JOIN TopicMaster TP ON SX.TopicID=TP.TopicID WHERE SX.TrainingID=TD.TrainingID AND ISNULL(TP.TopicName,'')<>'' FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')) Topics FROM EmpBasicMaster E INNER JOIN TrainingAssignment TA ON TA.EmpID=E.EmpID AND ISNULL(TA.Cancelled,0)=0 INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE E.EmpID=@EmpID ORDER BY COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)) DESC,TD.TrainingID";
+            DataTable dt=new DataTable();
+            using(SqlConnection con=new SqlConnection(constr)){using(SqlCommand cmd=new SqlCommand(q,con)){cmd.Parameters.AddWithValue("@EmpID",empID);using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);}}
+            gvEmployeeTraining.DataSource=dt;
+            gvEmployeeTraining.DataBind();
+            lblTrainingPopupTitle.Text=dt.Rows.Count==0 ? "No training record found for "+empID : "Training History: "+Convert.ToString(dt.Rows[0]["EmpName"])+" ("+empID+") - "+dt.Rows.Count+" record(s)";
+            ScriptManager.RegisterStartupScript(this,GetType(),"showTrainingModal","showEmployeeModal('employeeTrainingModal');",true);
+        }
+
         protected void btnExport_Click(object sender,EventArgs e){string reportType=Convert.ToString(ViewState["ReportType"]);if(string.IsNullOrWhiteSpace(reportType))reportType="All";ExportExcel(GetData(reportType),"EmployeeTrainingReport.xls");}
 
         private void ExportExcel(DataTable dt,string fileName)
