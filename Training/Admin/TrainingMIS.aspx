@@ -398,7 +398,7 @@
                         <asp:Label ID="lblCompletedManHours" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
-                <div class="kpi k4">
+                <div class="kpi k4" runat="server" visible="false">
                     <asp:LinkButton ID="lnkTotalManHours" runat="server" CommandArgument="TotalManHours" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Total Man Hours</div>
                         <asp:Label ID="lblTotalManHours" runat="server" CssClass="kpi-value" />
