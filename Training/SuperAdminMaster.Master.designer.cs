@@ -11,7 +11,6 @@ namespace Training
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         protected global::System.Web.UI.WebControls.HyperLink lnkCreateUser;
         protected global::System.Web.UI.WebControls.HyperLink lnkUserManagement;
-        protected global::System.Web.UI.WebControls.HyperLink lnkPasswordManagement;
         protected global::System.Web.UI.WebControls.HyperLink lnkLoginHistory;
         protected global::System.Web.UI.WebControls.HyperLink lnkActivityLog;
         protected global::System.Web.UI.WebControls.HyperLink lnkLogout;
