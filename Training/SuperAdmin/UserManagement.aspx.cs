@@ -67,7 +67,7 @@ namespace Training.SuperAdmin
             }
 
             string search = txtSearch.Text.Trim();
-            string sql = "SELECT L.LoginIDUserID,L.Role,L.CorrespondingEmpID,L.Active,(SELECT MAX(H.LoginTime) FROM UserLoginHistory H WHERE H.UserID=L.LoginIDUserID AND H.LoginStatus='Success') AS LastLogin FROM Login L WHERE L.Role=@Role";
+            string sql = "SELECT L.LoginIDUserID,L.Role,L.CorrespondingEmpID,L.Password,L.Active,(SELECT MAX(H.LoginTime) FROM UserLoginHistory H WHERE H.UserID=L.LoginIDUserID AND H.LoginStatus='Success') AS LastLogin FROM Login L WHERE L.Role=@Role";
             if (search != "")
                 sql += " AND (L.LoginIDUserID LIKE @Search OR L.CorrespondingEmpID LIKE @Search)";
             sql += " ORDER BY L.LoginIDUserID";
@@ -76,7 +76,22 @@ namespace Training.SuperAdmin
                 ? new SqlParameter[] { new SqlParameter("@Role", role) }
                 : new SqlParameter[] { new SqlParameter("@Role", role), new SqlParameter("@Search", "%" + search + "%") };
 
-            gvUsers.DataSource = db.GetDataTable(sql, parameters);
+            DataTable dt = db.GetDataTable(sql, parameters);
+            if (!dt.Columns.Contains("PasswordPlain"))
+                dt.Columns.Add("PasswordPlain", typeof(string));
+            Encryptor2 encryptor = new Encryptor2();
+            foreach (DataRow row in dt.Rows)
+            {
+                try
+                {
+                    row["PasswordPlain"] = encryptor.Decrypt(Convert.ToString(row["Password"]));
+                }
+                catch
+                {
+                    row["PasswordPlain"] = "[Unable to decrypt]";
+                }
+            }
+            gvUsers.DataSource = dt;
             gvUsers.DataBind();
         }
 
@@ -137,8 +152,16 @@ namespace Training.SuperAdmin
 
             if (e.CommandName == "ChangePassword")
             {
-                Session["SuperAdminPasswordLoginID"] = loginID;
-                Response.Redirect("~/SuperAdmin/PasswordManagement.aspx");
+                DataTable dt = db.GetDataTable("SELECT LoginIDUserID,Role,CorrespondingEmpID,Password,Active FROM Login WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID", loginID) });
+                if (dt.Rows.Count == 0) return;
+                txtLoginID.Text = dt.Rows[0]["LoginIDUserID"].ToString();
+                ddlRole.SelectedValue = dt.Rows[0]["Role"].ToString();
+                txtCorrespondingID.Text = dt.Rows[0]["CorrespondingEmpID"].ToString();
+                ddlActive.SelectedValue = dt.Rows[0]["Active"].ToString() == "N" ? "N" : "Y";
+                txtPassword.Text = "";
+                txtConfirmPassword.Text = "";
+                editCard.Visible = true;
+                SetMessage("User loaded. Enter the new password and save changes.", true);
                 return;
             }
 
@@ -194,13 +217,42 @@ namespace Training.SuperAdmin
                 SetMessage("Corresponding ID does not exist for the selected role.", false);
                 return;
             }
-
-            db.ExecuteSql("UPDATE Login SET Role=@Role,CorrespondingEmpID=@CorrespondingID,Active=@Active WHERE LoginIDUserID=@LoginID", new SqlParameter[] {
-                new SqlParameter("@Role", role),
-                new SqlParameter("@CorrespondingID", correspondingID),
-                new SqlParameter("@Active", ddlActive.SelectedValue),
-                new SqlParameter("@LoginID", loginID)
-            });
+            string password = txtPassword.Text;
+            string confirmPassword = txtConfirmPassword.Text;
+            if (password != "" || confirmPassword != "")
+            {
+                if (password != confirmPassword)
+                {
+                    SetMessage("Password and confirmation do not match.", false);
+                    return;
+                }
+            }
+            string sql = "UPDATE Login SET Role=@Role,CorrespondingEmpID=@CorrespondingID,Active=@Active";
+            if (password != "")
+                sql += ",Password=@Password,re=@re";
+            sql += " WHERE LoginIDUserID=@LoginID";
+            if (password == "")
+            {
+                db.ExecuteSql(sql, new SqlParameter[] {
+                    new SqlParameter("@Role", role),
+                    new SqlParameter("@CorrespondingID", correspondingID),
+                    new SqlParameter("@Active", ddlActive.SelectedValue),
+                    new SqlParameter("@LoginID", loginID)
+                });
+            }
+            else
+            {
+                Encryptor2 encryptor = new Encryptor2();
+                db.ExecuteSql(sql, new SqlParameter[] {
+                    new SqlParameter("@Role", role),
+                    new SqlParameter("@CorrespondingID", correspondingID),
+                    new SqlParameter("@Active", ddlActive.SelectedValue),
+                    new SqlParameter("@Password", encryptor.Encrypt(password)),
+                    new SqlParameter("@re", encryptor.Encrypt("Y")),
+                    new SqlParameter("@LoginID", loginID)
+                });
+                clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "PASSWORD_CHANGE", "UserManagement", "UserManagement.aspx", "User", loginID, "Password changed by SuperAdmin");
+            }
 
             clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "UPDATE", "UserManagement", "UserManagement.aspx", "User", loginID, "Updated existing user");
             SetMessage("User updated successfully.", true);
@@ -213,6 +265,8 @@ namespace Training.SuperAdmin
             editCard.Visible = false;
             txtLoginID.Text = "";
             txtCorrespondingID.Text = "";
+            txtPassword.Text = "";
+            txtConfirmPassword.Text = "";
         }
     }
 }
