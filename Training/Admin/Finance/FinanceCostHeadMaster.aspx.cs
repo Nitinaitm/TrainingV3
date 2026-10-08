@@ -46,6 +46,12 @@ namespace Training.Admin
             }
         }
 
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            ClearForm();
+            lblMessage.Text = "";
+        }
+
         protected void gvHeads_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName != "Toggle") return;
