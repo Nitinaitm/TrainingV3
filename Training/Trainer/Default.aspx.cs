@@ -51,7 +51,15 @@ namespace Training.Trainer
             ddlStatus.Items.Clear();
             ddlStatus.Items.Add(new ListItem("All", ""));
             ddlStatus.Items.Add(new ListItem("Draft", "Draft"));
+            ddlStatus.Items.Add(new ListItem("Trainer Assigned", "TrainerAssigned"));
+            ddlStatus.Items.Add(new ListItem("Sessions Created", "SessionsCreated"));
+            ddlStatus.Items.Add(new ListItem("Trainees Assigned", "TraineesAssigned"));
             ddlStatus.Items.Add(new ListItem("In Progress", "InProgress"));
+            ddlStatus.Items.Add(new ListItem("Attendance Completed", "AttendanceCompleted"));
+            ddlStatus.Items.Add(new ListItem("Pre Test Completed", "PreTestCompleted"));
+            ddlStatus.Items.Add(new ListItem("Post Test Completed", "PostTestCompleted"));
+            ddlStatus.Items.Add(new ListItem("Feedback Submitted", "FeedbackSubmitted"));
+            ddlStatus.Items.Add(new ListItem("Certificate Generated", "CertificateGenerated"));
             ddlStatus.Items.Add(new ListItem("Completed", "Completed"));
         }
 
@@ -112,6 +120,22 @@ namespace Training.Trainer
             return "Assigned Sessions";
         }
 
+        private string GetStatusFilter(string status)
+        {
+            if(status=="Draft") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%A%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%B%'";
+            if(status=="TrainerAssigned") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%B%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%C%'";
+            if(status=="SessionsCreated") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%C%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%D%'";
+            if(status=="TraineesAssigned") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%D%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%E%'";
+            if(status=="InProgress") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%E%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%F%'";
+            if(status=="AttendanceCompleted") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%F%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%G%'";
+            if(status=="PreTestCompleted") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%G%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%H%'";
+            if(status=="PostTestCompleted") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%H%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%I%'";
+            if(status=="FeedbackSubmitted") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%I%' AND ISNULL(TD.WorkflowStatus,'') NOT LIKE '%J%'";
+            if(status=="CertificateGenerated") return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND ISNULL(TD.WorkflowStatus,'') LIKE '%J%'";
+            if(status=="Completed") return " AND ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted')";
+            return " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
+        }
+
         private void BindGrid()
         {
             string query = "SELECT SM.SessionID,SM.TrainingID,CM.CourseName,TD.Batch,SM.SessionNo,SM.SessionName,TP.TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,TD.WorkflowStatus,TD.TrainingStatus,ISNULL(SM.AttendanceStatus,'Pending') AttendanceStatus FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID INNER JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID WHERE SM.TrainerID=@TrainerID AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
@@ -140,15 +164,7 @@ namespace Training.Trainer
                 query += " AND TD.CourseID=@CourseID";
                 param.Add(new SqlParameter("@CourseID", ddlCourse.SelectedValue));
             }
-            if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
-            {
-                query += " AND ISNULL(TD.TrainingStatus,'')=@Status";
-                param.Add(new SqlParameter("@Status", ddlStatus.SelectedValue));
-            }
-            else
-            {
-                query += " AND ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')";
-            }
+            query += GetStatusFilter(ddlStatus.SelectedValue);
             if (!string.IsNullOrEmpty(txtFromDate.Text.Trim()))
             {
                 query += " AND TRY_CONVERT(date,SM.SessionDate,105)>=TRY_CONVERT(date,@FromDate,105)";
