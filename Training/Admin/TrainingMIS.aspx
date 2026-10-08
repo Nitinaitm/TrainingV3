@@ -35,11 +35,27 @@
 <div class="kpi k2"><asp:LinkButton ID="lnkPostTest" runat="server" CommandArgument="PostTest" CssClass="kpi-link" OnClick="kpiCard_Click"><div class="kpi-label">Avg Post Test %</div><asp:Label ID="lblPostTest" runat="server" CssClass="kpi-value" /></asp:LinkButton></div><div class="kpi k4"><asp:LinkButton ID="lnkScheduledManHours" runat="server" CommandArgument="ScheduledManHours" CssClass="kpi-link" OnClick="kpiCard_Click"><div class="kpi-label">Man Hours - Training Scheduled</div><asp:Label ID="lblScheduledManHours" runat="server" CssClass="kpi-value" /></asp:LinkButton></div><div class="kpi k5"><asp:LinkButton ID="lnkCompletedManHours" runat="server" CommandArgument="CompletedManHours" CssClass="kpi-link" OnClick="kpiCard_Click"><div class="kpi-label">Man Hours - Training Completed</div><asp:Label ID="lblCompletedManHours" runat="server" CssClass="kpi-value" /></asp:LinkButton></div><div class="kpi k4"><asp:LinkButton ID="lnkTotalManHours" runat="server" CommandArgument="TotalManHours" CssClass="kpi-link" OnClick="kpiCard_Click"><div class="kpi-label">Total Man Hours</div><asp:Label ID="lblTotalManHours" runat="server" CssClass="kpi-value" /></asp:LinkButton></div>
 </div></div>
 <div class="summary-grid">
-<div class="mis-card"><div class="mis-title">Training Status Summary</div><asp:GridView ID="gvStatus" runat="server" AutoGenerateColumns="true" CssClass="mis-table" OnRowDataBound="gvSummary_RowDataBound" OnRowCommand="gvSummary_RowCommand" /></div>
-<div class="mis-card"><div class="mis-title">Training Type Summary</div><asp:GridView ID="gvType" runat="server" AutoGenerateColumns="true" CssClass="mis-table" OnRowDataBound="gvSummary_RowDataBound" OnRowCommand="gvSummary_RowCommand" /></div>
+<div class="mis-card"><div class="mis-title">Training Status Summary</div><asp:GridView ID="gvStatus" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
+<Columns>
+<asp:BoundField DataField="TrainingStatus" HeaderText="Training Status" />
+<asp:TemplateField HeaderText="Count"><ItemTemplate><asp:LinkButton ID="lnkStatusCount" runat="server" Text='<%# Eval("TrainingCount") %>' CommandName="StatusSummary" CommandArgument='<%# Eval("TrainingStatus") %>' CssClass="summary-link" /></ItemTemplate></asp:TemplateField>
+</Columns></asp:GridView></div>
+<div class="mis-card"><div class="mis-title">Training Type Summary</div><asp:GridView ID="gvType" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
+<Columns>
+<asp:BoundField DataField="TrainingType" HeaderText="Training Type" />
+<asp:TemplateField HeaderText="Count"><ItemTemplate><asp:LinkButton ID="lnkTypeCount" runat="server" Text='<%# Eval("TrainingCount") %>' CommandName="TypeSummary" CommandArgument='<%# Eval("TrainingType") %>' CssClass="summary-link" /></ItemTemplate></asp:TemplateField>
+</Columns></asp:GridView></div>
 </div>
-<div class="mis-card"><div class="mis-title">Course-wise Summary</div><asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="true" CssClass="mis-table" OnRowDataBound="gvSummary_RowDataBound" OnRowCommand="gvSummary_RowCommand" /></div>
-</div>
+<div class="mis-card"><div class="mis-title">Course-wise Summary</div><asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
+<Columns>
+<asp:BoundField DataField="CourseName" HeaderText="Course" />
+<asp:TemplateField HeaderText="Count"><ItemTemplate><asp:LinkButton ID="lnkCourseCount" runat="server" Text='<%# Eval("TrainingCount") %>' CommandName="CourseSummary" CommandArgument='<%# Eval("CourseName") %>' CssClass="summary-link" /></ItemTemplate></asp:TemplateField>
+<asp:BoundField DataField="TotalTrainingDays" HeaderText="Training Days" />
+<asp:BoundField DataField="CompletedTrainingDays" HeaderText="Completed Days" />
+<asp:BoundField DataField="ScheduledManHours" HeaderText="Scheduled Man Hours" />
+<asp:BoundField DataField="CompletedManHours" HeaderText="Completed Man Hours" />
+</Columns>
+</asp:GridView></div>
 <asp:Panel ID="pnlKpiDetails" runat="server" ClientIDMode="Static" CssClass="kpi-modal" style="display:none;">
 <div class="kpi-modal-box">
 <div class="kpi-modal-head"><asp:Label ID="lblKpiDetailsTitle" runat="server" /><button type="button" class="kpi-close" onclick="closeKpiDetails();return false;">&times;</button></div>
