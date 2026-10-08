@@ -92,7 +92,7 @@ namespace Training.SuperAdmin
                 return Exists("SELECT COUNT(*) FROM TrainerMaster WHERE TrainerID=@ID", correspondingID);
 
             if (role == "Trainee")
-                return Exists("SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@ID") ||
+                return Exists("SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@ID", correspondingID) ||
                        Exists("SELECT COUNT(*) FROM TraineeMasterExternal WHERE TraineeID=@ID", correspondingID);
 
             return false;
