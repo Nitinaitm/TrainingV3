@@ -17,6 +17,7 @@ namespace Training.Admin
             if (!IsPostBack)
             {
                 BindStatus();
+                BindCourse();
                 BindTrainingList();
             }
         }
@@ -35,6 +36,20 @@ namespace Training.Admin
             }
         }
 
+        private void BindCourse()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand("SELECT CourseID,CourseName FROM CourseMaster WHERE ISNULL(CourseName,'')<>'' ORDER BY CourseName", con))
+            {
+                con.Open();
+                ddlCourse.DataSource = cmd.ExecuteReader();
+                ddlCourse.DataTextField = "CourseName";
+                ddlCourse.DataValueField = "CourseID";
+                ddlCourse.DataBind();
+                ddlCourse.Items.Insert(0,new ListItem("All Courses",""));
+            }
+        }
+
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             pnlDetails.Visible = false;
@@ -46,6 +61,7 @@ namespace Training.Admin
         {
             txtTrainingID.Text = "";
             txtBatch.Text = "";
+            ddlCourse.SelectedIndex = 0;
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
             ddlStatus.SelectedIndex = 0;
@@ -62,6 +78,7 @@ namespace Training.Admin
             if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
             if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
             if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
+            if (ddlCourse.SelectedValue != "") { q.Append(" AND TD.CourseID=@CourseID"); cmd.Parameters.AddWithValue("@CourseID",ddlCourse.SelectedValue); }
             if (txtDateFrom.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom))>=TRY_CONVERT(date,@DateFrom,105)"); cmd.Parameters.AddWithValue("@DateFrom",txtDateFrom.Text.Trim()); }
             if (txtDateTo.Text.Trim() != "") { q.Append(" AND COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo))<=TRY_CONVERT(date,@DateTo,105)"); cmd.Parameters.AddWithValue("@DateTo",txtDateTo.Text.Trim()); }
             q.Append(" ORDER BY COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),TD.TrainingID");
