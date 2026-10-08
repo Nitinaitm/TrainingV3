@@ -4,7 +4,7 @@
 .page-shell{background:linear-gradient(135deg,#eff6ff 0%,#f8fafc 48%,#ecfdf5 100%);border:1px solid #dbeafe;border-radius:18px;padding:24px;box-shadow:0 4px 18px rgba(15,23,42,.08)}
 .card{background:rgba(255,255,255,.88);border-radius:14px;box-shadow:0 3px 14px rgba(15,23,42,.08);padding:20px;margin-bottom:20px;border:1px solid #dbeafe}
 .page-title{font-size:28px;font-weight:600;color:#1e293b;margin-bottom:20px}
-.gridview th{background:#198754;color:#fff;white-space:nowrap}.gridview td{vertical-align:middle;white-space:nowrap}
+.gridview th{background:#198754;color:#fff;white-space:nowrap}.gridview td{vertical-align:middle;white-space:nowrap}.gridview th:nth-child(5),.gridview td:nth-child(5){width:120px;max-width:120px;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
  .filter-label{font-weight:600;color:#334155;margin-bottom:5px}.filter-card{background:linear-gradient(135deg,#ffffff,#eef6ff)}.training-card{background:linear-gradient(135deg,#ffffff,#f0fdf4)}
 
 </style>
