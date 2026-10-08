@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Training.Business.SMS;
 
 namespace Training.Admin
 {
@@ -124,14 +125,40 @@ namespace Training.Admin
 
             if (result > 0)
             {
-                CreateManagerLogin(empID);
-                ShowMessage("Manager mapping saved successfully.", System.Drawing.Color.Green);
+                CreateManagerLogin(empID);\n                SendManagerAssignedSms(empID);\n                ShowMessage("Manager mapping saved successfully.", System.Drawing.Color.Green);
                 ClearForm();
                 BindGrid();
             }
             else
             {
                 ShowMessage("Manager mapping could not be saved.", System.Drawing.Color.Red);
+            }
+        }
+
+        private void SendManagerAssignedSms(string empID)
+        {
+            try
+            {
+                DataTable dt = objDB.GetDataTable(
+                    "SELECT TOP 1 M.ManagerID,E.MobileNo,L.TrainingLocation FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID LEFT JOIN TrainingLocationMaster L ON M.TrainingLocationID=L.TrainingLocationID WHERE M.EmpID=@EmpID AND ISNULL(M.ActiveStatus,'Y')='Y' ORDER BY M.ID DESC",
+                    new SqlParameter[] { new SqlParameter("@EmpID", empID) });
+
+                if (dt.Rows.Count == 0)
+                    return;
+
+                string mobileNo = Convert.ToString(dt.Rows[0]["MobileNo"]).Trim();
+                string managerID = Convert.ToString(dt.Rows[0]["ManagerID"]).Trim();
+                string location = Convert.ToString(dt.Rows[0]["TrainingLocation"]).Trim();
+
+                if (string.IsNullOrWhiteSpace(mobileNo))
+                    return;
+
+                SmsService.SendSms(
+                    mobileNo,
+                    SmsService.GetManagerAssignedMessage(managerID, location));
+            }
+            catch
+            {
             }
         }
 
