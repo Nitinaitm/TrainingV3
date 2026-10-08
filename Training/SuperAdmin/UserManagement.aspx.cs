@@ -229,9 +229,9 @@ namespace Training.SuperAdmin
                 return;
             }
 
-            db.ExecuteSql("UPDATE Login SET Active='N' WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID",loginID) });
-            clsAuditLog.LogActivity(CurrentUser(),"SuperAdmin","DISABLE","UserManagement","UserManagement.aspx","User",loginID,"User account disabled");
-            SetMessage("User disabled successfully.", true);
+            db.ExecuteSql("DELETE FROM Login WHERE LoginIDUserID=@LoginID", new SqlParameter[] { new SqlParameter("@LoginID",loginID) });
+            clsAuditLog.LogActivity(CurrentUser(),"SuperAdmin","DELETE","UserManagement","UserManagement.aspx","User",loginID,"User account deleted");
+            SetMessage("User deleted successfully.", true);
             BindUsers();
             BindLoginHistory();
             BindActivity();
