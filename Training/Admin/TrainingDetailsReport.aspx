@@ -15,6 +15,7 @@
 <div class="report-title">Training Report</div>
 <div class="filter-grid">
 <div class="field"><label>Training Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="input" /></div>
+<div class="field"><label>Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="input" /></div>
 <div class="field"><label>Training ID</label><asp:TextBox ID="txtTrainingID" runat="server" CssClass="input" /></div>
 <div class="field"><label>Batch</label><asp:TextBox ID="txtBatch" runat="server" CssClass="input" /></div>
 <div class="field"><label>From Date</label><asp:TextBox ID="txtDateFrom" runat="server" CssClass="input datepicker" placeholder="dd-mm-yyyy" /></div>
