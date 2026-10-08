@@ -108,7 +108,12 @@ namespace Training.Admin
 
         private int GetTrainerHostelOccupancy(string trainingID)
         {
-            return 0;
+            try
+            {
+                DataTable dt=objDB.GetDataTable("SELECT COUNT(DISTINCT HA.EmpID) AS Cnt FROM HostelAllotment HA INNER JOIN TrainerMaster T ON HA.EmpID=T.EmpID WHERE HA.TrainingID=@TrainingID AND HA.Status='Allotted' AND T.TrainerType='Internal'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+                return dt.Rows.Count==0?0:Convert.ToInt32(dt.Rows[0]["Cnt"]);
+            }
+            catch{return 0;}
         }
 
         protected void gvCosting_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
