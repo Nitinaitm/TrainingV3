@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
 using System.Web;
 using System.Web.UI;
@@ -9,1436 +8,185 @@ using System.Web.UI.WebControls;
 
 namespace Training.Admin
 {
-    public partial class ExamResultReport :
-        System.Web.UI.Page
+    public partial class ExamResultReport : Page
     {
-        clsDataAccess objDB =
-            new clsDataAccess();
+        clsDataAccess objDB=new clsDataAccess();
 
-        //-------------------------------------------------------
-        // PAGE LOAD
-        //-------------------------------------------------------
-
-        protected void Page_Load(
-            object sender,
-            EventArgs e)
+        protected void Page_Load(object sender,EventArgs e)
         {
-            if (!IsPostBack)
+            if(!IsPostBack)
             {
-                BindTraining();
-
-                BindCourse();
-
-                BindTest();
-
-                LoadReport();
+                BindCourseFilter();
+                BindStatusFilter();
+                BindTrainingList();
+                ShowLevel(1);
             }
         }
 
-        //-------------------------------------------------------
-        // BIND TRAINING
-        //-------------------------------------------------------
-
-        private void BindTraining()
+        private void BindCourseFilter()
         {
-            string query =
-                "SELECT TD.TrainingID, TD.TrainingID + ' | ' + ISNULL(CM.CourseName,'') + ' | Batch ' + ISNULL(TD.Batch,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID ORDER BY TD.DateFrom DESC, TD.TrainingID DESC";
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query);
-
-            ddlTraining.DataSource =
-                dt;
-
-            ddlTraining.DataTextField =
-                "TrainingName";
-
-            ddlTraining.DataValueField =
-                "TrainingID";
-
-            ddlTraining.DataBind();
-
-            ddlTraining.Items.Insert(
-                0,
-                new ListItem(
-                    "-- All Training --",
-                    ""));
+            string q="SELECT CourseID,CourseName FROM CourseMaster WHERE ISNULL(CourseName,'')<>'' ORDER BY CourseName";
+            DataTable dt=objDB.GetDataTable(q);
+            ddlCourseFilter.DataSource=dt;
+            ddlCourseFilter.DataTextField="CourseName";
+            ddlCourseFilter.DataValueField="CourseID";
+            ddlCourseFilter.DataBind();
+            ddlCourseFilter.Items.Insert(0,new ListItem("All Courses",""));
         }
 
-        //-------------------------------------------------------
-        // BIND COURSE
-        //-------------------------------------------------------
-
-        private void BindCourse()
+        private void BindStatusFilter()
         {
-            string query =
-                "SELECT CourseID, CourseName FROM CourseMaster ORDER BY CourseName";
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query);
-
-            ddlCourse.DataSource =
-                dt;
-
-            ddlCourse.DataTextField =
-                "CourseName";
-
-            ddlCourse.DataValueField =
-                "CourseID";
-
-            ddlCourse.DataBind();
-
-            ddlCourse.Items.Insert(
-                0,
-                new ListItem(
-                    "-- All Course --",
-                    ""));
+            ddlStatusFilter.Items.Clear();
+            ddlStatusFilter.Items.Add(new ListItem("All Status",""));
+            ddlStatusFilter.Items.Add(new ListItem("Completed","Closed"));
+            ddlStatusFilter.Items.Add(new ListItem("Completed","Completed"));
+            ddlStatusFilter.Items.Add(new ListItem("Ongoing","InProgress"));
+            ddlStatusFilter.Items.Add(new ListItem("Future","Future"));
         }
 
-        //-------------------------------------------------------
-        // BIND TEST
-        //-------------------------------------------------------
-
-        private void BindTest()
+        private void BindTrainingList()
         {
-            string query =
-                "SELECT TestID, TestTitle, TestType FROM TestMaster WHERE 1=1";
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTraining.SelectedValue)
-            )
+            string q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,(SELECT COUNT(*) FROM SessionMaster SM WHERE SM.TrainingID=TD.TrainingID AND ISNULL(SM.SessionCancelled,0)=0) SessionCount,(SELECT COUNT(DISTINCT TA.EmpID) FROM TrainingAssignment TA WHERE TA.TrainingID=TD.TrainingID AND ISNULL(TA.Cancelled,0)=0) TraineeCount,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainingID=TD.TrainingID AND TM.TestType='Pre') PreResultCount,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID WHERE SM.TrainingID=TD.TrainingID AND TM.TestType='Post') PostResultCount FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1";
+            SqlCommand cmd=new SqlCommand();
+            if(!string.IsNullOrWhiteSpace(ddlCourseFilter.SelectedValue))
             {
-                query +=
-                    " AND TrainingID=@TrainingID";
+                q+=" AND TD.CourseID=@CourseID";
+                cmd.Parameters.AddWithValue("@CourseID",ddlCourseFilter.SelectedValue);
             }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTestType.SelectedValue)
-            )
+            if(!string.IsNullOrWhiteSpace(ddlStatusFilter.SelectedValue))
             {
-                query +=
-                    " AND TestType=@TestType";
-            }
-
-            query +=
-                " ORDER BY TestType, TestTitle";
-
-            SqlParameter[] param =
-            {
-                new SqlParameter(
-                    "@TrainingID",
-                    String.IsNullOrWhiteSpace(
-                        ddlTraining.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTraining.SelectedValue),
-
-                new SqlParameter(
-                    "@TestType",
-                    String.IsNullOrWhiteSpace(
-                        ddlTestType.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTestType.SelectedValue)
-            };
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query,
-                    param);
-
-            ddlTest.DataSource =
-                dt;
-
-            ddlTest.DataTextField =
-                "TestTitle";
-
-            ddlTest.DataValueField =
-                "TestID";
-
-            ddlTest.DataBind();
-
-            ddlTest.Items.Insert(
-                0,
-                new ListItem(
-                    "-- All Tests --",
-                    ""));
-        }
-
-        //-------------------------------------------------------
-        // TRAINING CHANGE
-        //-------------------------------------------------------
-
-        protected void ddlTraining_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
-        {
-            BindTest();
-        }
-
-        //-------------------------------------------------------
-        // TEST TYPE CHANGE
-        //-------------------------------------------------------
-
-        protected void ddlTestType_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
-        {
-            BindTest();
-        }
-
-        //-------------------------------------------------------
-        // LOAD REPORT
-        //-------------------------------------------------------
-
-        private void LoadReport()
-        {
-            lblMessage.Text =
-                "";
-
-            DateTime fromDate;
-
-            DateTime toDate;
-
-            if
-            (
-                !ValidateDates(
-                    out fromDate,
-                    out toDate)
-            )
-            {
-                ClearReport();
-
-                return;
-            }
-
-            BindSummary(
-                fromDate,
-                toDate);
-
-            BindResultGrid(
-                fromDate,
-                toDate);
-
-            BindComparison(
-                fromDate,
-                toDate);
-        }
-
-        //-------------------------------------------------------
-        // SUMMARY
-        //-------------------------------------------------------
-
-        private void BindSummary(
-            DateTime fromDate,
-            DateTime toDate)
-        {
-            string query =
-                "SELECT COUNT(*) AS TotalResults, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('PASS','PASSED') THEN 1 ELSE 0 END) AS Passed, SUM(CASE WHEN UPPER(ISNULL(TR.ResultStatus,'')) IN ('FAIL','FAILED') THEN 1 ELSE 0 END) AS Failed, AVG(CAST(TR.Percentage AS DECIMAL(10,2))) AS AveragePercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE 1=1";
-
-            AddResultFilters(
-                ref query,
-                fromDate,
-                toDate);
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query,
-                    GetFilterParameters(
-                        fromDate,
-                        toDate));
-
-            int totalResults =
-                0;
-
-            int passed =
-                0;
-
-            int failed =
-                0;
-
-            decimal averagePercentage =
-                0;
-
-            if
-            (
-                dt.Rows.Count
-                >
-                0
-            )
-            {
-                DataRow dr =
-                    dt.Rows[0];
-
-                if
-                (
-                    dr["TotalResults"]
-                    !=
-                    DBNull.Value
-                )
+                if(ddlStatusFilter.SelectedValue=="Future")
+                    q+=" AND COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23))>CAST(GETDATE() AS date)";
+                else
                 {
-                    totalResults =
-                        Convert.ToInt32(
-                            dr["TotalResults"]);
-                }
-
-                if
-                (
-                    dr["Passed"]
-                    !=
-                    DBNull.Value
-                )
-                {
-                    passed =
-                        Convert.ToInt32(
-                            dr["Passed"]);
-                }
-
-                if
-                (
-                    dr["Failed"]
-                    !=
-                    DBNull.Value
-                )
-                {
-                    failed =
-                        Convert.ToInt32(
-                            dr["Failed"]);
-                }
-
-                if
-                (
-                    dr["AveragePercentage"]
-                    !=
-                    DBNull.Value
-                )
-                {
-                    averagePercentage =
-                        Convert.ToDecimal(
-                            dr["AveragePercentage"]);
+                    q+=" AND ISNULL(TD.TrainingStatus,'')=@Status";
+                    cmd.Parameters.AddWithValue("@Status",ddlStatusFilter.SelectedValue);
                 }
             }
-
-            lblTotalResults.Text =
-                totalResults.ToString();
-
-            lblPassed.Text =
-                passed.ToString();
-
-            lblFailed.Text =
-                failed.ToString();
-
-            lblAveragePercentage.Text =
-                averagePercentage.ToString(
-                    "0.00")
-                +
-                " %";
-
-            pnlSummary.Visible =
-                true;
+            if(!string.IsNullOrWhiteSpace(txtTrainingSearch.Text))
+            {
+                q+=" AND (TD.TrainingID LIKE @Search OR ISNULL(TD.Batch,'') LIKE @Search)";
+                cmd.Parameters.AddWithValue("@Search","%"+txtTrainingSearch.Text.Trim()+"%");
+            }
+            q+=" ORDER BY COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23)) DESC,TD.TrainingID DESC";
+            cmd.CommandText=q;
+            DataTable dt=new DataTable();
+            using(SqlConnection con=new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["constr"].ConnectionString))
+            {
+                cmd.Connection=con;
+                using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);
+            }
+            gvTrainingList.DataSource=dt;
+            gvTrainingList.DataBind();
+            lblTrainingCount.Text=dt.Rows.Count+" training(s)";
         }
 
-        //-------------------------------------------------------
-        // RESULT GRID
-        //-------------------------------------------------------
+        protected void btnSearchTraining_Click(object sender,EventArgs e){BindTrainingList();ShowLevel(1);}
+        protected void btnResetTraining_Click(object sender,EventArgs e){ddlCourseFilter.SelectedIndex=0;ddlStatusFilter.SelectedIndex=0;txtTrainingSearch.Text="";BindTrainingList();ShowLevel(1);}
 
-        private void BindResultGrid(
-            DateTime fromDate,
-            DateTime toDate)
+        protected void gvTrainingList_RowCommand(object sender,GridViewCommandEventArgs e)
         {
-            string query =
-                GetResultQuery();
-
-            AddResultFilters(
-                ref query,
-                fromDate,
-                toDate);
-
-            query +=
-                " ORDER BY TD.DateFrom DESC, TM.TrainingID DESC, CASE WHEN TM.TestType='Pre' THEN 1 WHEN TM.TestType='Post' THEN 2 ELSE 3 END, TM.TestTitle, TR.EmpID, TR.AttemptNo DESC";
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query,
-                    GetFilterParameters(
-                        fromDate,
-                        toDate));
-
-            gvResult.DataSource =
-                dt;
-
-            gvResult.DataBind();
-
-            btnExportResult.Enabled =
-                dt.Rows.Count
-                >
-                0;
+            if(e.CommandName!="ViewTraining")return;
+            string trainingID=Convert.ToString(e.CommandArgument);
+            ViewState["TrainingID"]=trainingID;
+            BindSessionList(trainingID);
+            ShowLevel(2);
         }
 
-        //-------------------------------------------------------
-        // RESULT QUERY
-        //-------------------------------------------------------
-
-        private string GetResultQuery()
+        private void BindSessionList(string trainingID)
         {
-            string query =
-                "SELECT TR.ResultID, TR.TestID, TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TM.TestType, TM.TestTitle, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, TR.AttemptNo, TR.TotalQuestions, TR.AttemptedQuestions, TR.CorrectAnswers, TR.WrongAnswers, TR.TotalMarks, TR.ObtainedMarks, TR.Percentage, TR.ResultStatus, TR.RankNo, TR.TimeTaken, TR.SubmittedOn, TR.IsFinalAttempt FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE 1=1";
-
-            return query;
+            string q="SELECT SM.SessionID,SM.SessionNo,ISNULL(SM.SessionName,'') SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,ISNULL(SM.SessionStatus,'') SessionStatus,ISNULL(CASE WHEN TM.TrainerType='Internal' THEN E.EmpName ELSE TM.NameExternal END,'') TrainerName,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster T1 ON TR.TestID=T1.TestID WHERE T1.SessionID=SM.SessionID AND T1.TestType='Pre') PreResults,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster T2 ON TR.TestID=T2.TestID WHERE T2.SessionID=SM.SessionID AND T2.TestType='Post') PostResults FROM SessionMaster SM LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN TrainerMaster TM ON SM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@TrainingID",trainingID));
+            gvSessionList.DataSource=dt;
+            gvSessionList.DataBind();
+            lblSelectedTraining.Text=trainingID+" - "+GetTrainingName(trainingID);
         }
 
-        //-------------------------------------------------------
-        // ADD RESULT FILTERS
-        //-------------------------------------------------------
-
-        private void AddResultFilters(
-            ref string query,
-            DateTime fromDate,
-            DateTime toDate)
+        private string GetTrainingName(string trainingID)
         {
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTraining.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TM.TrainingID=@TrainingID";
-            }
+            string q="SELECT ISNULL(CM.CourseName,'')+' | Batch '+ISNULL(TD.Batch,'') FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID";
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@TrainingID",trainingID));
+            return dt.Rows.Count==0?"":Convert.ToString(dt.Rows[0][0]);
+        }
 
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlCourse.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TD.CourseID=@CourseID";
-            }
+        protected void gvSessionList_RowCommand(object sender,GridViewCommandEventArgs e)
+        {
+            if(e.CommandName!="ViewResults")return;
+            string sessionID=Convert.ToString(e.CommandArgument);
+            ViewState["SessionID"]=sessionID;
+            BindResultList(sessionID);
+            ShowLevel(3);
+        }
 
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtBatch.Text)
-            )
-            {
-                query +=
-                    " AND TD.Batch LIKE @Batch";
-            }
+        private void BindResultList(string sessionID)
+        {
+            string q="SELECT TM.TestType,ISNULL(TM.TestTitle,'') TestTitle,TR.ResultID,TR.EmpID,ISNULL(EBM.EmpName,TME.TraineeName) TraineeName,TR.AttemptNo,TR.TotalQuestions,TR.AttemptedQuestions,TR.CorrectAnswers,TR.WrongAnswers,TR.TotalMarks,TR.ObtainedMarks,TR.Percentage,TR.ResultStatus,TR.RankNo,TR.SubmittedOn FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.SessionID=@SessionID ORDER BY CASE WHEN TM.TestType='Pre' THEN 1 ELSE 2 END,TR.EmpID,TR.AttemptNo DESC";
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@SessionID",sessionID));
+            gvResultList.DataSource=dt;
+            gvResultList.DataBind();
+            lblResultCount.Text=dt.Rows.Count.ToString();
+            lblPassed.Text=Convert.ToString(dt.Compute("COUNT(ResultStatus)","ResultStatus='PASS' OR ResultStatus='Passed'"));
+            lblFailed.Text=Convert.ToString(dt.Compute("COUNT(ResultStatus)","ResultStatus='FAIL' OR ResultStatus='Failed'"));
+            object avg=dt.Compute("AVG(Percentage)","");
+            lblAveragePercentage.Text=avg==DBNull.Value?"0.00 %":Convert.ToDecimal(avg).ToString("0.00")+" %";
+            lblSelectedSession.Text="Session "+sessionID;
+        }
 
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTestType.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TM.TestType=@TestType";
-            }
+        protected void btnBackTraining_Click(object sender,EventArgs e){ShowLevel(1);}
+        protected void btnBackSessions_Click(object sender,EventArgs e){string id=Convert.ToString(ViewState["TrainingID"]);BindSessionList(id);ShowLevel(2);}
 
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTest.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TM.TestID=@TestID";
-            }
+        private void ShowLevel(int level)
+        {
+            pnlTrainingList.Visible=level==1;
+            pnlSessionList.Visible=level==2;
+            pnlResultList.Visible=level==3;
+            lblMessage.Text="";
+        }
 
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtTrainee.Text)
-            )
+        protected void gvResultList_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType!=DataControlRowType.DataRow)return;
+            string result=Convert.ToString(DataBinder.Eval(e.Row.DataItem,"ResultStatus")).ToUpperInvariant();
+            for(int i=0;i<e.Row.Cells.Count;i++)
             {
-                query +=
-                    " AND (TR.EmpID LIKE @Trainee OR EBM.EmpName LIKE @Trainee OR TME.TraineeName LIKE @Trainee)";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlResultStatus.SelectedValue)
-            )
-            {
-                if
-                (
-                    ddlResultStatus.SelectedValue
-                    ==
-                    "PASS"
-                )
-                {
-                    query +=
-                        " AND UPPER(ISNULL(TR.ResultStatus,'')) IN ('PASS','PASSED')";
-                }
-                else if
-                (
-                    ddlResultStatus.SelectedValue
-                    ==
-                    "FAIL"
-                )
-                {
-                    query +=
-                        " AND UPPER(ISNULL(TR.ResultStatus,'')) IN ('FAIL','FAILED')";
-                }
-            }
-
-            if
-            (
-                ddlAttempt.SelectedValue
-                ==
-                "Final"
-            )
-            {
-                query +=
-                    " AND TR.IsFinalAttempt=1";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtFromDate.Text)
-            )
-            {
-                query +=
-                    " AND TR.SubmittedOn>=@FromDate";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtToDate.Text)
-            )
-            {
-                query +=
-                    " AND TR.SubmittedOn<DATEADD(DAY,1,@ToDate)";
+                if(e.Row.Cells[i].Text=="PASS"||e.Row.Cells[i].Text=="Passed")e.Row.Cells[i].CssClass="result-pass";
+                if(e.Row.Cells[i].Text=="FAIL"||e.Row.Cells[i].Text=="Failed")e.Row.Cells[i].CssClass="result-fail";
             }
         }
 
-        //-------------------------------------------------------
-        // FILTER PARAMETERS
-        //-------------------------------------------------------
+        protected void btnExportTraining_Click(object sender,EventArgs e){ExportDataTable(GetTrainingExportData(),"ExamResult_TrainingList");}
+        protected void btnExportSessions_Click(object sender,EventArgs e){string id=Convert.ToString(ViewState["TrainingID"]);ExportDataTable(GetSessionExportData(id),"ExamResult_Sessions");}
+        protected void btnExportResults_Click(object sender,EventArgs e){string id=Convert.ToString(ViewState["SessionID"]);ExportDataTable(GetResultExportData(id),"ExamResult_SessionResults");}
 
-        private SqlParameter[] GetFilterParameters(
-            DateTime fromDate,
-            DateTime toDate)
+        private DataTable GetTrainingExportData(){return GetTrainingDataForExport();}
+        private DataTable GetTrainingDataForExport()
         {
-            SqlParameter[] param =
-            {
-                new SqlParameter(
-                    "@TrainingID",
-                    String.IsNullOrWhiteSpace(
-                        ddlTraining.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTraining.SelectedValue),
-
-                new SqlParameter(
-                    "@CourseID",
-                    String.IsNullOrWhiteSpace(
-                        ddlCourse.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlCourse.SelectedValue),
-
-                new SqlParameter(
-                    "@Batch",
-                    "%"
-                    +
-                    txtBatch.Text.Trim()
-                    +
-                    "%"),
-
-                new SqlParameter(
-                    "@TestType",
-                    String.IsNullOrWhiteSpace(
-                        ddlTestType.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTestType.SelectedValue),
-
-                new SqlParameter(
-                    "@TestID",
-                    String.IsNullOrWhiteSpace(
-                        ddlTest.SelectedValue)
-                    ? (object)DBNull.Value
-                    : ddlTest.SelectedValue),
-
-                new SqlParameter(
-                    "@Trainee",
-                    "%"
-                    +
-                    txtTrainee.Text.Trim()
-                    +
-                    "%"),
-
-                new SqlParameter(
-                    "@FromDate",
-                    String.IsNullOrWhiteSpace(
-                        txtFromDate.Text)
-                    ? (object)DBNull.Value
-                    : fromDate),
-
-                new SqlParameter(
-                    "@ToDate",
-                    String.IsNullOrWhiteSpace(
-                        txtToDate.Text)
-                    ? (object)DBNull.Value
-                    : toDate)
-            };
-
-            return param;
+            string q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.Batch,TD.TrainingType,TD.TrainingStatus,TD.DateFrom,TD.DateTo FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID ORDER BY TD.TrainingID DESC";
+            return objDB.GetDataTable(q);
         }
+        private DataTable GetSessionExportData(string id){return objDB.GetDataTable("SELECT SessionID,SessionNo,SessionName,SessionDate,StartTime,EndTime,SessionStatus FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(SessionCancelled,0)=0 ORDER BY TRY_CONVERT(int,SessionNo)",new SqlParameter("@TrainingID",id));}
+        private DataTable GetResultExportData(string id){return objDB.GetDataTable("SELECT TM.TestType,TM.TestTitle,TR.EmpID,ISNULL(EBM.EmpName,TME.TraineeName) TraineeName,TR.AttemptNo,TR.TotalQuestions,TR.AttemptedQuestions,TR.CorrectAnswers,TR.WrongAnswers,TR.TotalMarks,TR.ObtainedMarks,TR.Percentage,TR.ResultStatus,TR.RankNo,TR.SubmittedOn FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.SessionID=@SessionID ORDER BY TM.TestType,TR.EmpID,TR.AttemptNo DESC",new SqlParameter("@SessionID",id));}
 
-        //-------------------------------------------------------
-        // PRE VS POST COMPARISON
-        //-------------------------------------------------------
-
-        private void BindComparison(
-            DateTime fromDate,
-            DateTime toDate)
+        private void ExportDataTable(DataTable dt,string fileName)
         {
-            DataTable dt =
-                GetComparisonData(
-                    fromDate,
-                    toDate);
-
-            gvComparison.DataSource =
-                dt;
-
-            gvComparison.DataBind();
-
-            btnExportComparison.Enabled =
-                dt.Rows.Count
-                >
-                0;
-        }
-
-        //-------------------------------------------------------
-        // GET COMPARISON DATA
-        //-------------------------------------------------------
-
-        private DataTable GetComparisonData(
-     DateTime fromDate,
-     DateTime toDate)
-        {
-            string query =
-                "SELECT X.TrainingID, X.CourseName, X.Batch, X.EmpID, X.TraineeName, X.PrePercentage, X.PostPercentage, CASE WHEN X.PrePercentage IS NOT NULL AND X.PostPercentage IS NOT NULL THEN X.PostPercentage-X.PrePercentage ELSE NULL END AS Improvement FROM (SELECT TM.TrainingID, ISNULL(CM.CourseName,'') AS CourseName, ISNULL(TD.Batch,'') AS Batch, TR.EmpID, ISNULL(EBM.EmpName,TME.TraineeName) AS TraineeName, AVG(CASE WHEN TM.TestType='Pre' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PrePercentage, AVG(CASE WHEN TM.TestType='Post' THEN CAST(TR.Percentage AS DECIMAL(10,2)) END) AS PostPercentage FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TR.IsFinalAttempt=1 AND TM.TestType IN ('Pre','Post')";
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlTraining.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TM.TrainingID=@TrainingID";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    ddlCourse.SelectedValue)
-            )
-            {
-                query +=
-                    " AND TD.CourseID=@CourseID";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtBatch.Text)
-            )
-            {
-                query +=
-                    " AND TD.Batch LIKE @Batch";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtTrainee.Text)
-            )
-            {
-                query +=
-                    " AND (TR.EmpID LIKE @Trainee OR EBM.EmpName LIKE @Trainee OR TME.TraineeName LIKE @Trainee)";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtFromDate.Text)
-            )
-            {
-                query +=
-                    " AND TR.SubmittedOn>=@FromDate";
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtToDate.Text)
-            )
-            {
-                query +=
-                    " AND TR.SubmittedOn<DATEADD(DAY,1,@ToDate)";
-            }
-
-            query +=
-                " GROUP BY TM.TrainingID, CM.CourseName, TD.Batch, TR.EmpID, EBM.EmpName, TME.TraineeName) X WHERE X.PrePercentage IS NOT NULL OR X.PostPercentage IS NOT NULL ORDER BY X.TrainingID DESC, X.TraineeName, X.EmpID";
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query,
-                    GetFilterParameters(
-                        fromDate,
-                        toDate));
-
-            return dt;
-        }
-        //-------------------------------------------------------
-        // SEARCH
-        //-------------------------------------------------------
-
-        protected void btnSearch_Click(
-            object sender,
-            EventArgs e)
-        {
-            LoadReport();
-        }
-
-        //-------------------------------------------------------
-        // RESET
-        //-------------------------------------------------------
-
-        protected void btnReset_Click(
-            object sender,
-            EventArgs e)
-        {
-            ddlTraining.SelectedIndex =
-                0;
-
-            ddlCourse.SelectedIndex =
-                0;
-
-            txtBatch.Text =
-                "";
-
-            ddlTestType.SelectedIndex =
-                0;
-
-            BindTest();
-
-            txtTrainee.Text =
-                "";
-
-            ddlResultStatus.SelectedIndex =
-                0;
-
-            ddlAttempt.SelectedValue =
-                "Final";
-
-            txtFromDate.Text =
-                "";
-
-            txtToDate.Text =
-                "";
-
-            lblMessage.Text =
-                "";
-
-            LoadReport();
-        }
-
-        //-------------------------------------------------------
-        // VALIDATE DATES
-        //-------------------------------------------------------
-
-        private bool ValidateDates(
-            out DateTime fromDate,
-            out DateTime toDate)
-        {
-            fromDate =
-                DateTime.MinValue;
-
-            toDate =
-                DateTime.MinValue;
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtFromDate.Text)
-            )
-            {
-                if
-                (
-                    !DateTime.TryParseExact(
-                        txtFromDate.Text.Trim(),
-                        "dd-MM-yyyy",
-                        CultureInfo.InvariantCulture,
-                        DateTimeStyles.None,
-                        out fromDate)
-                )
-                {
-                    ShowError(
-                        "Submitted From date must be in dd-MM-yyyy format.");
-
-                    return false;
-                }
-            }
-
-            if
-            (
-                !String.IsNullOrWhiteSpace(
-                    txtToDate.Text)
-            )
-            {
-                if
-                (
-                    !DateTime.TryParseExact(
-                        txtToDate.Text.Trim(),
-                        "dd-MM-yyyy",
-                        CultureInfo.InvariantCulture,
-                        DateTimeStyles.None,
-                        out toDate)
-                )
-                {
-                    ShowError(
-                        "Submitted To date must be in dd-MM-yyyy format.");
-
-                    return false;
-                }
-            }
-
-            if
-            (
-                fromDate
-                !=
-                DateTime.MinValue
-                &&
-                toDate
-                !=
-                DateTime.MinValue
-                &&
-                fromDate
-                >
-                toDate
-            )
-            {
-                ShowError(
-                    "Submitted From date cannot be greater than Submitted To date.");
-
-                return false;
-            }
-
-            return true;
-        }
-
-        //-------------------------------------------------------
-        // RESULT ROW DATA BOUND
-        //-------------------------------------------------------
-
-        protected void gvResult_RowDataBound(
-            object sender,
-            GridViewRowEventArgs e)
-        {
-            if
-            (
-                e.Row.RowType
-                !=
-                DataControlRowType.DataRow
-            )
-            {
-                return;
-            }
-
-            Label lblResult =
-                e.Row.FindControl(
-                    "lblResult")
-                as Label;
-
-            SetResultStyle(
-                lblResult);
-        }
-
-        //-------------------------------------------------------
-        // COMPARISON ROW DATA BOUND
-        //-------------------------------------------------------
-
-        protected void gvComparison_RowDataBound(
-      object sender,
-      GridViewRowEventArgs e)
-        {
-            if
-            (
-                e.Row.RowType
-                !=
-                DataControlRowType.DataRow
-            )
-            {
-                return;
-            }
-
-            Label lblImprovement =
-                e.Row.FindControl(
-                    "lblImprovement")
-                as Label;
-
-            if
-            (
-                lblImprovement
-                ==
-                null
-            )
-            {
-                return;
-            }
-
-            DataRowView drv =
-                e.Row.DataItem
-                as DataRowView;
-
-            if
-            (
-                drv
-                ==
-                null
-                ||
-                drv["Improvement"]
-                ==
-                DBNull.Value
-            )
-            {
-                return;
-            }
-
-            decimal improvement =
-                Convert.ToDecimal(
-                    drv["Improvement"]);
-
-            if (improvement > 0)
-            {
-                lblImprovement.CssClass =
-                    "improvement-positive";
-            }
-            else if (improvement < 0)
-            {
-                lblImprovement.CssClass =
-                    "improvement-negative";
-            }
-        }
-
-        //-------------------------------------------------------
-        // RESULT STYLE
-        //-------------------------------------------------------
-
-        private void SetResultStyle(
-            Label label)
-        {
-            if
-            (
-                label
-                ==
-                null
-            )
-            {
-                return;
-            }
-
-            string result =
-                label.Text.Trim();
-
-            if
-            (
-                result.Equals(
-                    "PASS",
-                    StringComparison.OrdinalIgnoreCase)
-                ||
-                result.Equals(
-                    "PASSED",
-                    StringComparison.OrdinalIgnoreCase)
-            )
-            {
-                label.CssClass =
-                    "result-pass";
-            }
-            else if
-            (
-                result.Equals(
-                    "FAIL",
-                    StringComparison.OrdinalIgnoreCase)
-                ||
-                result.Equals(
-                    "FAILED",
-                    StringComparison.OrdinalIgnoreCase)
-            )
-            {
-                label.CssClass =
-                    "result-fail";
-            }
-        }
-
-        //-------------------------------------------------------
-        // FORMAT TIME TAKEN
-        //-------------------------------------------------------
-
-        protected string FormatTimeTaken(
-            object value)
-        {
-            if
-            (
-                value
-                ==
-                null
-                ||
-                value
-                ==
-                DBNull.Value
-                ||
-                String.IsNullOrWhiteSpace(
-                    Convert.ToString(
-                        value))
-            )
-            {
-                return "-";
-            }
-
-            int seconds;
-
-            if
-            (
-                Int32.TryParse(
-                    Convert.ToString(
-                        value),
-                    out seconds)
-            )
-            {
-                if (seconds < 0)
-                {
-                    seconds =
-                        0;
-                }
-
-                TimeSpan time =
-                    TimeSpan.FromSeconds(
-                        seconds);
-
-                if
-                (
-                    time.TotalHours
-                    >=
-                    1
-                )
-                {
-                    return
-                        ((int)time.TotalHours)
-                        .ToString("00")
-                        +
-                        ":"
-                        +
-                        time.Minutes.ToString("00")
-                        +
-                        ":"
-                        +
-                        time.Seconds.ToString("00");
-                }
-
-                return
-                    time.Minutes.ToString("00")
-                    +
-                    ":"
-                    +
-                    time.Seconds.ToString("00");
-            }
-
-            return
-                Convert.ToString(
-                    value);
-        }
-
-        //-------------------------------------------------------
-        // FORMAT PERCENTAGE
-        //-------------------------------------------------------
-
-        protected string FormatPercentage(
-            object value)
-        {
-            if
-            (
-                value
-                ==
-                null
-                ||
-                value
-                ==
-                DBNull.Value
-            )
-            {
-                return "-";
-            }
-
-            decimal percentage =
-                Convert.ToDecimal(
-                    value);
-
-            return
-                percentage.ToString(
-                    "0.00")
-                +
-                " %";
-        }
-
-        //-------------------------------------------------------
-        // FORMAT IMPROVEMENT
-        //-------------------------------------------------------
-
-        protected string FormatImprovement(
-            object value)
-        {
-            if
-            (
-                value
-                ==
-                null
-                ||
-                value
-                ==
-                DBNull.Value
-            )
-            {
-                return "-";
-            }
-
-            decimal improvement =
-                Convert.ToDecimal(
-                    value);
-
-            if (improvement > 0)
-            {
-                return
-                    "+"
-                    +
-                    improvement.ToString(
-                        "0.00")
-                    +
-                    " %";
-            }
-
-            return
-                improvement.ToString(
-                    "0.00")
-                +
-                " %";
-        }
-
-        //-------------------------------------------------------
-        // EXPORT RESULT
-        //-------------------------------------------------------
-
-        protected void btnExportResult_Click(
-            object sender,
-            EventArgs e)
-        {
-            DateTime fromDate;
-
-            DateTime toDate;
-
-            if
-            (
-                !ValidateDates(
-                    out fromDate,
-                    out toDate)
-            )
-            {
-                return;
-            }
-
-            string query =
-                "SELECT TM.TrainingID AS [Training ID], ISNULL(CM.CourseName,'') AS [Course], ISNULL(TD.Batch,'') AS [Batch], CASE WHEN TM.TestType='Pre' THEN 'Pre Training' WHEN TM.TestType='Post' THEN 'Post Training' ELSE TM.TestType END AS [Exam], TM.TestTitle AS [Test Title], TR.EmpID AS [Trainee ID], ISNULL(EBM.EmpName,TME.TraineeName) AS [Trainee Name], TR.AttemptNo AS [Attempt], TR.TotalQuestions AS [Total Questions], TR.AttemptedQuestions AS [Attempted], TR.CorrectAnswers AS [Correct], TR.WrongAnswers AS [Wrong], TR.TotalMarks AS [Total Marks], TR.ObtainedMarks AS [Obtained Marks], TR.Percentage AS [Percentage], TR.ResultStatus AS [Result], TR.RankNo AS [Rank], TR.TimeTaken AS [Time Taken], TR.SubmittedOn AS [Submitted On], CASE WHEN TR.IsFinalAttempt=1 THEN 'Yes' ELSE 'No' END AS [Final Attempt] FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID INNER JOIN TrainingDetails TD ON TM.TrainingID=TD.TrainingID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE 1=1";
-
-            AddResultFilters(
-                ref query,
-                fromDate,
-                toDate);
-
-            query +=
-                " ORDER BY TD.DateFrom DESC, TM.TrainingID DESC, TM.TestType, TM.TestTitle, TR.EmpID, TR.AttemptNo DESC";
-
-            DataTable dt =
-                objDB.GetDataTable(
-                    query,
-                    GetFilterParameters(
-                        fromDate,
-                        toDate));
-
-            ExportDataTable(
-                dt,
-                "ExamResultReport");
-        }
-
-        //-------------------------------------------------------
-        // EXPORT COMPARISON
-        //-------------------------------------------------------
-
-        protected void btnExportComparison_Click(
-            object sender,
-            EventArgs e)
-        {
-            DateTime fromDate;
-
-            DateTime toDate;
-
-            if
-            (
-                !ValidateDates(
-                    out fromDate,
-                    out toDate)
-            )
-            {
-                return;
-            }
-
-            DataTable dt =
-                GetComparisonData(
-                    fromDate,
-                    toDate);
-
-            if
-            (
-                dt
-                !=
-                null
-            )
-            {
-                if
-                (
-                    dt.Columns.Contains(
-                        "TrainingID")
-                )
-                {
-                    dt.Columns[
-                        "TrainingID"]
-                        .ColumnName =
-                        "Training ID";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "CourseName")
-                )
-                {
-                    dt.Columns[
-                        "CourseName"]
-                        .ColumnName =
-                        "Course";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "EmpID")
-                )
-                {
-                    dt.Columns[
-                        "EmpID"]
-                        .ColumnName =
-                        "Trainee ID";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "TraineeName")
-                )
-                {
-                    dt.Columns[
-                        "TraineeName"]
-                        .ColumnName =
-                        "Trainee Name";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "PrePercentage")
-                )
-                {
-                    dt.Columns[
-                        "PrePercentage"]
-                        .ColumnName =
-                        "Pre Percentage";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "PostPercentage")
-                )
-                {
-                    dt.Columns[
-                        "PostPercentage"]
-                        .ColumnName =
-                        "Post Percentage";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "PreResult")
-                )
-                {
-                    dt.Columns[
-                        "PreResult"]
-                        .ColumnName =
-                        "Pre Result";
-                }
-
-                if
-                (
-                    dt.Columns.Contains(
-                        "PostResult")
-                )
-                {
-                    dt.Columns[
-                        "PostResult"]
-                        .ColumnName =
-                        "Post Result";
-                }
-            }
-
-            ExportDataTable(
-                dt,
-                "PrePostComparison");
-        }
-
-        //-------------------------------------------------------
-        // EXPORT DATATABLE
-        //-------------------------------------------------------
-
-        private void ExportDataTable(
-            DataTable dt,
-            string fileName)
-        {
-            if
-            (
-                dt
-                ==
-                null
-                ||
-                dt.Rows.Count
-                ==
-                0
-            )
-            {
-                ShowError(
-                    "No data available for export.");
-
-                return;
-            }
-
-            GridView gvExport =
-                new GridView();
-
-            gvExport.DataSource =
-                dt;
-
-            gvExport.DataBind();
-
+            if(dt==null||dt.Rows.Count==0){lblMessage.Text="No data available for export.";return;}
+            GridView g=new GridView();
+            g.DataSource=dt;
+            g.DataBind();
             Response.Clear();
-
-            Response.Buffer =
-                true;
-
-            Response.AddHeader(
-                "content-disposition",
-                "attachment;filename="
-                +
-                fileName
-                +
-                "_"
-                +
-                DateTime.Now.ToString(
-                    "yyyyMMddHHmmss")
-                +
-                ".xls");
-
-            Response.Charset =
-                "";
-
-            Response.ContentType =
-                "application/vnd.ms-excel";
-
-            StringWriter sw =
-                new StringWriter();
-
-            HtmlTextWriter hw =
-                new HtmlTextWriter(
-                    sw);
-
-            gvExport.RenderControl(
-                hw);
-
-            Response.Output.Write(
-                sw.ToString());
-
+            Response.Buffer=true;
+            Response.AddHeader("content-disposition","attachment;filename="+fileName+"_"+DateTime.Now.ToString("yyyyMMddHHmmss")+".xls");
+            Response.Charset="";
+            Response.ContentType="application/vnd.ms-excel";
+            using(StringWriter sw=new StringWriter())
+            {
+                using(HtmlTextWriter hw=new HtmlTextWriter(sw))g.RenderControl(hw);
+                Response.Output.Write(sw.ToString());
+            }
             Response.Flush();
-
-            HttpContext.Current
-                .ApplicationInstance
-                .CompleteRequest();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
-        //-------------------------------------------------------
-        // VERIFY RENDERING
-        //-------------------------------------------------------
-
-        public override void VerifyRenderingInServerForm(
-            Control control)
-        {
-        }
-
-        //-------------------------------------------------------
-        // CLEAR REPORT
-        //-------------------------------------------------------
-
-        private void ClearReport()
-        {
-            pnlSummary.Visible =
-                false;
-
-            gvResult.DataSource =
-                null;
-
-            gvResult.DataBind();
-
-            gvComparison.DataSource =
-                null;
-
-            gvComparison.DataBind();
-
-            btnExportResult.Enabled =
-                false;
-
-            btnExportComparison.Enabled =
-                false;
-        }
-
-        //-------------------------------------------------------
-        // ERROR
-        //-------------------------------------------------------
-
-        private void ShowError(
-            string message)
-        {
-            lblMessage.ForeColor =
-                System.Drawing.Color.Red;
-
-            lblMessage.Text =
-                message;
-        }
+        public override void VerifyRenderingInServerForm(Control control){}
     }
 }
