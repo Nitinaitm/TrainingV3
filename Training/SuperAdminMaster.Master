@@ -57,7 +57,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav font-weight-bold mx-auto py-0">
-                         <a href="~/SuperAdmin/Default.aspx" id="A1" class="nav-item nav-link" runat="server">Employee Details</a>
+                         <a href="~/SuperAdmin/Default.aspx" id="A1" class="nav-item nav-link" runat="server">Employee Details</a>\n                        <a href="~/SuperAdmin/UserManagement.aspx" id="A22" class="nav-item nav-link" runat="server">User Management</a>
                         <%--<a href="~/Admin/EmpBasicMaster.aspx" id="A2" class="nav-item nav-link" runat="server">Employee Registration</a>--%>
                         <%--<a href="~/Admin/BulkExcelUpload.aspx.aspx" id="A3" class="nav-item nav-link" runat="server">Table Bulk Insertion</a>--%>
                         <div class="nav-item dropdown">
