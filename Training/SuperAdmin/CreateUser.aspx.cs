@@ -94,7 +94,8 @@ namespace Training.SuperAdmin
                 new SqlParameter("@re", enc.Encrypt("Y"))
             });
 
-            clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "CREATE", "UserManagement", "CreateUser.aspx", "User", loginID, "Created " + role + " user");
+            string createDetails = "Login ID: " + loginID + "; Role: " + role + "; Corresponding ID: " + correspondingID + "; Active: " + ddlActive.SelectedValue;
+            clsAuditLog.LogActivity(CurrentUser(), "SuperAdmin", "CREATE", "UserManagement", "CreateUser.aspx", "User", loginID, "Created user. Values: " + createDetails);
             SetMessage("User created successfully.", true);
             ClearForm();
         }
