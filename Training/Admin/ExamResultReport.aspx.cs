@@ -84,8 +84,28 @@ namespace Training.Admin
         protected void btnSearchTraining_Click(object sender,EventArgs e){BindTrainingList();ShowLevel(1);}
         protected void btnResetTraining_Click(object sender,EventArgs e){ddlCourseFilter.SelectedIndex=0;ddlStatusFilter.SelectedIndex=0;txtTrainingSearch.Text="";BindTrainingList();ShowLevel(1);}
 
+        protected void ShowTrainingInfo(string trainingID)
+        {
+            string q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.TrainingLocation,'') TrainingLocation,TD.DateFrom,TD.DateTo,ISNULL(TD.NoOfDays,0) NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID";
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@TrainingID",trainingID) });
+            if(dt.Rows.Count==0)return;
+            DataRow r=dt.Rows[0];
+            lblInfoTrainingID.Text=Convert.ToString(r["TrainingID"]);
+            lblInfoCourse.Text=Convert.ToString(r["CourseName"]);
+            lblInfoBatch.Text=Convert.ToString(r["Batch"]);
+            lblInfoType.Text=Convert.ToString(r["TrainingType"]);
+            lblInfoOrganizer.Text=Convert.ToString(r["TrainingOrganizer"]);
+            lblInfoLocation.Text=Convert.ToString(r["TrainingLocation"]);
+            lblInfoFrom.Text=Convert.ToString(r["DateFrom"]);
+            lblInfoTo.Text=Convert.ToString(r["DateTo"]);
+            lblInfoDays.Text=Convert.ToString(r["NoOfDays"]);
+            lblInfoStatus.Text=Convert.ToString(r["TrainingStatus"]);
+            ClientScript.RegisterStartupScript(GetType(),"showTrainingInfo","showTrainingInfo();",true);
+        }
+
         protected void gvTrainingList_RowCommand(object sender,GridViewCommandEventArgs e)
         {
+            if(e.CommandName=="TrainingInfo"){ShowTrainingInfo(Convert.ToString(e.CommandArgument));return;}
             if(e.CommandName!="ViewTraining")return;
             string trainingID=Convert.ToString(e.CommandArgument);
             ViewState["TrainingID"]=trainingID;
