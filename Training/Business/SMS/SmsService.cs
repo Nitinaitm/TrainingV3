@@ -61,37 +61,37 @@ namespace Training.Business.SMS
 
         public static string GetLoginOtpMessage(string otp)
         {
-            return "One Time Password (OTP) for Training Portal Login is: " + otp + " - BSPHCL";
+            return "BSPHCL Training Portal Login OTP: " + otp + ". Do not share this OTP with anyone. - BSPHCL";
         }
 
         public static string GetTrainingStartedMessage(string trainingID, string trainingName)
         {
-            return "Training " + trainingID + " - " + trainingName + " has been started. Kindly attend the training as per schedule. - BSPHCL";
+            return "Training " + trainingID + " has started. Please attend the training as per the scheduled programme. - BSPHCL";
         }
 
         public static string GetManagerAssignedMessage(string managerID, string trainingLocation)
         {
-            return "You have been assigned as Training Manager for " + trainingLocation + ". Manager ID: " + managerID + ". - BSPHCL";
+            return "You have been assigned as Training Manager" + (string.IsNullOrWhiteSpace(trainingLocation) ? "" : " for " + trainingLocation) + ". Manager ID: " + managerID + ". - BSPHCL";
         }
 
         public static string GetAttendanceCompletedMessage(string trainingID, string trainingName, string sessionName)
         {
-            return "Attendance for " + trainingID + " - " + trainingName + ", Session " + sessionName + " has been completed. - BSPHCL";
+            return "Attendance for " + trainingID + ", Session " + sessionName + " has been completed. - BSPHCL Training Portal";
         }
 
         public static string GetPreTestPublishedMessage(string trainingID, string trainingName, string sessionName)
         {
-            return "Pre-Training Test for " + trainingID + " - " + trainingName + ", Session " + sessionName + " has been published. Kindly login to the Training Portal and complete it. - BSPHCL";
+            return "Pre-Training Test for " + trainingID + ", Session " + sessionName + " is now available. Please login to the BSPHCL Training Portal and complete it. - BSPHCL";
         }
 
         public static string GetPostTestPublishedMessage(string trainingID, string trainingName, string sessionName)
         {
-            return "Post-Training Test for " + trainingID + " - " + trainingName + ", Session " + sessionName + " has been published. Kindly login to the Training Portal and complete it. - BSPHCL";
+            return "Post-Training Test for " + trainingID + ", Session " + sessionName + " is now available. Please login to the BSPHCL Training Portal and complete it. - BSPHCL";
         }
 
         public static string GetFeedbackSubmittedMessage(string trainingID, string trainingName)
         {
-            return "Feedback has been submitted by a trainee for " + trainingID + " - " + trainingName + ". - BSPHCL";
+            return "Trainee feedback has been submitted for Training " + trainingID + ". Please review it on the BSPHCL Training Portal. - BSPHCL";
         }
     }
 }
