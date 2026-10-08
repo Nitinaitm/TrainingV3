@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Text;
 using System.Web.UI;
+using Training.Business.SMS;
 
 namespace Training.Admin
 {
@@ -339,13 +340,40 @@ AND NOT EXISTS (SELECT 1 FROM TrainingAssignment A WHERE A.TrainingID=@TrainingI
             new clsDataAccess().ExecuteSql("UPDATE TrainingDetails SET HostelRequiredTrainee=@HostelRequiredTrainee,UpdatedOn=GETDATE(),UpdatedBy=@UpdatedBy WHERE TrainingID=@TrainingID", new SqlParameter[]
             { new SqlParameter("@HostelRequiredTrainee", hostelRequired), new SqlParameter("@UpdatedBy", Session["UserID"] == null ? "Admin" : Session["UserID"].ToString()), new SqlParameter("@TrainingID", TrainingID) });
         }
+        private void SendTrainingStartedSms()
+        {
+            try
+            {
+                DataTable trainees = new clsDataAccess().GetDataTable(
+                    "SELECT DISTINCT E.MobileNo FROM TrainingAssignment A INNER JOIN EmpBasicMaster E ON A.EmpID=E.EmpID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(E.MobileNo,'')<>'' " +
+                    "UNION SELECT DISTINCT T.MobileNo FROM TrainingAssignment A INNER JOIN TraineeMasterExternal T ON A.EmpID=T.TraineeID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(T.MobileNo,'')<>''",
+                    P("@TrainingID", TrainingID));
+
+                DataTable trainers = new clsDataAccess().GetDataTable(
+                    "SELECT DISTINCT E.MobileNo FROM SessionMaster S INNER JOIN TrainerMaster T ON S.TrainerID=T.TrainerID INNER JOIN EmpBasicMaster E ON T.EmpID=E.EmpID WHERE S.TrainingID=@TrainingID AND T.TrainerType='Internal' AND ISNULL(E.MobileNo,'')<>'' " +
+                    "UNION SELECT DISTINCT T.MobileNo FROM SessionMaster S INNER JOIN TrainerMaster T ON S.TrainerID=T.TrainerID WHERE S.TrainingID=@TrainingID AND T.TrainerType='External' AND ISNULL(T.MobileNo,'')<>''",
+                    P("@TrainingID", TrainingID));
+
+                string message = SmsService.GetTrainingStartedMessage(TrainingID, "Training");
+
+                foreach (DataRow row in trainees.Rows)
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+
+                foreach (DataRow row in trainers.Rows)
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+            }
+            catch
+            {
+            }
+        }
+
         private void StartTraining()
         {
             if (IsTrainingStarted()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Training has already started."; LoadWorkflow(); return; }
             if (IsFeedbackRequired() && !IsFeedbackAssigned()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Feedback is required. Please assign Feedback before starting training."; return; }
             if (IsCertificateRequired() && !IsCertificateTemplateConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please configure Certificate Template before starting training."; return; }
             if (IsCertificateRequired() && !IsCertificateRuleConfigured()) { pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Red; lblMessage.Text = "Certificate is required. Please set Certificate Rules before starting training."; return; }
-            clsWorkflow.UpdateWorkflow(TrainingID, "InProgress", "E"); pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Green; lblMessage.Text = "Training has started successfully."; LoadWorkflow();
+            clsWorkflow.UpdateWorkflow(TrainingID, "InProgress", "E"); SendTrainingStartedSms(); pnlHostelConfirmation.Visible = false; lblMessage.ForeColor = System.Drawing.Color.Green; lblMessage.Text = "Training has started successfully."; LoadWorkflow();
         }
         protected void btnAttendance_Click(object sender, EventArgs e) { Response.Redirect("TrainingAttendance.aspx"); }
 
