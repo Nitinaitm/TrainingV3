@@ -5,7 +5,7 @@
 @media(max-width:900px){.form-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="page-wrap">
 <div class="card-box">
 <div class="title">Super Admin - User Management</div>
