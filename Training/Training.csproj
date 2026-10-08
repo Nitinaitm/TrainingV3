@@ -1482,6 +1482,7 @@
     <Compile Include="BatchLifecycle.ascx.designer.cs">
       <DependentUpon>BatchLifecycle.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Business\SMS\SmsService.cs" />
     <Compile Include="GenerationNominationID.cs" />
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
