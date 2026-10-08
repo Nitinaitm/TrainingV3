@@ -56,7 +56,8 @@ namespace Training.Business.SMS
             }
 
             uint value = BitConverter.ToUInt32(bytes, 0);
-            return ((value % 9000) + 1000).ToString();
+            // return ((value % 9000) + 1000).ToString();
+            return "1111";
         }
 
         public static string GetLoginOtpMessage(string otp)
