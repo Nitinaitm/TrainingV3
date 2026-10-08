@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Training.Business.SMS;
 
 namespace Training
 {
@@ -919,94 +920,12 @@ startTimer();
                     "Unable To Resend OTP.";
             }
         }
-        private string SendSMSToMobile(
-    string mobileNo)
+        private string SendSMSToMobile(string mobileNo)
         {
-            string otp =
-                string.Empty;
-
-            string message =
-                string.Empty;
-
-            string role =
-                Session["Role"] == null
-                ?
-                ""
-                :
-                Session["Role"].ToString();
-
-            if
-            (
-                role == "cust1"
-            )
-            {
-                otp =
-                    "1421";
-
-                return otp;
-            }
-
-            Random random =
-                new Random();
-
-            otp =
-                "1111";
-
-            //otp =
-            //random.Next(
-            //1000,
-            //9999).ToString();
-
-            message =
-                otp;
-
-            try
-            {
-                if
-                (
-                    mobileNo.Trim() != ""
-                )
-                {
-                    //HttpWebRequest request =
-                    //    (
-                    //    HttpWebRequest
-                    //    )
-                    //    WebRequest.Create
-                    //    (
-                    //    "https://api.pinnacle.in/index.php/sms/urlsms?sender=BSPHCE&numbers="
-                    //    +
-                    //    mobileNo.Trim()
-                    //    +
-                    //    "&messagetype=TXT&message=One Time Password (OTP) for Training Portal Login is : "
-                    //    +
-                    //    message
-                    //    +
-                    //    " - BSPHCL&response=Y&username=dbabsphcl&pass=Dba$7803"
-                    //    );
-
-                    //HttpWebResponse response =
-                    //    (
-                    //    HttpWebResponse
-                    //    )
-                    //    request.GetResponse();
-
-                    //StreamReader reader =
-                    //    new StreamReader(
-                    //    response.GetResponseStream());
-
-                    //string result =
-                    //    reader.ReadToEnd();
-
-                    //reader.Close();
-
-                    //response.Close();
-                }
-            }
-            catch
-            {
-
-            }
-
+            string otp = SmsService.GenerateOtp();
+            SmsService.SendSms(
+                mobileNo,
+                SmsService.GetLoginOtpMessage(otp));
             return otp;
         }
         private void RedirectUser()
