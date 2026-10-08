@@ -3,6 +3,7 @@ namespace Training.Admin
     public partial class TrainingDetailsReport
     {
         protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCourse;
         protected global::System.Web.UI.WebControls.TextBox txtTrainingID;
         protected global::System.Web.UI.WebControls.TextBox txtBatch;
         protected global::System.Web.UI.WebControls.TextBox txtDateFrom;
