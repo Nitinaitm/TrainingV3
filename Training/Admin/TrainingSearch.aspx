@@ -66,6 +66,7 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 </div>
 <div class="grid-card"><div class="count"><asp:Label ID="lblResultCount" runat="server" /></div><div class="grid-scroll-top" id="gridScrollTop" runat="server"><div class="grid-scroll-top-inner" id="gridScrollTopInner"></div></div><div class="grid-scroll" id="gridScroll" runat="server"><asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="False" CssClass="gridview" OnRowCommand="gvTraining_RowCommand">
 <Columns>
+<asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="EmpID" HeaderText="EmpID" />
 <asp:BoundField DataField="EmpName" HeaderText="EmpName" />
 <asp:BoundField DataField="EmpDesignation" HeaderText="EmpDesignation" />
