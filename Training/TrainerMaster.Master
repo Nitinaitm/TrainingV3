@@ -462,8 +462,7 @@
                     <div>
 
                         <div class="user-name">
-                            <asp:Label ID="lblTrainerID" runat="server" Text="Trainer" />
-                            <asp:Label ID="lblTrainerName" runat="server" Text="Trainer" />
+                            <asp:Label ID="lblTrainerID" runat="server" Text="Trainer" /><span>&nbsp;|&nbsp;</span><asp:Label ID="lblTrainerName" runat="server" Text="Trainer" />
                         </div>
                         <asp:Label ID="lblDesignation"
                             runat="server" />
