@@ -159,7 +159,7 @@ namespace Training.Admin
             }
             else if(type=="Certificates")
             {
-                q="SELECT TC.CertificateID,TC.TrainingID,TC.EmpID,E.EmpName,TC.CertificateStatus,TC.CreatedOn FROM TrainingCertificate TC INNER JOIN TrainingDetails TD ON TC.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON TC.EmpID=E.EmpID WHERE 1=1"+Filter("TD")+" ORDER BY TC.CreatedOn DESC";
+                q="SELECT TC.CertificateID,TC.TrainingID,TC.EmpID,E.EmpName,TC.CertificateStatus,TC.GeneratedOn FROM TrainingCertificate TC INNER JOIN TrainingDetails TD ON TC.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON TC.EmpID=E.EmpID WHERE 1=1"+Filter("TD")+" ORDER BY TC.GeneratedOn DESC";
                 title="Certificates Generated - "+lblCertificates.Text+" row(s)";
             }
             else if(type=="Feedback")
@@ -173,6 +173,7 @@ namespace Training.Admin
                 title="Post Test Results - Average "+lblPostTest.Text;
             }
             if(q=="")return;
+            ViewState["KpiDetailQuery"]=q;
             DataTable dt=GetFiltered(q);
             gvKpiDetails.DataSource=dt;
             gvKpiDetails.DataBind();
@@ -180,6 +181,28 @@ namespace Training.Admin
             ScriptManager.RegisterStartupScript(this,GetType(),"showKpiDetails","showKpiDetails();",true);
         }
 
+
+        protected void btnExportKpiDetails_Click(object sender,EventArgs e)
+        {
+            string q=ViewState["KpiDetailQuery"] as string;
+            if(string.IsNullOrWhiteSpace(q))return;
+            DataTable dt=GetFiltered(q);
+            Response.Clear();
+            Response.Buffer=true;
+            Response.AddHeader("Content-Disposition","attachment;filename=TrainingMIS_Details.xls");
+            Response.ContentType="application/vnd.ms-excel";
+            Response.ContentEncoding=Encoding.UTF8;
+            StringBuilder sb=new StringBuilder();
+            for(int i=0;i<dt.Columns.Count;i++){if(i>0)sb.Append("\t");sb.Append(dt.Columns[i].ColumnName);}
+            sb.AppendLine();
+            foreach(DataRow row in dt.Rows)
+            {
+                for(int i=0;i<dt.Columns.Count;i++){if(i>0)sb.Append("\t");string value=Convert.ToString(row[i]).Replace("\t"," ").Replace("\r"," ").Replace("\n"," ");sb.Append(value);}
+                sb.AppendLine();
+            }
+            Response.Write(sb.ToString());
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
 
         private DataTable GetFiltered(string q)
         {
