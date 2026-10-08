@@ -1032,6 +1032,7 @@
                 <div id="reportMenu"
                     class="submenu-container hide">
 
+                    <a href="TrainingMIS.aspx" class="submenu-item">Training MIS / Management Summary</a>
                     <a href="TrainingDetailsReport.aspx"
                         class="submenu-item">Training Report
                     </a>
