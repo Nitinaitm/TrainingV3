@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Training.Business.Certificate;
+using Training.Business.SMS;
 
 namespace Training.Trainee
 {
@@ -1058,6 +1059,9 @@ question +
                 SaveFeedbackDetails(
                     feedbackID);
 
+                ViewState["FeedbackID"] = feedbackID;
+                SendFeedbackSubmittedSms(trainingID);
+
                 UpdateTrainingProgress();
 
                 btnSubmit.Enabled =
@@ -1093,6 +1097,27 @@ question +
                     "Unable to submit feedback. "
                     +
                     ex.Message;
+            }
+        }
+
+        private void SendFeedbackSubmittedSms(string trainingID)
+        {
+            try
+            {
+                DataTable trainers = objDB.GetDataTable(
+                    "SELECT DISTINCT T.TrainerID,CASE WHEN T.TrainerType='Internal' THEN E.MobileNo ELSE T.MobileNo END AS MobileNo " +
+                    "FROM Feedback F INNER JOIN FeedbackDetail FD ON F.FeedbackID=FD.FeedbackID INNER JOIN TrainerMaster T ON FD.TrainerID=T.TrainerID " +
+                    "LEFT JOIN EmpBasicMaster E ON T.EmpID=E.EmpID " +
+                    "WHERE F.FeedbackID=@FeedbackID AND ISNULL(CASE WHEN T.TrainerType='Internal' THEN E.MobileNo ELSE T.MobileNo END,'')<>''",
+                    new SqlParameter[] { new SqlParameter("@FeedbackID", ViewState["FeedbackID"] == null ? "" : ViewState["FeedbackID"].ToString()) });
+
+                string message = SmsService.GetFeedbackSubmittedMessage(trainingID, "Training");
+
+                foreach (DataRow row in trainers.Rows)
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+            }
+            catch
+            {
             }
         }
 
