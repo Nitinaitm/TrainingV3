@@ -73,17 +73,7 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 <asp:TemplateField HeaderText="EmpPostingPlace (HRMS)"><ItemTemplate><asp:LinkButton ID="lnkPosting" runat="server" CssClass="grid-link" CommandName="Posting" CommandArgument='<%# Eval("EmpID") %>'><%# Eval("EmpPostingPlace") %></asp:LinkButton></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="Posting Place"><ItemTemplate><asp:LinkButton ID="lnkPostingDetails" runat="server" CssClass="grid-link" CommandName="Posting" CommandArgument='<%# Eval("EmpID") %>'>View Details</asp:LinkButton></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="TrainingAttendanceStatus"><ItemTemplate><asp:LinkButton ID="lnkAttendance" runat="server" CssClass='<%# Convert.ToString(Eval("TrainingAttendanceStatus"))=="Attended" ? "grid-link status-attended" : "grid-link status-not-attended" %>' CommandName="Training" CommandArgument='<%# Eval("EmpID") %>'><%# Eval("TrainingAttendanceStatus") %></asp:LinkButton></ItemTemplate></asp:TemplateField>
-<asp:BoundField DataField="TrainingID" HeaderText="TrainingID" />
-<asp:BoundField DataField="CourseName" HeaderText="CourseName" />
-<asp:BoundField DataField="TrainingType" HeaderText="TrainingType" />
-<asp:BoundField DataField="TrainingOrganizer" HeaderText="TrainingOrganizer" />
-<asp:BoundField DataField="Batch" HeaderText="Batch" />
-<asp:BoundField DataField="TrainingLocation" HeaderText="TrainingLocation" />
-<asp:BoundField DataField="NoOfDays" HeaderText="NoOfDays" />
-<asp:BoundField DataField="DateFrom" HeaderText="DateFrom" />
-<asp:BoundField DataField="DateTo" HeaderText="DateTo" />
-<asp:BoundField DataField="TrainingStatus" HeaderText="TrainingStatus" />
-<asp:BoundField DataField="Topics" HeaderText="Topics" />
+
 </Columns>
 <EmptyDataTemplate>No employee/training record found.</EmptyDataTemplate>
 </asp:GridView></div></div>
