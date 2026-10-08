@@ -100,7 +100,7 @@ namespace Training.Admin
         {
             try
             {
-                DataTable dt=objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM HostelAllotment WHERE TrainingID=@TrainingID AND ISNULL(ActiveStatus,'Y')='Y'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+                DataTable dt=objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM HostelAllotment WHERE TrainingID=@TrainingID AND Status='Allotted'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
                 return dt.Rows.Count==0?0:Convert.ToInt32(dt.Rows[0]["Cnt"]);
             }
             catch{return 0;}
