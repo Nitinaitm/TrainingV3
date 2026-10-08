@@ -1,4 +1,4 @@
-<%@ page title="Training MIS" language="C#" masterpagefile="~/AdminMaster.Master" autoeventwireup="true" codebehind="TrainingMIS.aspx.cs" inherits="Training.Admin.TrainingMIS" %>
+<%@ page title="Training MIS" language="C#" masterpagefile="~/AdminMaster.Master" autoeventwireup="true" codebehind="TrainingMIS.aspx.cs" inherits="Training.Admin.TrainingMIS"  MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>

@@ -1,4 +1,4 @@
-<%@ Page Title="Training Report" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingDetailsReport.aspx.cs" Inherits="Training.Admin.TrainingDetailsReport" EnableEventValidation="false" %>
+<%@ Page Title="Training Report" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="TrainingDetailsReport.aspx.cs" Inherits="Training.Admin.TrainingDetailsReport" EnableEventValidation="false"  MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
