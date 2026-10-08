@@ -65,486 +65,144 @@
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <div class="exam-report-page">
-
-        <!-- ================================================= -->
-        <!-- PAGE TITLE                                        -->
-        <!-- ================================================= -->
-
-        <div class="exam-header">
-
-            <div>
-
-                <span class="page-title">Exam Result Report
-                </span>
-
-            </div>
-
+<div class="exam-report-page">
+    <div class="exam-header">
+        <div>
+            <span class="page-title">Exam Result Report</span>
+            <div class="page-subtitle">Training → Session → Exam Result</div>
         </div>
+        <asp:Label ID="lblMessage" runat="server" CssClass="message-area" />
+    </div>
 
-
-        <asp:label
-            id="lblMessage"
-            runat="server"
-            cssclass="message-area">
-        </asp:label>
-
-
-        <!-- ================================================= -->
-        <!-- FILTERS -->
-        <div class="card report-card">
+    <asp:Panel ID="pnlTrainingList" runat="server">
+        <div class="report-card">
             <div class="report-card-header">
                 <div>
-                    <span class="section-title">Exam Result Filters</span>
-                    <div class="filter-hint">Select the required filters and click Search. Filters are applied together.</div>
+                    <span class="section-title">Training List</span>
+                    <div class="filter-hint">Select a training to view its sessions and exam results.</div>
                 </div>
-                <div class="filter-toolbar">
-                    <asp:Button ID="btnSearch" runat="server" Text="Search Results" CssClass="btn btn-light btn-sm" OnClick="btnSearch_Click" />
-                    <asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btn btn-outline-light btn-sm" CausesValidation="false" OnClick="btnReset_Click" />
-                </div>
+                <asp:Button ID="btnExportTraining" runat="server" Text="Export Training List" CssClass="btn btn-light btn-sm" OnClick="btnExportTraining_Click" />
             </div>
-            <div class="card-body filter-body">
-                <div class="filter-grid">
-                    <div class="filter-item filter-wide">
-                        <label class="filter-label">Training</label>
-                        <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
-                    </div>
+            <div class="card-body">
+                <div class="filter-grid compact-filters">
                     <div class="filter-item">
                         <label class="filter-label">Course</label>
-                        <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-control"></asp:DropDownList>
+                        <asp:DropDownList ID="ddlCourseFilter" runat="server" CssClass="form-control" />
                     </div>
                     <div class="filter-item">
-                        <label class="filter-label">Batch</label>
-                        <asp:TextBox ID="txtBatch" runat="server" CssClass="form-control" MaxLength="100" placeholder="Batch"></asp:TextBox>
+                        <label class="filter-label">Training Status</label>
+                        <asp:DropDownList ID="ddlStatusFilter" runat="server" CssClass="form-control" />
                     </div>
                     <div class="filter-item">
-                        <label class="filter-label">Exam Type</label>
-                        <asp:DropDownList ID="ddlTestType" runat="server" CssClass="form-control">
-                            <asp:ListItem Text="All Exam Types" Value=""></asp:ListItem>
-                            <asp:ListItem Text="Pre Training Exam" Value="Pre"></asp:ListItem>
-                            <asp:ListItem Text="Post Training Exam" Value="Post"></asp:ListItem>
-                        </asp:DropDownList>
+                        <label class="filter-label">Training ID / Batch</label>
+                        <asp:TextBox ID="txtTrainingSearch" runat="server" CssClass="form-control" placeholder="Search Training ID or Batch" />
                     </div>
-                    <div class="filter-item filter-wide">
-                        <label class="filter-label">Test</label>
-                        <asp:DropDownList ID="ddlTest" runat="server" CssClass="form-control"></asp:DropDownList>
-                    </div>
-                    <div class="filter-item filter-wide">
-                        <label class="filter-label">Trainee ID / Name</label>
-                        <asp:TextBox ID="txtTrainee" runat="server" CssClass="form-control" MaxLength="150" placeholder="Enter ID or name"></asp:TextBox>
-                    </div>
-                    <div class="filter-item">
-                        <label class="filter-label">Result</label>
-                        <asp:DropDownList ID="ddlResultStatus" runat="server" CssClass="form-control">
-                            <asp:ListItem Text="All Results" Value=""></asp:ListItem>
-                            <asp:ListItem Text="Pass" Value="PASS"></asp:ListItem>
-                            <asp:ListItem Text="Fail" Value="FAIL"></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                    <div class="filter-item">
-                        <label class="filter-label">Attempt</label>
-                        <asp:DropDownList ID="ddlAttempt" runat="server" CssClass="form-control">
-                            <asp:ListItem Text="Final Attempt" Value="Final" Selected="True"></asp:ListItem>
-                            <asp:ListItem Text="All Attempts" Value="All"></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                    <div class="filter-item">
-                        <label class="filter-label">Submitted From</label>
-                        <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control exam-date" MaxLength="10" placeholder="dd-MM-yyyy"></asp:TextBox>
-                    </div>
-                    <div class="filter-item">
-                        <label class="filter-label">Submitted To</label>
-                        <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control exam-date" MaxLength="10" placeholder="dd-MM-yyyy"></asp:TextBox>
+                    <div class="filter-toolbar filter-item">
+                        <asp:Button ID="btnSearchTraining" runat="server" Text="Search" CssClass="btn btn-primary" OnClick="btnSearchTraining_Click" />
+                        <asp:Button ID="btnResetTraining" runat="server" Text="Reset" CssClass="btn btn-outline-secondary" CausesValidation="false" OnClick="btnResetTraining_Click" />
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- SUMMARY                                           -->
-        <!-- ================================================= -->
-
-        <asp:panel
-            id="pnlSummary"
-            runat="server"
-            visible="false">
-
-            <div class="summary-grid">
-
-                <!-- Appeared -->
-
-                <div class="summary-card-wrap">
-
-                    <div class="summary-box">
-
-                        <span class="summary-title">
-                            Total Results
-                        </span>
-
-                        <asp:Label
-                            ID="lblTotalResults"
-                            runat="server"
-                            Text="0"
-                            CssClass="summary-value">
-                        </asp:Label>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Passed -->
-
-                <div class="summary-card-wrap">
-
-                    <div class="summary-box passed">
-
-                        <span class="summary-title">
-                            Passed
-                        </span>
-
-                        <asp:Label
-                            ID="lblPassed"
-                            runat="server"
-                            Text="0"
-                            CssClass="summary-value passed-value">
-                        </asp:Label>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Failed -->
-
-                <div class="summary-card-wrap">
-
-                    <div class="summary-box failed">
-
-                        <span class="summary-title">
-                            Failed
-                        </span>
-
-                        <asp:Label
-                            ID="lblFailed"
-                            runat="server"
-                            Text="0"
-                            CssClass="summary-value failed-value">
-                        </asp:Label>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Average -->
-
-                <div class="summary-card-wrap">
-
-                    <div class="summary-box average">
-
-                        <span class="summary-title">
-                            Average Percentage
-                        </span>
-
-                        <asp:Label
-                            ID="lblAveragePercentage"
-                            runat="server"
-                            Text="0.00 %"
-                            CssClass="summary-value average-value">
-                        </asp:Label>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </asp:panel>
-
-
-        <!-- ================================================= -->
-        <!-- RESULT GRID                                       -->
-        <!-- ================================================= -->
-
-        <div class="card report-card">
-
-            <div class="report-card-header">
-
-                <div class="row">
-
-                    <div class="col-md-8">
-
-                        <span class="section-title">Trainee Exam Results
-                        </span>
-
-                    </div>
-
-
-                    <div class="col-md-4 text-right">
-
-                        <asp:button
-                            id="btnExportResult"
-                            runat="server"
-                            text="Export Excel"
-                            cssclass="btn btn-light btn-sm export-btn"
-                            causesvalidation="false"
-                            onclick="btnExportResult_Click" />
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="card-body">
-
+                <div class="result-count"><asp:Label ID="lblTrainingCount" runat="server" /></div>
                 <div class="table-wrap">
-
-                    <asp:gridview
-                        id="gvResult"
-                        runat="server"
-                        autogeneratecolumns="false"
-                        cssclass="table table-bordered table-hover report-table"
-                        gridlines="None"
-                        onrowdatabound="gvResult_RowDataBound">
-
+                    <asp:GridView ID="gvTrainingList" runat="server" AutoGenerateColumns="False" CssClass="report-table" OnRowCommand="gvTrainingList_RowCommand" EmptyDataText="No training found.">
                         <Columns>
-                            <asp:TemplateField HeaderText="S.No.">
-                                <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" Width="55px" />
-                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
                             <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
                             <asp:BoundField DataField="CourseName" HeaderText="Course" />
                             <asp:BoundField DataField="Batch" HeaderText="Batch" />
-                            <asp:TemplateField HeaderText="Exam">
-                                <ItemTemplate>
-                                    <%# Eval("TestType").ToString()=="Pre" ? "Pre Training" : Eval("TestType").ToString()=="Post" ? "Post Training" : Eval("TestType").ToString() %>
-                                </ItemTemplate>
-                            </asp:TemplateField>
+                            <asp:BoundField DataField="TrainingType" HeaderText="Type" />
+                            <asp:BoundField DataField="TrainingStatus" HeaderText="Status" />
+                            <asp:BoundField DataField="DateFrom" HeaderText="From" />
+                            <asp:BoundField DataField="DateTo" HeaderText="To" />
+                            <asp:BoundField DataField="SessionCount" HeaderText="Sessions" />
+                            <asp:BoundField DataField="TraineeCount" HeaderText="Trainees" />
+                            <asp:BoundField DataField="PreResultCount" HeaderText="Pre Results" />
+                            <asp:BoundField DataField="PostResultCount" HeaderText="Post Results" />
+                            <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:LinkButton ID="btnViewTraining" runat="server" Text="View Sessions" CssClass="btn btn-sm btn-primary" CommandName="ViewTraining" CommandArgument='<%# Eval("TrainingID") %>' /></ItemTemplate></asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </div>
+        </div>
+    </asp:Panel>
+
+    <asp:Panel ID="pnlSessionList" runat="server" Visible="false">
+        <div class="breadcrumb-bar">
+            <asp:LinkButton ID="btnBackTraining" runat="server" Text="← Training List" CssClass="back-link" OnClick="btnBackTraining_Click" />
+            <span>/</span>
+            <strong><asp:Label ID="lblSelectedTraining" runat="server" /></strong>
+        </div>
+        <div class="report-card">
+            <div class="report-card-header">
+                <div><span class="section-title">Session List</span><div class="filter-hint">Click View Results to see the exam result of that session.</div></div>
+                <asp:Button ID="btnExportSessions" runat="server" Text="Export Sessions" CssClass="btn btn-light btn-sm" OnClick="btnExportSessions_Click" />
+            </div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <asp:GridView ID="gvSessionList" runat="server" AutoGenerateColumns="False" CssClass="report-table" OnRowCommand="gvSessionList_RowCommand" EmptyDataText="No sessions found.">
+                        <Columns>
+                            <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
+                            <asp:BoundField DataField="SessionID" HeaderText="Session ID" />
+                            <asp:BoundField DataField="SessionNo" HeaderText="Session No" />
+                            <asp:BoundField DataField="SessionName" HeaderText="Session" />
+                            <asp:BoundField DataField="TopicName" HeaderText="Topic" />
+                            <asp:BoundField DataField="SessionDate" HeaderText="Date" />
+                            <asp:BoundField DataField="StartTime" HeaderText="Start" />
+                            <asp:BoundField DataField="EndTime" HeaderText="End" />
+                            <asp:BoundField DataField="TrainerName" HeaderText="Trainer" />
+                            <asp:BoundField DataField="SessionStatus" HeaderText="Status" />
+                            <asp:BoundField DataField="PreResults" HeaderText="Pre Results" />
+                            <asp:BoundField DataField="PostResults" HeaderText="Post Results" />
+                            <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:LinkButton ID="btnViewResults" runat="server" Text="View Results" CssClass="btn btn-sm btn-success" CommandName="ViewResults" CommandArgument='<%# Eval("SessionID") %>' /></ItemTemplate></asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </div>
+        </div>
+    </asp:Panel>
+
+    <asp:Panel ID="pnlResultList" runat="server" Visible="false">
+        <div class="breadcrumb-bar">
+            <asp:LinkButton ID="btnBackSessions" runat="server" Text="← Session List" CssClass="back-link" OnClick="btnBackSessions_Click" />
+            <span>/</span><strong><asp:Label ID="lblSelectedSession" runat="server" /></strong>
+        </div>
+        <div class="summary-grid">
+            <div class="summary-card-wrap"><div class="summary-box"><span class="summary-title">Results</span><asp:Label ID="lblResultCount" runat="server" CssClass="summary-value" /></div></div>
+            <div class="summary-card-wrap"><div class="summary-box passed"><span class="summary-title">Passed</span><asp:Label ID="lblPassed" runat="server" CssClass="summary-value passed-value" /></div></div>
+            <div class="summary-card-wrap"><div class="summary-box failed"><span class="summary-title">Failed</span><asp:Label ID="lblFailed" runat="server" CssClass="summary-value failed-value" /></div></div>
+            <div class="summary-card-wrap"><div class="summary-box average"><span class="summary-title">Average %</span><asp:Label ID="lblAveragePercentage" runat="server" CssClass="summary-value average-value" /></div></div>
+        </div>
+        <div class="report-card">
+            <div class="report-card-header">
+                <div><span class="section-title">Exam Results</span><div class="filter-hint">Trainee-wise result for this session</div></div>
+                <asp:Button ID="btnExportResults" runat="server" Text="Export Results" CssClass="btn btn-light btn-sm" OnClick="btnExportResults_Click" />
+            </div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <asp:GridView ID="gvResultList" runat="server" AutoGenerateColumns="False" CssClass="report-table" EmptyDataText="No exam result found for this session." OnRowDataBound="gvResultList_RowDataBound">
+                        <Columns>
+                            <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
+                            <asp:BoundField DataField="TestType" HeaderText="Exam" />
                             <asp:BoundField DataField="TestTitle" HeaderText="Test" />
                             <asp:BoundField DataField="EmpID" HeaderText="Trainee ID" />
                             <asp:BoundField DataField="TraineeName" HeaderText="Trainee Name" />
-                            <asp:BoundField DataField="AttemptNo" HeaderText="Attempt">
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:BoundField>
-                            <asp:TemplateField HeaderText="Performance">
-                                <ItemTemplate>
-                                    <div class="metric-main"><%# Eval("CorrectAnswers") %> Correct / <%# Eval("WrongAnswers") %> Wrong</div>
-                                    <div class="metric-sub"><%# Eval("AttemptedQuestions") %> / <%# Eval("TotalQuestions") %> Attempted</div>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Score">
-                                <ItemTemplate>
-                                    <span class="score-badge"><%# Eval("ObtainedMarks","{0:0.##}") %> / <%# Eval("TotalMarks","{0:0.##}") %></span>
-                                </ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Percentage">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblPercentage" runat="server" CssClass="percentage-text" Text='<%# Eval("Percentage", "{0:0.00}") + " %" %>'></asp:Label>
-                                </ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Result">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblResult" runat="server" Text='<%# Eval("ResultStatus") %>'></asp:Label>
-                                </ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:TemplateField>
-                            <asp:BoundField DataField="RankNo" HeaderText="Rank">
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:BoundField>
-                            <asp:BoundField DataField="SubmittedOn" HeaderText="Submitted On" DataFormatString="{0:dd-MM-yyyy hh:mm tt}">
-                                <ItemStyle HorizontalAlign="Center" Wrap="false" />
-                            </asp:BoundField>
-                            <asp:TemplateField HeaderText="Action">
-                                <ItemTemplate>
-                                    <asp:HyperLink ID="lnkViewAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary answer-btn" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' />
-                                </ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:TemplateField>
+                            <asp:BoundField DataField="AttemptNo" HeaderText="Attempt" />
+                            <asp:BoundField DataField="TotalQuestions" HeaderText="Total Q." />
+                            <asp:BoundField DataField="AttemptedQuestions" HeaderText="Attempted" />
+                            <asp:BoundField DataField="CorrectAnswers" HeaderText="Correct" />
+                            <asp:BoundField DataField="WrongAnswers" HeaderText="Wrong" />
+                            <asp:BoundField DataField="TotalMarks" HeaderText="Total Marks" />
+                            <asp:BoundField DataField="ObtainedMarks" HeaderText="Obtained" />
+                            <asp:BoundField DataField="Percentage" HeaderText="Percentage" />
+                            <asp:BoundField DataField="ResultStatus" HeaderText="Result" />
+                            <asp:BoundField DataField="RankNo" HeaderText="Rank" />
+                            <asp:BoundField DataField="SubmittedOn" HeaderText="Submitted On" />
+                            <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:HyperLink ID="lnkAnswers" runat="server" Text="View Answers" CssClass="btn btn-sm btn-outline-primary" NavigateUrl='<%# "AnswerDetails.aspx?ResultID=" + Eval("ResultID") %>' /></ItemTemplate></asp:TemplateField>
                         </Columns>
-
-                        <EmptyDataTemplate>
-
-                            <div class="empty-data">
-                                No exam result found.
-                            </div>
-
-                        </EmptyDataTemplate>
-
-                    </asp:gridview>
-
+                    </asp:GridView>
                 </div>
-
             </div>
-
         </div>
-
-
-        <!-- ================================================= -->
-        <!-- PRE VS POST COMPARISON                            -->
-        <!-- ================================================= -->
-
-        <div class="card report-card">
-
-            <div class="report-card-header comparison-header">
-
-                <div class="row">
-
-                    <div class="col-md-8">
-
-                        <span class="section-title">Pre vs Post Training Comparison
-                        </span>
-
-                    </div>
-
-
-                    <div class="col-md-4 text-right">
-
-                        <asp:button
-                            id="btnExportComparison"
-                            runat="server"
-                            text="Export Excel"
-                            cssclass="btn btn-light btn-sm"
-                            causesvalidation="false"
-                            onclick="btnExportComparison_Click" />
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="card-body">
-
-                <div class="table-wrap">
-
-                    <asp:gridview
-                        id="gvComparison"
-                        runat="server"
-                        autogeneratecolumns="false"
-                        cssclass="table table-bordered table-hover report-table"
-                        gridlines="None"
-                        onrowdatabound="gvComparison_RowDataBound">
-
-    <Columns>
-
-        <asp:TemplateField HeaderText="Sl. No.">
-
-            <ItemTemplate>
-                <%# Container.DataItemIndex + 1 %>
-            </ItemTemplate>
-
-            <ItemStyle
-                HorizontalAlign="Center"
-                Width="65px" />
-
-        </asp:TemplateField>
-
-
-        <asp:BoundField
-            DataField="TrainingID"
-            HeaderText="Training ID" />
-
-
-        <asp:BoundField
-            DataField="CourseName"
-            HeaderText="Course" />
-
-
-        <asp:BoundField
-            DataField="Batch"
-            HeaderText="Batch" />
-
-
-        <asp:BoundField
-            DataField="EmpID"
-            HeaderText="Trainee ID" />
-
-
-        <asp:BoundField
-            DataField="TraineeName"
-            HeaderText="Trainee Name" />
-
-
-        <asp:TemplateField HeaderText="Pre %">
-
-            <ItemTemplate>
-
-                <asp:Label
-                    ID="lblPre"
-                    runat="server"
-                    Text='<%# FormatPercentage(Eval("PrePercentage")) %>'>
-                </asp:Label>
-
-            </ItemTemplate>
-
-            <ItemStyle
-                HorizontalAlign="Center" />
-
-        </asp:TemplateField>
-
-
-        <asp:TemplateField HeaderText="Post %">
-
-            <ItemTemplate>
-
-                <asp:Label
-                    ID="lblPost"
-                    runat="server"
-                    Text='<%# FormatPercentage(Eval("PostPercentage")) %>'>
-                </asp:Label>
-
-            </ItemTemplate>
-
-            <ItemStyle
-                HorizontalAlign="Center" />
-
-        </asp:TemplateField>
-
-
-        <asp:TemplateField HeaderText="Improvement">
-
-            <ItemTemplate>
-
-                <asp:Label
-                    ID="lblImprovement"
-                    runat="server"
-                    Text='<%# FormatImprovement(Eval("Improvement")) %>'>
-                </asp:Label>
-
-            </ItemTemplate>
-
-            <ItemStyle
-                HorizontalAlign="Center" />
-
-        </asp:TemplateField>
-
-    </Columns>
-
-
-    <EmptyDataTemplate>
-
-        <div class="empty-data">
-
-            No Pre/Post comparison data found.
-
-        </div>
-
-    </EmptyDataTemplate>
-
-</asp:gridview>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
+    </asp:Panel>
+</div>
 </asp:Content>
