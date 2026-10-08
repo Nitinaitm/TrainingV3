@@ -86,13 +86,12 @@
     <div class="main-layout">
         <div class="sidebar" id="superAdminSidebar">
             <div class="superadmin-title"><i class="fas fa-user-shield mr-2"></i> Super Admin</div>
-            <div class="superadmin-info">System-wide user and access management</div>
-            <a href='<%= ResolveUrl("~/SuperAdmin/UserManagement.aspx") %>' class="menu-item" id="lnkUserManagement" runat="server">
-                <i class="fas fa-users-cog mr-2"></i> User Management
-            </a>
-            <a href='<%= ResolveUrl("~/SuperAdmin/Logout.aspx") %>' class="menu-item logout-btn" id="lnkLogout" runat="server">
-                <i class="fas fa-sign-out-alt mr-2"></i> Logout
-            </a>
+            <div class="superadmin-info">System-wide administration and security</div>
+            <a href='<%= ResolveUrl("~/SuperAdmin/UserManagement.aspx") %>' class="menu-item" id="lnkUserManagement" runat="server"><i class="fas fa-users-cog mr-2"></i> User Management</a>
+            <a href='<%= ResolveUrl("~/SuperAdmin/PasswordManagement.aspx") %>' class="menu-item" id="lnkPasswordManagement" runat="server"><i class="fas fa-key mr-2"></i> Password Management</a>
+            <a href='<%= ResolveUrl("~/SuperAdmin/LoginHistory.aspx") %>' class="menu-item" id="lnkLoginHistory" runat="server"><i class="fas fa-sign-in-alt mr-2"></i> Login History</a>
+            <a href='<%= ResolveUrl("~/SuperAdmin/ActivityLog.aspx") %>' class="menu-item" id="lnkActivityLog" runat="server"><i class="fas fa-history mr-2"></i> Activity Log</a>
+            <a href='<%= ResolveUrl("~/SuperAdmin/Logout.aspx") %>' class="menu-item logout-btn" id="lnkLogout" runat="server"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
         <div class="content-area">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
