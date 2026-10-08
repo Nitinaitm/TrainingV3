@@ -105,7 +105,7 @@ namespace Training.Admin
         private string GetTrainingName(string trainingID)
         {
             string q="SELECT ISNULL(CM.CourseName,'')+' | Batch '+ISNULL(TD.Batch,'') FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE TD.TrainingID=@TrainingID";
-            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@TrainingID",trainingID));
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@TrainingID",trainingID) });
             return dt.Rows.Count==0?"":Convert.ToString(dt.Rows[0][0]);
         }
 
