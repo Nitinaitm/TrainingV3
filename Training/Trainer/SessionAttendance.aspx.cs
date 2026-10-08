@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Training.Business.SMS;
 using OfficeOpenXml;
 using System.IO;
 namespace Training.Trainer
@@ -243,6 +244,33 @@ namespace Training.Trainer
             return "ATT" + DateTime.Now.ToString("yyMMdd") + id.ToString("00000") + Guid.NewGuid().ToString("N").Substring(0,4);
         }
 
+        private void SendAttendanceCompletedSms()
+        {
+            try
+            {
+                string trainingID = Session["TrainingID"].ToString();
+                string sessionID = Session["SessionID"].ToString();
+
+                DataTable session = obj.GetDataTable(
+                    "SELECT SessionName FROM SessionMaster WHERE SessionID=@SessionID AND TrainingID=@TrainingID",
+                    new SqlParameter[] { new SqlParameter("@SessionID", sessionID), new SqlParameter("@TrainingID", trainingID) });
+
+                string sessionName = session.Rows.Count > 0 ? Convert.ToString(session.Rows[0]["SessionName"]) : sessionID;
+                string message = SmsService.GetAttendanceCompletedMessage(trainingID, "Training", sessionName);
+
+                DataTable trainees = obj.GetDataTable(
+                    "SELECT DISTINCT E.MobileNo FROM TrainingAssignment A INNER JOIN EmpBasicMaster E ON A.EmpID=E.EmpID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(E.MobileNo,'')<>'' " +
+                    "UNION SELECT DISTINCT T.MobileNo FROM TrainingAssignment A INNER JOIN TraineeMasterExternal T ON A.EmpID=T.TraineeID WHERE A.TrainingID=@TrainingID AND ISNULL(A.AssignmentStatus,'Assigned')='Assigned' AND ISNULL(T.MobileNo,'')<>''",
+                    new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+
+                foreach (DataRow row in trainees.Rows)
+                    SmsService.SendSms(Convert.ToString(row["MobileNo"]), message);
+            }
+            catch
+            {
+            }
+        }
+
         protected void btnCompleteAttendance_Click(object sender, EventArgs e)
         {
             string query = @"SELECT COUNT(*) FROM TrainingAssignment TA LEFT JOIN SessionAttendance SA ON TA.EmpID=SA.EmpID AND TA.TrainingID=SA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND TA.AssignmentStatus='Assigned' AND SA.AttendanceStatus IS NULL";
@@ -264,6 +292,7 @@ namespace Training.Trainer
                 ? new SqlParameter[] { new SqlParameter("@Actor",Session["ManagerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()) }
                 : new SqlParameter[] { new SqlParameter("@Actor",Session["TrainerID"].ToString()), new SqlParameter("@TrainingID",Session["TrainingID"].ToString()), new SqlParameter("@SessionID",Session["SessionID"].ToString()), new SqlParameter("@TrainerID",Session["TrainerID"].ToString()) };
             obj.ExecuteSql(query,param);
+            if (!IsManager) SendAttendanceCompletedSms();
             UpdateTrainingAttendanceWorkflow();
             BindGrid();
             BindSummary();
