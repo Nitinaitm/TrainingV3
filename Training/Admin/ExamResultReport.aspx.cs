@@ -96,7 +96,7 @@ namespace Training.Admin
         private void BindSessionList(string trainingID)
         {
             string q="SELECT SM.SessionID,SM.SessionNo,ISNULL(SM.SessionName,'') SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,ISNULL(SM.SessionStatus,'') SessionStatus,ISNULL(CASE WHEN TM.TrainerType='Internal' THEN E.EmpName ELSE TM.NameExternal END,'') TrainerName,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster T1 ON TR.TestID=T1.TestID WHERE T1.SessionID=SM.SessionID AND T1.TestType='Pre') PreResults,(SELECT COUNT(*) FROM TestResult TR INNER JOIN TestMaster T2 ON TR.TestID=T2.TestID WHERE T2.SessionID=SM.SessionID AND T2.TestType='Post') PostResults FROM SessionMaster SM LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN TrainerMaster TM ON SM.TrainerID=TM.TrainerID LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 ORDER BY TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(int,SM.SessionNo)";
-            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@TrainingID",trainingID));
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@TrainingID",trainingID) });
             gvSessionList.DataSource=dt;
             gvSessionList.DataBind();
             lblSelectedTraining.Text=trainingID+" - "+GetTrainingName(trainingID);
@@ -121,7 +121,7 @@ namespace Training.Admin
         private void BindResultList(string sessionID)
         {
             string q="SELECT TM.TestType,ISNULL(TM.TestTitle,'') TestTitle,TR.ResultID,TR.EmpID,ISNULL(EBM.EmpName,TME.TraineeName) TraineeName,TR.AttemptNo,TR.TotalQuestions,TR.AttemptedQuestions,TR.CorrectAnswers,TR.WrongAnswers,TR.TotalMarks,TR.ObtainedMarks,TR.Percentage,TR.ResultStatus,TR.RankNo,TR.SubmittedOn FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.SessionID=@SessionID ORDER BY CASE WHEN TM.TestType='Pre' THEN 1 ELSE 2 END,TR.EmpID,TR.AttemptNo DESC";
-            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@SessionID",sessionID));
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@SessionID",sessionID) });
             gvResultList.DataSource=dt;
             gvResultList.DataBind();
             lblResultCount.Text=dt.Rows.Count.ToString();
@@ -164,8 +164,8 @@ namespace Training.Admin
             string q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.Batch,TD.TrainingType,TD.TrainingStatus,TD.DateFrom,TD.DateTo FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID ORDER BY TD.TrainingID DESC";
             return objDB.GetDataTable(q);
         }
-        private DataTable GetSessionExportData(string id){return objDB.GetDataTable("SELECT SessionID,SessionNo,SessionName,SessionDate,StartTime,EndTime,SessionStatus FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(SessionCancelled,0)=0 ORDER BY TRY_CONVERT(int,SessionNo)",new SqlParameter("@TrainingID",id));}
-        private DataTable GetResultExportData(string id){return objDB.GetDataTable("SELECT TM.TestType,TM.TestTitle,TR.EmpID,ISNULL(EBM.EmpName,TME.TraineeName) TraineeName,TR.AttemptNo,TR.TotalQuestions,TR.AttemptedQuestions,TR.CorrectAnswers,TR.WrongAnswers,TR.TotalMarks,TR.ObtainedMarks,TR.Percentage,TR.ResultStatus,TR.RankNo,TR.SubmittedOn FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.SessionID=@SessionID ORDER BY TM.TestType,TR.EmpID,TR.AttemptNo DESC",new SqlParameter("@SessionID",id));}
+        private DataTable GetSessionExportData(string id){return objDB.GetDataTable("SELECT SessionID,SessionNo,SessionName,SessionDate,StartTime,EndTime,SessionStatus FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(SessionCancelled,0)=0 ORDER BY TRY_CONVERT(int,SessionNo)",new SqlParameter[] { new SqlParameter("@TrainingID",id) });}
+        private DataTable GetResultExportData(string id){return objDB.GetDataTable("SELECT TM.TestType,TM.TestTitle,TR.EmpID,ISNULL(EBM.EmpName,TME.TraineeName) TraineeName,TR.AttemptNo,TR.TotalQuestions,TR.AttemptedQuestions,TR.CorrectAnswers,TR.WrongAnswers,TR.TotalMarks,TR.ObtainedMarks,TR.Percentage,TR.ResultStatus,TR.RankNo,TR.SubmittedOn FROM TestResult TR INNER JOIN TestMaster TM ON TR.TestID=TM.TestID LEFT JOIN EmpBasicMaster EBM ON EBM.EmpID=TR.EmpID LEFT JOIN TraineeMasterExternal TME ON TME.EmpIDExternal=TR.EmpID WHERE TM.SessionID=@SessionID ORDER BY TM.TestType,TR.EmpID,TR.AttemptNo DESC",new SqlParameter[] { new SqlParameter("@SessionID",id) });}
 
         private void ExportDataTable(DataTable dt,string fileName)
         {
