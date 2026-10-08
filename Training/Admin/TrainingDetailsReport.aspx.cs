@@ -99,7 +99,7 @@ namespace Training.Admin
             if (dt.Rows.Count == 0) return;
             DataRow r = dt.Rows[0];
             lblPopupTrainingID.Text = Convert.ToString(r["TrainingID"]);lblPopupType.Text = Convert.ToString(r["TrainingType"]);lblPopupOrganizer.Text = Convert.ToString(r["TrainingOrganizer"]);lblPopupLocation.Text = Convert.ToString(r["TrainingLocation"]);lblPopupBatch.Text = Convert.ToString(r["Batch"]);lblPopupFrom.Text = Convert.ToString(r["DateFrom"]);lblPopupTo.Text = Convert.ToString(r["DateTo"]);
-            ScriptManager.RegisterStartupScript(this,GetType(),"showTrainingInfo","showTrainingInfo();",true);
+            ClientScript.RegisterStartupScript(GetType(),"showTrainingInfo","showTrainingInfo();",true);
         }
 
         private void LoadTrainingHeader(string trainingID)
