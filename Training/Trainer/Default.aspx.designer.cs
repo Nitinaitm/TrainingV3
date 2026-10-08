@@ -25,7 +25,7 @@ namespace Training.Trainer
         protected global::System.Web.UI.WebControls.LinkButton lnkFutureSession;
         protected global::System.Web.UI.WebControls.LinkButton lnkPendingSession;
         protected global::System.Web.UI.WebControls.DropDownList ddlCourse;
-        protected global::System.Web.UI.WebControls.DropDownList ddlBatch;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
         protected global::System.Web.UI.WebControls.TextBox txtFromDate;
         protected global::System.Web.UI.WebControls.TextBox txtToDate;
         protected global::System.Web.UI.WebControls.Button btnSearch;
