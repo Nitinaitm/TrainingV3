@@ -33,7 +33,7 @@
 <asp:GridView ID="gvTraining" runat="server" AutoGenerateColumns="False" CssClass="grid" OnRowCommand="gvTraining_RowCommand">
 <Columns>
 <asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex+1 %></ItemTemplate></asp:TemplateField>
-<asp:TemplateField HeaderText="Training ID"><ItemTemplate><asp:LinkButton ID="lnkTrainingID" runat="server" Text="<%# Eval("TrainingID") %>" CssClass="training-link" CommandName="TrainingInfo" CommandArgument="<%# Eval("TrainingID") %>" /></ItemTemplate></asp:TemplateField>
+<asp:TemplateField HeaderText="Training ID"><ItemTemplate><asp:LinkButton ID="lnkTrainingID" runat="server" Text='<%# Eval("TrainingID") %>' CssClass="training-link" CommandName="TrainingInfo" CommandArgument='<%# Eval("TrainingID") %>' /></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="CourseName" HeaderText="Course" />
 
 <asp:BoundField DataField="NoOfDays" HeaderText="Days" />
