@@ -104,7 +104,6 @@ namespace Training.Admin
             lblFeedback.Text=Scalar("SELECT COUNT(*) FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID WHERE ISNULL(F.Submitted,0)=1"+f).ToString();
             decimal post=ScalarDecimal("SELECT ISNULL(AVG(R.Percentage),0) FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE TM.TestType='POST'"+f);
             lblPostTest.Text=post.ToString("0.00")+"%";
-
             string statusQ="SELECT ISNULL(TD.TrainingStatus,'') TrainingStatus,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingStatus,'') ORDER BY TrainingStatus";
             string typeQ="SELECT ISNULL(TD.TrainingType,'') TrainingType,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingType,'') ORDER BY TrainingType";
             string courseQ="SELECT ISNULL(CM.CourseName,'') CourseName,COUNT(*) TrainingCount,ISNULL(SUM(TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),''))),0) TotalTrainingDays FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1"+f+" GROUP BY ISNULL(CM.CourseName,'') ORDER BY TrainingCount DESC,CourseName";
@@ -112,6 +111,75 @@ namespace Training.Admin
             gvType.DataSource=GetFiltered(typeQ);gvType.DataBind();
             gvCourse.DataSource=GetFiltered(courseQ);gvCourse.DataBind();
         }
+
+        protected void kpiCard_Click(object sender,EventArgs e)
+        {
+            LinkButton card=(LinkButton)sender;
+            BindKpiDetails(card.CommandArgument);
+        }
+
+        private void BindKpiDetails(string type)
+        {
+            string q="";
+            string title="";
+            if(type=="TotalTrainings")
+            {
+                q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingOrganizer,'') TrainingOrganizer,ISNULL(TD.Batch,'') Batch,ISNULL(TD.TrainingLocation,'') TrainingLocation,TD.NoOfDays,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                title="Total Trainings - "+lblTotalTrainings.Text+" row(s)";
+            }
+            else if(type=="CompletedTrainings")
+            {
+                q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.Batch,'') Batch,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(TD.TrainingStatus,'') IN ('Closed','Completed')"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                title="Completed Trainings - "+lblCompletedTrainings.Text+" row(s)";
+            }
+            else if(type=="OngoingTrainings")
+            {
+                q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.Batch,'') Batch,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed') AND "+DateExpr("TD.DateFrom")+"<=CAST(GETDATE() AS date) AND "+DateExpr("TD.DateTo")+">=CAST(GETDATE() AS date)"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC";
+                title="Ongoing Trainings - "+lblOngoingTrainings.Text+" row(s)";
+            }
+            else if(type=="FutureTrainings")
+            {
+                q="SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.Batch,'') Batch,CONVERT(varchar(10),"+DateExpr("TD.DateFrom")+",105) DateFrom,CONVERT(varchar(10),"+DateExpr("TD.DateTo")+",105) DateTo,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Closed','Completed') AND "+DateExpr("TD.DateFrom")+">CAST(GETDATE() AS date)"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom");
+                title="Future Trainings - "+lblFutureTrainings.Text+" row(s)";
+            }
+            else if(type=="TotalTrainees")
+            {
+                q="SELECT E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace,COUNT(DISTINCT TA.TrainingID) TrainingCount FROM EmpBasicMaster E INNER JOIN TrainingAssignment TA ON E.EmpID=TA.EmpID AND ISNULL(TA.Cancelled,0)=0 INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE 1=1"+Filter("TD")+" GROUP BY E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace ORDER BY E.EmpID";
+                title="Total Trainees - "+lblTotalTrainees.Text+" unique trainee(s)";
+            }
+            else if(type=="TotalSessions")
+            {
+                q="SELECT SM.SessionID,SM.TrainingID,SM.SessionNo,SM.SessionName,ISNULL(TP.TopicName,'') TopicName,SM.SessionDate,SM.StartTime,SM.EndTime,ISNULL(SM.SessionStatus,'') SessionStatus,ISNULL(CM.CourseName,'') CourseName FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN TopicMaster TP ON SM.TopicID=TP.TopicID LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE ISNULL(SM.SessionCancelled,0)=0"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+","+DateExpr("SM.SessionDate");
+                title="Total Sessions - "+lblTotalSessions.Text+" row(s)";
+            }
+            else if(type=="Attendance")
+            {
+                q="SELECT SA.ID,SA.TrainingID,SA.SessionID,SA.EmpID,E.EmpName,SA.AttendanceStatus,ISNULL(SA.Remarks,'') Remarks,SA.CreatedBy AttendanceMarkedBy,SA.CreatedOn AttendanceMarkedOn FROM SessionAttendance SA INNER JOIN TrainingDetails TD ON SA.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON SA.EmpID=E.EmpID WHERE 1=1"+Filter("TD")+" ORDER BY SA.CreatedOn DESC";
+                title="Attendance Records - "+lblAttendance.Text+"";
+            }
+            else if(type=="Certificates")
+            {
+                q="SELECT TC.CertificateID,TC.TrainingID,TC.EmpID,E.EmpName,TC.CertificateStatus,TC.CreatedOn FROM TrainingCertificate TC INNER JOIN TrainingDetails TD ON TC.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON TC.EmpID=E.EmpID WHERE 1=1"+Filter("TD")+" ORDER BY TC.CreatedOn DESC";
+                title="Certificates Generated - "+lblCertificates.Text+" row(s)";
+            }
+            else if(type=="Feedback")
+            {
+                q="SELECT F.ID,F.TrainingID,F.EmpID,E.EmpName,F.Submitted,F.SubmittedOn FROM Feedback F INNER JOIN TrainingDetails TD ON F.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON F.EmpID=E.EmpID WHERE ISNULL(F.Submitted,0)=1"+Filter("TD")+" ORDER BY F.SubmittedOn DESC";
+                title="Feedback Submitted - "+lblFeedback.Text+" row(s)";
+            }
+            else if(type=="PostTest")
+            {
+                q="SELECT R.ID,R.TestID,TM.TestTitle,R.EmpID,E.EmpName,R.AttemptNo,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.WrongAnswers,R.TotalMarks,R.ObtainedMarks,R.Percentage,R.ResultStatus FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID WHERE TM.TestType='POST'"+Filter("TD")+" ORDER BY R.Percentage DESC";
+                title="Post Test Results - Average "+lblPostTest.Text;
+            }
+            if(q=="")return;
+            DataTable dt=GetFiltered(q);
+            gvKpiDetails.DataSource=dt;
+            gvKpiDetails.DataBind();
+            lblKpiDetailsTitle.Text=title+" | "+dt.Rows.Count+" row(s)";
+            ScriptManager.RegisterStartupScript(this,GetType(),"showKpiDetails","showKpiDetails();",true);
+        }
+
 
         private DataTable GetFiltered(string q)
         {
