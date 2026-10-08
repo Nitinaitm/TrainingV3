@@ -89,9 +89,8 @@
             cursor: pointer;
         }
 
-            .notification:hover {
-                color: #0d6efd;
-            }
+            .notification:hover { color:#0d6efd; }
+        .notification-announcement .notify-count{background:#f59e0b}.notification-alert .notify-count{background:#dc2626}.notification .notify-count{min-width:18px;width:auto;padding:0 4px}.notification .notify-count:hover::after{position:absolute;top:22px;right:0;background:#111827;color:#fff;font-size:11px;padding:4px 7px;border-radius:4px;white-space:nowrap;z-index:10001}.notification-announcement .notify-count:hover::after{content:"Announcement"}.notification-alert .notify-count:hover::after{content:"Notification"}
 
         .notify-count {
             position: absolute;
@@ -454,16 +453,7 @@
 
             <div class="header-right">
 
-                <a href="Notifications.aspx"
-                    class="notification"
-                    style="text-decoration: none;">
-
-                    <i class="fas fa-bell"></i>
-
-                    <span class="notify-count">1
-                    </span>
-
-                </a>
+                <a href="Announcement.aspx" class="notification notification-announcement" title="Announcements"><i class="fas fa-bullhorn"></i><span class="notify-count"><asp:Label ID="lblAnnouncementCount" runat="server" Text="0" /></span></a><a href="Notifications.aspx" class="notification notification-alert" title="Notifications"><i class="fas fa-bell"></i><span class="notify-count"><asp:Label ID="lblNotificationCount" runat="server" Text="0" /></span></a>
 
                 <div class="user-info">
 
