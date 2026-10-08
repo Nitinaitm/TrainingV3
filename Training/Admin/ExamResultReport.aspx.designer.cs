@@ -18,6 +18,18 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.Button btnResetTraining;
         protected global::System.Web.UI.WebControls.Label lblTrainingCount;
         protected global::System.Web.UI.WebControls.GridView gvTrainingList;
+        protected global::System.Web.UI.WebControls.Panel pnlTrainingInfoModal;
+        protected global::System.Web.UI.WebControls.Label lblTrainingInfoTitle;
+        protected global::System.Web.UI.WebControls.Label lblInfoTrainingID;
+        protected global::System.Web.UI.WebControls.Label lblInfoCourse;
+        protected global::System.Web.UI.WebControls.Label lblInfoBatch;
+        protected global::System.Web.UI.WebControls.Label lblInfoType;
+        protected global::System.Web.UI.WebControls.Label lblInfoOrganizer;
+        protected global::System.Web.UI.WebControls.Label lblInfoLocation;
+        protected global::System.Web.UI.WebControls.Label lblInfoFrom;
+        protected global::System.Web.UI.WebControls.Label lblInfoTo;
+        protected global::System.Web.UI.WebControls.Label lblInfoDays;
+        protected global::System.Web.UI.WebControls.Label lblInfoStatus;
         protected global::System.Web.UI.WebControls.Panel pnlSessionList;
         protected global::System.Web.UI.WebControls.LinkButton btnBackTraining;
         protected global::System.Web.UI.WebControls.Label lblSelectedTraining;
