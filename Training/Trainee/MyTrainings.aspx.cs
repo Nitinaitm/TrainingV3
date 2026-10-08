@@ -124,7 +124,6 @@ namespace Training.Trainee
         {
             ddlStatus.Items.Clear();
             ddlStatus.Items.Add(new ListItem("All", ""));
-            ddlStatus.Items.Add(new ListItem("Pending", "Pending"));
             ddlStatus.Items.Add(new ListItem("In Progress", "In Progress"));
             ddlStatus.Items.Add(new ListItem("Completed", "Completed"));
         }
@@ -336,17 +335,11 @@ namespace Training.Trainee
                     row["StatusClass"] =
                         "badge badge-success badge-status";
                 }
-                else if (done > 0)
+                else
                 {
                     row["StatusText"] = "In Progress";
                     row["StatusClass"] =
                         "badge badge-warning badge-status";
-                }
-                else
-                {
-                    row["StatusText"] = "Pending";
-                    row["StatusClass"] =
-                        "badge badge-secondary badge-status";
                 }
             }
 
