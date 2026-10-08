@@ -189,7 +189,7 @@ namespace Training.Trainer
             if (e.CommandName != "History") return;
             string trainingID = e.CommandArgument == null ? "" : e.CommandArgument.ToString();
             if (string.IsNullOrWhiteSpace(trainingID)) return;
-            object access = obj.ExecuteScalar("SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID AND EXISTS (SELECT 1 FROM TrainingDetails TD WHERE TD.TrainingID=SessionMaster.TrainingID AND TD.TrainingStatus='Closed')", new SqlParameter[]
+            object access = obj.ExecuteScalar("SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID AND EXISTS (SELECT 1 FROM TrainingDetails TD WHERE TD.TrainingID=SessionMaster.TrainingID AND ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted'))", new SqlParameter[]
             {
                 new SqlParameter("@TrainingID", trainingID),
                 new SqlParameter("@TrainerID", TrainerID)
