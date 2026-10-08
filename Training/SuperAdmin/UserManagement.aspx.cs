@@ -193,12 +193,6 @@ namespace Training.SuperAdmin
                 return;
             }
 
-            if (string.Equals(loginID, CurrentUser(), StringComparison.OrdinalIgnoreCase))
-            {
-                SetMessage("Use the normal password reset/change flow for your own SuperAdmin account.", false);
-                return;
-            }
-
             Encryptor2 enc = new Encryptor2();
             db.ExecuteSql("UPDATE Login SET Password=@Password,re=@re WHERE LoginIDUserID=@LoginID", new SqlParameter[] {
                 new SqlParameter("@Password",enc.Encrypt(password)),
