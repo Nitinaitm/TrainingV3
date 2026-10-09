@@ -198,25 +198,35 @@
                 margin-right: -5px
             }
         }
-    </style>
+    
+.finance-summary { margin-top:10px; padding:16px; border-radius:12px; background:linear-gradient(135deg,#e8f5e9,#e3f2fd); border:1px solid #cfe2f3; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+.finance-summary .summary-value { background:#fff; border:1px solid #d8dee4; border-left:4px solid #198754; box-shadow:0 2px 6px rgba(0,0,0,.04); }
+.finance-summary .summary-value:nth-child(2) { border-left-color:#0d6efd; }
+.finance-summary .summary-value:nth-child(3) { border-left-color:#fd7e14; }
+.finance-summary .summary-value:nth-child(4) { border-left-color:#6f42c1; }
+.finance-summary .total-value { color:#198754; }
+.detail-actions { padding:12px 15px; margin:15px 0 5px; background:#f8f9fa; border:1px solid #dee2e6; border-radius:10px; }
+.detail-actions .btn { min-width:130px; white-space:nowrap; margin:3px; }
+.finance-grid .btn { white-space:nowrap; min-width:78px; padding:5px 10px; }
+</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="main-card">
 <div class="page-heading">Finance - Training Detail</div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label>
-<div class="row">
+<div class="row finance-summary">
 <div class="col-lg-3 col-md-6 mb-2"><span class="summary-value">Training ID: <asp:Label ID="lblTrainingID" runat="server"></asp:Label></span></div>
 <div class="col-lg-3 col-md-6 mb-2"><span class="summary-value">Course: <asp:Label ID="lblCourse" runat="server"></asp:Label></span></div>
 <div class="col-lg-3 col-md-6 mb-2"><span class="summary-value">Batch: <asp:Label ID="lblBatch" runat="server"></asp:Label></span></div>
 <div class="col-lg-3 col-md-6 mb-2"><span class="summary-value">Duration: <asp:Label ID="lblDuration" runat="server"></asp:Label></span></div>
 </div>
-<div class="row mt-2">
+<div class="row mt-2 finance-summary">
 <div class="col-md-3 mb-2"><span class="summary-value">Trainees: <asp:Label ID="lblTrainees" runat="server"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Trainers: <asp:Label ID="lblTrainers" runat="server"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" CssClass="total-value"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server"></asp:Label></span></div>
 </div>
-<div class="no-print"><asp:Button ID="btnPrint" runat="server" Text="Print Detail" CssClass="btn btn-primary" OnClientClick="window.print();return false;" />&nbsp;<asp:Button ID="btnBack" runat="server" Text="Back to Final Report" CssClass="btn btn-secondary" OnClick="btnBack_Click" /></div>
+<div class="no-print detail-actions"><asp:Button ID="btnPrint" runat="server" Text="Print Detail" CssClass="btn btn-primary" OnClientClick="window.print();return false;" />&nbsp;<asp:Button ID="btnBack" runat="server" Text="Back to Final Report" CssClass="btn btn-secondary" OnClick="btnBack_Click" /></div>
 <div class="section-title">1. Session-wise Cost Head</div>
 <div class="table-responsive"><asp:GridView ID="gvSession" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False">
 <Columns>
