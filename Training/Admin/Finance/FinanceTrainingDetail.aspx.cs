@@ -20,6 +20,7 @@ namespace Training.Admin
 
         private void BindAll(string trainingID)
         {
+            FinanceCommon.EnsureCostingForTraining(objDB,trainingID,Convert.ToString(Session["UserID"]));
             DataTable h=objDB.GetDataTable("SELECT TD.TrainingID,ISNULL(C.CourseName,'') CourseName,ISNULL(TD.Batch,'') Batch,ISNULL(TD.NoOfDays,0) NoOfDays,COUNT(DISTINCT TA.EmpID) TraineeCount,COUNT(DISTINCT TTM.TrainerID) TrainerCount FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID LEFT JOIN TrainingAssignment TA ON TD.TrainingID=TA.TrainingID AND ISNULL(TA.Cancelled,0)=0 LEFT JOIN TrainingTrainerMapping TTM ON TD.TrainingID=TTM.TrainingID WHERE TD.TrainingID=@TrainingID GROUP BY TD.TrainingID,C.CourseName,TD.Batch,TD.NoOfDays",new SqlParameter("@TrainingID",trainingID));
             if(h.Rows.Count==0){ShowMessage("Training not found.",Color.Red);return;}
             DataRow r=h.Rows[0];lblTrainingID.Text=r["TrainingID"].ToString();lblCourse.Text=r["CourseName"].ToString();lblBatch.Text=r["Batch"].ToString();lblDuration.Text=r["NoOfDays"].ToString()+" Day(s)";lblTrainees.Text=r["TraineeCount"].ToString();lblTrainers.Text=r["TrainerCount"].ToString();
