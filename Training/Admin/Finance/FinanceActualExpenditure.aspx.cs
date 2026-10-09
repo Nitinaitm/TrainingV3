@@ -23,7 +23,7 @@ namespace Training.Admin
 
         private void BindTraining()
         {
-            DataTable dt = objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID+' - '+ISNULL(C.CourseName,'')+' - '+ISNULL(TD.Batch,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
+            DataTable dt = objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID+' - '+ISNULL(C.CourseName,'')+' - '+ISNULL(TD.Batch,'')+' - '+ISNULL(TD.TrainingLocation,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
             ddlTraining.DataSource=dt; ddlTraining.DataTextField="TrainingName"; ddlTraining.DataValueField="TrainingID"; ddlTraining.DataBind();
             ddlTraining.Items.Insert(0,new ListItem("Select Training / Batch",""));
         }
@@ -82,12 +82,12 @@ namespace Training.Admin
 
         private void BindSummary()
         {
-            if(ddlTraining.SelectedValue==""){lblFinalCost.Text="₹0.00";lblActual.Text="₹0.00";lblBalance.Text="₹0.00";return;}
+            if(ddlTraining.SelectedValue==""){lblFinalCost.Text="Rs. 0.00";lblActual.Text="Rs. 0.00";lblBalance.Text="Rs. 0.00";return;}
             DataTable dt=objDB.GetDataTable("SELECT ISNULL(SUM(FinalAmount),0) FinalCost FROM FinanceCostingDetail WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             decimal finalCost=Convert.ToDecimal(dt.Rows[0]["FinalCost"]);
             dt=objDB.GetDataTable("SELECT ISNULL(SUM(Amount),0) ActualCost FROM FinanceActualExpenditure WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             decimal actual=Convert.ToDecimal(dt.Rows[0]["ActualCost"]);
-            lblFinalCost.Text="₹"+finalCost.ToString("N2"); lblActual.Text="₹"+actual.ToString("N2"); lblBalance.Text="₹"+(finalCost-actual).ToString("N2");
+            lblFinalCost.Text="Rs. "+finalCost.ToString("N2"); lblActual.Text="Rs. "+actual.ToString("N2"); lblBalance.Text="Rs. "+(finalCost-actual).ToString("N2");
         }
 
         private void ClearSelection(){BindExpenditure();BindSummary();}
