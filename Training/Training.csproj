@@ -2396,10 +2396,19 @@
     <Compile Include="Admin\Finance\FinanceCosting.aspx.designer.cs" />
     <Compile Include="Admin\Finance\FinanceSessionCosting.aspx.cs" />
     <Compile Include="Admin\Finance\FinanceSessionCosting.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceActualExpenditure.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceActualExpenditure.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceFinalReport.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceFinalReport.aspx.designer.cs" />
+    <Compile Include="Admin\Finance\FinanceTrainingDetail.aspx.cs" />
+    <Compile Include="Admin\Finance\FinanceTrainingDetail.aspx.designer.cs" />
     <Content Include="Admin\Finance\FinanceCostHeadMaster.aspx" />
     <Content Include="Admin\Finance\FinanceRateMaster.aspx" />
     <Content Include="Admin\Finance\FinanceCosting.aspx" />
     <Content Include="Admin\Finance\FinanceSessionCosting.aspx" />
+    <Content Include="Admin\Finance\FinanceActualExpenditure.aspx" />
+    <Content Include="Admin\Finance\FinanceFinalReport.aspx" />
+    <Content Include="Admin\Finance\FinanceTrainingDetail.aspx" />
     <Content Include="App_Data\FinanceModule.sql" />
   </ItemGroup>
   <ItemGroup>
