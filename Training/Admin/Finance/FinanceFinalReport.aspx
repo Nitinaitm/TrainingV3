@@ -1,14 +1,30 @@
-<%@ Page Title="Finance - Final Report" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="FinanceFinalReport.aspx.cs" Inherits="Training.Admin.FinanceFinalReport" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <style>
-<script>$(document).ready(function(){if($("#ddlTraining").length){if($("#ddlTraining").hasClass("select2-hidden-accessible"))$("#ddlTraining").select2("destroy");$("#ddlTraining").select2({width:"100%",placeholder:"Search Training ID / Course / Batch / Location",allowClear:true});}});</script>
-<script>$(document).ready(function(){if($("#ddlTraining").length){if($("#ddlTraining").hasClass("select2-hidden-accessible"))$("#ddlTraining").select2("destroy");$("#ddlTraining").select2({width:"100%",placeholder:"Search / Select",allowClear:true});}if($("#ddlCourse").length){if($("#ddlCourse").hasClass("select2-hidden-accessible"))$("#ddlCourse").select2("destroy");$("#ddlCourse").select2({width:"100%",placeholder:"Search / Select",allowClear:true});}});</script></asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+body{background:#f5f5f5;}
+.main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin-top:20px;margin-bottom:20px;}
+.page-heading{font-size:28px;font-weight:bold;color:darkcyan;margin-bottom:20px;}
+.form-control,.form-select{height:38px!important;border:1px solid #ced4da!important;border-radius:4px;}
+.btn-save{background:darkcyan!important;color:#fff!important;border:1px solid darkcyan!important;border-radius:4px;padding:7px 18px;font-weight:600;}
+.btn-save:hover{background:teal!important;border-color:teal!important;color:#fff!important;}
+.finance-grid .btn{white-space:nowrap;min-width:78px;padding:5px 10px;font-size:13px;display:inline-block;}
+.finance-grid td:last-child{white-space:nowrap;}
+.select2-container{width:100%!important;}
+.select2-container--default .select2-selection--single{height:38px!important;border:1px solid #ced4da!important;border-radius:4px!important;}
+.select2-selection__rendered{line-height:36px!important;}
+.select2-selection__arrow{height:36px!important;}
+.summary-label{font-weight:600;margin-bottom:5px;display:block;color:#343a40;}
+.summary-value{min-height:38px;height:38px;padding:7px 12px;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;display:block;}
+.total-value{font-weight:700;color:#198754;font-size:18px;}
+.report-button{min-width:130px;white-space:nowrap;}
+.detail-actions .btn{min-width:130px;white-space:nowrap;}
+@media(max-width:768px){.main-card{padding:15px;}.page-heading{font-size:24px;}}
+</style>
+<script>$(document).ready(function(){if($("#ddlTraining").length){if($("#ddlTraining").hasClass("select2-hidden-accessible"))$("#ddlTraining").select2("destroy");$("#ddlTraining").select2({width:"100%",placeholder:"Search Training ID / Course / Batch / Location",allowClear:true});}if($("#ddlCourse").length){if($("#ddlCourse").hasClass("select2-hidden-accessible"))$("#ddlCourse").select2("destroy");$("#ddlCourse").select2({width:"100%",placeholder:"Search Course",allowClear:true});}});</script>
+</asp:Content><asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="main-card">
 <div class="page-heading">Finance - Final Report</div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label>
