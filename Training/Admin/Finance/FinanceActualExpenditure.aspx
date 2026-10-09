@@ -2,6 +2,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
 .main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin:20px 0}.page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}.summary-value{min-height:38px;padding:7px 12px;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;display:block;font-weight:600}.finance-grid th{background:#198754!important;color:#fff!important;white-space:nowrap}.finance-grid td{vertical-align:middle}@media(max-width:768px){.main-card{padding:15px}}
+
+.finance-grid .btn { white-space:nowrap; min-width:78px; padding:5px 10px; font-size:13px; display:inline-block; }
+.finance-grid td:last-child { white-space:nowrap; }
+.action-button { white-space:nowrap; min-width:110px; }
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -21,7 +25,8 @@
 <div class="text-center mb-3"><asp:Button ID="btnSave" runat="server" Text="Save Expenditure" CssClass="btn btn-success" OnClick="btnSave_Click" />&nbsp;<asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btn btn-secondary" OnClick="btnClear_Click" /></div>
 <div class="row mb-3"><div class="col-md-4"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" Text="₹0.00"></asp:Label></span></div><div class="col-md-4"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server" Text="₹0.00"></asp:Label></span></div><div class="col-md-4"><span class="summary-value">Balance: <asp:Label ID="lblBalance" runat="server" Text="₹0.00"></asp:Label></span></div></div>
 <div class="table-responsive"><asp:GridView ID="gvExpenditure" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="ExpenditureID" OnRowCommand="gvExpenditure_RowCommand">
-<Columns><asp:BoundField DataField="ExpenditureDate" HeaderText="Date" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" /><asp:BoundField DataField="SessionName" HeaderText="Session" /><asp:BoundField DataField="VendorName" HeaderText="Vendor / Payee" /><asp:BoundField DataField="BillReference" HeaderText="Bill / Ref." /><asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="{0:N2}" /><asp:BoundField DataField="Remarks" HeaderText="Remarks" /><asp:ButtonField CommandName="DeleteExpenditure" Text="Delete" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-danger" /></Columns>
+<Columns>
+<asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField><asp:BoundField DataField="ExpenditureDate" HeaderText="Date" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" /><asp:BoundField DataField="SessionName" HeaderText="Session" /><asp:BoundField DataField="VendorName" HeaderText="Vendor / Payee" /><asp:BoundField DataField="BillReference" HeaderText="Bill / Ref." /><asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="{0:N2}" /><asp:BoundField DataField="Remarks" HeaderText="Remarks" /><asp:ButtonField CommandName="DeleteExpenditure" Text="Delete" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-danger" /></Columns>
 </asp:GridView></div>
 </div></div>
 </asp:Content>
