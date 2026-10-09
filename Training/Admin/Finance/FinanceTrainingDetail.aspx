@@ -2,19 +2,26 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
+        body { background:#f5f7fb; }
         .main-card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px #d9d9d9;
-            margin-top: 20px
+            background:#fff;
+            padding:25px;
+            border-radius:14px;
+            box-shadow:0 4px 18px rgba(0,0,0,.08);
+            margin-top:20px;
+            margin-bottom:20px;
+            border:1px solid #e5e7eb;
         }
 
         .page-heading {
-            font-size: 28px;
-            font-weight: bold;
-            color: #198754;
-            margin-bottom: 20px
+            font-size:28px;
+            font-weight:700;
+            color:#0d6efd;
+            margin-bottom:20px;
+            padding:12px 16px;
+            border-radius:10px;
+            background:linear-gradient(135deg,#e8f1ff,#f3f8ff);
+            border-left:5px solid #0d6efd;
         }
 
         .info-box {
@@ -199,7 +206,7 @@
             }
         }
     
-.finance-summary { margin-top:10px; padding:16px; border-radius:12px; background:linear-gradient(135deg,#e8f5e9,#e3f2fd); border:1px solid #cfe2f3; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+.finance-summary { margin-top:10px; padding:16px; border-radius:12px; background:linear-gradient(135deg,#eef7ff,#f0fff7); border:1px solid #cfe2f3; box-shadow:0 4px 12px rgba(0,0,0,.06); }
 .finance-summary .summary-value { background:#fff; border:1px solid #d8dee4; border-left:4px solid #198754; box-shadow:0 2px 6px rgba(0,0,0,.04); }
 .finance-summary .summary-value:nth-child(2) { border-left-color:#0d6efd; }
 .finance-summary .summary-value:nth-child(3) { border-left-color:#fd7e14; }
