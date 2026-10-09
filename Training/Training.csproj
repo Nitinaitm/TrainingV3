@@ -246,36 +246,22 @@
     <Content Include="App_Data\ErrorLog.txt" />
     <Content Include="App_Data\VisitorCount.txt" />
     <Content Include="bin\Antlr3.Runtime.dll" />
-    
     <Content Include="bin\BouncyCastle.Cryptography.dll" />
-    
     <Content Include="bin\ClosedXML.dll" />
     <Content Include="bin\ClosedXML.Parser.dll" />
-    
-    
- 
     <Content Include="bin\DocumentFormat.OpenXml.dll" />
-    
     <Content Include="bin\EPPlus.dll" />
     <Content Include="bin\EPPlus.Interfaces.dll" />
     <Content Include="bin\EPPlus.System.Drawing.dll" />
-   
     <Content Include="bin\ExcelNumberFormat.dll" />
-   
     <Content Include="bin\itextsharp.dll" />
-   
     <Content Include="bin\itextsharp.xmlworker.dll" />
     <Content Include="bin\Microsoft.Bcl.HashCode.dll" />
- 
     <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
-
     <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
     <Content Include="bin\Newtonsoft.Json.dll" />
- 
     <Content Include="bin\QRCoder.dll" />
-
     <Content Include="bin\RBush.dll" />
-  
     <Content Include="bin\roslyn\csc.exe" />
     <Content Include="bin\roslyn\csi.exe" />
     <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
@@ -313,17 +299,11 @@
     <Content Include="bin\roslyn\vbc.exe" />
     <Content Include="bin\roslyn\VBCSCompiler.exe" />
     <Content Include="bin\SixLabors.Fonts.dll" />
-   
     <Content Include="bin\System.Buffers.dll" />
-    
     <Content Include="bin\System.Memory.dll" />
-    
     <Content Include="bin\System.Numerics.Vectors.dll" />
-   
     <Content Include="bin\System.Runtime.CompilerServices.Unsafe.dll" />
-  
     <Content Include="bin\System.Web.Optimization.dll" />
-  
     <Content Include="bin\Training.dll" />
     <Content Include="bin\Training.pdb" />
     <Content Include="bin\WebGrease.dll" />
@@ -952,21 +932,51 @@
     <Content Include="Trainer\TrainingCalendar.aspx" />
     <Content Include="Trainer\TrainingMaterial.aspx" />
     <Content Include="TrainingHistory.aspx" />
+    <Content Include="Uploads\AttendanceSheet\SES000030_20260728152021.pdf" />
+    <Content Include="Uploads\Certificates\E14123_TR-CR000005-IN-BSPHCL-5TH-10-290726-040826-002_20260731184714.pdf" />
     <Content Include="Uploads\CertificateTemplate\Background\70aa6374407d4454a6897cde50ed0802.png" />
     <Content Include="Uploads\CertificateTemplate\Background\7c674ba8f2b348ec8bfd42c62712f416.png" />
+    <Content Include="Uploads\CertificateTemplate\Background\8a5e5405a49e47fba02dc532aae2c69c.png" />
+    <Content Include="Uploads\CertificateTemplate\Background\bbac8ecb3cd04b2b8fa303fbeeffa574.png" />
+    <Content Include="Uploads\CertificateTemplate\Background\bd028ba9206f422f81aa2687cdf4d3dc.png" />
+    <Content Include="Uploads\CertificateTemplate\Background\d66be7a50ed34df7adc788044e47b7d1.png" />
+    <Content Include="Uploads\CertificateTemplate\Background\d8622f73f7b44311b59f8e42fb11bf43.png" />
     <Content Include="Uploads\CertificateTemplate\Logo\1112090b3cde4ba6a005eeca509bd88e.png" />
+    <Content Include="Uploads\CertificateTemplate\Logo\32e82d7ecbd9478698f88a8bb3b4ca19.png" />
     <Content Include="Uploads\CertificateTemplate\Logo\bdd7011c66fc46e8b1bb0080b62db2fb.png" />
+    <Content Include="Uploads\CertificateTemplate\Logo\cb0a0304ee4642beb0bde5450d6888cd.png" />
+    <Content Include="Uploads\CertificateTemplate\Logo\e10b7e42074343799688f8f4d1d27c9c.png" />
+    <Content Include="Uploads\CertificateTemplate\Logo\e53c1a61d7f24f02836bb1d1e8d18f32.png" />
+    <Content Include="Uploads\CertificateTemplate\Logo\f8ae7b284b124cd1ab292bbd690a3204.png" />
     <Content Include="Uploads\Certificate\Signature\024f7a1278404dc296b8e4364151a0e2.png" />
+    <Content Include="Uploads\Certificate\Signature\2bcc62b9-00f7-456a-993f-2b9e9fe393e1.png" />
     <Content Include="Uploads\Certificate\Signature\3377b90a0417496caf6b6d0e405c4200.png" />
     <Content Include="Uploads\Certificate\Signature\3cb4746a639846d4911d0c722a5deb33.png" />
     <Content Include="Uploads\Certificate\Signature\54a78d78d59a42b4bb35ef299bf916b9.png" />
+    <Content Include="Uploads\Certificate\Signature\72dbc7f4-8d94-424a-b693-fc85a4d01064.png" />
+    <Content Include="Uploads\Certificate\Signature\812b08da-fbd4-4814-9a9c-2f6c493041fc.jpeg" />
     <Content Include="Uploads\Certificate\Signature\88a363f768774def868857e68e0ab9f6.png" />
     <Content Include="Uploads\Certificate\Signature\978b6ea7096c436d9578e5d87fa203fa.png" />
     <Content Include="Uploads\Certificate\Signature\9a78f1c467fe44f9839aa3f12bc8a21e.png" />
+    <Content Include="Uploads\Certificate\Signature\a0288670-9bf1-4264-86bc-81ac6dfdb202.png" />
+    <Content Include="Uploads\Certificate\Signature\a3837c52-cf09-423b-b4c5-bb9f9d84d54f.png" />
     <Content Include="Uploads\Certificate\Signature\b26cd390782e4e138607261523a79d0e.jpg" />
+    <Content Include="Uploads\Certificate\Signature\b7ceee3b-7cec-4f9f-b0bd-8fd305092827.jpeg" />
+    <Content Include="Uploads\Certificate\Signature\b9cf919e-c1de-4c61-9455-a10cd41aef18.png" />
+    <Content Include="Uploads\Certificate\Signature\dc44e587-4284-442d-9188-6874904f11d3.png" />
+    <Content Include="Uploads\Certificate\Signature\dce36537-51c7-46c9-918a-aed40da0b1c2.png" />
+    <Content Include="Uploads\Certificate\Signature\dd4429ca-bc91-4b80-8b0f-3e73098d7d52.png" />
     <Content Include="Uploads\Certificate\Signature\de49c48c763c49629971325fcb7491d6.png" />
+    <Content Include="Uploads\Certificate\Signature\e6962757-cece-452f-89b8-159f605f3344.png" />
+    <Content Include="Uploads\Certificate\Signature\ec4d6544-1a82-4735-8d06-2731aa39a579.png" />
     <Content Include="Uploads\Certificate\Signature\ed67c149348642cd91826d828e9f2aa5.png" />
     <Content Include="Uploads\QuestionImage\18f65f80-e56d-4543-ae55-1dd02aad58ce.png" />
+    <Content Include="Uploads\TrainingMaterial\MAT1573000008.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT5059000001.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT5946000006.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT7020000009.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT9342000001.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT9865000001.pdf" />
     <Content Include="VerifyCertificate.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -2262,10 +2272,8 @@
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\Training.dll.config" />
-
     <Content Include="obj\Debug\Training.csproj.CopyComplete" />
     <Content Include="obj\Debug\Training.csproj.CoreCompileInputs.cache" />
-   
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <Content Include="SuperAdminMaster.Master" />
@@ -2282,14 +2290,16 @@
     <Content Include="Trainer\scss\bootstrap\mixins\_size.scss" />
     <Content Include="Trainer\scss\bootstrap\utilities\_borders.scss" />
     <Content Include="Trainer\scss\bootstrap\utilities\_clearfix.scss" />
-    <Content Include="Uploads\AttendanceSheet\SES000030_20260728152021.pdf" />
-    <Content Include="Uploads\Certificates\E14123_TR-CR000005-IN-BSPHCL-5TH-10-290726-040826-002_20260731184714.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT1573000008.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT5059000001.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT5946000006.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT7020000009.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT9342000001.pdf" />
-    <Content Include="Uploads\TrainingMaterial\MAT9865000001.pdf" />
+    <Content Include="Uploads\Certificates\E00195_TR-CR000003-IN-BPTI-5TH-15-010926-280926-001_20260928130609.pdf" />
+    <Content Include="Uploads\Certificates\E02904_TR-CR000003-RE-CBIP-5TH-17-010926-300926-001_20260929124152.pdf" />
+    <Content Include="Uploads\Certificates\E07046_TR-CR000006-IN-BPTI-5TH-15-010926-300926-001_20260929153231.pdf" />
+    <Content Include="Uploads\Certificates\E08084_TR-CR000006-RE-BSPHCL-ABC-11-170926-240926-001_20260924164521.pdf" />
+    <Content Include="Uploads\Certificates\E14861_TR-CR000003-IN-BPTI-ABC-13-010926-300926-001_20260925105112.pdf" />
+    <Content Include="Uploads\Certificates\E19410_TR-CR000003-RE-BPTI-5TH-18-010926-300926-001_20260929151648.pdf" />
+    <Content Include="Uploads\Certificates\E19519_TR-CR000003-IN-BPTI-5TH-16-010926-280926-001_20260928151353.pdf" />
+    <Content Include="Uploads\Certificates\E19528_TR-CR000006-IN-BPTI-ABC-13-250926-300926-001_20260928124439.pdf" />
+    <Content Include="Uploads\Certificates\E20320_TR-CR000005-IN-BPTI-5TH-11-010926-280926-001_20260928132550.pdf" />
+    <Content Include="Uploads\TrainingMaterial\MAT5905000010.pdf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2303,6 +2313,8 @@
     <Folder Include="obj\Debug\TempPE\" />
     <Folder Include="Scripts\" />
     <Folder Include="Styles\" />
+    <Folder Include="Uploads\Announcements\" />
+    <Folder Include="Uploads\Notifications\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\Communication.sql" />
