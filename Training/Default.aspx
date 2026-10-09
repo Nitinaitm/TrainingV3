@@ -1392,7 +1392,7 @@
                                                             CssClass="portal-btn portal-btn-primary"
                                                             ValidationGroup="v"
                                                             OnClick="btnOTP_Click"
-                                                            OnClientClick="this.value='Sending OTP...'; this.disabled=true; startTimer();" />
+                                                            OnClientClick="this.value='Sending OTP...'; startTimer();" />
 
 
                                                         <asp:Button
