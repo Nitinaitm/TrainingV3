@@ -1048,6 +1048,14 @@
                         class="submenu-item">Session Costing
                     </a>
 
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceActualExpenditure.aspx") %>'
+                        class="submenu-item">Actual Expenditure
+                    </a>
+
+                    <a href='<%= ResolveUrl("~/Admin/Finance/FinanceFinalReport.aspx") %>'
+                        class="submenu-item">Final Finance Report
+                    </a>
+
                 </div>
 
                 <!-- ================= REPORTS ================= -->
