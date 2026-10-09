@@ -49,15 +49,15 @@ namespace Training.Admin
         {
             FinanceCommon.EnsureCostingForTraining(objDB,trainingID,Convert.ToString(Session["UserID"]));
             string q="SELECT ISNULL(C.CourseName,'') CourseName,TD.TrainingID,ISNULL(TD.Batch,'') Batch,1 BatchCount,ISNULL(SC.SessionCost,0) SessionCost,ISNULL(BC.BatchCost,0) BatchCost,ISNULL(SC.SessionCost,0)+ISNULL(BC.BatchCost,0) FinalCost,ISNULL(X.ActualPaid,0) ActualPaid,ISNULL(SC.SessionCost,0)+ISNULL(BC.BatchCost,0)-ISNULL(X.ActualPaid,0) Balance FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID LEFT JOIN (SELECT TrainingID,SUM(FinalAmount) SessionCost FROM FinanceCostingDetail WHERE CostingLevel='Session' GROUP BY TrainingID) SC ON SC.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,SUM(FinalAmount) BatchCost FROM FinanceCostingDetail WHERE CostingLevel='Batch' GROUP BY TrainingID) BC ON BC.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure GROUP BY TrainingID) X ON X.TrainingID=TD.TrainingID WHERE TD.TrainingID=@TrainingID";
-            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@TrainingID",trainingID));BindGrid(dt);SetSummary(dt);
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@TrainingID",trainingID) });BindGrid(dt);SetSummary(dt);
         }
 
         private void BindCourseReport(string courseID)
         {
-            DataTable ids=objDB.GetDataTable("SELECT TrainingID FROM TrainingDetails WHERE CourseID=@CourseID",new SqlParameter("@CourseID",courseID));
+            DataTable ids=objDB.GetDataTable("SELECT TrainingID FROM TrainingDetails WHERE CourseID=@CourseID",new SqlParameter[] { new SqlParameter("@CourseID",courseID) });
             foreach(DataRow row in ids.Rows) FinanceCommon.EnsureCostingForTraining(objDB,Convert.ToString(row["TrainingID"]),Convert.ToString(Session["UserID"]));
             string q="SELECT ISNULL(C.CourseName,'') CourseName,TD.TrainingID,ISNULL(TD.Batch,'') Batch,COUNT(*) OVER() BatchCount,ISNULL(SC.SessionCost,0) SessionCost,ISNULL(BC.BatchCost,0) BatchCost,ISNULL(SC.SessionCost,0)+ISNULL(BC.BatchCost,0) FinalCost,ISNULL(X.ActualPaid,0) ActualPaid,ISNULL(SC.SessionCost,0)+ISNULL(BC.BatchCost,0)-ISNULL(X.ActualPaid,0) Balance FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID LEFT JOIN (SELECT TrainingID,SUM(FinalAmount) SessionCost FROM FinanceCostingDetail WHERE CostingLevel='Session' GROUP BY TrainingID) SC ON SC.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,SUM(FinalAmount) BatchCost FROM FinanceCostingDetail WHERE CostingLevel='Batch' GROUP BY TrainingID) BC ON BC.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure GROUP BY TrainingID) X ON X.TrainingID=TD.TrainingID WHERE TD.CourseID=@CourseID ORDER BY TD.TrainingID";
-            DataTable dt=objDB.GetDataTable(q,new SqlParameter("@CourseID",courseID));BindGrid(dt);SetSummary(dt);
+            DataTable dt=objDB.GetDataTable(q,new SqlParameter[] { new SqlParameter("@CourseID",courseID) });BindGrid(dt);SetSummary(dt);
         }
 
         private void BindGrid(DataTable dt){gvReport.DataSource=dt;gvReport.DataBind();}
