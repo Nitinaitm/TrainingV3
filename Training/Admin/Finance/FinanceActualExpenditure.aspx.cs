@@ -37,6 +37,7 @@ namespace Training.Admin
 
         protected void ddlTraining_SelectedIndexChanged(object sender,EventArgs e)
         {
+            if(ddlTraining.SelectedValue!="") FinanceCommon.EnsureCostingForTraining(objDB,ddlTraining.SelectedValue,Convert.ToString(Session["UserID"]));
             BindSessions();
             BindExpenditure();
             BindSummary();
