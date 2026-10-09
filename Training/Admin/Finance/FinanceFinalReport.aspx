@@ -3,6 +3,10 @@
 <style>
 .main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin:20px 0}.page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}.summary-value{min-height:42px;padding:9px 12px;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;display:block;font-weight:600}.total-value{font-size:20px;color:#198754}.finance-grid th{background:#198754!important;color:#fff!important;white-space:nowrap}.finance-grid td{vertical-align:middle}.print-only{display:none}@media print{.no-print,.sidebar,.navbar{display:none!important}.main-card{box-shadow:none;margin:0;padding:0}.print-only{display:block}}
 @media(max-width:768px){.main-card{padding:15px}}
+
+.finance-grid .btn { white-space:nowrap; min-width:78px; padding:5px 10px; font-size:13px; display:inline-block; }
+.finance-grid td:last-child { white-space:nowrap; }
+.action-button { white-space:nowrap; min-width:110px; }
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -24,6 +28,7 @@
 <div class="text-end no-print mb-3"><asp:Button ID="btnPrint" runat="server" Text="Print Final Report" CssClass="btn btn-primary" OnClientClick="window.print();return false;" /></div>
 <div class="table-responsive"><asp:GridView ID="gvReport" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" OnRowCommand="gvReport_RowCommand">
 <Columns>
+<asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
 <asp:BoundField DataField="CourseName" HeaderText="Course" />
 <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
 <asp:BoundField DataField="Batch" HeaderText="Batch" />
