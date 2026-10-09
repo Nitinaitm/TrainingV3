@@ -40,7 +40,7 @@ namespace Training.Admin
                 gvCosting.DataBind();
                 lblTrainees.Text="0";
                 lblDays.Text="0";
-                lblTotal.Text="₹0.00";
+                lblTotal.Text="Rs. 0.00";
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace Training.Admin
             gvCosting.DataBind();
 
             DataTable total=objDB.GetDataTable("SELECT ISNULL(SUM(FinalAmount),0) AS Total FROM FinanceCostingDetail WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
-            lblTotal.Text="₹"+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
+            lblTotal.Text="Rs. "+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
         }
 
         private void EnsureAutomaticBatchEntries(string trainingID)
