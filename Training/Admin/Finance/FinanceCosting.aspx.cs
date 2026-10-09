@@ -62,58 +62,7 @@ namespace Training.Admin
 
         private void EnsureAutomaticBatchEntries(string trainingID)
         {
-            DataTable heads=objDB.GetDataTable("SELECT CostHeadID,CalculationMode,UnitType FROM FinanceCostHeadMaster WHERE Active='Y' AND CostLevel='Batch'");
-            int trainees=FinanceCommon.GetTraineeCount(objDB,trainingID);
-            int days=FinanceCommon.GetTrainingDays(objDB,trainingID);
-
-            foreach(DataRow h in heads.Rows)
-            {
-                int headID=Convert.ToInt32(h["CostHeadID"]);
-                string mode=Convert.ToString(h["CalculationMode"]);
-                DataTable existing=objDB.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel='Batch' AND CostHeadID=@CostHeadID",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID),new SqlParameter("@CostHeadID",headID)});
-                if(existing.Rows.Count>0) continue;
-
-                int rateID;
-                decimal rate=FinanceCommon.GetRate(objDB,headID,DateTime.Today,out rateID);
-                decimal qty=GetAutomaticQuantity(trainingID,Convert.ToString(h["UnitType"]),trainees,days);
-                if(mode=="Manual") qty=0;
-
-                decimal calculated=qty*rate;
-
-                objDB.ExecuteSql("INSERT INTO FinanceCostingDetail(TrainingID,CourseID,CostingLevel,CostHeadID,RateID,CalculationMode,UnitType,Quantity,AppliedRate,CalculatedAmount,Remarks,CreatedBy) SELECT @TrainingID,TD.CourseID,'Batch',@CostHeadID,@RateID,@Mode,@Unit,@Qty,@Rate,@Amount,'Initial automatic/manual costing',@CreatedBy FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID",
-                new SqlParameter[]{new SqlParameter("@TrainingID",trainingID),new SqlParameter("@CostHeadID",headID),new SqlParameter("@RateID",rateID==0?(object)DBNull.Value:rateID),new SqlParameter("@Mode",mode),new SqlParameter("@Unit",Convert.ToString(h["UnitType"])),new SqlParameter("@Qty",qty),new SqlParameter("@Rate",rate),new SqlParameter("@Amount",calculated),new SqlParameter("@CreatedBy",Convert.ToString(Session["UserID"]))});
-            }
-        }
-
-        private decimal GetAutomaticQuantity(string trainingID,string unit,int trainees,int days)
-        {
-            if(unit=="Trainee-Day") return trainees*days;
-            if(unit=="Trainee") return trainees;
-            if(unit=="Day") return days;
-            if(unit=="Fixed") return 1;
-            if(unit=="Trainee-Night") return GetTraineeHostelOccupancy(trainingID)*Math.Max(0,days-1);
-            if(unit=="Trainer-Night") return GetTrainerHostelOccupancy(trainingID)*Math.Max(0,days-1);
-            return 0;
-        }
-
-        private int GetTraineeHostelOccupancy(string trainingID)
-        {
-            try
-            {
-                DataTable dt=objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM HostelAllotment WHERE TrainingID=@TrainingID AND Status='Allotted'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
-                return dt.Rows.Count==0?0:Convert.ToInt32(dt.Rows[0]["Cnt"]);
-            }
-            catch{return 0;}
-        }
-
-        private int GetTrainerHostelOccupancy(string trainingID)
-        {
-            try
-            {
-                DataTable dt=objDB.GetDataTable("SELECT COUNT(DISTINCT HA.EmpID) AS Cnt FROM HostelAllotment HA INNER JOIN TrainerMaster T ON HA.EmpID=T.EmpID WHERE HA.TrainingID=@TrainingID AND HA.Status='Allotted' AND T.TrainerType='Internal'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
-                return dt.Rows.Count==0?0:Convert.ToInt32(dt.Rows[0]["Cnt"]);
-            }
-            catch{return 0;}
+            FinanceCommon.EnsureCostingForTraining(objDB,trainingID,Convert.ToString(Session["UserID"]));
         }
 
         protected void gvCosting_RowCommand(object sender,System.Web.UI.WebControls.GridViewCommandEventArgs e)
