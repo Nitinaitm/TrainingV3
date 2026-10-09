@@ -198,7 +198,10 @@
                 margin-right: -5px
             }
         }
-    </style>
+    
+.form-control,.form-select{height:38px!important;border:1px solid #ced4da;border-radius:4px}.summary-value{min-height:42px;padding:9px 12px;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;display:block;font-weight:600}.total-value{font-size:20px;color:#198754}.finance-grid .btn{white-space:nowrap;min-width:92px;padding:5px 10px;font-size:13px}.finance-grid td:last-child{white-space:nowrap}.report-button{min-width:130px;white-space:nowrap}
+</style>
+<script>$(document).ready(function(){if($("#ddlTraining").length){if($("#ddlTraining").hasClass("select2-hidden-accessible"))$("#ddlTraining").select2("destroy");$("#ddlTraining").select2({width:"100%",placeholder:"Search Training ID / Course / Batch / Location",allowClear:true});}});</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="main-card">
@@ -206,17 +209,17 @@
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label>
 <div class="row no-print">
 <div class="col-lg-3 col-md-6 mb-3"><label class="form-label">Report Type *</label><asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged"><asp:ListItem Text="Batch Wise" Value="Batch"></asp:ListItem><asp:ListItem Text="Course Wise" Value="Course"></asp:ListItem></asp:DropDownList></div>
-<div class="col-lg-5 col-md-6 mb-3" id="pnlBatchFilter" runat="server"><label class="form-label">Training / Batch</label><asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-select"></asp:DropDownList></div>
+<div class="col-lg-5 col-md-6 mb-3" id="pnlBatchFilter" runat="server"><label class="form-label">Training / Batch</label><asp:DropDownList ID="ddlTraining" runat="server" ClientIDMode="Static" CssClass="form-select"></asp:DropDownList></div>
 <div class="col-lg-5 col-md-6 mb-3" id="pnlCourseFilter" runat="server"><label class="form-label">Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select"></asp:DropDownList></div>
-<div class="col-lg-2 col-md-6 mb-3 d-flex align-items-end"><asp:Button ID="btnShow" runat="server" Text="Show Report" CssClass="btn btn-success w-100" OnClick="btnShow_Click" /></div>
+<div class="col-lg-2 col-md-6 mb-3 d-flex align-items-end"><asp:Button ID="btnShow" runat="server" Text="Show Report" CssClass="btn btn-success w-100 report-button" OnClick="btnShow_Click" /></div>
 </div>
 <div class="row mb-3">
-<div class="col-md-3 mb-2"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" Text="₹0.00"></asp:Label></span></div>
-<div class="col-md-3 mb-2"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server" Text="₹0.00"></asp:Label></span></div>
-<div class="col-md-3 mb-2"><span class="summary-value">Balance: <asp:Label ID="lblBalance" runat="server" Text="₹0.00"></asp:Label></span></div>
+<div class="col-md-3 mb-2"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
+<div class="col-md-3 mb-2"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
+<div class="col-md-3 mb-2"><span class="summary-value">Balance: <asp:Label ID="lblBalance" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value total-value">Report: <asp:Label ID="lblReportName" runat="server" Text="Batch Wise"></asp:Label></span></div>
 </div>
-<div class="text-end no-print mb-3"><asp:Button ID="btnPrint" runat="server" Text="Print Final Report" CssClass="btn btn-primary" OnClientClick="window.print();return false;" /></div>
+<div class="text-end no-print mb-3"><asp:Button ID="btnPrint" runat="server" Text="Print Final Report" CssClass="btn btn-primary report-button" OnClientClick="window.print();return false;" /></div>
 <div class="table-responsive"><asp:GridView ID="gvReport" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" OnRowCommand="gvReport_RowCommand">
 <Columns>
 <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
