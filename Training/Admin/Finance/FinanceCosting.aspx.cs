@@ -19,7 +19,7 @@ namespace Training.Admin
 
         private void BindTraining()
         {
-            DataTable dt = objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID + ' - ' + ISNULL(C.CourseName,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
+            DataTable dt = objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID + ' - ' + ISNULL(C.CourseName,'') + ' - ' + ISNULL(TD.Batch,'') + ' - ' + ISNULL(TD.TrainingLocation,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
             ddlTraining.DataSource = dt;
             ddlTraining.DataTextField = "TrainingName";
             ddlTraining.DataValueField = "TrainingID";
