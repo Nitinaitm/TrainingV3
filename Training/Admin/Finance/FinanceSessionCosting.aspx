@@ -16,7 +16,11 @@
         .finance-grid th { background:#198754 !important; color:#fff !important; font-weight:600; white-space:nowrap; }
         .finance-grid td { vertical-align:middle; }
         @media(max-width:768px) { .main-card { padding:15px; } }
-    </style>
+    
+.finance-grid .btn { white-space:nowrap; min-width:78px; padding:5px 10px; font-size:13px; display:inline-block; }
+.finance-grid td:last-child { white-space:nowrap; }
+.action-button { white-space:nowrap; min-width:110px; }
+</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid">
@@ -31,6 +35,7 @@
 <div class="table-responsive">
 <asp:GridView ID="gvCosting" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="CostingDetailID" OnRowCommand="gvCosting_RowCommand">
 <Columns>
+<asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
 <asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" />
 <asp:BoundField DataField="UnitType" HeaderText="Unit" />
 <asp:BoundField DataField="Quantity" HeaderText="Qty" DataFormatString="{0:N2}" />
