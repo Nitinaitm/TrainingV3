@@ -18,7 +18,7 @@ namespace Training.Admin
 
         private void BindTraining()
         {
-            DataTable dt=objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID + ' - ' + ISNULL(C.CourseName,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
+            DataTable dt=objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID + ' - ' + ISNULL(C.CourseName,'') + ' - ' + ISNULL(TD.Batch,'') + ' - ' + ISNULL(TD.TrainingLocation,'') AS TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
             ddlTraining.DataSource=dt;
             ddlTraining.DataTextField="TrainingName";
             ddlTraining.DataValueField="TrainingID";
@@ -43,7 +43,7 @@ namespace Training.Admin
             ddlSession.Items.Insert(0,new System.Web.UI.WebControls.ListItem("Select Session",""));
             gvCosting.DataSource=null;
             gvCosting.DataBind();
-            lblTotal.Text="₹0.00";
+            lblTotal.Text="Rs. 0.00";
         }
 
         protected void ddlSession_SelectedIndexChanged(object sender,EventArgs e)
@@ -81,7 +81,7 @@ namespace Training.Admin
             gvCosting.DataSource=dt;
             gvCosting.DataBind();
             DataTable total=objDB.GetDataTable("SELECT ISNULL(SUM(FinalAmount),0) AS Total FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND SessionID=@SessionID AND CostingLevel='Session'",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID),new SqlParameter("@SessionID",sessionID)});
-            lblTotal.Text="₹"+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
+            lblTotal.Text="Rs. "+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
         }
 
         protected void gvCosting_RowCommand(object sender,System.Web.UI.WebControls.GridViewCommandEventArgs e)
