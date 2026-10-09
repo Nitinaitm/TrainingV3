@@ -1,11 +1,27 @@
 <%@ Page Title="Finance - Rate Master" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="FinanceRateMaster.aspx.cs" Inherits="Training.Admin.FinanceRateMaster" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-<style>
-body{background:#f5f5f5}.main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin:20px 0}.page-heading{font-size:28px;font-weight:bold;color:darkcyan;margin-bottom:4px}.page-subheading{color:#6c757d;display:block;margin-bottom:22px}.finance-section{border-top:1px solid #e5e5e5;padding-top:20px;margin-top:20px}.finance-section-title{font-size:20px;font-weight:bold;color:darkcyan;margin-bottom:18px}.form-label{font-weight:500;margin-bottom:6px;color:#343a40}.form-control,.form-select{height:38px;border:1px solid #ced4da;border-radius:4px}.btn-save{background:darkcyan;color:#fff;border:none}.btn-save:hover{background:teal;color:#fff}.finance-actions{margin-top:10px}.finance-table{margin-bottom:0!important}.finance-table th{background:darkcyan!important;color:#fff!important;white-space:nowrap;font-weight:600;padding:10px 12px}.finance-table td{vertical-align:middle;padding:9px 12px}.finance-table tbody tr:hover{background:#f8fbfb}.table-wrap{overflow-x:auto;border:1px solid #dee2e6;border-radius:6px}.message{display:block;margin-bottom:10px}@media(max-width:767px){.main-card{padding:18px}.page-heading{font-size:24px}}
-</style>
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<div class="container-fluid"><div class="main-card">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server"><style>
+body{background:#f5f5f5}
+.main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin-top:20px;margin-bottom:20px}
+.page-heading{font-size:28px;font-weight:bold;color:darkcyan;margin-bottom:20px}
+.page-subheading{display:block;color:#6c757d;margin-top:-12px;margin-bottom:22px}
+.form-label{font-weight:500;margin-bottom:6px;color:#343a40}
+.form-control,.form-select{height:38px!important;border:1px solid #ced4da!important;border-radius:4px!important}
+.validation{color:red;font-size:13px}
+.btn-save{background:darkcyan;color:white;border:none}
+.btn-save:hover{background:teal;color:white}
+.section-heading{font-size:20px;font-weight:bold;color:darkcyan;border-bottom:2px solid #e5e5e5;padding-bottom:10px;margin-top:18px;margin-bottom:18px}
+.table-box{width:100%;overflow-x:auto;border:1px solid #dee2e6;border-radius:8px}
+.finance-table{margin-bottom:0!important;min-width:700px}
+.finance-table th{background:darkcyan!important;color:#fff!important;white-space:nowrap;font-weight:600;padding:11px 12px;border-color:#0f7f80!important}
+.finance-table td{vertical-align:middle;padding:10px 12px}
+.finance-table tbody tr:hover{background:#f4fbfb}
+.action-row{text-align:right;margin-top:8px}
+.total-card{height:38px;border:1px solid #ced4da;border-radius:4px;background:#f8f9fa;display:flex;align-items:center;padding:0 12px;color:darkcyan;font-size:18px;font-weight:bold}
+.info-box{background:#f8f9fa;border:1px solid #e5e5e5;border-radius:8px;padding:12px}
+.message{display:block;margin-bottom:8px}
+@media(max-width:767px){.main-card{padding:18px}.page-heading{font-size:24px}.action-row{text-align:center}.finance-table{min-width:850px}}
+</style></asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"><div class="container-fluid"><div class="main-card">
 <div class="page-heading">Finance - Rate Master</div><span class="page-subheading">Maintain effective rates for each cost head</span>
 <asp:Label ID="lblMessage" runat="server" CssClass="font-weight-bold message"></asp:Label>
 <div class="row">
@@ -15,9 +31,8 @@ body{background:#f5f5f5}.main-card{background:#fff;padding:25px;border-radius:12
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Effective To</label><asp:TextBox ID="txtTo" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Remarks</label><asp:TextBox ID="txtRemarks" runat="server" CssClass="form-control" placeholder="Optional"></asp:TextBox></div>
 </div>
-<div class="finance-actions"><asp:Button ID="btnSave" runat="server" Text="Save Rate" CssClass="btn btn-save mr-2" OnClick="btnSave_Click" /><asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btn btn-secondary" OnClick="btnClear_Click" /></div>
-<div class="finance-section"><div class="finance-section-title"><i class="fas fa-history mr-2"></i>Rate History</div>
-<div class="table-wrap"><asp:GridView ID="gvRates" runat="server" CssClass="table table-bordered table-hover mb-0 finance-table" AutoGenerateColumns="False">
-<Columns><asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" /><asp:BoundField DataField="Rate" HeaderText="Rate" DataFormatString="{0:N2}" /><asp:BoundField DataField="EffectiveFrom" HeaderText="From" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="EffectiveTo" HeaderText="To" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="Active" HeaderText="Active" /></Columns>
-</asp:GridView></div></div>
+<div class="action-row"><asp:Button ID="btnSave" runat="server" Text="Save Rate" CssClass="btn btn-save mr-2" OnClick="btnSave_Click" /><asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btn btn-secondary" OnClick="btnClear_Click" /></div>
+<div class="section-heading">Rate History</div>
+<div class="table-box"><asp:GridView ID="gvRates" runat="server" CssClass="table table-bordered table-hover mb-0 finance-table" AutoGenerateColumns="False">
+<Columns><asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" /><asp:BoundField DataField="Rate" HeaderText="Rate" DataFormatString="{0:N2}" /><asp:BoundField DataField="EffectiveFrom" HeaderText="From" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="EffectiveTo" HeaderText="To" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="Active" HeaderText="Active" /></Columns></asp:GridView></div>
 </div></div></asp:Content>
