@@ -198,7 +198,10 @@
                 margin-right: -5px
             }
         }
-    </style>
+    
+.form-control,.form-select{height:38px!important;border:1px solid #ced4da;border-radius:4px}.summary-label{font-weight:600;margin-bottom:6px;display:block;color:#343a40}.summary-value{min-height:38px;padding:7px 12px;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;display:block}.total-value{font-weight:700;color:#198754;font-size:18px}.finance-grid .btn{white-space:nowrap;min-width:78px;padding:5px 10px;font-size:13px}.finance-grid td:last-child{white-space:nowrap}.action-button{white-space:nowrap;min-width:110px}
+</style>
+<script>$(document).ready(function(){if($("#ddlTraining").length){if($("#ddlTraining").hasClass("select2-hidden-accessible"))$("#ddlTraining").select2("destroy");$("#ddlTraining").select2({width:"100%",placeholder:"Search Training ID / Course / Batch / Location",allowClear:true});}});</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid">
@@ -206,9 +209,9 @@
 <div class="page-heading">Finance - Session Costing</div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label>
 <div class="row">
-<div class="col-lg-5 col-md-6 mb-3"><label class="form-label">Training / Batch</label><asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlTraining_SelectedIndexChanged"></asp:DropDownList></div>
+<div class="col-lg-5 col-md-6 mb-3"><label class="form-label">Training / Batch / Location</label><asp:DropDownList ID="ddlTraining" runat="server" ClientIDMode="Static" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlTraining_SelectedIndexChanged"></asp:DropDownList></div>
 <div class="col-lg-5 col-md-6 mb-3"><label class="form-label">Session</label><asp:DropDownList ID="ddlSession" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlSession_SelectedIndexChanged"></asp:DropDownList></div>
-<div class="col-lg-2 col-md-12 mb-3"><label class="summary-label">Session Cost</label><div class="summary-value total-value"><asp:Label ID="lblTotal" runat="server">₹0.00</asp:Label></div></div>
+<div class="col-lg-2 col-md-12 mb-3"><label class="summary-label">Session Cost</label><div class="summary-value total-value"><asp:Label ID="lblTotal" runat="server">Rs. 0.00</asp:Label></div></div>
 </div>
 <div class="table-responsive">
 <asp:GridView ID="gvCosting" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="CostingDetailID" OnRowCommand="gvCosting_RowCommand">
