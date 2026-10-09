@@ -97,7 +97,7 @@ public class clsDataAccess
     public void Rollback() { if (Trans != null) { Trans.Rollback(); Trans.Dispose(); Trans = null; } if (con.State == ConnectionState.Open) con.Close(); }
     public object ExecuteScalar(string Query, SqlParameter[] param)
     {
-        SqlCommand cmd = new SqlCommand(); try { cmd.CommandType = CommandType.Text; cmd.CommandText = Query; cmd.Connection = con; cmd.Connection.Open(); if (param != null) foreach (SqlParameter prm in param) cmd.Parameters.Add(prm); object objRet = cmd.ExecuteScalar(); if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); return objRet; } catch (Exception) { if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); return null; } finally { if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); }
+        SqlCommand cmd = new SqlCommand(); try { cmd.CommandType = CommandType.Text; cmd.CommandText = Query; cmd.Connection = con; cmd.Connection.Open(); SetAuditContext(); if (param != null) foreach (SqlParameter prm in param) cmd.Parameters.Add(prm); object objRet = cmd.ExecuteScalar(); if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); return objRet; } catch (Exception) { if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); return null; } finally { if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close(); }
     }
     public int ExecuteSql(string query, SqlParameter[] param, SqlTransaction trans)
     {
