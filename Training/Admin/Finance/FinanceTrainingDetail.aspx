@@ -3,14 +3,15 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body { background:#f5f7fb; }
+
         .main-card {
             background:#fff;
             padding:25px;
             border-radius:14px;
-            box-shadow:0 4px 18px rgba(0,0,0,.08);
+            box-shadow:0 5px 20px rgba(13,110,253,.08);
             margin-top:20px;
             margin-bottom:20px;
-            border:1px solid #e5e7eb;
+            border:1px solid #e3e8ef;
         }
 
         .page-heading {
@@ -18,204 +19,127 @@
             font-weight:700;
             color:#0d6efd;
             margin-bottom:20px;
-            padding:12px 16px;
+            padding:13px 18px;
             border-radius:10px;
-            background:linear-gradient(135deg,#e8f1ff,#f3f8ff);
+            background:linear-gradient(135deg,#eaf3ff,#f5f9ff);
             border-left:5px solid #0d6efd;
+            box-shadow:0 3px 10px rgba(13,110,253,.08);
         }
 
-        .info-box {
-            margin-bottom: 12px
+        .finance-summary {
+            margin-top:10px;
+            padding:16px 12px 8px;
+            border-radius:13px;
+            background:linear-gradient(135deg,#eef7ff 0%,#f4fff8 100%);
+            border:1px solid #d7e5f2;
+            box-shadow:0 4px 12px rgba(0,0,0,.05);
         }
 
-        .action-card {
-            margin-top: 20px;
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px
+        .summary-value {
+            display:block;
+            min-height:48px;
+            padding:12px 13px;
+            background:#fff;
+            border:1px solid #e1e7ee;
+            border-left:4px solid #198754;
+            border-radius:8px;
+            box-shadow:0 2px 7px rgba(0,0,0,.04);
+            font-weight:600;
+            color:#495057;
         }
 
-        .btn-action {
-            min-width: 180px;
-            margin-right: 10px;
-            margin-bottom: 10px
+        .finance-summary .col-lg-3:nth-child(2) .summary-value,
+        .finance-summary .col-md-3:nth-child(2) .summary-value { border-left-color:#0d6efd; }
+
+        .finance-summary .col-lg-3:nth-child(3) .summary-value,
+        .finance-summary .col-md-3:nth-child(3) .summary-value { border-left-color:#fd7e14; }
+
+        .finance-summary .col-lg-3:nth-child(4) .summary-value,
+        .finance-summary .col-md-3:nth-child(4) .summary-value { border-left-color:#6f42c1; }
+
+        .summary-value label { color:#212529; font-weight:700; }
+        .total-value { color:#198754 !important; font-size:17px; }
+
+        .detail-actions {
+            padding:12px 15px;
+            margin:16px 0 18px;
+            background:linear-gradient(135deg,#f8f9fa,#eef5ff);
+            border:1px solid #dbe3ec;
+            border-radius:10px;
         }
 
-        .status-badge {
-            font-size: 16px;
-            padding: 8px 15px
+        .detail-actions .btn {
+            min-width:140px;
+            white-space:nowrap;
+            margin:3px;
+            font-weight:600;
         }
 
-        .lifecycle-section {
-            margin-top: 16px;
-            padding: 14px;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            background: #fff
+        .section-title {
+            margin:22px 0 10px;
+            padding:10px 14px;
+            border-radius:8px;
+            background:linear-gradient(90deg,#0d6efd,#4dabf7);
+            color:#fff;
+            font-size:17px;
+            font-weight:700;
+            box-shadow:0 3px 8px rgba(13,110,253,.14);
         }
 
-        .session-cycle {
-            background: #fbfbfb
+        .table-responsive {
+            border-radius:8px;
+            overflow-x:auto;
+            box-shadow:0 2px 8px rgba(0,0,0,.04);
+            margin-bottom:18px;
         }
 
-        .lifecycle-section + .lifecycle-section {
-            margin-top: 12px
+        .finance-grid {
+            margin-bottom:0 !important;
+            background:#fff;
+            border-color:#dee6ef;
         }
 
-        .lifecycle {
-            margin: 20px 0 25px;
-            padding: 20px;
-            border: 1px solid #dee2e6;
-            border-radius: 12px;
-            background: #f8f9fa
+        .finance-grid thead th {
+            background:#eaf3ff;
+            color:#164a7b;
+            font-weight:700;
+            border-color:#cddbea;
+            white-space:nowrap;
+            vertical-align:middle;
         }
 
-        .lifecycle-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            text-align: center
+        .finance-grid tbody td {
+            vertical-align:middle;
+            border-color:#e4e9ef;
+            white-space:nowrap;
         }
 
-        .stage-scroll {
-            overflow-x: auto;
-            padding: 8px 0 12px
+        .finance-grid tbody tr:nth-child(even) td { background:#f8fbff; }
+        .finance-grid tbody tr:hover td { background:#fff8e8; }
+
+        .finance-grid .btn {
+            white-space:nowrap;
+            min-width:78px;
+            padding:5px 10px;
         }
-
-        .stage-line {
-            display: flex;
-            align-items: flex-start;
-            min-width: 1100px
-        }
-
-        .stage-item {
-            flex: 1;
-            position: relative;
-            text-align: center
-        }
-
-            .stage-item:not(:last-child):after {
-                content: "";
-                position: absolute;
-                top: 17px;
-                left: 50%;
-                width: 100%;
-                height: 4px;
-                background: #dc3545;
-                z-index: 0
-            }
-
-            .stage-item.done:not(:last-child):after {
-                background: #198754
-            }
-
-        .stage-bubble {
-            position: relative;
-            z-index: 1;
-            width: 52px;
-            height: 52px;
-            line-height: 46px;
-            border-radius: 50%;
-            margin: 0 auto 8px;
-            background: #dc3545;
-            color: #fff;
-            font-weight: 700;
-            font-size: 13px;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 1px #dc3545;
-            cursor: help
-        }
-
-        .stage-item.done .stage-bubble {
-            background: #198754;
-            box-shadow: 0 0 0 1px #198754
-        }
-
-        .stage-item.na .stage-bubble, .stage-item.skipped .stage-bubble {
-            background: #adb5bd;
-            box-shadow: 0 0 0 1px #adb5bd
-        }
-
-        .stage-item.partial .stage-bubble {
-            box-shadow: 0 0 0 1px #198754
-        }
-
-        .stage-label {
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.25;
-            padding: 0 4px
-        }
-
-        .stage-state {
-            font-size: 10px;
-            margin-top: 3px;
-            color: #dc3545
-        }
-
-        .stage-item.done .stage-state {
-            color: #198754
-        }
-
-        .stage-item.na .stage-state, .stage-item.skipped .stage-state {
-            color: #6c757d
-        }
-
-        .stage-bubble[data-tooltip] {
-            position: relative
-        }
-
-            .stage-bubble[data-tooltip]:hover:after {
-                content: attr(data-tooltip);
-                position: absolute;
-                left: 50%;
-                bottom: calc(100% + 10px);
-                transform: translateX(-50%);
-                background: #212529;
-                color: #fff;
-                padding: 7px 10px;
-                border-radius: 6px;
-                font-size: 12px;
-                font-weight: 600;
-                line-height: 1.2;
-                white-space: nowrap;
-                z-index: 1000;
-                box-shadow: 0 3px 10px rgba(0,0,0,.25)
-            }
-
-            .stage-bubble[data-tooltip]:hover:before {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: calc(100% + 4px);
-                transform: translateX(-50%);
-                border: 6px solid transparent;
-                border-top-color: #212529;
-                z-index: 1001
-            }
 
         @media(max-width:768px) {
-            .main-card {
-                padding: 15px
-            }
-
-            .stage-scroll {
-                margin-left: -5px;
-                margin-right: -5px
-            }
+            .main-card { padding:15px; }
+            .page-heading { font-size:22px; }
+            .summary-value { min-height:auto; }
+            .detail-actions .btn { width:100%; margin:4px 0; }
+            .section-title { font-size:15px; }
         }
-    
-.finance-summary { margin-top:10px; padding:16px; border-radius:12px; background:linear-gradient(135deg,#eef7ff,#f0fff7); border:1px solid #cfe2f3; box-shadow:0 4px 12px rgba(0,0,0,.06); }
-.finance-summary .summary-value { background:#fff; border:1px solid #d8dee4; border-left:4px solid #198754; box-shadow:0 2px 6px rgba(0,0,0,.04); }
-.finance-summary .summary-value:nth-child(2) { border-left-color:#0d6efd; }
-.finance-summary .summary-value:nth-child(3) { border-left-color:#fd7e14; }
-.finance-summary .summary-value:nth-child(4) { border-left-color:#6f42c1; }
-.finance-summary .total-value { color:#198754; }
-.detail-actions { padding:12px 15px; margin:15px 0 5px; background:#f8f9fa; border:1px solid #dee2e6; border-radius:10px; }
-.detail-actions .btn { min-width:130px; white-space:nowrap; margin:3px; }
-.finance-grid .btn { white-space:nowrap; min-width:78px; padding:5px 10px; }
-</style>
+
+        @media print {
+            body { background:#fff; }
+            .main-card { box-shadow:none; border:0; margin:0; }
+            .page-heading { box-shadow:none; }
+            .detail-actions { display:none !important; }
+            .section-title { break-after:avoid; }
+            .table-responsive { overflow:visible; }
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="container-fluid"><div class="main-card">
