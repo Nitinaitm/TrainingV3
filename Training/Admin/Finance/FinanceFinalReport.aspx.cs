@@ -17,7 +17,7 @@ namespace Training.Admin
 
         private void BindTraining()
         {
-            DataTable dt=objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID+' - '+ISNULL(C.CourseName,'')+' - '+ISNULL(TD.Batch,'') TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
+            DataTable dt=objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID+' - '+ISNULL(C.CourseName,'')+' - '+ISNULL(TD.Batch,'')+' - '+ISNULL(TD.TrainingLocation,'') TrainingName FROM TrainingDetails TD LEFT JOIN CourseMaster C ON TD.CourseID=C.CourseID ORDER BY TD.TrainingID DESC");
             ddlTraining.DataSource=dt;ddlTraining.DataTextField="TrainingName";ddlTraining.DataValueField="TrainingID";ddlTraining.DataBind();ddlTraining.Items.Insert(0,new ListItem("Select Training / Batch",""));
         }
 
@@ -66,10 +66,10 @@ namespace Training.Admin
         {
             decimal final=0,actual=0;
             foreach(DataRow r in dt.Rows){final+=Convert.ToDecimal(r["FinalCost"]);actual+=Convert.ToDecimal(r["ActualPaid"]); }
-            lblFinalCost.Text="₹"+final.ToString("N2");lblActual.Text="₹"+actual.ToString("N2");lblBalance.Text="₹"+(final-actual).ToString("N2");
+            lblFinalCost.Text="Rs. "+final.ToString("N2");lblActual.Text="Rs. "+actual.ToString("N2");lblBalance.Text="Rs. "+(final-actual).ToString("N2");
         }
 
-        private void ShowEmpty(){gvReport.DataSource=null;gvReport.DataBind();lblFinalCost.Text="₹0.00";lblActual.Text="₹0.00";lblBalance.Text="₹0.00";}
+        private void ShowEmpty(){gvReport.DataSource=null;gvReport.DataBind();lblFinalCost.Text="Rs. 0.00";lblActual.Text="Rs. 0.00";lblBalance.Text="Rs. 0.00";}
 
         protected void gvReport_RowCommand(object sender,GridViewCommandEventArgs e)
         {
