@@ -20,6 +20,19 @@ namespace Training.Business.SMS
                 if (string.IsNullOrWhiteSpace(mobileNumber) || string.IsNullOrWhiteSpace(message))
                     return false;
 
+                System.Threading.Tasks.Task.Run(() => SendSmsInternal(mobileNumber, message));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static void SendSmsInternal(string mobileNumber, string message)
+        {
+            try
+            {
                 string encodedMessage = HttpUtility.UrlEncode(message);
 
                 string url = baseUrl +
@@ -34,15 +47,14 @@ namespace Training.Business.SMS
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = "GET";
                 req.Timeout = 5000;
+                req.ReadWriteTimeout = 5000;
 
                 using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
                 {
-                    return ((int)response.StatusCode >= 200 && (int)response.StatusCode < 300);
                 }
             }
             catch
             {
-                return false;
             }
         }
 
