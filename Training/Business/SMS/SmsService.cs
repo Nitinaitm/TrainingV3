@@ -33,7 +33,7 @@ namespace Training.Business.SMS
 
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = "GET";
-                req.Timeout = 15000;
+                req.Timeout = 5000;
 
                 using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
                 {
