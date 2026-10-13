@@ -449,277 +449,106 @@ TA.TrainingID <> @TrainingID
                 return exists;
             }
         }
-        protected void btnAddEmployee_Click(
+                protected void btnAddEmployee_Click(
         object sender,
         EventArgs e)
         {
             lblEmpMessage.Text = "";
+            pnlRepeatCourseConfirm.Visible = false;
 
-            if (txtEmpID.Text.Trim() == "")
+            string empID = txtEmpID.Text.Trim().ToUpperInvariant();
+            if (String.IsNullOrWhiteSpace(empID))
             {
-                lblEmpMessage.Text =
-                "Enter Employee ID.";
-
+                lblEmpMessage.Text = "Enter Employee ID.";
                 return;
             }
 
-            using (SqlConnection con =
-                new SqlConnection(constr))
+            using (SqlConnection con = new SqlConnection(constr))
             {
                 con.Open();
 
-                //------------------------------------
-                // Employee Exists
-                //------------------------------------
-
-                SqlCommand cmdEmp =
-                new SqlCommand(@"
-
-SELECT
-
-EmpID
-
-FROM EmpBasicMaster
-
-WHERE EmpID=@EmpID
-
-", con);
-
-                cmdEmp.Parameters.AddWithValue(
-                "@EmpID",
-                txtEmpID.Text.Trim());
-
-                object objEmp =
-                cmdEmp.ExecuteScalar();
-
-                if (objEmp == null)
+                using (SqlTransaction tran = con.BeginTransaction(System.Data.IsolationLevel.Serializable))
                 {
-                    lblEmpMessage.Text =
-                    "Employee not found.";
+                    try
+                    {
+                        bool courseConflict;
+                        if (!CanAssignEmployee(con, tran, empID, out courseConflict))
+                        {
+                            SqlCommand cmdEmp = new SqlCommand(
+                                "SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con, tran);
+                            cmdEmp.Parameters.AddWithValue("@EmpID", empID);
+                            bool employeeExists = Convert.ToInt32(cmdEmp.ExecuteScalar()) > 0;
 
-                    con.Close();
-
-                    return;
-                }
-
-                //------------------------------------
-                // Already Assigned
-                //------------------------------------
-
-                SqlCommand cmdDup =
-                new SqlCommand(@"
-
+                            SqlCommand cmdDuplicate = new SqlCommand(@"
 SELECT COUNT(*)
-
 FROM TrainingAssignment
-
 WHERE TrainingID=@TrainingID
-
 AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
+                            cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+                            cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
+                            bool alreadyAssigned = Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0;
 
-", con);
+                            tran.Rollback();
 
-                cmdDup.Parameters.AddWithValue(
-                "@TrainingID",
-                Session["TrainingID"]);
+                            if (courseConflict)
+                            {
+                                ViewState["RepeatCourseEmpID"] = empID;
+                                pnlRepeatCourseConfirm.Visible = true;
+                                lblRepeatCourseMessage.Text = "Employee " + Server.HtmlEncode(empID) + " is already assigned for this Course in another batch. Do you still want to assign this employee to the current batch?";
+                                lblEmpMessage.ForeColor = Color.DarkOrange;
+                                lblEmpMessage.Text = "Course assignment already exists. Please confirm whether to continue.";
+                            }
+                            else if (!employeeExists)
+                            {
+                                lblEmpMessage.ForeColor = Color.Red;
+                                lblEmpMessage.Text = "Employee not found.";
+                            }
+                            else if (alreadyAssigned)
+                            {
+                                lblEmpMessage.ForeColor = Color.Red;
+                                lblEmpMessage.Text = "Employee already assigned.";
+                            }
+                            else
+                            {
+                                lblEmpMessage.ForeColor = Color.Red;
+                                lblEmpMessage.Text = "Assignment could not be validated. Please retry.";
+                            }
+                            return;
+                        }
 
-                cmdDup.Parameters.AddWithValue(
-                "@EmpID",
-                txtEmpID.Text.Trim());
+                        if (IsBatchFull(con, tran))
+                        {
+                            tran.Rollback();
+                            lblEmpMessage.ForeColor = Color.Red;
+                            lblEmpMessage.Text = "Batch Strength Reached.";
+                            return;
+                        }
 
-                int cnt =
-                Convert.ToInt32(
-                cmdDup.ExecuteScalar());
-
-                if (cnt > 0)
-                {
-                    lblEmpMessage.Text =
-                    "Employee already assigned.";
-
-                    con.Close();
-
-                    return;
+                        SaveAssignment(con, tran, empID, Convert.ToString(ViewState["Mode"] ?? "EMP"));
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (tran.Connection != null)
+                            tran.Rollback();
+                        lblEmpMessage.ForeColor = Color.Red;
+                        lblEmpMessage.Text = "Assignment failed: " + Server.HtmlEncode(ex.Message);
+                        return;
+                    }
                 }
-
-                //------------------------------------
-                // Same Topic Already Attended
-                //------------------------------------
-
-                SqlCommand cmdTopic =
-                new SqlCommand(@"
-
-SELECT COUNT(*)
-
-FROM TrainingAssignment TA
-
-INNER JOIN TrainingDetails TD
-ON TA.TrainingID = TD.TrainingID
-
-WHERE
-TA.EmpID = @EmpID
-
-AND TD.CourseID =
-(
-    SELECT CourseID
-    FROM TrainingDetails
-    WHERE TrainingID = @TrainingID
-)
-
-AND ISNULL(TA.AssignmentStatus,'Assigned') <> 'Cancelled'
-
-AND TA.TrainingID <> @TrainingID", con);
-
-                cmdTopic.Parameters.AddWithValue(
-                "@EmpID",
-                txtEmpID.Text.Trim());
-
-                cmdTopic.Parameters.AddWithValue(
-                "@TrainingID",
-                Session["TrainingID"]);
-
-                int topicCnt =
-                Convert.ToInt32(
-                cmdTopic.ExecuteScalar());
-
-                if (topicCnt > 0)
-                {
-                    ViewState["RepeatCourseEmpID"] = txtEmpID.Text.Trim().ToUpperInvariant();
-                    pnlRepeatCourseConfirm.Visible = true;
-                    lblRepeatCourseMessage.Text = "Employee " + Server.HtmlEncode(txtEmpID.Text.Trim().ToUpperInvariant()) + " is already assigned for this Course in another batch. Do you still want to assign this employee to the current batch?";
-                    lblEmpMessage.ForeColor = Color.DarkOrange;
-                    lblEmpMessage.Text = "Course assignment already exists. Please confirm whether to continue.";
-
-                    con.Close();
-
-                    return;
-                }
-                if (IsBatchFull(con, null))
-                {
-                    lblEmpMessage.ForeColor =
-                    Color.Red;
-
-                    lblEmpMessage.Text =
-                    "Batch Strength Reached.";
-
-                    con.Close();
-
-                    return;
-                }
-                //------------------------------------
-                // Save
-                //------------------------------------
-
-                SqlCommand cmd =
-                new SqlCommand(@"
-
-INSERT INTO
-
-TrainingAssignment
-(
-AssignmentID,
-TrainingID,
-EmpID,
-TrainingAttended,
-CreatedOn,
-CreatedBy,
-AssignmentMode,
-AssignmentStatus,
-Remarks
-)
-
-VALUES
-(
-@AssignmentID,
-@TrainingID,
-@EmpID,
-'Pending',
-GETDATE(),
-'Admin',
-@AssignmentMode,
-'Assigned',
-''
-)
-
-", con);
-
-                cmd.Parameters.AddWithValue(
-                "@AssignmentID",
-                GenerateAssignmentID());
-
-                cmd.Parameters.AddWithValue(
-                "@TrainingID",
-                Session["TrainingID"]);
-
-                cmd.Parameters.AddWithValue(
-                "@EmpID",
-                txtEmpID.Text.Trim().ToUpperInvariant());
-                cmd.Parameters.AddWithValue(
-"@AssignmentMode",
-ViewState["Mode"].ToString());
-                cmd.ExecuteNonQuery();
-                SqlCommand cmd1 =
-new SqlCommand(@"
-
-INSERT INTO TrainingProgress
-(
-ProgressID,
-TrainingID,
-EmpID,
-CreatedOn,
-CreatedBy
-)
-
-VALUES
-(
-@ProgressID,
-@TrainingID,
-@EmpID,
-GETDATE(),
-@CreatedBy
-)
-
-", con);
-
-                cmd1.Parameters.AddWithValue(
-                "@ProgressID",
-                GenerateProgressID());
-
-                cmd1.Parameters.AddWithValue(
-                "@TrainingID",
-                Session["TrainingID"]);
-
-                cmd1.Parameters.AddWithValue(
-                "@EmpID",
-                txtEmpID.Text.Trim().ToUpperInvariant());
-
-                cmd1.Parameters.AddWithValue(
-                "@CreatedBy",
-                "Admin");
-
-                cmd1.ExecuteNonQuery();
-                con.Close();
             }
 
-            
-
-
             txtEmpID.Text = "";
-
             BindAssignedEmployee();
-
-
-            //LoadBatchSummary();
-            lblEmpMessage.ForeColor =
-            System.Drawing.Color.Green;
-
-            lblEmpMessage.Text =
-            "Employee assigned successfully.";
+            lblEmpMessage.ForeColor = Color.Green;
+            lblEmpMessage.Text = "Employee assigned successfully.";
         }
 
-        protected void btnAllowRepeatCourse_Click(object sender, EventArgs e)
+                protected void btnAllowRepeatCourse_Click(object sender, EventArgs e)
         {
             string empID = Convert.ToString(ViewState["RepeatCourseEmpID"]).Trim().ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(empID))
+            if (String.IsNullOrWhiteSpace(empID))
             {
                 pnlRepeatCourseConfirm.Visible = false;
                 lblEmpMessage.ForeColor = Color.Red;
@@ -731,48 +560,61 @@ GETDATE(),
             {
                 con.Open();
 
-                SqlCommand cmdEmp = new SqlCommand("SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con);
-                cmdEmp.Parameters.AddWithValue("@EmpID", empID);
-                if (Convert.ToInt32(cmdEmp.ExecuteScalar()) == 0)
-                {
-                    pnlRepeatCourseConfirm.Visible = false;
-                    ViewState["RepeatCourseEmpID"] = null;
-                    lblEmpMessage.ForeColor = Color.Red;
-                    lblEmpMessage.Text = "Employee not found.";
-                    return;
-                }
-
-                SqlCommand cmdDuplicate = new SqlCommand("SELECT COUNT(*) FROM TrainingAssignment WHERE TrainingID=@TrainingID AND EmpID=@EmpID AND ISNULL(AssignmentStatus,'Assigned')<>'Cancelled'", con);
-                cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
-                cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
-                if (Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0)
-                {
-                    pnlRepeatCourseConfirm.Visible = false;
-                    ViewState["RepeatCourseEmpID"] = null;
-                    lblEmpMessage.ForeColor = Color.Red;
-                    lblEmpMessage.Text = "Employee already assigned to this batch.";
-                    return;
-                }
-
-                if (IsBatchFull(con, null))
-                {
-                    pnlRepeatCourseConfirm.Visible = false;
-                    lblEmpMessage.ForeColor = Color.Red;
-                    lblEmpMessage.Text = "Batch Strength Reached.";
-                    return;
-                }
-
-                using (SqlTransaction tran = con.BeginTransaction())
+                using (SqlTransaction tran = con.BeginTransaction(System.Data.IsolationLevel.Serializable))
                 {
                     try
                     {
+                        AcquireCourseAssignmentLock(con, tran, empID);
+
+                        SqlCommand cmdEmp = new SqlCommand(
+                            "SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con, tran);
+                        cmdEmp.Parameters.AddWithValue("@EmpID", empID);
+                        if (Convert.ToInt32(cmdEmp.ExecuteScalar()) == 0)
+                        {
+                            tran.Rollback();
+                            pnlRepeatCourseConfirm.Visible = false;
+                            ViewState["RepeatCourseEmpID"] = null;
+                            lblEmpMessage.ForeColor = Color.Red;
+                            lblEmpMessage.Text = "Employee not found.";
+                            return;
+                        }
+
+                        SqlCommand cmdDuplicate = new SqlCommand(@"
+SELECT COUNT(*)
+FROM TrainingAssignment
+WHERE TrainingID=@TrainingID
+AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
+                        cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+                        cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
+                        if (Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0)
+                        {
+                            tran.Rollback();
+                            pnlRepeatCourseConfirm.Visible = false;
+                            ViewState["RepeatCourseEmpID"] = null;
+                            lblEmpMessage.ForeColor = Color.Red;
+                            lblEmpMessage.Text = "Employee already assigned to this batch.";
+                            return;
+                        }
+
+                        if (IsBatchFull(con, tran))
+                        {
+                            tran.Rollback();
+                            lblEmpMessage.ForeColor = Color.Red;
+                            lblEmpMessage.Text = "Batch Strength Reached.";
+                            return;
+                        }
+
                         SaveAssignment(con, tran, empID, Convert.ToString(ViewState["Mode"] ?? "EMP"));
                         tran.Commit();
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        tran.Rollback();
-                        throw;
+                        if (tran.Connection != null)
+                            tran.Rollback();
+                        lblEmpMessage.ForeColor = Color.Red;
+                        lblEmpMessage.Text = "Assignment failed: " + Server.HtmlEncode(ex.Message);
+                        return;
                     }
                 }
             }
@@ -1199,12 +1041,42 @@ EventArgs e)
             }
         }
 
+        private void AcquireCourseAssignmentLock(SqlConnection con, SqlTransaction tran, string empid)
+        {
+            SqlCommand cmd = new SqlCommand(@"
+DECLARE @CourseID nvarchar(100);
+DECLARE @LockResource nvarchar(255);
+DECLARE @LockResult int;
+
+SELECT @CourseID = CONVERT(nvarchar(100), CourseID)
+FROM TrainingDetails
+WHERE TrainingID = @TrainingID;
+
+IF @CourseID IS NOT NULL
+BEGIN
+    SET @LockResource = N'TrainingCourseAssignment:' + @CourseID + N':' + @EmpID;
+    EXEC @LockResult = sp_getapplock
+        @Resource = @LockResource,
+        @LockMode = 'Exclusive',
+        @LockOwner = 'Transaction',
+        @LockTimeout = 10000;
+
+    IF @LockResult < 0
+        RAISERROR('Could not lock course assignment. Please retry.', 16, 1);
+END", con, tran);
+            cmd.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+            cmd.Parameters.AddWithValue("@EmpID", empid);
+            cmd.ExecuteNonQuery();
+        }
+
         private bool CanAssignEmployee(
 SqlConnection con,
 SqlTransaction tran,
 string empid,
 out bool courseConflict)
         {
+            AcquireCourseAssignmentLock(con, tran, empid);
+
             courseConflict = false;
 
             SqlCommand cmdEmp = new SqlCommand(
@@ -1315,6 +1187,8 @@ WHERE EmpID=@EmpID", con, tran);
 
         private bool CanOverrideCourseConflict(SqlConnection con, SqlTransaction tran, string empid)
         {
+            AcquireCourseAssignmentLock(con, tran, empid);
+
             SqlCommand cmdEmp = new SqlCommand(
                 "SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con, tran);
             cmdEmp.Parameters.AddWithValue("@EmpID", empid);
