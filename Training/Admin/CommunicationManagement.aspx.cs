@@ -117,7 +117,7 @@ ORDER BY CreatedOn DESC";
             {
                 if (!DateTime.TryParseExact(txtEffectiveTo.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out toDate))
                 { ShowError("Invalid Effective To date."); return; }
-                to = toDate.Date.AddDays(1).AddTicks(-1);
+                to = toDate.Date.AddDays(1).AddMilliseconds(-3);
             }
             if (from != DBNull.Value && to != DBNull.Value && Convert.ToDateTime(from) > Convert.ToDateTime(to))
             { ShowError("Effective From cannot be after Effective To."); return; }
