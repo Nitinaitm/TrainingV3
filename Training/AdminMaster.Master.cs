@@ -29,7 +29,7 @@ namespace Training
         {
             try
             {
-                DataTable announcements = objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM Announcement WHERE ISNULL(IsActive,1)=1", new SqlParameter[0]);
+                DataTable announcements = objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM Announcement", new SqlParameter[0]);
                 DataTable notifications = objDB.GetDataTable("SELECT COUNT(*) AS Cnt FROM Notification", new SqlParameter[0]);
                 lblAnnouncementCount.Text = announcements.Rows.Count == 0 ? "0" : announcements.Rows[0]["Cnt"].ToString();
                 lblNotificationCount.Text = notifications.Rows.Count == 0 ? "0" : notifications.Rows[0]["Cnt"].ToString();
