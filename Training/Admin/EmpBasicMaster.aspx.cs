@@ -38,6 +38,7 @@ namespace Training.Admin
 
         protected void ddlCompany_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BindPostingPlaceOptions();
             BindPostingDepartment();
             BindFieldHierarchy();
             SetPostingDetailMode();
@@ -102,6 +103,7 @@ namespace Training.Admin
 
         private void BindPostingPlaceOptions()
         {
+            string previousValue = ddlPostingDetailPlace.SelectedValue;
             ddlPostingDetailPlace.Items.Clear();
             ddlPostingDetailPlace.Items.Add(new ListItem("Select Posting Place", ""));
             ddlPostingDetailPlace.Items.Add(new ListItem("HQ", "HQ"));
@@ -109,6 +111,15 @@ namespace Training.Admin
             if (!IsHqOnlyCompany())
             {
                 ddlPostingDetailPlace.Items.Add(new ListItem("Field Office", "Field"));
+            }
+
+            if (IsHqOnlyCompany())
+            {
+                ddlPostingDetailPlace.SelectedValue = "HQ";
+            }
+            else if (!string.IsNullOrWhiteSpace(previousValue) && ddlPostingDetailPlace.Items.FindByValue(previousValue) != null)
+            {
+                ddlPostingDetailPlace.SelectedValue = previousValue;
             }
         }
 
@@ -276,22 +287,16 @@ namespace Training.Admin
 
         private void SetPostingDetailMode()
         {
-            bool hq = string.Equals(ddlPostingDetailPlace.SelectedValue, "HQ", StringComparison.OrdinalIgnoreCase);
-            bool field = string.Equals(ddlPostingDetailPlace.SelectedValue, "Field", StringComparison.OrdinalIgnoreCase);
-
             if (IsHqOnlyCompany())
             {
-                if (ddlPostingDetailPlace.Items.FindByValue("Field") != null)
-                {
-                    ddlPostingDetailPlace.Items.Remove(ddlPostingDetailPlace.Items.FindByValue("Field"));
-                }
-
-                if (string.IsNullOrWhiteSpace(ddlPostingDetailPlace.SelectedValue))
+                if (ddlPostingDetailPlace.Items.FindByValue("HQ") != null)
                 {
                     ddlPostingDetailPlace.SelectedValue = "HQ";
-                    hq = true;
                 }
             }
+
+            bool hq = string.Equals(ddlPostingDetailPlace.SelectedValue, "HQ", StringComparison.OrdinalIgnoreCase);
+            bool field = string.Equals(ddlPostingDetailPlace.SelectedValue, "Field", StringComparison.OrdinalIgnoreCase);
 
             divPostingDepartment.Visible = hq;
             divAreaBoardZone.Visible = field;
