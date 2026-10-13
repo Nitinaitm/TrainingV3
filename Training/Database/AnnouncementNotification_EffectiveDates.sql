@@ -1,6 +1,6 @@
 /* Run once on the Training database before publishing the communication updates.
-   SQL Server 2012 compatible. Existing records remain valid and default to the
-   entire batch/training duration when no explicit window was stored. */
+   SQL Server 2012 compatible. Existing records remain valid; NULL effective dates are treated as having no date limit
+   until an administrator edits them. */
 IF OBJECT_ID('dbo.Announcement','U') IS NOT NULL
 BEGIN
     IF COL_LENGTH('dbo.Announcement','TargetTrainingID') IS NULL ALTER TABLE dbo.Announcement ADD TargetTrainingID NVARCHAR(50) NULL;
