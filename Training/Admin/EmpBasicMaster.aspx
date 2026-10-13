@@ -14,16 +14,24 @@
     <script>
 
         function LoadSearchableDropdown() {
-            $('[id*=ddlDesignation]').select2({ placeholder: 'Search Designation', allowClear: true, width: '100%' });
-            $('[id*=ddlPostingPlace]').select2({ placeholder: 'Search HRMS Posting Place', allowClear: true, width: '100%' });
-            $('[id*=ddlCompany]').select2({ placeholder: 'Search Company', allowClear: true, width: '100%' });
-            $('[id*=ddlPostingDetailPlace]').select2({ placeholder: 'Search Posting Place', allowClear: true, width: '100%' });
-            $('[id*=ddlPostingDepartment]').select2({ placeholder: 'Search Department / Office / Cell', allowClear: true, width: '100%' });
-            $('[id*=ddlAreaBoardZone]').select2({ placeholder: 'Search Area Board / Zone', allowClear: true, width: '100%' });
-            $('[id*=ddlCircle]').select2({ placeholder: 'Search Circle', allowClear: true, width: '100%' });
-            $('[id*=ddlDivision]').select2({ placeholder: 'Search Division', allowClear: true, width: '100%' });
-            $('[id*=ddlSubdivision]').select2({ placeholder: 'Search Subdivision', allowClear: true, width: '100%' });
-            $('[id*=ddlSection]').select2({ placeholder: 'Search Section', allowClear: true, width: '100%' });
+            var controls = [
+                ['ddlDesignation', 'Search Designation'],
+                ['ddlPostingPlace', 'Search HRMS Posting Place'],
+                ['ddlCompany', 'Search Company'],
+                ['ddlPostingDetailPlace', 'Search Posting Place'],
+                ['ddlPostingDepartment', 'Search Department / Office / Cell'],
+                ['ddlAreaBoardZone', 'Search Area Board / Zone'],
+                ['ddlCircle', 'Search Circle'],
+                ['ddlDivision', 'Search Division'],
+                ['ddlSubdivision', 'Search Subdivision'],
+                ['ddlSection', 'Search Section']
+            ];
+            controls.forEach(function (item) {
+                var ddl = $('[id$="' + item[0] + '"]');
+                if (!ddl.length) return;
+                if (ddl.hasClass('select2-hidden-accessible')) ddl.select2('destroy');
+                ddl.select2({ placeholder: item[1], allowClear: true, width: '100%' });
+            });
         }
 
         function ClearSearchableDropdown() {
