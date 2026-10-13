@@ -30,7 +30,7 @@
    <div class="col-md-4"><label class="form-label">Effective From</label><asp:TextBox ID="txtEffectiveFrom" runat="server" CssClass="form-control" TextMode="Date"/></div>
    <div class="col-md-4"><label class="form-label">Effective To</label><asp:TextBox ID="txtEffectiveTo" runat="server" CssClass="form-control" TextMode="Date"/></div>
    <div class="col-md-4"><label class="form-label">Availability</label><asp:DropDownList ID="ddlAvailabilityMode" runat="server" CssClass="form-select"><asp:ListItem Text="Complete batch duration" Value="Batch"/><asp:ListItem Text="This session only" Value="Session"/><asp:ListItem Text="Custom dates" Value="Custom"/></asp:DropDownList></div>
-   <div class="col-12"><asp:Label ID="lblEditTarget" runat="server" CssClass="text-secondary small"/></div>
+   <div class="col-md-6"><label class="form-label">Target Batch / Training ID</label><asp:TextBox ID="txtEditTrainingID" runat="server" CssClass="form-control" MaxLength="50"/></div><div class="col-md-6"><label class="form-label">Target Session ID</label><asp:TextBox ID="txtEditSessionID" runat="server" CssClass="form-control" MaxLength="50"/></div><div class="col-12"><asp:Label ID="lblEditTarget" runat="server" CssClass="text-secondary small"/></div>
    <div class="col-12"><asp:Button ID="btnSaveEdit" runat="server" Text="Save Changes" CssClass="btn btn-primary" OnClick="btnSaveEdit_Click"/><asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary ms-2" CausesValidation="false" OnClick="btnCancelEdit_Click"/></div>
   </div>
  </asp:Panel>
