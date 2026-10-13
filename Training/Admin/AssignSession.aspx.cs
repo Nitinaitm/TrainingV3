@@ -76,7 +76,7 @@ namespace Training.Admin
                 this,
                 GetType(),
                 "InitControls",
-                "initControls();calculateHours();",
+                "window.addEventListener('load', function () { initControls(); calculateHours(); });",
                 true);
         }
 
