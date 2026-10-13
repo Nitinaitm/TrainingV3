@@ -29,7 +29,12 @@ namespace Training.Admin
         private void BindGrid()
         {
             string query = @"
-SELECT RecordType, RecordID, Title, Message, SenderID, Audience, TargetTrainingID, TargetSessionID, AvailabilityMode, EffectiveFrom, EffectiveTo, CreatedOn
+SELECT C.RecordType, C.RecordID, C.Title, C.Message,
+CASE WHEN C.SenderID LIKE 'MANAGER:%'
+     THEN ISNULL((SELECT TOP 1 E.EmpName FROM ManagerMaster M INNER JOIN EmpBasicMaster E ON M.EmpID=E.EmpID WHERE M.ManagerID=SUBSTRING(C.SenderID,9,100)), C.SenderID)
+     ELSE ISNULL((SELECT TOP 1 CASE WHEN TM.TrainerType='Internal' THEN E.EmpName ELSE TM.NameExternal END FROM TrainerMaster TM LEFT JOIN EmpBasicMaster E ON TM.EmpID=E.EmpID WHERE TM.TrainerID=C.SenderID), C.SenderID)
+END + ' (' + C.SenderID + ')' AS SenderID,
+C.Audience, C.TargetTrainingID, C.TargetSessionID, C.AvailabilityMode, C.EffectiveFrom, C.EffectiveTo, C.CreatedOn
 FROM
 (
     SELECT 'Announcement' AS RecordType, AnnouncementID AS RecordID, ISNULL(Title,'Announcement') AS Title, Message, TrainerID AS SenderID, Audience, TargetTrainingID, TargetSessionID, AvailabilityMode, EffectiveFrom, EffectiveTo, CreatedOn
@@ -38,7 +43,7 @@ FROM
     SELECT 'Notification' AS RecordType, NotificationID AS RecordID, ISNULL(Title,'Notification') AS Title, Message, TrainerID AS SenderID, Audience, TargetTrainingID, TargetSessionID, AvailabilityMode, EffectiveFrom, EffectiveTo, CreatedOn
     FROM Notification
 ) C
-WHERE (@Type='All' OR RecordType=@Type)
+WHERE (@Type='All' OR C.RecordType=@Type)
 ORDER BY CreatedOn DESC";
             DataTable dt = obj.GetDataTable(query, new SqlParameter[] { new SqlParameter("@Type", ddlType.SelectedValue) });
             gvCommunications.DataSource = dt;
