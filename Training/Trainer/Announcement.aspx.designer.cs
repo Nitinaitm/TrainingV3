@@ -37,7 +37,7 @@ namespace Training.Trainer {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMessage;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTargetTraining;\n        protected global::System.Web.UI.WebControls.DropDownList ddlTargetSession;\n        protected global::System.Web.UI.WebControls.DropDownList ddlAvailabilityMode;\n        protected global::System.Web.UI.WebControls.TextBox txtEffectiveFrom;\n        protected global::System.Web.UI.WebControls.TextBox txtEffectiveTo;\n        protected global::System.Web.UI.WebControls.TextBox txtMessage;
         protected global::System.Web.UI.WebControls.FileUpload fuPdf;
         
         /// <summary>
