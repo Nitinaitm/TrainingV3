@@ -155,6 +155,7 @@
     <Content Include="Admin\CertificatePreview.aspx" />
     <Content Include="Admin\CertificateTemplate.aspx" />
     <Content Include="Admin\CertificateTemplateMaster.aspx" />
+    <Content Include="Admin\CommunicationManagement.aspx" />
     <Content Include="Admin\CloneTest.aspx" />
     <Content Include="Admin\CourseCategoryMaster.aspx" />
     <Content Include="Admin\CourseMaster.aspx" />
@@ -1035,6 +1036,7 @@
     <Content Include="Uploads\TrainingMaterial\MAT9342000001.pdf" />
     <Content Include="Uploads\TrainingMaterial\MAT9865000001.pdf" />
     <Content Include="VerifyCertificate.aspx" />
+    <Content Include="Database\AnnouncementNotification_EffectiveDates.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1126,6 +1128,13 @@
     </Compile>
     <Compile Include="Admin\CertificateTemplateMaster.aspx.designer.cs">
       <DependentUpon>CertificateTemplateMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CommunicationManagement.aspx.cs">
+      <DependentUpon>CommunicationManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CommunicationManagement.aspx.designer.cs">
+      <DependentUpon>CommunicationManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\CloneTest.aspx.cs">
       <DependentUpon>CloneTest.aspx</DependentUpon>
