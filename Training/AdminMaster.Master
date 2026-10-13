@@ -81,10 +81,14 @@
             font-size: 24px;
             color: #555;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
             .notification:hover {
                 color: #0d6efd;
+                text-decoration: none;
             }
 
         .notify-count {
