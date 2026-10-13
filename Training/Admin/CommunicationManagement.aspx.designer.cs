@@ -15,6 +15,8 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.TextBox txtEffectiveFrom;
         protected global::System.Web.UI.WebControls.TextBox txtEffectiveTo;
         protected global::System.Web.UI.WebControls.DropDownList ddlAvailabilityMode;
+        protected global::System.Web.UI.WebControls.TextBox txtEditTrainingID;
+        protected global::System.Web.UI.WebControls.TextBox txtEditSessionID;
         protected global::System.Web.UI.WebControls.Label lblEditTarget;
         protected global::System.Web.UI.WebControls.Button btnSaveEdit;
         protected global::System.Web.UI.WebControls.Button btnCancelEdit;
