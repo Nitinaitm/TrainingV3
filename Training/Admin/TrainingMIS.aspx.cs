@@ -115,11 +115,17 @@ namespace Training.Admin
             gvStatus.DataSource=GetFiltered(statusQ);gvStatus.DataBind();
             gvType.DataSource=GetFiltered(typeQ);gvType.DataBind();
             gvCourse.DataSource=GetFiltered(courseQ);gvCourse.DataBind();
+            lblCourseCount.Text=gvCourse.Rows.Count.ToString();
         }
 
         protected void kpiCard_Click(object sender,EventArgs e)
         {
             LinkButton card=(LinkButton)sender;
+            if(card.CommandArgument=="CourseWiseSummary")
+            {
+                ScriptManager.RegisterStartupScript(this,GetType(),"showCourseSummary","showCourseSummary();",true);
+                return;
+            }
             BindKpiDetails(card.CommandArgument);
         }
 
