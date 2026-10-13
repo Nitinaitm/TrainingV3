@@ -56,6 +56,16 @@ namespace Training.Trainer
             ddlAudience.SelectedIndex = 0;
         }
 
+        protected void gvAnnouncements_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "DeleteAnnouncement") return;
+            string id = Convert.ToString(e.CommandArgument);
+            obj.ExecuteSql("DELETE FROM Announcement WHERE AnnouncementID=@ID AND TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@ID", id), new SqlParameter("@TrainerID", TrainerID) });
+            string pdfPath = Server.MapPath("~/Uploads/Announcements/" + id + ".pdf");
+            if (File.Exists(pdfPath)) File.Delete(pdfPath);
+            BindGrid();
+        }
+
         private void BindGrid()
         {
             string query = "SELECT AnnouncementID,Title, Message, Audience, CreatedOn FROM Announcement WHERE TrainerID=@TrainerID AND IsActive=1 ORDER BY CreatedOn DESC";
