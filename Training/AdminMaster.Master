@@ -91,6 +91,11 @@
                 text-decoration: none;
             }
 
+        .notification-announcement .notify-count { background:#f59e0b; }
+        .notification-notification .notify-count { background:#dc2626; }
+        .notification-announcement:hover { color:#b45309; }
+        .notification-notification:hover { color:#0d6efd; }
+
         .notify-count {
             position: absolute;
             top: -8px;
