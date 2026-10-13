@@ -89,6 +89,17 @@ namespace Training.Admin
             }
         }
 
+        private int ScalarAllTime(string q)
+        {
+            using(SqlConnection con=new SqlConnection(constr))
+            using(SqlCommand cmd=new SqlCommand(q,con))
+            {
+                con.Open();
+                object value=cmd.ExecuteScalar();
+                return value==null || value==DBNull.Value ? 0 : Convert.ToInt32(value);
+            }
+        }
+
         private void BindMIS()
         {
             string f=Filter("TD");
@@ -97,6 +108,11 @@ namespace Training.Admin
             lblOngoingTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+"<=CAST(GETDATE() AS date) AND "+DateExpr("TD.DateTo")+">=CAST(GETDATE() AS date)"+f).ToString();
             lblFutureTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+">CAST(GETDATE() AS date)"+f).ToString();
             lblTotalTrainees.Text=Scalar("SELECT COUNT(DISTINCT TA.EmpID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE ISNULL(TA.Cancelled,0)=0"+f).ToString();
+            int totalEmployees=ScalarAllTime("SELECT COUNT(DISTINCT NULLIF(LTRIM(RTRIM(EmpID)),'')) FROM EmpBasicMaster");
+            int trainedEmployees=ScalarAllTime("SELECT COUNT(DISTINCT LTRIM(RTRIM(SA.EmpID))) FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TDX ON TDX.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TDX.TrainingStatus,'') NOT IN ('Cancelled','Canceled')");
+            decimal trainingCoverage=totalEmployees>0 ? (100.0m*trainedEmployees/totalEmployees) : 0m;
+            lblTrainingCoverage.Text=trainingCoverage.ToString("0.00")+"%";
+            lblTrainingCoverageCount.Text=trainedEmployees.ToString("N0")+" / "+totalEmployees.ToString("N0")+" employees";
             lblTotalSessions.Text=Scalar("SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID WHERE ISNULL(SM.SessionCancelled,0)=0"+f).ToString();
             decimal attendance=ScalarDecimal("SELECT ISNULL(100.0*SUM(X.IsPresent)/NULLIF(COUNT(*),0),0) FROM (SELECT CASE WHEN EXISTS (SELECT 1 FROM SessionAttendance SA WHERE SA.TrainingID=TD.TrainingID AND SA.SessionID=SM.SessionID AND SA.EmpID=TA.EmpID AND SA.AttendanceStatus='Present') THEN 1 ELSE 0 END IsPresent FROM TrainingDetails TD INNER JOIN SessionMaster SM ON SM.TrainingID=TD.TrainingID INNER JOIN TrainingAssignment TA ON TA.TrainingID=TD.TrainingID AND ISNULL(TA.Cancelled,0)=0 WHERE ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(SM.AttendanceSkipped,0)=0 AND ISNULL(TD.AttendanceRequired,0)=1"+f+") X");
             lblAttendance.Text=attendance.ToString("0.00")+"%";
@@ -157,6 +173,11 @@ namespace Training.Admin
             {
                 q="SELECT TA.EmpID,ISNULL(MAX(E.EmpName),'') EmpName,ISNULL(MAX(E.EmpDesignation),'') EmpDesignation,ISNULL(MAX(E.EmpCompany),'') EmpCompany,ISNULL(MAX(E.EmpPostingPlace),'') EmpPostingPlace,COUNT(DISTINCT TA.TrainingID) TrainingCount FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID WHERE ISNULL(TA.Cancelled,0)=0"+Filter("TD")+" GROUP BY TA.EmpID ORDER BY TA.EmpID";
                 title="Total Trainees - "+lblTotalTrainees.Text+" unique trainee(s)";
+            }
+            else if(type=="TrainingCoverage")
+            {
+                q="SELECT E.EmpID,ISNULL(E.EmpName,'') EmpName,ISNULL(E.EmpDesignation,'') EmpDesignation,ISNULL(E.EmpCompany,'') EmpCompany,ISNULL(E.EmpPostingPlace,'') EmpPostingPlace,COUNT(DISTINCT SA.TrainingID) TrainingsAttended,CONVERT(varchar(10),MAX(COALESCE(TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(date,SM.SessionDate,23),TRY_CONVERT(date,SM.SessionDate))),105) LastTrainingDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TD ON TD.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TD.TrainingStatus,'') NOT IN ('Cancelled','Canceled') GROUP BY E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace ORDER BY E.EmpName,E.EmpID";
+                title="% Employees Trained - "+lblTrainingCoverage.Text+" ("+lblTrainingCoverageCount.Text+")";
             }
             else if(type=="TotalSessions")
             {
