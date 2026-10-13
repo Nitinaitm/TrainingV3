@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
 using System.Web.UI.WebControls;
 
 namespace Training.Admin
@@ -68,6 +69,9 @@ ORDER BY CreatedOn DESC";
                 string table = type == "Announcement" ? "Announcement" : "Notification";
                 string key = type == "Announcement" ? "AnnouncementID" : "NotificationID";
                 obj.ExecuteSql("DELETE FROM " + table + " WHERE " + key + "=@ID", new SqlParameter[] { new SqlParameter("@ID", id) });
+                string uploadFolder = Server.MapPath(type == "Announcement" ? "~/Uploads/Announcements/" : "~/Uploads/Notifications/");
+                string attachmentPath = Path.Combine(uploadFolder, id + ".pdf");
+                if (File.Exists(attachmentPath)) File.Delete(attachmentPath);
                 lblMessage.CssClass = "fw-semibold text-success";
                 lblMessage.Text = type + " deleted successfully.";
                 pnlEdit.Visible = false;
