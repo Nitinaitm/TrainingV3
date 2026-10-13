@@ -392,6 +392,12 @@
                         <asp:Label ID="lblScheduledManHours" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
+                <div class="kpi k3">
+                    <asp:LinkButton ID="lnkCourseSummary" runat="server" CommandArgument="CourseWiseSummary" CssClass="kpi-link" OnClick="kpiCard_Click">
+                        <div class="kpi-label">Course-wise Summary</div>
+                        <asp:Label ID="lblCourseCount" runat="server" CssClass="kpi-value" />
+                    </asp:LinkButton>
+                </div>
                 <div class="kpi k5">
                     <asp:LinkButton ID="lnkCompletedManHours" runat="server" CommandArgument="CompletedManHours" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Man Hours - Training Completed</div>
@@ -434,23 +440,30 @@
                 </asp:GridView>
             </div>
         </div>
-        <div class="mis-card">
-            <div class="mis-title">Course-wise Summary</div>
-            <asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
-                <Columns>
-                    <asp:BoundField DataField="CourseName" HeaderText="Course" />
-                    <asp:TemplateField HeaderText="Count">
-                        <ItemTemplate>
-                            <asp:LinkButton ID="lnkCourseCount" runat="server" Text='<%# Eval("TrainingCount") %>' CommandName="CourseSummary" CommandArgument='<%# Eval("CourseName") %>' CssClass="summary-link" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TotalTrainingDays" HeaderText="Training Days" />
-                    <asp:BoundField DataField="CompletedTrainingDays" HeaderText="Completed Days" />
-                    <asp:BoundField DataField="ScheduledManHours" HeaderText="Scheduled Man Hours" />
-                    <asp:BoundField DataField="CompletedManHours" HeaderText="Completed Man Hours" />
-                </Columns>
-            </asp:GridView>
-        </div>
+        <asp:Panel ID="pnlCourseSummary" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
+            <div class="kpi-modal-box">
+                <div class="kpi-modal-head">
+                    <span>Course-wise Summary</span>
+                    <button type="button" class="kpi-close" onclick="closeCourseSummary();return false;">&times;</button>
+                </div>
+                <div class="kpi-modal-body">
+                    <asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
+                        <Columns>
+                            <asp:BoundField DataField="CourseName" HeaderText="Course" />
+                            <asp:TemplateField HeaderText="Count">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkCourseCount" runat="server" Text='<%# Eval("TrainingCount") %>' CommandName="CourseSummary" CommandArgument='<%# Eval("CourseName") %>' CssClass="summary-link" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="TotalTrainingDays" HeaderText="Training Days" />
+                            <asp:BoundField DataField="CompletedTrainingDays" HeaderText="Completed Days" />
+                            <asp:BoundField DataField="ScheduledManHours" HeaderText="Scheduled Man Hours" />
+                            <asp:BoundField DataField="CompletedManHours" HeaderText="Completed Man Hours" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </div>
+        </asp:Panel>
         <asp:Panel ID="pnlKpiDetails" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
             <div class="kpi-modal-box">
                 <div class="kpi-modal-head">
@@ -469,7 +482,14 @@
     <script>
         function showKpiDetails() { var e = document.getElementById("pnlKpiDetails"); if (e) e.style.display = "flex"; }
         function closeKpiDetails() { var e = document.getElementById("pnlKpiDetails"); if (e) e.style.display = "none"; }
-        document.addEventListener("click", function (e) { var m = document.getElementById("pnlKpiDetails"); if (m && e.target === m) closeKpiDetails(); });
+        function showCourseSummary() { var e = document.getElementById("pnlCourseSummary"); if (e) e.style.display = "flex"; }
+        function closeCourseSummary() { var e = document.getElementById("pnlCourseSummary"); if (e) e.style.display = "none"; }
+        document.addEventListener("click", function (e) {
+            var m = document.getElementById("pnlKpiDetails");
+            if (m && e.target === m) closeKpiDetails();
+            var c = document.getElementById("pnlCourseSummary");
+            if (c && e.target === c) closeCourseSummary();
+        });
     </script>
     <script>document.addEventListener("DOMContentLoaded", function () { if (typeof flatpickr !== "undefined") { flatpickr("#<%= txtFromDate.ClientID %>", { dateFormat: "d-m-Y", allowInput: true }); flatpickr("#<%= txtToDate.ClientID %>", { dateFormat: "d-m-Y", allowInput: true }); } });</script>
 </asp:Content>
