@@ -392,16 +392,18 @@
                         <asp:Label ID="lblScheduledManHours" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
-                <div class="kpi k3">
-                    <asp:LinkButton ID="lnkCourseSummary" runat="server" CommandArgument="CourseWiseSummary" CssClass="kpi-link" OnClick="kpiCard_Click">
-                        <div class="kpi-label">Course-wise Summary</div>
-                        <asp:Label ID="lblCourseCount" runat="server" CssClass="kpi-value" />
-                    </asp:LinkButton>
-                </div>
+               
                 <div class="kpi k5">
                     <asp:LinkButton ID="lnkCompletedManHours" runat="server" CommandArgument="CompletedManHours" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Man Hours - Training Completed</div>
                         <asp:Label ID="lblCompletedManHours" runat="server" CssClass="kpi-value" />
+                    </asp:LinkButton>
+                </div>
+
+                 <div class="kpi k3">
+                    <asp:LinkButton ID="lnkCourseSummary" runat="server" CommandArgument="CourseWiseSummary" CssClass="kpi-link" OnClick="kpiCard_Click">
+                        <div class="kpi-label">Course-wise Summary</div>
+                        <asp:Label ID="lblCourseCount" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
                 <div class="kpi k4" runat="server" visible="false">
