@@ -46,7 +46,7 @@
                 <div class="col-md-12 text-end">
                     <asp:Button ID="btnMarkAllRead" runat="server" Text="Mark All as Read" CssClass="btn btn-success" OnClick="btnMarkAllRead_Click" /></div>
             </div>
-            <asp:GridView ID="gvNotifications" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover" EmptyDataText="No Notifications">
+            <asp:GridView ID="gvNotifications" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover" EmptyDataText="No Notifications" OnRowCommand="gvNotifications_RowCommand">
                 <Columns>
                     <asp:TemplateField HeaderText="Sl No">
                         <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
@@ -61,6 +61,7 @@
                             <asp:LinkButton ID="lnkMarkRead" runat="server" Text="Mark Read" CssClass="btn btn-sm btn-primary" CommandName="MarkRead" CommandArgument='<%# Eval("NotificationID") %>' Visible='<%# Eval("IsRead").ToString()=="False" %>' /></ItemTemplate>
                         <ItemStyle Width="120px" HorizontalAlign="Center" />
                     </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Delete"><ItemTemplate><asp:LinkButton ID="lnkDeleteNotification" runat="server" Text="Delete" CssClass="btn btn-sm btn-outline-danger" CommandName="DeleteNotification" CommandArgument='<%# Eval("NotificationID") %>' OnClientClick="return confirm('Delete this notification?');" /></ItemTemplate></asp:TemplateField>
                 </Columns>
             </asp:GridView>
         </div>
