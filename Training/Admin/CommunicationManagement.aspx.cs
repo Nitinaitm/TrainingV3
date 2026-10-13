@@ -91,7 +91,9 @@ ORDER BY CreatedOn DESC";
             ddlAvailabilityMode.SelectedValue = ddlAvailabilityMode.Items.FindByValue(Convert.ToString(row["AvailabilityMode"])) == null ? "Batch" : Convert.ToString(row["AvailabilityMode"]);
             txtEffectiveFrom.Text = row["EffectiveFrom"] == DBNull.Value ? "" : Convert.ToDateTime(row["EffectiveFrom"]).ToString("yyyy-MM-dd");
             txtEffectiveTo.Text = row["EffectiveTo"] == DBNull.Value ? "" : Convert.ToDateTime(row["EffectiveTo"]).ToString("yyyy-MM-dd");
-            lblEditTarget.Text = "Target batch: " + Convert.ToString(row["TargetTrainingID"]) + "; session: " + Convert.ToString(row["TargetSessionID"]) + "; audience: " + Convert.ToString(row["Audience"]) + ". Target selection can be changed by the original sender.";
+            txtEditTrainingID.Text = row["TargetTrainingID"] == DBNull.Value ? "" : Convert.ToString(row["TargetTrainingID"]);
+            txtEditSessionID.Text = row["TargetSessionID"] == DBNull.Value ? "" : Convert.ToString(row["TargetSessionID"]);
+            lblEditTarget.Text = "Audience: " + Convert.ToString(row["Audience"]) + ". Leave target IDs blank to make it general (subject to sender assignment rules).";
             pnlEdit.Visible = true;
             lblMessage.Text = "";
         }
@@ -119,11 +121,13 @@ ORDER BY CreatedOn DESC";
             string table = hfRecordType.Value == "Announcement" ? "Announcement" : "Notification";
             string key = hfRecordType.Value == "Announcement" ? "AnnouncementID" : "NotificationID";
             string sql = table == "Announcement"
-                ? "UPDATE Announcement SET Title=@Title, Message=@Message, AvailabilityMode=@Mode, EffectiveFrom=@From, EffectiveTo=@To WHERE AnnouncementID=@ID"
-                : "UPDATE Notification SET Title=@Title, Message=@Message, AvailabilityMode=@Mode, EffectiveFrom=@From, EffectiveTo=@To WHERE NotificationID=@ID";
+                ? "UPDATE Announcement SET Title=@Title, Message=@Message, TargetTrainingID=@TrainingID, TargetSessionID=@SessionID, AvailabilityMode=@Mode, EffectiveFrom=@From, EffectiveTo=@To WHERE AnnouncementID=@ID"
+                : "UPDATE Notification SET Title=@Title, Message=@Message, TargetTrainingID=@TrainingID, TargetSessionID=@SessionID, AvailabilityMode=@Mode, EffectiveFrom=@From, EffectiveTo=@To WHERE NotificationID=@ID";
             obj.ExecuteSql(sql, new SqlParameter[] {
                 new SqlParameter("@Title", table == "Announcement" ? txtEditTitle.Text.Trim() : (object)DBNull.Value),
                 new SqlParameter("@Message", txtEditMessage.Text.Trim()),
+                new SqlParameter("@TrainingID", string.IsNullOrWhiteSpace(txtEditTrainingID.Text) ? (object)DBNull.Value : txtEditTrainingID.Text.Trim()),
+                new SqlParameter("@SessionID", string.IsNullOrWhiteSpace(txtEditSessionID.Text) ? (object)DBNull.Value : txtEditSessionID.Text.Trim()),
                 new SqlParameter("@Mode", ddlAvailabilityMode.SelectedValue),
                 new SqlParameter("@From", from),
                 new SqlParameter("@To", to),
