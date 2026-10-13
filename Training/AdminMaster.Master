@@ -500,7 +500,7 @@
 
                 <!-- ================= HOME PAGE MANAGEMENT ================= -->
 
-                <a href="HomePageManagement.aspx"
+                <a href='<%= ResolveUrl("~/Admin/HomePageManagement.aspx") %>'
                     class="menu-item">
 
                     <i class="fas fa-newspaper mr-2"></i>
@@ -510,7 +510,7 @@
 
                 <!-- ================= DASHBOARD ================= -->
 
-                <a href="Dashboard.aspx"
+                <a href='<%= ResolveUrl("~/Admin/Dashboard.aspx") %>'
                     class="menu-item">
 
                     <i class="fas fa-home mr-2"></i>
@@ -518,7 +518,7 @@
 
                 </a>
 
-                <a href="LMSMaterials.aspx"
+                <a href='<%= ResolveUrl("~/Admin/LMSMaterials.aspx") %>'
                     class="menu-item">
 
                     <i class="fas fa-home mr-2"></i>
@@ -562,21 +562,21 @@
                     <div id="employeeMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="Default.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/Default.aspx") %>'
                             class="submenu-item">Employee Management
                         </a>
 
-                        <a href="EmpBasicMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/EmpBasicMaster.aspx") %>'
                             class="submenu-item">Employee Registration/ Entry
                         </a>
 
-                        <a href="ExternalEmpEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/ExternalEmpEntry.aspx") %>'
                             class="submenu-item">External Trainee Entry
                         </a>
 
-                        <a href="ExternalTraineeReport.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/ExternalTraineeReport.aspx") %>'
                             class="submenu-item">External Trainee Report
-                            <a href="ProfileChangeRequests.aspx"
+                            <a href='<%= ResolveUrl("~/Admin/ProfileChangeRequests.aspx") %>'
                                 class="submenu-item">Profile Change Requests
                             </a>
                         </a>
@@ -599,12 +599,12 @@
                     <div id="courseMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="CourseMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/CourseMaster.aspx") %>'
                             class="submenu-item">Course Entry
                         </a>
 
 
-                        <a href="CourseCategoryMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/CourseCategoryMaster.aspx") %>'
                             class="submenu-item">Course Category Entry
                         </a>
 
@@ -626,12 +626,12 @@
                     <div id="topicMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="TopicMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/TopicMaster.aspx") %>'
                             class="submenu-item">Topic Entry
                         </a>
 
 
-                        <a href="TopicCategoryMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/TopicCategoryMaster.aspx") %>'
                             class="submenu-item">Topic Category Entry
                         </a>
 
@@ -654,18 +654,18 @@
                     <div id="trainerMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="TrainerEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/TrainerEntry.aspx") %>'
                             class="submenu-item">Trainer Entry
                         </a>
 
 
 
 
-                        <a href="AreaOfExpertiseMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/AreaOfExpertiseMaster.aspx") %>'
                             class="submenu-item">Area of Expertise
                         </a>
 
-                        <a href="QualificationMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/QualificationMaster.aspx") %>'
                             class="submenu-item">Qualification Master
                         </a>
 
@@ -685,19 +685,19 @@
                     <div id="trainingTypeMenu"
                         class="submenu-container hide">
 
-                        <a href="TrainingTypeEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/TrainingTypeEntry.aspx") %>'
                             class="submenu-item">Training Type Entry
                         </a>
 
-                        <a href="TrainingCategoryEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/TrainingCategoryEntry.aspx") %>'
                             class="submenu-item">Training Category Entry
                         </a>
 
-                        <a href="OrganizerEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/OrganizerEntry.aspx") %>'
                             class="submenu-item">Organizer Entry
                         </a>
 
-                        <a href="LocationEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/LocationEntry.aspx") %>'
                             class="submenu-item">Location Entry
                         </a>
 
@@ -717,11 +717,11 @@
                     <div id="feedbackMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="FeedbackCategoryMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/FeedbackCategoryMaster.aspx") %>'
                             class="submenu-item">Feedback Category
                         </a>
 
-                        <a href="FeedbackMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/FeedbackMaster.aspx") %>'
                             class="submenu-item">Feedback Questionnaire
                         </a>
 
@@ -741,7 +741,7 @@
                     <div id="certificateMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="CertificateTemplateMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/CertificateTemplateMaster.aspx") %>'
                             class="submenu-item">Certificate Template Master
                         </a>
 
@@ -760,21 +760,21 @@
                     <div id="HostelMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="HostelMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/HostelMaster.aspx") %>'
                             class="submenu-item">Hostel Master
                         </a>
 
-                        <a href="HostelBlockMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/HostelBlockMaster.aspx") %>'
                             class="submenu-item">Hostel Block Master
                         </a>
-                        <a href="HostelFlatMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/HostelFlatMaster.aspx") %>'
                             class="submenu-item">Hostel Flat Master
                         </a>
 
-                        <a href="HostelRoomMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/HostelRoomMaster.aspx") %>'
                             class="submenu-item">Hostel Room Master
                         </a>
-                        <a href="HostelBedMaster.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/HostelBedMaster.aspx") %>'
                             class="submenu-item">Hostel Bed Master
                         </a>
 
@@ -794,7 +794,7 @@
                     <div id="managerMasterMenu"
                         class="submenu-container hide">
 
-                        <a href="ManagerEntry.aspx"
+                        <a href='<%= ResolveUrl("~/Admin/ManagerEntry.aspx") %>'
                             class="submenu-item">Manager Entry
                         </a>
 
@@ -819,24 +819,24 @@
                 <div id="trainingMenu"
                     class="submenu-container hide">
 
-                    <a href="CreateBatch.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/CreateBatch.aspx") %>'
                         class="submenu-item">Create Batch
                     </a>
 
-                    <a href="TrainingList.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/TrainingList.aspx") %>'
                         class="submenu-item">Training List
                     </a>
 
-                    <a href="ManageTraining.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/ManageTraining.aspx") %>'
                         class="submenu-item">Manage Training
                     </a>
 
 
-                    <a href="AssignTrainee.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/AssignTrainee.aspx") %>'
                         class="submenu-item">Assign Trainee
                     </a>
 
-                    <a href="AssignSession.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/AssignSession.aspx") %>'
                         class="submenu-item">Assign Session and Trainer
                     </a>
 
@@ -857,15 +857,15 @@
                 <div id="hostelAllotmentMenu"
                     class="submenu-container hide">
 
-                    <a href="HostelAllotment.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/HostelAllotment.aspx") %>'
                         class="submenu-item">Hostel Allotment
                     </a>
 
-                    <a href="TrainingAllotmentDetails.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/TrainingAllotmentDetails.aspx") %>'
                         class="submenu-item">Training Allotment Details
                     </a>
 
-                    <a href="HostelStayHistoryReport.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/HostelStayHistoryReport.aspx") %>'
                         class="submenu-item">Hostel Stay History Report
                     </a>
 
@@ -884,11 +884,11 @@
                 <div id="attendanceMenu"
                     class="submenu-container hide">
 
-                    <a href="SessionAttendance.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/SessionAttendance.aspx") %>'
                         class="submenu-item">Session Attendance
                     </a>
 
-                    <a href="TrainingAttendance.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/TrainingAttendance.aspx") %>'
                         class="submenu-item">Training Attendance
                     </a>
 
@@ -910,18 +910,18 @@
                 <div id="questionMenu"
                     class="submenu-container hide">
 
-                    <a href="QuestionBank.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/QuestionBank.aspx") %>'
                         class="submenu-item">Question Bank
                     </a>
 
-                    <a href="QuestionBankUpload.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/QuestionBankUpload.aspx") %>'
                         class="submenu-item">Question Bank Upload
                     </a>
 
-                    <a href="QuestionApproval.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/QuestionApproval.aspx") %>'
                         class="submenu-item">Question Approval
                     </a>
-                    <a href="CloneTest.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/CloneTest.aspx") %>'
                         class="submenu-item">Question Clone Reassign
                     </a>
 
@@ -941,7 +941,7 @@
                 <div id="feedbackMenu"
                     class="submenu-container hide">
 
-                    <a href="AssignFeedback.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/AssignFeedback.aspx") %>'
                         class="submenu-item">Assign Feedback
                     </a>
 
@@ -962,15 +962,15 @@
                 <div id="certificateMenu"
                     class="submenu-container hide">
 
-                    <a href="CertificateTemplate.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/CertificateTemplate.aspx") %>'
                         class="submenu-item">Configure Certificate
                     </a>
 
-                    <a href="CertificatePreview.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/CertificatePreview.aspx") %>'
                         class="submenu-item">Certificate Preview
                     </a>
 
-                    <a href="GeneratedCertificateList.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/GeneratedCertificateList.aspx") %>'
                         class="submenu-item">Generated Certificates
                     </a>
 
@@ -990,7 +990,7 @@
                 <div id="examMenu"
                     class="submenu-container hide">
 
-                    <a href="ExamResultReport.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/ExamResultReport.aspx") %>'
                         class="submenu-item">Exam Result Report
                     </a>
 
@@ -1010,11 +1010,11 @@
                 <div id="dataMenu"
                     class="submenu-container hide">
 
-                    <a href="FindTrainingID.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/FindTrainingID.aspx") %>'
                         class="submenu-item">Find Training ID
                     </a>
 
-                    <a href="BulkExcelUpload.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/BulkExcelUpload.aspx") %>'
                         class="submenu-item">Bulk Excel Upload
                     </a>
 
@@ -1073,12 +1073,12 @@
                 <div id="reportMenu"
                     class="submenu-container hide">
 
-                    <a href="TrainingMIS.aspx" class="submenu-item">Training MIS / Management Summary</a>
-                    <a href="TrainingDetailsReport.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/TrainingMIS.aspx") %>' class="submenu-item">Training MIS / Management Summary</a>
+                    <a href='<%= ResolveUrl("~/Admin/TrainingDetailsReport.aspx") %>'
                         class="submenu-item">Training Report
                     </a>
 
-                    <a href="TrainingSearch.aspx"
+                    <a href='<%= ResolveUrl("~/Admin/TrainingSearch.aspx") %>'
                         class="submenu-item">Employee-wise Training Report
                     </a>
 
@@ -1086,7 +1086,7 @@
 
                 <!-- ================= LOGOUT ================= -->
 
-                <a href="Logout.aspx"
+                <a href='<%= ResolveUrl("~/Admin/Logout.aspx") %>'
                     class="menu-item logout-btn">
 
                     <i class="fas fa-sign-out-alt mr-2"></i>
