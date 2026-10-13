@@ -18,7 +18,7 @@ namespace Training.Admin
                 Response.Redirect("~/Default.aspx");
                 return;
             }
-            if (!IsPostBack) BindGrid();
+            if (!IsPostBack)\n            {\n                string requestedType = Convert.ToString(Request.QueryString["type"]);\n                if (ddlType.Items.FindByValue(requestedType) != null) ddlType.SelectedValue = requestedType;\n                BindGrid();\n            }
         }
 
         private void BindGrid()
