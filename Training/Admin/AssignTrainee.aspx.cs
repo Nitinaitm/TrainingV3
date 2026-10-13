@@ -583,8 +583,11 @@ AND TA.TrainingID <> @TrainingID", con);
 
                 if (topicCnt > 0)
                 {
-                    lblEmpMessage.Text =
-                    "Employee is already assigned for this Course in another batch.";
+                    ViewState["RepeatCourseEmpID"] = txtEmpID.Text.Trim().ToUpperInvariant();
+                    pnlRepeatCourseConfirm.Visible = true;
+                    lblRepeatCourseMessage.Text = "Employee " + Server.HtmlEncode(txtEmpID.Text.Trim().ToUpperInvariant()) + " is already assigned for this Course in another batch. Do you still want to assign this employee to the current batch?";
+                    lblEmpMessage.ForeColor = Color.DarkOrange;
+                    lblEmpMessage.Text = "Course assignment already exists. Please confirm whether to continue.";
 
                     con.Close();
 
@@ -711,6 +714,83 @@ GETDATE(),
 
             lblEmpMessage.Text =
             "Employee assigned successfully.";
+        }
+
+        protected void btnAllowRepeatCourse_Click(object sender, EventArgs e)
+        {
+            string empID = Convert.ToString(ViewState["RepeatCourseEmpID"]).Trim().ToUpperInvariant();
+            if (string.IsNullOrWhiteSpace(empID))
+            {
+                pnlRepeatCourseConfirm.Visible = false;
+                lblEmpMessage.ForeColor = Color.Red;
+                lblEmpMessage.Text = "Please enter the employee ID again.";
+                return;
+            }
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                con.Open();
+
+                SqlCommand cmdEmp = new SqlCommand("SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con);
+                cmdEmp.Parameters.AddWithValue("@EmpID", empID);
+                if (Convert.ToInt32(cmdEmp.ExecuteScalar()) == 0)
+                {
+                    pnlRepeatCourseConfirm.Visible = false;
+                    ViewState["RepeatCourseEmpID"] = null;
+                    lblEmpMessage.ForeColor = Color.Red;
+                    lblEmpMessage.Text = "Employee not found.";
+                    return;
+                }
+
+                SqlCommand cmdDuplicate = new SqlCommand("SELECT COUNT(*) FROM TrainingAssignment WHERE TrainingID=@TrainingID AND EmpID=@EmpID AND ISNULL(AssignmentStatus,'Assigned')<>'Cancelled'", con);
+                cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+                cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
+                if (Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0)
+                {
+                    pnlRepeatCourseConfirm.Visible = false;
+                    ViewState["RepeatCourseEmpID"] = null;
+                    lblEmpMessage.ForeColor = Color.Red;
+                    lblEmpMessage.Text = "Employee already assigned to this batch.";
+                    return;
+                }
+
+                if (IsBatchFull(con, null))
+                {
+                    pnlRepeatCourseConfirm.Visible = false;
+                    lblEmpMessage.ForeColor = Color.Red;
+                    lblEmpMessage.Text = "Batch Strength Reached.";
+                    return;
+                }
+
+                using (SqlTransaction tran = con.BeginTransaction())
+                {
+                    try
+                    {
+                        SaveAssignment(con, tran, empID, Convert.ToString(ViewState["Mode"] ?? "EMP"));
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
+
+            ViewState["RepeatCourseEmpID"] = null;
+            pnlRepeatCourseConfirm.Visible = false;
+            txtEmpID.Text = "";
+            BindAssignedEmployee();
+            lblEmpMessage.ForeColor = Color.Green;
+            lblEmpMessage.Text = "Employee assigned successfully to this batch.";
+        }
+
+        protected void btnCancelRepeatCourse_Click(object sender, EventArgs e)
+        {
+            ViewState["RepeatCourseEmpID"] = null;
+            pnlRepeatCourseConfirm.Visible = false;
+            lblEmpMessage.ForeColor = Color.Gray;
+            lblEmpMessage.Text = "Assignment cancelled. No changes were made.";
         }
 
         private void BindAssignedEmployee()
