@@ -37,6 +37,10 @@ namespace Training {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;\n        protected global::System.Web.UI.WebControls.HyperLink lnkAnnouncementBell;\n        protected global::System.Web.UI.WebControls.Label lblAnnouncementCount;\n        protected global::System.Web.UI.WebControls.HyperLink lnkNotificationBell;\n        protected global::System.Web.UI.WebControls.Label lblNotificationCount;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;
+        protected global::System.Web.UI.WebControls.HyperLink lnkAnnouncementBell;
+        protected global::System.Web.UI.WebControls.Label lblAnnouncementCount;
+        protected global::System.Web.UI.WebControls.HyperLink lnkNotificationBell;
+        protected global::System.Web.UI.WebControls.Label lblNotificationCount;
     }
 }
