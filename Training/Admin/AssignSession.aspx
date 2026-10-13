@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="Session Management" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AssignSession.aspx.cs" MaintainScrollPositionOnPostback="true" Inherits="Training.Admin.AssignSession" ClientIDMode="Static" %>
 <%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" /><script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <style>body{background:#f5f5f5}.main-card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 0 10px #d9d9d9;margin:20px 0}.page-heading{font-size:28px;font-weight:bold;color:darkcyan;margin-bottom:20px}.validation{color:red;font-size:13px}.readonly-box{background:#eef3f8!important;font-weight:bold}.select2-container{width:100%!important}.select2-container .select2-selection--single{height:38px!important;border:1px solid #ced4da!important}.select2-selection__rendered{line-height:36px!important}.select2-selection__arrow{height:36px!important}.gridview th{background:#0d6efd;color:#fff;font-weight:bold;text-align:center}.gridview td{vertical-align:middle}</style>
 </asp:Content>
