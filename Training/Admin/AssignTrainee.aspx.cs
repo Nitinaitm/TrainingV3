@@ -1134,106 +1134,67 @@ object sender,
 EventArgs e)
         {
             lblMessage.Text = "";
-
             int assigned = 0;
-
             int skipped = 0;
+            int conflicts = 0;
 
-            using (SqlConnection con =
-                new SqlConnection(constr))
+            using (SqlConnection con = new SqlConnection(constr))
             {
                 con.Open();
-
-                SqlTransaction tran =
-                con.BeginTransaction();
+                SqlTransaction tran = con.BeginTransaction();
 
                 try
                 {
-                    foreach (GridViewRow row in
-                        gvCompanyEmployee.Rows)
+                    foreach (GridViewRow row in gvCompanyEmployee.Rows)
                     {
-                        CheckBox chk =
-                        (CheckBox)row.FindControl(
-                        "chkSelect");
+                        CheckBox chk = (CheckBox)row.FindControl("chkSelect");
+                        if (chk == null || !chk.Checked)
+                            continue;
 
-                        if (chk == null ||
-                            !chk.Checked)
+                        Label lblEmpID = (Label)row.FindControl("lblEmpID");
+                        string empid = lblEmpID.Text.Trim().ToUpperInvariant();
+                        bool courseConflict;
+
+                        if (!CanAssignEmployee(con, tran, empid, out courseConflict))
                         {
+                            if (courseConflict)
+                            {
+                                AddCourseConflict(con, tran, empid, "COMPANY");
+                                conflicts++;
+                            }
+                            else
+                            {
+                                skipped++;
+                            }
                             continue;
                         }
-
-                        Label lblEmpID =
-                        (Label)row.FindControl(
-                        "lblEmpID");
-
-                        string empid =
-                        lblEmpID.Text.Trim().ToUpperInvariant();
-
-                        //----------------------------------
-                        // Validation
-                        //----------------------------------
-
-                        if (!CanAssignEmployee(
-                            con,
-                            tran,
-                            empid))
-                        {
-                            skipped++;
-
-                            continue;
-                        }
-
-                        //----------------------------------
-                        // Save
-                        //----------------------------------
 
                         if (IsBatchFull(con, tran))
                         {
                             skipped++;
-
                             continue;
                         }
 
-                        SaveAssignment(
-                            con,
-                            tran,
-                            empid,
-                            "COMPANY");
-
+                        SaveAssignment(con, tran, empid, "COMPANY");
                         assigned++;
                     }
 
                     tran.Commit();
-
                     BindAssignedEmployee();
+                    BindCourseConflictList();
 
-
-                    // LoadBatchSummary();
-
-                    lblMessage.ForeColor =
-                    Color.Green;
-
-                    lblMessage.Text =
-                    assigned.ToString()
-                    + " Employee Assigned Successfully.";
-
+                    lblMessage.ForeColor = conflicts > 0 ? Color.DarkOrange : Color.Green;
+                    lblMessage.Text = assigned + " employee(s) assigned successfully.";
+                    if (conflicts > 0)
+                        lblMessage.Text += " " + conflicts + " same-course conflict(s) listed below for your decision.";
                     if (skipped > 0)
-                    {
-                        lblMessage.Text +=
-                        "  "
-                        + skipped.ToString()
-                        + " Employee Skipped.";
-                    }
+                        lblMessage.Text += " " + skipped + " employee(s) skipped (invalid ID, already assigned to this batch, or batch full).";
                 }
                 catch (Exception ex)
                 {
                     tran.Rollback();
-
-                    lblMessage.ForeColor =
-                    Color.Red;
-
-                    lblMessage.Text =
-                    ex.Message;
+                    lblMessage.ForeColor = Color.Red;
+                    lblMessage.Text = ex.Message;
                 }
             }
         }
@@ -1241,112 +1202,243 @@ EventArgs e)
         private bool CanAssignEmployee(
 SqlConnection con,
 SqlTransaction tran,
-string empid)
+string empid,
+out bool courseConflict)
         {
-            //--------------------------------------------
-            // Employee Exists
-            //--------------------------------------------
+            courseConflict = false;
 
-            SqlCommand cmdEmp =
-            new SqlCommand(@"
-
-SELECT COUNT(*)
-
-FROM EmpBasicMaster
-
-WHERE EmpID=@EmpID
-
-", con, tran);
-
-            cmdEmp.Parameters.AddWithValue(
-            "@EmpID",
-            empid);
-
-            if (Convert.ToInt32(
-                cmdEmp.ExecuteScalar()) == 0)
-            {
+            SqlCommand cmdEmp = new SqlCommand(
+                "SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con, tran);
+            cmdEmp.Parameters.AddWithValue("@EmpID", empid);
+            if (Convert.ToInt32(cmdEmp.ExecuteScalar()) == 0)
                 return false;
-            }
 
-            //--------------------------------------------
-            // Already Assigned in Current Training
-            //--------------------------------------------
-
-            SqlCommand cmdDuplicate =
-            new SqlCommand(@"
-
+            SqlCommand cmdDuplicate = new SqlCommand(@"
 SELECT COUNT(*)
-
 FROM TrainingAssignment
-
-WHERE
-
-TrainingID=@TrainingID
-
-AND
-
-EmpID=@EmpID
-
-", con, tran);
-
-
-
-            cmdDuplicate.Parameters.AddWithValue(
-            "@TrainingID",
-            Session["TrainingID"]);
-
-            cmdDuplicate.Parameters.AddWithValue(
-            "@EmpID",
-            empid);
-
-            if (Convert.ToInt32(
-                cmdDuplicate.ExecuteScalar()) > 0)
-            {
+WHERE TrainingID=@TrainingID
+AND EmpID=@EmpID", con, tran);
+            cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+            cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
+            if (Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0)
                 return false;
-            }
 
-            //--------------------------------------------
-            // Same Topic Already Attended
-            //--------------------------------------------
-
-            SqlCommand cmdTopic =
-            new SqlCommand(@"
+            SqlCommand cmdTopic = new SqlCommand(@"
 SELECT COUNT(*)
-
 FROM TrainingAssignment TA
-
-INNER JOIN TrainingDetails TD
-ON TA.TrainingID = TD.TrainingID
-
-WHERE
-TA.EmpID = @EmpID
-
-AND TD.CourseID =
-(
-    SELECT CourseID
-    FROM TrainingDetails
-    WHERE TrainingID = @TrainingID
-)
-
+INNER JOIN TrainingDetails TD ON TA.TrainingID = TD.TrainingID
+WHERE TA.EmpID = @EmpID
+AND TD.CourseID = (SELECT CourseID FROM TrainingDetails WHERE TrainingID = @TrainingID)
 AND ISNULL(TA.AssignmentStatus,'Assigned') <> 'Cancelled'
-
 AND TA.TrainingID <> @TrainingID", con, tran);
+            cmdTopic.Parameters.AddWithValue("@EmpID", empid);
+            cmdTopic.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
 
-            cmdTopic.Parameters.AddWithValue(
-            "@EmpID",
-            empid);
-
-            cmdTopic.Parameters.AddWithValue(
-            "@TrainingID",
-            Session["TrainingID"]);
-
-            if (Convert.ToInt32(
-                cmdTopic.ExecuteScalar()) > 0)
+            if (Convert.ToInt32(cmdTopic.ExecuteScalar()) > 0)
             {
+                courseConflict = true;
                 return false;
             }
 
             return true;
+        }
+
+        private DataTable GetCourseConflictTable()
+        {
+            DataTable dt = ViewState["CourseConflictList"] as DataTable;
+            if (dt == null)
+            {
+                dt = new DataTable();
+                dt.Columns.Add("EmpID");
+                dt.Columns.Add("EmpName");
+                dt.Columns.Add("EmpCompany");
+                dt.Columns.Add("SourceMode");
+                dt.Columns.Add("ConflictReason");
+            }
+            return dt;
+        }
+
+        private void AddCourseConflict(SqlConnection con, SqlTransaction tran, string empid, string sourceMode)
+        {
+            DataTable dt = GetCourseConflictTable();
+            foreach (DataRow existing in dt.Rows)
+            {
+                if (String.Equals(Convert.ToString(existing["EmpID"]), empid, StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+
+            SqlCommand cmd = new SqlCommand(@"
+SELECT EmpID, ISNULL(EmpName,'') AS EmpName, ISNULL(EmpCompany,'') AS EmpCompany
+FROM EmpBasicMaster
+WHERE EmpID=@EmpID", con, tran);
+            cmd.Parameters.AddWithValue("@EmpID", empid);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    dt.Rows.Add(
+                        Convert.ToString(reader["EmpID"]),
+                        Convert.ToString(reader["EmpName"]),
+                        Convert.ToString(reader["EmpCompany"]),
+                        sourceMode,
+                        "Same course in another batch");
+                }
+            }
+
+            ViewState["CourseConflictList"] = dt;
+        }
+
+        private void BindCourseConflictList()
+        {
+            DataTable dt = GetCourseConflictTable();
+            ViewState["CourseConflictList"] = dt;
+            pnlCourseConflictReview.Visible = dt.Rows.Count > 0;
+            gvCourseConflict.DataSource = dt;
+            gvCourseConflict.DataBind();
+            lblCourseConflictTitle.Text = dt.Rows.Count +
+                " employee(s) already assigned to the same course in another batch. Select rows and choose an action.";
+        }
+
+        private List<string> GetSelectedCourseConflictIds()
+        {
+            List<string> selectedIds = new List<string>();
+            foreach (GridViewRow row in gvCourseConflict.Rows)
+            {
+                CheckBox chk = row.FindControl("chkConflictSelect") as CheckBox;
+                Label empLabel = row.FindControl("lblConflictEmpID") as Label;
+                if (chk != null && chk.Checked && empLabel != null)
+                    selectedIds.Add(empLabel.Text.Trim().ToUpperInvariant());
+            }
+            return selectedIds;
+        }
+
+        private bool CanOverrideCourseConflict(SqlConnection con, SqlTransaction tran, string empid)
+        {
+            SqlCommand cmdEmp = new SqlCommand(
+                "SELECT COUNT(*) FROM EmpBasicMaster WHERE EmpID=@EmpID", con, tran);
+            cmdEmp.Parameters.AddWithValue("@EmpID", empid);
+            if (Convert.ToInt32(cmdEmp.ExecuteScalar()) == 0)
+                return false;
+
+            SqlCommand cmdDuplicate = new SqlCommand(@"
+SELECT COUNT(*)
+FROM TrainingAssignment
+WHERE TrainingID=@TrainingID
+AND EmpID=@EmpID", con, tran);
+            cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
+            cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
+            return Convert.ToInt32(cmdDuplicate.ExecuteScalar()) == 0;
+        }
+
+        protected void btnAllowCourseConflicts_Click(object sender, EventArgs e)
+        {
+            List<string> selectedIds = GetSelectedCourseConflictIds();
+            if (selectedIds.Count == 0)
+            {
+                BindCourseConflictList();
+                lblCourseConflictTitle.Text = "Select at least one employee before allowing assignment.";
+                return;
+            }
+
+            DataTable pending = GetCourseConflictTable();
+            List<string> resolvedIds = new List<string>();
+            int assigned = 0;
+            int skipped = 0;
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                con.Open();
+                SqlTransaction tran = con.BeginTransaction();
+                try
+                {
+                    foreach (string empid in selectedIds)
+                    {
+                        if (!CanOverrideCourseConflict(con, tran, empid))
+                        {
+                            resolvedIds.Add(empid);
+                            skipped++;
+                            continue;
+                        }
+
+                        if (IsBatchFull(con, tran))
+                        {
+                            skipped++;
+                            continue;
+                        }
+
+                        string mode = "BULK";
+                        foreach (DataRow item in pending.Rows)
+                        {
+                            if (String.Equals(Convert.ToString(item["EmpID"]), empid, StringComparison.OrdinalIgnoreCase))
+                            {
+                                mode = Convert.ToString(item["SourceMode"]);
+                                break;
+                            }
+                        }
+
+                        SaveAssignment(con, tran, empid, mode);
+                        resolvedIds.Add(empid);
+                        assigned++;
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    BindCourseConflictList();
+                    lblCourseConflictTitle.Text = "Assignment failed: " + Server.HtmlEncode(ex.Message);
+                    return;
+                }
+            }
+
+            foreach (string empid in resolvedIds)
+            {
+                for (int i = pending.Rows.Count - 1; i >= 0; i--)
+                {
+                    if (String.Equals(Convert.ToString(pending.Rows[i]["EmpID"]), empid, StringComparison.OrdinalIgnoreCase))
+                        pending.Rows.RemoveAt(i);
+                }
+            }
+
+            ViewState["CourseConflictList"] = pending;
+            BindAssignedEmployee();
+            BindCourseConflictList();
+            lblCourseConflictTitle.Text = assigned + " employee(s) assigned. " +
+                skipped + " selected employee(s) could not be assigned (for example, batch full); unresolved conflicts remain in the list.";
+        }
+
+        protected void btnDontAllowCourseConflicts_Click(object sender, EventArgs e)
+        {
+            List<string> selectedIds = GetSelectedCourseConflictIds();
+            if (selectedIds.Count == 0)
+            {
+                BindCourseConflictList();
+                lblCourseConflictTitle.Text = "Select at least one employee to reject the assignment.";
+                return;
+            }
+
+            DataTable pending = GetCourseConflictTable();
+            int removed = 0;
+            foreach (string empid in selectedIds)
+            {
+                for (int i = pending.Rows.Count - 1; i >= 0; i--)
+                {
+                    if (String.Equals(Convert.ToString(pending.Rows[i]["EmpID"]), empid, StringComparison.OrdinalIgnoreCase))
+                    {
+                        pending.Rows.RemoveAt(i);
+                        removed++;
+                    }
+                }
+            }
+
+            ViewState["CourseConflictList"] = pending;
+            BindCourseConflictList();
+            if (pnlCourseConflictReview.Visible)
+                lblCourseConflictTitle.Text = removed + " employee(s) not assigned. Remaining conflicts are still pending your decision.";
+            else
+                lblMessage.Text = removed + " employee(s) were not assigned.";
         }
 
         private void SaveAssignment(
@@ -1497,115 +1589,87 @@ EventArgs e)
 
             if (!fuExcel.HasFile)
             {
-                lblBulkMessage.ForeColor =
-                Color.Red;
-
-                lblBulkMessage.Text =
-                "Please select Excel file.";
-
+                lblBulkMessage.ForeColor = Color.Red;
+                lblBulkMessage.Text = "Please select Excel file.";
                 return;
             }
 
-            string ext =
-            System.IO.Path.GetExtension(
-            fuExcel.FileName).ToLower();
-
+            string ext = System.IO.Path.GetExtension(fuExcel.FileName).ToLowerInvariant();
             if (ext != ".xlsx")
             {
-                lblBulkMessage.ForeColor =
-                Color.Red;
-
-                lblBulkMessage.Text =
-                "Only .xlsx file allowed.";
-
+                lblBulkMessage.ForeColor = Color.Red;
+                lblBulkMessage.Text = "Only .xlsx file allowed.";
                 return;
             }
 
             DataTable dt = new DataTable();
             dt.Columns.Add("EmpID");
-
             int duplicateInExcel = 0;
+            HashSet<string> empList = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            HashSet<string> empList =
-            new HashSet<string>(
-            StringComparer.OrdinalIgnoreCase);
-
-            ExcelPackage.LicenseContext =
-            LicenseContext.NonCommercial;
-
-            using (ExcelPackage package =
-                new ExcelPackage(
-                fuExcel.PostedFile.InputStream))
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage package = new ExcelPackage(fuExcel.PostedFile.InputStream))
             {
-                ExcelWorksheet ws =
-                package.Workbook.Worksheets[0];
+                ExcelWorksheet ws = package.Workbook.Worksheets[0];
+                if (ws == null || ws.Dimension == null)
+                {
+                    lblBulkMessage.ForeColor = Color.Red;
+                    lblBulkMessage.Text = "The Excel file is empty or has no worksheet.";
+                    return;
+                }
 
-                int rowCount =
-                ws.Dimension.End.Row;
-
+                int rowCount = ws.Dimension.End.Row;
                 for (int i = 2; i <= rowCount; i++)
                 {
-                    string empid =
-                    ws.Cells[i, 1]
-                    .Text
-                    .Trim().ToUpperInvariant();
-
-                    if (string.IsNullOrWhiteSpace(empid))
+                    string empid = ws.Cells[i, 1].Text.Trim().ToUpperInvariant();
+                    if (String.IsNullOrWhiteSpace(empid))
                         continue;
 
-                    // Duplicate in Excel
                     if (!empList.Add(empid))
                     {
                         duplicateInExcel++;
                         continue;
                     }
-
                     dt.Rows.Add(empid);
                 }
             }
+
             int success = 0;
-
             int skipped = 0;
+            int conflicts = 0;
 
-            using (SqlConnection con =
-                new SqlConnection(constr))
+            using (SqlConnection con = new SqlConnection(constr))
             {
                 con.Open();
-
-                SqlTransaction tran =
-                con.BeginTransaction();
-
+                SqlTransaction tran = con.BeginTransaction();
                 try
                 {
                     foreach (DataRow dr in dt.Rows)
                     {
-                        string empid =
-                        dr["EmpID"]
-                        .ToString().ToUpperInvariant();
+                        string empid = dr["EmpID"].ToString().ToUpperInvariant();
+                        bool courseConflict;
 
-                        if (!CanAssignEmployee(
-                            con,
-                            tran,
-                            empid))
+                        if (!CanAssignEmployee(con, tran, empid, out courseConflict))
                         {
-                            skipped++;
-
+                            if (courseConflict)
+                            {
+                                AddCourseConflict(con, tran, empid, "BULK");
+                                conflicts++;
+                            }
+                            else
+                            {
+                                skipped++;
+                            }
                             continue;
                         }
 
                         if (IsBatchFull(con, tran))
                         {
                             skipped++;
-
                             continue;
                         }
 
-                        SaveAssignment(
-                            con,
-                            tran,
-                            empid,
-                            "BULK");
-
+                        SaveAssignment(con, tran, empid, "BULK");
                         success++;
                     }
 
@@ -1614,48 +1678,26 @@ EventArgs e)
                 catch (Exception ex)
                 {
                     tran.Rollback();
-
-                    lblBulkMessage.ForeColor =
-                    Color.Red;
-
-                    lblBulkMessage.Text =
-                    ex.Message;
-
+                    lblBulkMessage.ForeColor = Color.Red;
+                    lblBulkMessage.Text = ex.Message;
                     return;
                 }
             }
 
             BindAssignedEmployee();
+            BindCourseConflictList();
+            lblBulkMessage.ForeColor = conflicts > 0 ? Color.DarkOrange : Color.Green;
 
-
-
-            //   LoadBatchSummary();
-
-            lblBulkMessage.ForeColor =
-Color.Green;
-
-            StringBuilder msg =
-            new StringBuilder();
-
-            msg.Append(success +
-            " Employee Assigned Successfully.");
-
+            StringBuilder msg = new StringBuilder();
+            msg.Append(success + " employee(s) assigned successfully.");
+            if (conflicts > 0)
+                msg.Append("<br/>" + conflicts + " same-course conflict(s) are listed below for your decision.");
             if (skipped > 0)
-            {
-                msg.Append("<br/>");
-                msg.Append(skipped +
-                " Employee Skipped.");
-            }
-
+                msg.Append("<br/>" + skipped + " employee(s) skipped (invalid ID, already assigned to this batch, or batch full).");
             if (duplicateInExcel > 0)
-            {
-                msg.Append("<br/>");
-                msg.Append(duplicateInExcel +
-                " Duplicate Employee ID(s) found in Excel.");
-            }
+                msg.Append("<br/>" + duplicateInExcel + " duplicate employee ID(s) found in Excel.");
 
-            lblBulkMessage.Text =
-            msg.ToString();
+            lblBulkMessage.Text = msg.ToString();
         }
 
         private bool IsBatchFull(
