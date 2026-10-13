@@ -484,7 +484,6 @@ SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
 AND EmpID=@EmpID
-AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'
 AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
                             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
                             cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
@@ -1090,7 +1089,8 @@ out bool courseConflict)
 SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
-AND EmpID=@EmpID", con, tran);
+AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
             cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
             if (Convert.ToInt32(cmdDuplicate.ExecuteScalar()) > 0)
@@ -1200,7 +1200,8 @@ WHERE EmpID=@EmpID", con, tran);
 SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
-AND EmpID=@EmpID", con, tran);
+AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
             cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
             return Convert.ToInt32(cmdDuplicate.ExecuteScalar()) == 0;
