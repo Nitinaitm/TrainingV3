@@ -1789,9 +1789,7 @@ WHERE TrainingID=@TrainingID", con);
             GetType(),
             Guid.NewGuid().ToString(),
 
-             "$('#lstCompany').select2({width:'100%'});" +
-             "$('#lstDesignation').select2({width:'100%'});" +
-             "$('#lstPostingPlace').select2({width:'100%'});",
+             "window.addEventListener('load', initAssignTraineeSelect2);",
             //"$('#ddlTrainingType').select2({width:'100%'});" +
             //"$('#ddlTrainingCategory').select2({width:'100%'});" +
             //"$('#ddlTrainingOrganizer').select2({width:'100%'});" +
