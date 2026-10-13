@@ -1876,6 +1876,8 @@ WHERE TrainingID=@TrainingID", con);
 
                 btnDownloadFormat.Enabled = true;
                 btnUploadExcel.Enabled = true;
+                btnAllowCourseConflicts.Enabled = true;
+                btnDontAllowCourseConflicts.Enabled = true;
 
                 btnFinish.Enabled = true;
 
@@ -1893,6 +1895,8 @@ WHERE TrainingID=@TrainingID", con);
 
                     btnDownloadFormat.Enabled = false;
                     btnUploadExcel.Enabled = false;
+                    btnAllowCourseConflicts.Enabled = false;
+                    btnDontAllowCourseConflicts.Enabled = false;
 
                     btnFinish.Enabled = false;
                 }
