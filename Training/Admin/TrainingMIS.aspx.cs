@@ -108,7 +108,7 @@ namespace Training.Admin
             lblOngoingTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+"<=CAST(GETDATE() AS date) AND "+DateExpr("TD.DateTo")+">=CAST(GETDATE() AS date)"+f).ToString();
             lblFutureTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+">CAST(GETDATE() AS date)"+f).ToString();
             lblTotalTrainees.Text=Scalar("SELECT COUNT(DISTINCT TA.EmpID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE ISNULL(TA.Cancelled,0)=0"+f).ToString();
-            int totalEmployees=ScalarAllTime("SELECT COUNT(DISTINCT NULLIF(LTRIM(RTRIM(EmpID),''))) FROM EmpBasicMaster");
+            int totalEmployees=ScalarAllTime("SELECT COUNT(DISTINCT NULLIF(LTRIM(RTRIM(EmpID)),'')) FROM EmpBasicMaster");
             int trainedEmployees=ScalarAllTime("SELECT COUNT(DISTINCT LTRIM(RTRIM(SA.EmpID))) FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TDX ON TDX.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TDX.TrainingStatus,'') NOT IN ('Cancelled','Canceled')");
             decimal trainingCoverage=totalEmployees>0 ? (100.0m*trainedEmployees/totalEmployees) : 0m;
             lblTrainingCoverage.Text=trainingCoverage.ToString("0.00")+"%";
