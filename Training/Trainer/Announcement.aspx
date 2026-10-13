@@ -52,6 +52,13 @@
                     <div class="col-md-12">
                         <label>Message *</label><asp:TextBox ID="txtMessage" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4" /></div>
                 </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4"><label>Batch / Training</label><asp:DropDownList ID="ddlTargetTraining" runat="server" CssClass="form-select" /></div>
+                    <div class="col-md-4"><label>Session (for session-only)</label><asp:DropDownList ID="ddlTargetSession" runat="server" CssClass="form-select" /></div>
+                    <div class="col-md-4"><label>Available for *</label><asp:DropDownList ID="ddlAvailabilityMode" runat="server" CssClass="form-select"><asp:ListItem Text="Complete duration of batch" Value="Batch"/><asp:ListItem Text="This session only" Value="Session"/><asp:ListItem Text="Custom date range" Value="Custom"/></asp:DropDownList></div>
+                    <div class="col-md-6"><label>Effective From (custom)</label><asp:TextBox ID="txtEffectiveFrom" runat="server" CssClass="form-control" TextMode="Date" /></div>
+                    <div class="col-md-6"><label>Effective To (custom)</label><asp:TextBox ID="txtEffectiveTo" runat="server" CssClass="form-control" TextMode="Date" /></div>
+                </div>
                 <div class="mt-3"><label>PDF Attachment</label><asp:FileUpload ID="fuPdf" runat="server" CssClass="form-control mb-2" />
                     <asp:Button ID="btnSend" runat="server" Text="Send Announcement" CssClass="btn btn-success" OnClick="btnSend_Click" /><asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="btn btn-secondary ms-2" OnClick="btnClear_Click" /><asp:Label ID="lblMessage" runat="server" Font-Bold="true" CssClass="ms-3" /></div>
             </div>
