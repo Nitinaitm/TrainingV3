@@ -15,7 +15,11 @@ namespace Training.Trainer
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["TrainerID"] == null) Response.Redirect("~/Default.aspx");
-            if (!IsPostBack)\n            {\n                BindTargetLists();\n                BindGrid();\n            }
+            if (!IsPostBack)
+            {
+                BindTargetLists();
+                BindGrid();
+            }
         }
 
         private string TrainerID => Session["TrainerID"].ToString();
@@ -28,14 +32,25 @@ namespace Training.Trainer
             if (string.IsNullOrEmpty(txtMessage.Text.Trim()))
             { lblMessage.Text = "Please enter Message."; lblMessage.ForeColor = System.Drawing.Color.Red; return; }
 
-            string query = @"INSERT INTO Announcement (AnnouncementID, TrainerID, Title, Message, Audience, CreatedOn, IsActive) 
-                             VALUES (@AnnouncementID, @TrainerID, @Title, @Message, @Audience, GETDATE(), 1)";
+            DateTime effectiveFrom;
+            DateTime effectiveTo;
+            string windowError;
+            if (!TryResolveWindow(out effectiveFrom, out effectiveTo, out windowError))
+            { lblMessage.Text = windowError; lblMessage.ForeColor = System.Drawing.Color.Red; return; }
+
+            string query = @"INSERT INTO Announcement (AnnouncementID, TrainerID, Title, Message, Audience, CreatedOn, IsActive, TargetTrainingID, TargetSessionID, AvailabilityMode, EffectiveFrom, EffectiveTo)
+                             VALUES (@AnnouncementID, @TrainerID, @Title, @Message, @Audience, GETDATE(), 1, @TargetTrainingID, @TargetSessionID, @AvailabilityMode, @EffectiveFrom, @EffectiveTo)";
             SqlParameter[] param = new SqlParameter[] {
                 new SqlParameter("@AnnouncementID", Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()),
                 new SqlParameter("@TrainerID", TrainerID),
                 new SqlParameter("@Title", txtTitle.Text.Trim()),
                 new SqlParameter("@Message", txtMessage.Text.Trim()),
-                new SqlParameter("@Audience", ddlAudience.SelectedValue)
+                new SqlParameter("@Audience", ddlAudience.SelectedValue),
+                new SqlParameter("@TargetTrainingID", string.IsNullOrWhiteSpace(ddlTargetTraining.SelectedValue) ? (object)DBNull.Value : ddlTargetTraining.SelectedValue),
+                new SqlParameter("@TargetSessionID", string.IsNullOrWhiteSpace(ddlTargetSession.SelectedValue) ? (object)DBNull.Value : ddlTargetSession.SelectedValue),
+                new SqlParameter("@AvailabilityMode", ddlAvailabilityMode.SelectedValue),
+                new SqlParameter("@EffectiveFrom", effectiveFrom),
+                new SqlParameter("@EffectiveTo", effectiveTo)
             };
             string announcementID=param[0].Value.ToString();
             if(fuPdf.HasFile){string ext=Path.GetExtension(fuPdf.FileName).ToLower();if(ext!=".pdf"){lblMessage.Text="Only PDF file is allowed.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}string folder=Server.MapPath("~/Uploads/Announcements/");if(!Directory.Exists(folder))Directory.CreateDirectory(folder);fuPdf.SaveAs(Path.Combine(folder,announcementID+".pdf"));}
@@ -100,7 +115,12 @@ namespace Training.Trainer
         {
             txtTitle.Text = "";
             txtMessage.Text = "";
-            ddlAudience.SelectedIndex = 0;\n            if (ddlTargetTraining.Items.Count > 0) ddlTargetTraining.SelectedIndex = 0;\n            if (ddlTargetSession.Items.Count > 0) ddlTargetSession.SelectedIndex = 0;\n            ddlAvailabilityMode.SelectedValue = "Batch";\n            txtEffectiveFrom.Text = "";\n            txtEffectiveTo.Text = "";
+            ddlAudience.SelectedIndex = 0;
+            if (ddlTargetTraining.Items.Count > 0) ddlTargetTraining.SelectedIndex = 0;
+            if (ddlTargetSession.Items.Count > 0) ddlTargetSession.SelectedIndex = 0;
+            ddlAvailabilityMode.SelectedValue = "Batch";
+            txtEffectiveFrom.Text = "";
+            txtEffectiveTo.Text = "";
         }
 
         protected void gvAnnouncements_RowCommand(object sender, GridViewCommandEventArgs e)
