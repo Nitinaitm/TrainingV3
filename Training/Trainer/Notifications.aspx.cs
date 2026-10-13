@@ -31,6 +31,22 @@ namespace Training.Trainer
             gvNotifications.DataBind();
         }
 
+        protected void gvNotifications_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            string id = Convert.ToString(e.CommandArgument);
+            if (e.CommandName == "MarkRead")
+            {
+                obj.ExecuteSql("UPDATE Notification SET IsRead=1 WHERE NotificationID=@ID AND TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@ID", id), new SqlParameter("@TrainerID", TrainerID) });
+            }
+            else if (e.CommandName == "DeleteNotification")
+            {
+                obj.ExecuteSql("DELETE FROM Notification WHERE NotificationID=@ID AND TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@ID", id), new SqlParameter("@TrainerID", TrainerID) });
+                string pdfPath = Server.MapPath("~/Uploads/Notifications/" + id + ".pdf");
+                if (File.Exists(pdfPath)) File.Delete(pdfPath);
+            }
+            BindGrid();
+        }
+
         protected void btnMarkAllRead_Click(object sender, EventArgs e)
         {
             string query = "UPDATE Notification SET IsRead=1 WHERE TrainerID=@TrainerID";
