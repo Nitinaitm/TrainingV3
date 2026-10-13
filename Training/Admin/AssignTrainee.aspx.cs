@@ -484,6 +484,7 @@ SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
 AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'
 AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
                             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
                             cmdDuplicate.Parameters.AddWithValue("@EmpID", empID);
