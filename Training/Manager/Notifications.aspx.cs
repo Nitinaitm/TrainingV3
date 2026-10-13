@@ -36,21 +36,21 @@ namespace Training.Manager
             {
                 if (!DateTime.TryParseExact(txtEffectiveFrom.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out from) || !DateTime.TryParseExact(txtEffectiveTo.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out to))
                 { error = "Select both Effective From and Effective To dates."; return false; }
-                to = to.Date.AddDays(1).AddTicks(-1);
+                to = to.Date.AddDays(1).AddMilliseconds(-3);
             }
             else if (ddlAvailabilityMode.SelectedValue == "Session")
             {
                 if (String.IsNullOrWhiteSpace(ddlTargetTraining.SelectedValue) || String.IsNullOrWhiteSpace(ddlTargetSession.SelectedValue)) { error = "Select the batch and session for session-only availability."; return false; }
                 DataTable dt = obj.GetDataTable(@"SELECT SM.SessionDate FROM SessionMaster SM INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID AND M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@SessionID", ddlTargetSession.SelectedValue), new SqlParameter("@TrainingID", ddlTargetTraining.SelectedValue), new SqlParameter("@ManagerID", ManagerID) });
                 if (dt.Rows.Count == 0) { error = "The selected session is not in a batch managed by you."; return false; }
-                from = Convert.ToDateTime(dt.Rows[0]["SessionDate"]).Date; to = from.Date.AddDays(1).AddTicks(-1);
+                from = Convert.ToDateTime(dt.Rows[0]["SessionDate"]).Date; to = from.Date.AddDays(1).AddMilliseconds(-3);
             }
             else
             {
                 if (String.IsNullOrWhiteSpace(ddlTargetTraining.SelectedValue)) { error = "Select a batch for complete batch-duration availability, or choose Custom date range."; return false; }
                 DataTable dt = obj.GetDataTable(@"SELECT TD.DateFrom, TD.DateTo FROM TrainingDetails TD INNER JOIN TrainingLocationMaster L ON TD.TrainingLocation=L.TrainingLocation INNER JOIN ManagerMaster M ON M.TrainingLocationID=L.TrainingLocationID WHERE TD.TrainingID=@TrainingID AND M.ManagerID=@ManagerID AND ISNULL(M.ActiveStatus,'Y')='Y'", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTargetTraining.SelectedValue), new SqlParameter("@ManagerID", ManagerID) });
                 if (dt.Rows.Count == 0 || dt.Rows[0]["DateFrom"] == DBNull.Value || dt.Rows[0]["DateTo"] == DBNull.Value) { error = "Batch start and end dates are not available."; return false; }
-                from = Convert.ToDateTime(dt.Rows[0]["DateFrom"]).Date; to = Convert.ToDateTime(dt.Rows[0]["DateTo"]).Date.AddDays(1).AddTicks(-1);
+                from = Convert.ToDateTime(dt.Rows[0]["DateFrom"]).Date; to = Convert.ToDateTime(dt.Rows[0]["DateTo"]).Date.AddDays(1).AddMilliseconds(-3);
             }
             if (from > to) { error = "Effective From cannot be after Effective To."; return false; }
             return true;
