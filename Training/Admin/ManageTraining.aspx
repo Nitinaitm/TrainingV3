@@ -5,11 +5,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         .main-card {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
             background: #fff;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 0 10px #d9d9d9;
-            margin-top: 20px
+            margin: 20px 0;
+        }
+
+        .main-card .row {
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 0;
+        }
+
+        .main-card .table-responsive {
+            width: 100%;
+            overflow-x: auto;
         }
 
         .page-heading {
