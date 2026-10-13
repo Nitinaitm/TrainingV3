@@ -450,13 +450,14 @@
 
             <div class="header-right">
 
-                <div class="notification">
-
+                <asp:HyperLink ID="lnkAnnouncementBell" runat="server" NavigateUrl="~/Admin/CommunicationManagement.aspx?type=Announcement" CssClass="notification notification-announcement" ToolTip="Announcements">
+                    <i class="fas fa-bullhorn"></i>
+                    <asp:Label ID="lblAnnouncementCount" runat="server" CssClass="notify-count" Text="0" />
+                </asp:HyperLink>
+                <asp:HyperLink ID="lnkNotificationBell" runat="server" NavigateUrl="~/Admin/CommunicationManagement.aspx?type=Notification" CssClass="notification notification-notification" ToolTip="Notifications">
                     <i class="fas fa-bell"></i>
-
-                    <span class="notify-count">1</span>
-
-                </div>
+                    <asp:Label ID="lblNotificationCount" runat="server" CssClass="notify-count" Text="0" />
+                </asp:HyperLink>
 
                 <div class="user-info">
 
