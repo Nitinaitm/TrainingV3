@@ -283,24 +283,6 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.Label lblCompletedManHours;
         
         /// <summary>
-        /// lnkCourseSummary control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkCourseSummary;
-        
-        /// <summary>
-        /// lblCourseCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCourseCount;
-        
-        /// <summary>
         /// lnkTotalManHours control.
         /// </summary>
         /// <remarks>
@@ -317,6 +299,24 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTotalManHours;
+        
+        /// <summary>
+        /// lnkCourseSummary control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkCourseSummary;
+        
+        /// <summary>
+        /// lblCourseCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCourseCount;
         
         /// <summary>
         /// gvStatus control.
