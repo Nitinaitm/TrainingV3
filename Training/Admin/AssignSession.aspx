@@ -55,8 +55,10 @@ function loadTrainerExpertise() {
         error:function(){ expertise.text(''); }
     });
 }
-$(document).on('change', '[id$="ddlTrainer"]', loadTrainerExpertise);
-$(document).on('change', '[id$="ddlStartTime"],[id$="ddlEndTime"]', calculateHours);
+window.addEventListener('load', function () {
+    $(document).on('change', '[id$="ddlTrainer"]', loadTrainerExpertise);
+    $(document).on('change', '[id$="ddlStartTime"],[id$="ddlEndTime"]', calculateHours);
+});
 window.addEventListener('load', initControls);
 if (typeof(Sys) !== 'undefined') Sys.Application.add_load(initControls);
 </script>
