@@ -1,7 +1,7 @@
 <%@ Page Title="Assign Trainee" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="AssignTrainee.aspx.cs" MaintainScrollPositionOnPostback="true" Inherits="Training.Admin.AssignTrainee" ClientIDMode="Static" %>
 <%@ Register Src="~/Admin/TrainingSummary.ascx" TagPrefix="uc" TagName="TrainingSummary" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"/><script src="https://code.jquery.com/jquery-3.7.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <style>.main-card{background:#fff;padding:25px;margin-top:20px;border-radius:12px;box-shadow:0 0 10px #d9d9d9}.page-heading{font-size:28px;font-weight:bold;color:#198754;margin-bottom:20px}.section-title{font-size:20px;font-weight:bold;color:#198754;margin-bottom:15px}.gridview th{background:#198754;color:#fff;text-align:center}.gridview td{vertical-align:middle}.select2-container{width:100%!important}</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -14,29 +14,21 @@
 <hr/><div class="section-title" runat="server" id="messageTotalAssigned">Total Trainee Assigned</div><asp:GridView ID="gvAssignedEmployee" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-striped gridview" EmptyDataText="No Employee Assigned" OnRowCommand="gvAssignedEmployee_RowCommand"><Columns><asp:TemplateField HeaderText="Sl No"><ItemTemplate><%# Container.DataItemIndex+1 %></ItemTemplate></asp:TemplateField><asp:BoundField DataField="EmpID" HeaderText="Employee ID"/><asp:BoundField DataField="EmpName" HeaderText="Employee Name"/><asp:BoundField DataField="EmpDesignation" HeaderText="Designation"/><asp:BoundField DataField="EmpCompany" HeaderText="Company"/><asp:BoundField DataField="EmpPostingPlace" HeaderText="Posting Place"/><asp:TemplateField HeaderText="Mobile No"><ItemTemplate><asp:Label ID="lblAssignedMobile" runat="server" Text="-"/></ItemTemplate></asp:TemplateField><asp:TemplateField HeaderText="Email ID"><ItemTemplate><asp:Label ID="lblAssignedEmail" runat="server" Text="-"/></ItemTemplate></asp:TemplateField><asp:TemplateField HeaderText="Assignment Status"><ItemTemplate><asp:Label ID="lblStatus" runat="server" Text='<%# Eval("AssignmentStatus") %>' CssClass="badge bg-success"/></ItemTemplate></asp:TemplateField><asp:TemplateField HeaderText="Action"><ItemTemplate><asp:LinkButton ID="lnkRemove" runat="server" Text="Remove" CssClass="btn btn-danger btn-sm" CommandName="RemoveEmployee" CommandArgument='<%# Eval("AssignmentID") %>' OnClientClick="return confirm('Are you sure you want to remove this employee?');"/></ItemTemplate></asp:TemplateField></Columns></asp:GridView>
 <div class="text-center mt-3"><asp:Button ID="btnUpdateBatch" runat="server" Text="Update Batch" CssClass="btn btn-secondary" OnClick="btnUpdateBatch_Click"/> <asp:Button ID="btnPrevious" runat="server" Text="Update Sessions & Trainers" CssClass="btn btn-secondary" OnClick="btnPrevious_Click"/> <asp:Button ID="btnFinish" runat="server" Text="Finish Trainee Assignment" CssClass="btn btn-success" OnClick="btnFinish_Click"/></div>
 </div></div>
-<script>$(function(){$('#lstCompany,#lstDesignation,#lstPostingPlace').select2({width:'100%',closeOnSelect:false});});if(typeof(Sys)!=='undefined')Sys.Application.add_load(function(){$('#lstCompany,#lstDesignation,#lstPostingPlace').select2({width:'100%',closeOnSelect:false});});function ToggleAll(cb){$('#gvCompanyEmployee input[type=checkbox]').prop('checked',cb.checked);}function SelectAllEmployee(){$('#gvCompanyEmployee input[type=checkbox]').prop('checked',true);}function ClearEmployeeSelection(){$('#gvCompanyEmployee input[type=checkbox]').prop('checked',false);}</script>
-<script runat="server">
-protected void Page_PreRender(object sender, System.EventArgs e)
-{
-    System.Collections.Generic.Dictionary<string, string[]> contacts = new System.Collections.Generic.Dictionary<string, string[]>(System.StringComparer.OrdinalIgnoreCase);
-    using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["constr"].ConnectionString))
-    {
-        System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand("SELECT EmpID, ISNULL(MobileNo,'') AS MobileNo, ISNULL(EmailId,'') AS EmailId FROM EmpBasicMaster", con);
-        con.Open();
-        using (System.Data.SqlClient.SqlDataReader dr = cmd.ExecuteReader())
-        {
-            while (dr.Read()) contacts[dr["EmpID"].ToString()] = new string[] { dr["MobileNo"].ToString(), dr["EmailId"].ToString() };
-        }
-    }
-    foreach (System.Web.UI.WebControls.GridViewRow row in gvCompanyEmployee.Rows)
-    {
-        System.Web.UI.WebControls.Label id = row.FindControl("lblEmpID") as System.Web.UI.WebControls.Label;
-        string[] v; if (id != null && contacts.TryGetValue(id.Text.Trim(), out v)) { ((System.Web.UI.WebControls.Label)row.FindControl("lblCompanyMobile")).Text = string.IsNullOrWhiteSpace(v[0]) ? "-" : v[0]; ((System.Web.UI.WebControls.Label)row.FindControl("lblCompanyEmail")).Text = string.IsNullOrWhiteSpace(v[1]) ? "-" : v[1]; }
-    }
-    foreach (System.Web.UI.WebControls.GridViewRow row in gvAssignedEmployee.Rows)
-    {
-        string id = row.Cells[1].Text.Trim(); string[] v; if (contacts.TryGetValue(id, out v)) { ((System.Web.UI.WebControls.Label)row.FindControl("lblAssignedMobile")).Text = string.IsNullOrWhiteSpace(v[0]) ? "-" : v[0]; ((System.Web.UI.WebControls.Label)row.FindControl("lblAssignedEmail")).Text = string.IsNullOrWhiteSpace(v[1]) ? "-" : v[1]; }
-    }
+<script>
+function initAssignTraineeSelect2() {
+    ['lstCompany','lstDesignation','lstPostingPlace'].forEach(function(id) {
+        var el = $('[id$="' + id + '"]');
+        if (!el.length) return;
+        if (el.hasClass('select2-hidden-accessible')) el.select2('destroy');
+        el.select2({ width: '100%', closeOnSelect: false });
+    });
 }
+window.addEventListener('load', initAssignTraineeSelect2);
+if (typeof(Sys) !== 'undefined') {
+    Sys.Application.add_load(initAssignTraineeSelect2);
+}
+function ToggleAll(cb) { $('[id$="gvCompanyEmployee"] input[type=checkbox]').prop('checked', cb.checked); }
+function SelectAllEmployee() { $('[id$="gvCompanyEmployee"] input[type=checkbox]').prop('checked', true); }
+function ClearEmployeeSelection() { $('[id$="gvCompanyEmployee"] input[type=checkbox]').prop('checked', false); }
 </script>
 </asp:Content>
