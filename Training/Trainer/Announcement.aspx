@@ -61,7 +61,7 @@
                 <h5 class="mb-0"><i class="fa fa-history"></i>Past Announcements</h5>
             </div>
             <div class="card-body">
-                <asp:GridView ID="gvAnnouncements" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Announcements">
+                <asp:GridView ID="gvAnnouncements" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered table-hover gridview" EmptyDataText="No Announcements" OnRowCommand="gvAnnouncements_RowCommand">
                     <Columns>
                         <asp:TemplateField HeaderText="Sl No">
                             <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
@@ -71,6 +71,7 @@
                         <asp:BoundField DataField="Message" HeaderText="Message" />
                         <asp:BoundField DataField="Audience" HeaderText="Audience" />
                         <asp:BoundField DataField="CreatedOn" HeaderText="Sent On" DataFormatString="{0:dd-MM-yyyy HH:mm}" /><asp:TemplateField HeaderText="PDF"><ItemTemplate><asp:HyperLink ID="lnkPdf" runat="server" Text="Download PDF" NavigateUrl='<%# "~/Uploads/Announcements/"+Eval("AnnouncementID")+".pdf" %>' Target="_blank" Visible='<%# Convert.ToBoolean(Eval("HasPdf")) %>' CssClass="btn btn-sm btn-danger" /></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:LinkButton ID="lnkDeleteAnnouncement" runat="server" Text="Delete" CssClass="btn btn-sm btn-outline-danger" CommandName="DeleteAnnouncement" CommandArgument='<%# Eval("AnnouncementID") %>' OnClientClick="return confirm('Delete this announcement?');" /></ItemTemplate></asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
