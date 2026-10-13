@@ -141,6 +141,12 @@ namespace Training.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCourseConflictReview;
+        protected global::System.Web.UI.WebControls.Label lblCourseConflictTitle;
+        protected global::System.Web.UI.WebControls.GridView gvCourseConflict;
+        protected global::System.Web.UI.WebControls.Button btnAllowCourseConflicts;
+        protected global::System.Web.UI.WebControls.Button btnDontAllowCourseConflicts;
+
         protected global::System.Web.UI.WebControls.Panel pnlCompany;
         
         /// <summary>
