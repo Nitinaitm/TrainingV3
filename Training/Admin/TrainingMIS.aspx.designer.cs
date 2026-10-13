@@ -157,6 +157,33 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.Label lblTotalTrainees;
         
         /// <summary>
+        /// lnkTrainingCoverage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkTrainingCoverage;
+        
+        /// <summary>
+        /// lblTrainingCoverage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTrainingCoverage;
+        
+        /// <summary>
+        /// lblTrainingCoverageCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTrainingCoverageCount;
+        
+        /// <summary>
         /// lnkTotalSessions control.
         /// </summary>
         /// <remarks>
@@ -307,9 +334,6 @@ namespace Training.Admin {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkTrainingCoverage;
-        protected global::System.Web.UI.WebControls.Label lblTrainingCoverage;
-        protected global::System.Web.UI.WebControls.Label lblTrainingCoverageCount;
         protected global::System.Web.UI.WebControls.LinkButton lnkCourseSummary;
         
         /// <summary>

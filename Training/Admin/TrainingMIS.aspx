@@ -352,10 +352,18 @@
                 </div>
                 <div class="kpi k5">
                     <asp:LinkButton ID="lnkTotalTrainees" runat="server" CommandArgument="TotalTrainees" CssClass="kpi-link" OnClick="kpiCard_Click">
-                        <div class="kpi-label">Total Trainees Trained</div>
+                        <div class="kpi-label">Total Trainees Assigned</div>
                         <asp:Label ID="lblTotalTrainees" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
+                 <div class="kpi k7">
+                    <asp:LinkButton ID="lnkTrainingCoverage" runat="server" CommandArgument="TrainingCoverage" CssClass="kpi-link" OnClick="kpiCard_Click">
+                        <div class="kpi-label">Total Employees Trained</div>
+                        <asp:Label ID="lblTrainingCoverage" runat="server" CssClass="kpi-value" />
+                        <asp:Label ID="lblTrainingCoverageCount" runat="server" CssClass="kpi-label" />
+                    </asp:LinkButton>
+                </div>
+
                 <div class="kpi k6">
                     <asp:LinkButton ID="lnkTotalSessions" runat="server" CommandArgument="TotalSessions" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Total Sessions</div>
@@ -408,13 +416,7 @@
                     </asp:LinkButton>
                 </div>
 
-                <div class="kpi k7">
-                    <asp:LinkButton ID="lnkTrainingCoverage" runat="server" CommandArgument="TrainingCoverage" CssClass="kpi-link" OnClick="kpiCard_Click">
-                        <div class="kpi-label">% Employees Trained</div>
-                        <asp:Label ID="lblTrainingCoverage" runat="server" CssClass="kpi-value" />
-                        <asp:Label ID="lblTrainingCoverageCount" runat="server" CssClass="kpi-label" />
-                    </asp:LinkButton>
-                </div>
+               
                 <div class="kpi k3">
                     <asp:LinkButton ID="lnkCourseSummary" runat="server" CommandArgument="CourseWiseSummary" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Course-wise Summary</div>
