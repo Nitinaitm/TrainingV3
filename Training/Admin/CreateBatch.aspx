@@ -104,7 +104,7 @@
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkPostTrainingAssessment" runat="server" Text="Post-Training Assessment" Checked="true" /></div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkFeedbackRequired" runat="server" Text="Feedback" Checked="true" /></div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkCertificateRequired" runat="server" Text="Certificate" Checked="true" /></div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTrainerHostelRequired" runat="server" Text="Trainer Hostel" Checked="true" AutoPostBack="true" OnCheckedChanged="chkTrainerHostelRequired_CheckedChanged" /></div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2" runat="server" visible="false"><asp:CheckBox ID="chkTrainerHostelRequired" runat="server" Text="Trainer Hostel" Checked="true" AutoPostBack="true" OnCheckedChanged="chkTrainerHostelRequired_CheckedChanged" /></div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2"><asp:CheckBox ID="chkTraineeHostelRequired" runat="server" Text="Trainee Hostel" Checked="true" AutoPostBack="true" OnCheckedChanged="chkTraineeHostelRequired_CheckedChanged" /></div>
                     </div>
                 </div>
