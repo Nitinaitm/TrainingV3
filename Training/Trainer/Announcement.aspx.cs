@@ -84,7 +84,7 @@ namespace Training.Trainer
                 if (!DateTime.TryParseExact(txtEffectiveFrom.Text, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out effectiveFrom) ||
                     !DateTime.TryParseExact(txtEffectiveTo.Text, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out effectiveTo))
                 { error = "Select both Effective From and Effective To dates."; return false; }
-                effectiveTo = effectiveTo.Date.AddDays(1).AddTicks(-1);
+                effectiveTo = effectiveTo.Date.AddDays(1).AddMilliseconds(-3);
             }
             else if (ddlAvailabilityMode.SelectedValue == "Session")
             {
@@ -93,7 +93,7 @@ namespace Training.Trainer
                 DataTable dt = obj.GetDataTable(@"SELECT SM.SessionDate FROM SessionMaster SM WHERE SM.SessionID=@SessionID AND SM.TrainingID=@TrainingID AND SM.TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@SessionID", ddlTargetSession.SelectedValue), new SqlParameter("@TrainingID", ddlTargetTraining.SelectedValue), new SqlParameter("@TrainerID", TrainerID) });
                 if (dt.Rows.Count == 0) { error = "The selected session does not belong to your assigned batch."; return false; }
                 effectiveFrom = Convert.ToDateTime(dt.Rows[0]["SessionDate"]).Date;
-                effectiveTo = effectiveFrom.Date.AddDays(1).AddTicks(-1);
+                effectiveTo = effectiveFrom.Date.AddDays(1).AddMilliseconds(-3);
             }
             else
             {
@@ -103,7 +103,7 @@ namespace Training.Trainer
                 if (dt.Rows.Count == 0 || dt.Rows[0]["DateFrom"] == DBNull.Value || dt.Rows[0]["DateTo"] == DBNull.Value)
                 { error = "Batch start and end dates are not available."; return false; }
                 effectiveFrom = Convert.ToDateTime(dt.Rows[0]["DateFrom"]).Date;
-                effectiveTo = Convert.ToDateTime(dt.Rows[0]["DateTo"]).Date.AddDays(1).AddTicks(-1);
+                effectiveTo = Convert.ToDateTime(dt.Rows[0]["DateTo"]).Date.AddDays(1).AddMilliseconds(-3);
             }
             if (effectiveFrom > effectiveTo) { error = "Effective From cannot be after Effective To."; return false; }
             return true;
