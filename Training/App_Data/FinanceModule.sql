@@ -43,7 +43,7 @@ BEGIN
     CREATE TABLE dbo.FinanceCostingDetail
     (
         CostingDetailID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-        TrainingID VARCHAR(50) NOT NULL,
+        TrainingID VARCHAR(100) NOT NULL,
         CourseID VARCHAR(50) NULL,
         SessionID VARCHAR(50) NULL,
         CostingLevel VARCHAR(20) NOT NULL,
@@ -72,7 +72,7 @@ BEGIN
     CREATE TABLE dbo.FinanceActualExpenditure
     (
         ExpenditureID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-        TrainingID VARCHAR(50) NOT NULL,
+        TrainingID VARCHAR(100) NOT NULL,
         CourseID VARCHAR(50) NULL,
         SessionID VARCHAR(50) NULL,
         CostHeadID INT NULL,
@@ -109,3 +109,23 @@ IF NOT EXISTS (SELECT 1 FROM dbo.FinanceCostHeadMaster WHERE CostHeadCode='TRANS
 INSERT INTO dbo.FinanceCostHeadMaster(CostHeadCode,CostHeadName,CostLevel,CalculationMode,UnitType) VALUES('TRANSPORT','Transportation','Batch','Manual','Fixed');
 IF NOT EXISTS (SELECT 1 FROM dbo.FinanceCostHeadMaster WHERE CostHeadCode='MISC')
 INSERT INTO dbo.FinanceCostHeadMaster(CostHeadCode,CostHeadName,CostLevel,CalculationMode,UnitType) VALUES('MISC','Miscellaneous','Batch','Manual','Fixed');
+
+/* Existing installations: preserve full TrainingIDs instead of truncating them. */
+IF OBJECT_ID('dbo.FinanceCostingDetail','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Training') DROP INDEX IX_FinanceCostingDetail_Training ON dbo.FinanceCostingDetail;
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') DROP INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail;
+    ALTER TABLE dbo.FinanceCostingDetail ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Training') CREATE INDEX IX_FinanceCostingDetail_Training ON dbo.FinanceCostingDetail(TrainingID,CostingLevel);
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') CREATE INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail(TrainingID,EmpID,TrainerID,CostHeadID);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceActualExpenditure','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Training') DROP INDEX IX_FinanceActualExpenditure_Training ON dbo.FinanceActualExpenditure;
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') DROP INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure;
+    ALTER TABLE dbo.FinanceActualExpenditure ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Training') CREATE INDEX IX_FinanceActualExpenditure_Training ON dbo.FinanceActualExpenditure(TrainingID,SessionID,CostHeadID);
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
+END;
+GO
