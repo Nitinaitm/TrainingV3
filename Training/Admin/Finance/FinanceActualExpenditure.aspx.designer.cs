@@ -17,5 +17,13 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.Label lblActual;
         protected global::System.Web.UI.WebControls.Label lblBalance;
         protected global::System.Web.UI.WebControls.GridView gvExpenditure;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelEmpID;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelTrainerID;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelCheckIn;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelCheckOut;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelNights;
+        protected global::System.Web.UI.WebControls.TextBox txtHostelUsageRemarks;
+        protected global::System.Web.UI.WebControls.Button btnSaveHostelUsage;
+        protected global::System.Web.UI.WebControls.GridView gvHostelUsage;
     }
 }
