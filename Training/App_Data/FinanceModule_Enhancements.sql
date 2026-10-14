@@ -79,7 +79,8 @@ BEGIN
     (
         HostelUsageID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
         TrainingID VARCHAR(50) NOT NULL,
-        EmpID VARCHAR(50) NOT NULL,
+        EmpID VARCHAR(50) NULL,
+        TrainerID VARCHAR(50) NULL,
         HostelID INT NULL,
         CheckInDate DATE NOT NULL,
         CheckOutDate DATE NULL,
@@ -91,7 +92,7 @@ BEGIN
         ModifiedOn DATETIME NULL,
         ModifiedBy VARCHAR(100) NULL
     );
-    CREATE INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage(TrainingID,EmpID,UsageStatus);
+    CREATE INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage(TrainingID,EmpID,TrainerID,UsageStatus);
 END;
 GO
 
