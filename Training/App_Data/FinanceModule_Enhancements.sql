@@ -108,3 +108,17 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person')
     CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
 GO
+
+/* Finance-specific batch configuration avoids assuming that every batch is residential. */
+IF OBJECT_ID('dbo.FinanceTrainingSettings','U') IS NULL
+BEGIN
+    CREATE TABLE dbo.FinanceTrainingSettings
+    (
+        TrainingID VARCHAR(50) NOT NULL PRIMARY KEY,
+        ResidentialType VARCHAR(20) NOT NULL DEFAULT('Unspecified'),
+        Notes VARCHAR(1000) NULL,
+        ModifiedOn DATETIME NOT NULL DEFAULT(GETDATE()),
+        ModifiedBy VARCHAR(100) NULL
+    );
+END;
+GO
