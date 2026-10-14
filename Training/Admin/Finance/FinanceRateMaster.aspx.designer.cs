@@ -65,10 +65,10 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRemarks;
-        protected global::System.Web.UI.WebControls.TextBox txtCourseID;
-        protected global::System.Web.UI.WebControls.TextBox txtTrainingID;
-        protected global::System.Web.UI.WebControls.TextBox txtLocation;
-        protected global::System.Web.UI.WebControls.TextBox txtTrainerID;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCourse;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTraining;
+        protected global::System.Web.UI.WebControls.DropDownList ddlLocation;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTrainer;
         protected global::System.Web.UI.WebControls.DropDownList ddlResidentialType;
         
         /// <summary>
