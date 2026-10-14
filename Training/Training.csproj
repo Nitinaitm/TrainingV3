@@ -2460,6 +2460,7 @@
   -->
   <ItemGroup>
     <Content Include="App_Data\FinanceModule.sql" />
+    <Content Include="App_Data\FinanceModule_Enhancements.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Audit\clsAuditLog.cs" />
