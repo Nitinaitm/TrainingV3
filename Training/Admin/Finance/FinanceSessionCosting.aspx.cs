@@ -97,7 +97,11 @@ namespace Training.Admin
                 if(!Decimal.TryParse(txtOverride.Text.Trim(),out amount) || amount<0){lblMessage.Text="Invalid override amount.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}
                 value=amount;
             }
-            objDB.ExecuteSql("UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID",new SqlParameter[]{new SqlParameter("@OverrideAmount",value),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID)});
+            System.Web.UI.WebControls.TextBox txtReason=(System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverrideReason");
+            string reason=txtReason==null?"":txtReason.Text.Trim();
+            if(reason==""){lblMessage.Text="Please enter a reason for the manual override.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}
+            string sql="DECLARE @PreviousOverrideAmount DECIMAL(18,2); SELECT @PreviousOverrideAmount=OverrideAmount FROM FinanceCostingDetail WHERE CostingDetailID=@ID; INSERT INTO FinanceCostingOverrideAudit(CostingDetailID,PreviousOverrideAmount,NewOverrideAmount,OverrideReason,ChangedBy,ChangedOn) VALUES(@ID,@PreviousOverrideAmount,@OverrideAmount,@Reason,@ModifiedBy,GETDATE()); UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,OverrideReason=@Reason,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID;";
+            objDB.ExecuteSql(sql,new SqlParameter[]{new SqlParameter("@OverrideAmount",value),new SqlParameter("@Reason",reason),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID)});
             BindSelectedSession();
         }
     }
