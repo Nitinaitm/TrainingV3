@@ -42,5 +42,30 @@ body{background:#f5f5f5;}
 <Columns>
 <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField><asp:BoundField DataField="ExpenditureDate" HeaderText="Date" DataFormatString="{0:dd-MM-yyyy}" /><asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" /><asp:BoundField DataField="SessionName" HeaderText="Session" /><asp:BoundField DataField="VendorName" HeaderText="Vendor / Payee" /><asp:BoundField DataField="BillReference" HeaderText="Bill / Ref." /><asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="{0:N2}" /><asp:BoundField DataField="Remarks" HeaderText="Remarks" /><asp:ButtonField CommandName="DeleteExpenditure" Text="Delete" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-danger" /></Columns>
 </asp:GridView></div>
+<hr />
+<h4 class="mt-4">Actual Hostel Usage (not just allotment)</h4>
+<p class="text-muted">Enter the nights actually used. These quantities feed hostel costing only after you select Recalculate Costs on the Training Costing page.</p>
+<div class="row">
+<div class="col-lg-3 col-md-6 mb-2"><label class="form-label">Trainee EmpID</label><asp:TextBox ID="txtHostelEmpID" runat="server" CssClass="form-control" placeholder="Enter EmpID"></asp:TextBox></div>
+<div class="col-lg-3 col-md-6 mb-2"><label class="form-label">Trainer ID</label><asp:TextBox ID="txtHostelTrainerID" runat="server" CssClass="form-control" placeholder="Enter TrainerID"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Check-in</label><asp:TextBox ID="txtHostelCheckIn" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Check-out</label><asp:TextBox ID="txtHostelCheckOut" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Chargeable Nights</label><asp:TextBox ID="txtHostelNights" runat="server" CssClass="form-control" placeholder="Auto from dates"></asp:TextBox></div>
+<div class="col-lg-8 col-md-8 mb-2"><label class="form-label">Usage Remarks</label><asp:TextBox ID="txtHostelUsageRemarks" runat="server" CssClass="form-control" placeholder="Optional"></asp:TextBox></div>
+<div class="col-lg-4 col-md-4 mb-2 d-flex align-items-end"><asp:Button ID="btnSaveHostelUsage" runat="server" Text="Save Actual Hostel Usage" CssClass="btn btn-primary w-100" OnClick="btnSaveHostelUsage_Click" /></div>
+</div>
+<div class="table-responsive"><asp:GridView ID="gvHostelUsage" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="HostelUsageID" OnRowCommand="gvHostelUsage_RowCommand">
+<Columns>
+<asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate></asp:TemplateField>
+<asp:BoundField DataField="EmpID" HeaderText="EmpID" />
+<asp:BoundField DataField="TrainerID" HeaderText="Trainer ID" />
+<asp:BoundField DataField="CheckInDate" HeaderText="Check-in" DataFormatString="{0:dd-MM-yyyy}" />
+<asp:BoundField DataField="CheckOutDate" HeaderText="Check-out" DataFormatString="{0:dd-MM-yyyy}" />
+<asp:BoundField DataField="ChargeableNights" HeaderText="Nights" DataFormatString="{0:N2}" />
+<asp:BoundField DataField="UsageStatus" HeaderText="Status" />
+<asp:BoundField DataField="Remarks" HeaderText="Remarks" />
+<asp:ButtonField CommandName="CancelUsage" Text="Cancel" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-danger" />
+</Columns>
+</asp:GridView></div>
 </div></div>
 </asp:Content>
