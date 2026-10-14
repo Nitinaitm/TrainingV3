@@ -66,7 +66,7 @@ namespace Training.Admin
 
         public static DataTable GetTrainingSessions(clsDataAccess db, string trainingID)
         {
-            return db.GetDataTable("SELECT SessionID,ISNULL(SessionName,'') AS SessionName,SessionDate,ISNULL(TrainerID,'') AS TrainerID FROM SessionMaster WHERE TrainingID=@TrainingID ORDER BY TRY_CONVERT(date,SessionDate,105),SessionID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return db.GetDataTable("SELECT SessionID,ISNULL(SessionName,'') AS SessionName,SessionDate,ISNULL(TrainerID,'') AS TrainerID,ISNULL(TotalHours,0) AS SessionHours FROM SessionMaster WHERE TrainingID=@TrainingID ORDER BY TRY_CONVERT(date,SessionDate,105),SessionID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
         }
         public static int GetTrainerCount(clsDataAccess db, string trainingID)
         {
