@@ -120,7 +120,7 @@ namespace Training.Admin
             gvCosting.DataSource=dt;
             gvCosting.DataBind();
 
-            DataTable total=objDB.GetDataTable("SELECT ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel IN ('Batch','Session')),0)+ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID) AND CostingLevel='Course'),0) AS Total",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+            DataTable total=objDB.GetDataTable("SELECT ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel IN ('Batch','Session')),0)+ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID) AND CostingLevel='Course'),0)/NULLIF((SELECT COUNT(*) FROM TrainingDetails WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID)),0) AS Total",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
             lblTotal.Text="Rs. "+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
         }
 
