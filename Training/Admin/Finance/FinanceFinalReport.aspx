@@ -53,6 +53,7 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" />
 <asp:BoundField DataField="ManHours" HeaderText="Trainee Man-Hours" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="BatchCount" HeaderText="Batches" />
+<asp:BoundField DataField="CourseCost" HeaderText="Allocated Course Cost" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="SessionCost" HeaderText="Session Cost" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="BatchCost" HeaderText="Batch Cost" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="FinalCost" HeaderText="Final Cost" DataFormatString="{0:N2}" />
