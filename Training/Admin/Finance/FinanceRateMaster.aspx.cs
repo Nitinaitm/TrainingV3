@@ -54,8 +54,24 @@ namespace Training.Admin
                     return;
                 }
                 to = toDate.Date;
+                if (to.Value.Date < fromDate.Date)
+                {
+                    ShowMessage("Effective To cannot be earlier than Effective From.", Color.Red);
+                    return;
+                }
             }
-            int result = objDB.ExecuteSql("INSERT INTO FinanceRateMaster(CostHeadID,Rate,EffectiveFrom,EffectiveTo,Remarks,CreatedBy) VALUES(@CostHeadID,@Rate,@From,@To,@Remarks,@CreatedBy)", new SqlParameter[] { new SqlParameter("@CostHeadID",Convert.ToInt32(ddlCostHead.SelectedValue)),new SqlParameter("@Rate",rate),new SqlParameter("@From",fromDate.Date),new SqlParameter("@To",to.HasValue?(object)to.Value:(object)DBNull.Value),new SqlParameter("@Remarks",txtRemarks.Text.Trim()),new SqlParameter("@CreatedBy",Convert.ToString(Session["UserID"])) });
+            string courseID = txtCourseID.Text.Trim();
+            string trainingID = txtTrainingID.Text.Trim();
+            string location = txtLocation.Text.Trim();
+            string trainerID = txtTrainerID.Text.Trim();
+            object residentialType = ddlResidentialType.SelectedValue == "" ? (object)DBNull.Value : ddlResidentialType.SelectedValue;
+            DataTable overlap = objDB.GetDataTable("SELECT TOP 1 RateID FROM FinanceRateMaster WHERE CostHeadID=@CostHeadID AND ISNULL(CourseID,'')=@CourseID AND ISNULL(TrainingID,'')=@TrainingID AND ISNULL(TrainingLocation,'')=@Location AND ISNULL(ResidentialType,'')=@ResidentialType AND ISNULL(TrainerID,'')=@TrainerID AND Active='Y' AND EffectiveFrom<=ISNULL(@To,CONVERT(date,'99991231')) AND ISNULL(EffectiveTo,CONVERT(date,'99991231'))>=@From", new SqlParameter[] { new SqlParameter("@CostHeadID", Convert.ToInt32(ddlCostHead.SelectedValue)), new SqlParameter("@CourseID", courseID), new SqlParameter("@TrainingID", trainingID), new SqlParameter("@Location", location), new SqlParameter("@ResidentialType", residentialType == DBNull.Value ? "" : residentialType), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@From", fromDate.Date), new SqlParameter("@To", to.HasValue ? (object)to.Value : DBNull.Value) });
+            if (overlap.Rows.Count > 0)
+            {
+                ShowMessage("An active rate already exists for the same scope and overlapping effective dates. Close the earlier rate first.", Color.Red);
+                return;
+            }
+            int result = objDB.ExecuteSql("INSERT INTO FinanceRateMaster(CostHeadID,Rate,EffectiveFrom,EffectiveTo,CourseID,TrainingID,TrainingLocation,ResidentialType,TrainerID,Remarks,CreatedBy) VALUES(@CostHeadID,@Rate,@From,@To,NULLIF(@CourseID,''),NULLIF(@TrainingID,''),NULLIF(@Location,''),NULLIF(@ResidentialType,''),NULLIF(@TrainerID,''),@Remarks,@CreatedBy)", new SqlParameter[] { new SqlParameter("@CostHeadID",Convert.ToInt32(ddlCostHead.SelectedValue)),new SqlParameter("@Rate",rate),new SqlParameter("@From",fromDate.Date),new SqlParameter("@To",to.HasValue?(object)to.Value:(object)DBNull.Value),new SqlParameter("@CourseID",courseID),new SqlParameter("@TrainingID",trainingID),new SqlParameter("@Location",location),new SqlParameter("@ResidentialType",residentialType == DBNull.Value ? "" : residentialType),new SqlParameter("@TrainerID",trainerID),new SqlParameter("@Remarks",txtRemarks.Text.Trim()),new SqlParameter("@CreatedBy",Convert.ToString(Session["UserID"])) });
             if(result>0){ShowMessage("Rate saved successfully.",Color.Green);ClearForm();BindGrid();}
         }
 
@@ -64,7 +80,7 @@ namespace Training.Admin
             ClearForm();
         }
 
-        private void ClearForm(){txtRate.Text="";txtFrom.Text=DateTime.Today.ToString("yyyy-MM-dd");txtTo.Text="";txtRemarks.Text="";}
+        private void ClearForm(){txtRate.Text="";txtFrom.Text=DateTime.Today.ToString("yyyy-MM-dd");txtTo.Text="";txtRemarks.Text="";txtCourseID.Text="";txtTrainingID.Text="";txtLocation.Text="";txtTrainerID.Text="";ddlResidentialType.SelectedIndex=0;}
         private void ShowMessage(string text,Color color){lblMessage.Text=text;lblMessage.ForeColor=color;}
     }
 }
