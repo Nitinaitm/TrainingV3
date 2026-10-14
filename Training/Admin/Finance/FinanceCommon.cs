@@ -90,7 +90,7 @@ namespace Training.Admin
                     if (mode != "Manual")
                     {
                         if (unit == "Trainee-Day") qty = attendedTraineeDays;
-                        else if (unit == "Trainee") qty = trainees;
+                        else if (unit == "Trainee" || unit == "Trainee-Day") qty = sessionTrainees;
                         else if (unit == "Trainer-Day") qty = trainers * days;
                         else if (unit == "Trainer") qty = trainers;
                         else if (unit == "Day") qty = days;
@@ -109,6 +109,7 @@ namespace Training.Admin
                 DateTime asOn = DateTime.Today;
                 DateTime.TryParse(Convert.ToString(s["SessionDate"]), out asOn);
                 int sessionTrainers = GetSessionTrainerCount(db, trainingID, sessionID);
+                int sessionTrainees = GetSessionPresentCount(db, trainingID, sessionID);
                 DataTable sessionHeads = db.GetDataTable("SELECT CostHeadID,CalculationMode,UnitType FROM FinanceCostHeadMaster WHERE Active='Y' AND CostLevel='Session'");
                 foreach (DataRow h in sessionHeads.Rows)
                 {
@@ -138,7 +139,13 @@ namespace Training.Admin
 
         public static int GetAttendedTraineeDays(clsDataAccess db, string trainingID)
         {
-            DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM (SELECT DISTINCT SA.EmpID,CONVERT(date,SM.SessionDate) AS AttendanceDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID WHERE SA.TrainingID=@TrainingID AND SA.AttendanceStatus='Present') A", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM (SELECT DISTINCT SA.EmpID,TRY_CONVERT(date,SM.SessionDate,105) AS AttendanceDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID WHERE SA.TrainingID=@TrainingID AND SA.AttendanceStatus='Present') A", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
+        }
+
+        public static int GetSessionPresentCount(clsDataAccess db, string trainingID, string sessionID)
+        {
+            DataTable dt = db.GetDataTable("SELECT COUNT(DISTINCT EmpID) AS Cnt FROM SessionAttendance WHERE TrainingID=@TrainingID AND SessionID=@SessionID AND AttendanceStatus='Present'", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID) });
             return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
         }
 
