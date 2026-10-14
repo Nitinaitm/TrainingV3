@@ -31,7 +31,7 @@ namespace Training.Admin
 
         private void BindGrid()
         {
-            gvRates.DataSource = objDB.GetDataTable("SELECT R.RateID,H.CostHeadName,R.Rate,R.EffectiveFrom,R.EffectiveTo,R.Active FROM FinanceRateMaster R INNER JOIN FinanceCostHeadMaster H ON R.CostHeadID=H.CostHeadID ORDER BY H.CostHeadName,R.EffectiveFrom DESC,R.RateID DESC");
+            gvRates.DataSource = objDB.GetDataTable("SELECT R.RateID,H.CostHeadName,R.Rate,R.EffectiveFrom,R.EffectiveTo,ISNULL(R.CourseID,'All') AS CourseScope,ISNULL(R.TrainingID,'All') AS BatchScope,ISNULL(R.TrainingLocation,'All') AS LocationScope,ISNULL(R.ResidentialType,'All') AS ResidentialScope,ISNULL(R.TrainerID,'All') AS TrainerScope,R.Active FROM FinanceRateMaster R INNER JOIN FinanceCostHeadMaster H ON R.CostHeadID=H.CostHeadID ORDER BY H.CostHeadName,R.EffectiveFrom DESC,R.RateID DESC");
             gvRates.DataBind();
         }
 
