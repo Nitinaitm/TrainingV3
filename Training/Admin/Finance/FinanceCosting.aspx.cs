@@ -59,9 +59,41 @@ namespace Training.Admin
             int result = objDB.ExecuteSql("IF EXISTS (SELECT 1 FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID) UPDATE FinanceTrainingSettings SET ResidentialType=@ResidentialType,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE TrainingID=@TrainingID ELSE INSERT INTO FinanceTrainingSettings(TrainingID,ResidentialType,ModifiedOn,ModifiedBy) VALUES(@TrainingID,@ResidentialType,GETDATE(),@ModifiedBy)", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@ResidentialType", ddlResidentialType.SelectedValue), new SqlParameter("@ModifiedBy", Convert.ToString(Session["UserID"])) });
             if (result >= 0)
             {
-                lblMessage.Text = "Batch type saved. Run costing again for new batches; existing costing rows are retained until explicitly recalculated.";
+                RecalculateCosts(ddlTraining.SelectedValue, "Batch type changed to " + ddlResidentialType.SelectedValue);
+                BindSelectedTraining();
+                BindCourseSummary();
+                lblMessage.Text = "Batch type saved and non-overridden costing recalculated. Previous applied rates are archived.";
                 lblMessage.ForeColor = System.Drawing.Color.Green;
             }
+        }
+
+        protected void btnRecalculateCosting_Click(object sender, EventArgs e)
+        {
+            if (ddlTraining.SelectedValue == "")
+            {
+                lblMessage.Text = "Select a training batch first.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+            string reason = txtRecalculationReason.Text.Trim();
+            if (reason == "")
+            {
+                lblMessage.Text = "Enter a reason before recalculating costing.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+            RecalculateCosts(ddlTraining.SelectedValue, reason);
+            BindSelectedTraining();
+            BindCourseSummary();
+            lblMessage.Text = "Costing recalculated. Previous applied-rate snapshots are available in history.";
+            lblMessage.ForeColor = System.Drawing.Color.Green;
+        }
+
+        private void RecalculateCosts(string trainingID, string reason)
+        {
+            string sql = "INSERT INTO FinanceCostingCalculationHistory(CostingDetailID,TrainingID,CourseID,SessionID,CostingLevel,CostHeadID,RateID,CalculationMode,UnitType,Quantity,AppliedRate,CalculatedAmount,OverrideAmount,FinalAmount,ArchiveReason,ArchivedOn,ArchivedBy) SELECT CostingDetailID,TrainingID,CourseID,SessionID,CostingLevel,CostHeadID,RateID,CalculationMode,UnitType,Quantity,AppliedRate,CalculatedAmount,OverrideAmount,FinalAmount,@Reason,GETDATE(),@UserID FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND OverrideAmount IS NULL; DELETE FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND OverrideAmount IS NULL;";
+            objDB.ExecuteSql(sql, new SqlParameter[] { new SqlParameter("@Reason", reason), new SqlParameter("@UserID", Convert.ToString(Session["UserID"])), new SqlParameter("@TrainingID", trainingID) });
+            FinanceCommon.EnsureCostingForTraining(objDB, trainingID, Convert.ToString(Session["UserID"]));
         }
 
         private void BindSelectedTraining()
