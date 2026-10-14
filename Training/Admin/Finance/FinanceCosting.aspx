@@ -33,6 +33,8 @@ body{background:#f5f5f5;}
 <div class="col-lg-2 col-md-4 col-6 mb-2"><label class="summary-label">Training Days</label><asp:Label ID="lblDays" runat="server" CssClass="summary-value"></asp:Label></div>
 <div class="col-lg-2 col-md-4 col-12 mb-2"><label class="summary-label">Total Cost</label><div class="summary-value total-value"><asp:Label ID="lblTotal" runat="server" Text="Rs. 0.00"></asp:Label></div></div>
 <div class="col-lg-4 col-md-8 col-12 mb-2"><label class="summary-label">Batch Type</label><div class="d-flex gap-2"><asp:DropDownList ID="ddlResidentialType" runat="server" CssClass="form-select"></asp:DropDownList><asp:Button ID="btnSaveResidentialType" runat="server" Text="Save Type" CssClass="btn btn-outline-primary" OnClick="btnSaveResidentialType_Click" /></div></div>
+<div class="col-lg-5 col-md-8 col-12 mb-2"><label class="summary-label">Recalculation Reason</label><asp:TextBox ID="txtRecalculationReason" runat="server" CssClass="form-control" placeholder="e.g. Attendance and hostel usage updated"></asp:TextBox></div>
+<div class="col-lg-3 col-md-4 col-12 mb-2"><label class="summary-label">&nbsp;</label><asp:Button ID="btnRecalculateCosting" runat="server" Text="Recalculate Costs" CssClass="btn btn-warning w-100" OnClick="btnRecalculateCosting_Click" /></div>
 </div>
 <div class="table-responsive">
 <asp:GridView ID="gvCosting" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="CostingDetailID" OnRowCommand="gvCosting_RowCommand">
