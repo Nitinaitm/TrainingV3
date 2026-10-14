@@ -122,6 +122,34 @@ IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceA
     CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
 GO
 
+/* Preserve the previous applied-rate snapshot when an administrator recalculates a batch. */
+IF OBJECT_ID('dbo.FinanceCostingCalculationHistory','U') IS NULL
+BEGIN
+    CREATE TABLE dbo.FinanceCostingCalculationHistory
+    (
+        HistoryID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        CostingDetailID BIGINT NOT NULL,
+        TrainingID VARCHAR(50) NOT NULL,
+        CourseID VARCHAR(50) NULL,
+        SessionID VARCHAR(50) NULL,
+        CostingLevel VARCHAR(20) NOT NULL,
+        CostHeadID INT NOT NULL,
+        RateID INT NULL,
+        CalculationMode VARCHAR(30) NOT NULL,
+        UnitType VARCHAR(30) NULL,
+        Quantity DECIMAL(18,4) NOT NULL,
+        AppliedRate DECIMAL(18,2) NOT NULL,
+        CalculatedAmount DECIMAL(18,2) NOT NULL,
+        OverrideAmount DECIMAL(18,2) NULL,
+        FinalAmount DECIMAL(18,2) NOT NULL,
+        ArchiveReason VARCHAR(1000) NOT NULL,
+        ArchivedOn DATETIME NOT NULL DEFAULT(GETDATE()),
+        ArchivedBy VARCHAR(100) NULL
+    );
+    CREATE INDEX IX_FinanceCostingCalculationHistory_Training ON dbo.FinanceCostingCalculationHistory(TrainingID,ArchivedOn);
+END;
+GO
+
 /* Finance-specific batch configuration avoids assuming that every batch is residential. */
 IF OBJECT_ID('dbo.FinanceTrainingSettings','U') IS NULL
 BEGIN
