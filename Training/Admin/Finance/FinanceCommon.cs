@@ -80,9 +80,18 @@ namespace Training.Admin
                 string level = Convert.ToString(h["CostLevel"]);
                 string mode = Convert.ToString(h["CalculationMode"]);
                 string unit = Convert.ToString(h["UnitType"]);
-                if (level == "Batch")
+                if (level == "Course" || level == "Batch" || level == "Person")
                 {
-                    DataTable exists = db.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel='Batch' AND CostHeadID=@CostHeadID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@CostHeadID", headID) });
+                    string costingLevel = level == "Course" ? "Course" : "Batch";
+                    DataTable exists;
+                    if (costingLevel == "Course")
+                    {
+                        exists = db.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE CourseID=@CourseID AND CostingLevel='Course' AND CostHeadID=@CostHeadID", new SqlParameter[] { new SqlParameter("@CourseID", courseID), new SqlParameter("@CostHeadID", headID) });
+                    }
+                    else
+                    {
+                        exists = db.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel='Batch' AND CostHeadID=@CostHeadID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@CostHeadID", headID) });
+                    }
                     if (exists.Rows.Count > 0) continue;
                     int rateID;
                     decimal rate = GetRate(db, headID, DateTime.Today, courseID, trainingID, location, residentialType == "Unspecified" ? null : residentialType, null, out rateID);
@@ -90,7 +99,7 @@ namespace Training.Admin
                     if (mode != "Manual")
                     {
                         if (unit == "Trainee-Day") qty = attendedTraineeDays;
-                        else if (unit == "Trainee" || unit == "Trainee-Day") qty = sessionTrainees;
+                        else if (unit == "Trainee") qty = trainees;
                         else if (unit == "Trainer-Day") qty = trainers * days;
                         else if (unit == "Trainer") qty = trainers;
                         else if (unit == "Day") qty = days;
@@ -98,7 +107,7 @@ namespace Training.Admin
                         else if (unit == "Trainee-Night") qty = residentialType == "Residential" ? GetTraineeHostelNights(db, trainingID) : 0;
                         else if (unit == "Trainer-Night") qty = residentialType == "Residential" ? GetTrainerHostelNights(db, trainingID) : 0;
                     }
-                    InsertCosting(db, trainingID, null, "Batch", headID, rateID, mode, unit, qty, rate, qty * rate, createdBy);
+                    InsertCosting(db, trainingID, null, costingLevel, headID, rateID, mode, unit, qty, rate, qty * rate, createdBy);
                 }
             }
 
@@ -125,7 +134,7 @@ namespace Training.Admin
                     {
                         if (unit == "Trainer-Day" || unit == "Trainer") qty = sessionTrainers;
                         else if (unit == "Day" || unit == "Fixed") qty = 1;
-                        else if (unit == "Trainee") qty = trainees;
+                        else if (unit == "Trainee" || unit == "Trainee-Day") qty = sessionTrainees;
                     }
                     InsertCosting(db, trainingID, sessionID, "Session", headID, rateID, mode, unit, qty, rate, qty * rate, createdBy);
                 }
