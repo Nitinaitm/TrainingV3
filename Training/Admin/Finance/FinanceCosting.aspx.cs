@@ -14,6 +14,7 @@ namespace Training.Admin
             {
                 BindTraining();
                 BindCourseSummary();
+                BindResidentialSetting();
             }
         }
 
@@ -29,7 +30,38 @@ namespace Training.Admin
 
         protected void ddlTraining_SelectedIndexChanged(object sender,EventArgs e)
         {
+            BindResidentialSetting();
             BindSelectedTraining();
+        }
+
+        private void BindResidentialSetting()
+        {
+            ddlResidentialType.Items.Clear();
+            ddlResidentialType.Items.Add(new System.Web.UI.WebControls.ListItem("Select Batch Type", ""));
+            ddlResidentialType.Items.Add(new System.Web.UI.WebControls.ListItem("Residential", "Residential"));
+            ddlResidentialType.Items.Add(new System.Web.UI.WebControls.ListItem("Non-Residential", "Non-Residential"));
+            if (ddlTraining.SelectedValue == "") return;
+            DataTable dt = objDB.GetDataTable("SELECT ResidentialType FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue) });
+            if (dt.Rows.Count > 0 && ddlResidentialType.Items.FindByValue(Convert.ToString(dt.Rows[0]["ResidentialType"])) != null)
+            {
+                ddlResidentialType.SelectedValue = Convert.ToString(dt.Rows[0]["ResidentialType"]);
+            }
+        }
+
+        protected void btnSaveResidentialType_Click(object sender, EventArgs e)
+        {
+            if (ddlTraining.SelectedValue == "" || ddlResidentialType.SelectedValue == "")
+            {
+                lblMessage.Text = "Select a training batch and its residential type first.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+            int result = objDB.ExecuteSql("IF EXISTS (SELECT 1 FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID) UPDATE FinanceTrainingSettings SET ResidentialType=@ResidentialType,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE TrainingID=@TrainingID ELSE INSERT INTO FinanceTrainingSettings(TrainingID,ResidentialType,ModifiedOn,ModifiedBy) VALUES(@TrainingID,@ResidentialType,GETDATE(),@ModifiedBy)", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@ResidentialType", ddlResidentialType.SelectedValue), new SqlParameter("@ModifiedBy", Convert.ToString(Session["UserID"])) });
+            if (result >= 0)
+            {
+                lblMessage.Text = "Batch type saved. Run costing again for new batches; existing costing rows are retained until explicitly recalculated.";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
+            }
         }
 
         private void BindSelectedTraining()
@@ -83,7 +115,16 @@ namespace Training.Admin
                 }
                 value=amount;
             }
-            objDB.ExecuteSql("UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID",new SqlParameter[]{new SqlParameter("@OverrideAmount",value),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID)});
+            System.Web.UI.WebControls.TextBox txtReason=(System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverrideReason");
+            string reason=txtReason==null?"":txtReason.Text.Trim();
+            if (reason == "")
+            {
+                lblMessage.Text="Please enter a reason for the manual override.";
+                lblMessage.ForeColor=System.Drawing.Color.Red;
+                return;
+            }
+            string sql="DECLARE @PreviousOverrideAmount DECIMAL(18,2); SELECT @PreviousOverrideAmount=OverrideAmount FROM FinanceCostingDetail WHERE CostingDetailID=@ID; INSERT INTO FinanceCostingOverrideAudit(CostingDetailID,PreviousOverrideAmount,NewOverrideAmount,OverrideReason,ChangedBy,ChangedOn) VALUES(@ID,@PreviousOverrideAmount,@OverrideAmount,@Reason,@ModifiedBy,GETDATE()); UPDATE FinanceCostingDetail SET OverrideAmount=@OverrideAmount,OverrideReason=@Reason,ModifiedOn=GETDATE(),ModifiedBy=@ModifiedBy WHERE CostingDetailID=@ID;";
+            objDB.ExecuteSql(sql,new SqlParameter[]{new SqlParameter("@OverrideAmount",value),new SqlParameter("@Reason",reason),new SqlParameter("@ModifiedBy",Convert.ToString(Session["UserID"])),new SqlParameter("@ID",detailID)});
             BindSelectedTraining();
         }
 
