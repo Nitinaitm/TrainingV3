@@ -11,7 +11,7 @@ IF COL_LENGTH('dbo.FinanceRateMaster','CourseID') IS NULL
     ALTER TABLE dbo.FinanceRateMaster ADD CourseID VARCHAR(50) NULL;
 GO
 IF COL_LENGTH('dbo.FinanceRateMaster','TrainingID') IS NULL
-    ALTER TABLE dbo.FinanceRateMaster ADD TrainingID VARCHAR(50) NULL;
+    ALTER TABLE dbo.FinanceRateMaster ADD TrainingID VARCHAR(100) NULL;
 GO
 IF COL_LENGTH('dbo.FinanceRateMaster','TrainingLocation') IS NULL
     ALTER TABLE dbo.FinanceRateMaster ADD TrainingLocation VARCHAR(200) NULL;
@@ -78,7 +78,7 @@ BEGIN
     CREATE TABLE dbo.FinanceHostelUsage
     (
         HostelUsageID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-        TrainingID VARCHAR(50) NOT NULL,
+        TrainingID VARCHAR(100) NOT NULL,
         EmpID VARCHAR(50) NULL,
         TrainerID VARCHAR(50) NULL,
         HostelID INT NULL,
@@ -129,7 +129,7 @@ BEGIN
     (
         HistoryID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
         CostingDetailID BIGINT NOT NULL,
-        TrainingID VARCHAR(50) NOT NULL,
+        TrainingID VARCHAR(100) NOT NULL,
         CourseID VARCHAR(50) NULL,
         SessionID VARCHAR(50) NULL,
         CostingLevel VARCHAR(20) NOT NULL,
@@ -155,7 +155,7 @@ IF OBJECT_ID('dbo.FinanceTrainingSettings','U') IS NULL
 BEGIN
     CREATE TABLE dbo.FinanceTrainingSettings
     (
-        TrainingID VARCHAR(50) NOT NULL PRIMARY KEY,
+        TrainingID VARCHAR(100) NOT NULL PRIMARY KEY,
         ResidentialType VARCHAR(20) NOT NULL DEFAULT('Unspecified'),
         Notes VARCHAR(1000) NULL,
         ModifiedOn DATETIME NOT NULL DEFAULT(GETDATE()),
@@ -220,3 +220,28 @@ BEGIN
 END;
 GO
 
+/* Keep audit-table TrainingID columns aligned with the source tables. */
+DECLARE @FinanceAuditTable SYSNAME;
+DECLARE @FinanceAuditNullable BIT;
+DECLARE @FinanceAuditSQL NVARCHAR(1000);
+DECLARE FinanceAuditTrainingIDCursor CURSOR LOCAL FAST_FORWARD FOR
+SELECT T.name, C.is_nullable
+FROM sys.tables T
+INNER JOIN sys.columns C ON C.object_id=T.object_id
+INNER JOIN sys.types Y ON Y.user_type_id=C.user_type_id
+WHERE T.schema_id=SCHEMA_ID('dbo')
+  AND T.name LIKE 'Finance%[_]Audit'
+  AND C.name='TrainingID'
+  AND Y.name='varchar'
+  AND C.max_length < 100;
+OPEN FinanceAuditTrainingIDCursor;
+FETCH NEXT FROM FinanceAuditTrainingIDCursor INTO @FinanceAuditTable,@FinanceAuditNullable;
+WHILE @@FETCH_STATUS=0
+BEGIN
+    SET @FinanceAuditSQL=N'ALTER TABLE dbo.'+QUOTENAME(@FinanceAuditTable)+N' ALTER COLUMN TrainingID VARCHAR(100) '+CASE WHEN @FinanceAuditNullable=1 THEN N'NULL' ELSE N'NOT NULL' END+N';';
+    EXEC sp_executesql @FinanceAuditSQL;
+    FETCH NEXT FROM FinanceAuditTrainingIDCursor INTO @FinanceAuditTable,@FinanceAuditNullable;
+END;
+CLOSE FinanceAuditTrainingIDCursor;
+DEALLOCATE FinanceAuditTrainingIDCursor;
+GO
