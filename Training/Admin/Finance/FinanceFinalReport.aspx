@@ -27,15 +27,19 @@ body{background:#f5f5f5;}
 <div class="page-heading">Finance - Final Report</div>
 <asp:Label ID="lblMessage" runat="server" Font-Bold="true"></asp:Label>
 <div class="row no-print">
-<div class="col-lg-3 col-md-6 mb-3"><label class="form-label">Report Type *</label><asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged"><asp:ListItem Text="Batch Wise" Value="Batch"></asp:ListItem><asp:ListItem Text="Course Wise" Value="Course"></asp:ListItem></asp:DropDownList></div>
+<div class="col-lg-3 col-md-6 mb-3"><label class="form-label">Report Type *</label><asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged"><asp:ListItem Text="Batch Wise" Value="Batch"></asp:ListItem><asp:ListItem Text="Course Wise" Value="Course"></asp:ListItem><asp:ListItem Text="Trainee Wise" Value="Trainee"></asp:ListItem><asp:ListItem Text="Trainer Wise" Value="Trainer"></asp:ListItem><asp:ListItem Text="Cost Head Wise" Value="CostHead"></asp:ListItem></asp:DropDownList></div>
 <div class="col-lg-5 col-md-6 mb-3" id="pnlBatchFilter" runat="server"><label class="form-label">Training / Batch</label><asp:DropDownList ID="ddlTraining" runat="server" ClientIDMode="Static" CssClass="form-select select2-searchable"></asp:DropDownList></div>
 <div class="col-lg-5 col-md-6 mb-3" id="pnlCourseFilter" runat="server"><label class="form-label">Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select select2-searchable"></asp:DropDownList></div>
+<div class="col-lg-3 col-md-6 mb-3" id="pnlTraineeFilter" runat="server"><label class="form-label">Employee ID</label><asp:TextBox ID="txtEmpID" runat="server" CssClass="form-control" placeholder="Enter EmpID"></asp:TextBox></div>
+<div class="col-lg-3 col-md-6 mb-3" id="pnlTrainerFilter" runat="server"><label class="form-label">Trainer</label><asp:DropDownList ID="ddlTrainer" runat="server" CssClass="form-select select2-searchable"></asp:DropDownList></div>
+<div class="col-lg-3 col-md-6 mb-3" id="pnlCostHeadFilter" runat="server"><label class="form-label">Cost Head</label><asp:DropDownList ID="ddlCostHead" runat="server" CssClass="form-select select2-searchable"></asp:DropDownList></div>
 <div class="col-lg-2 col-md-6 mb-3 d-flex align-items-end"><asp:Button ID="btnShow" runat="server" Text="Show Report" CssClass="btn btn-success w-100 report-button" OnClick="btnShow_Click" /></div>
 </div>
 <div class="row mb-3">
 <div class="col-md-3 mb-2"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Balance: <asp:Label ID="lblBalance" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
+<div class="col-md-3 mb-2"><span class="summary-value">Trainee Man-Hours: <asp:Label ID="lblManHours" runat="server" Text="0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value total-value">Report: <asp:Label ID="lblReportName" runat="server" Text="Batch Wise"></asp:Label></span></div>
 </div>
 <div class="text-end no-print mb-3"><asp:Button ID="btnPrint" runat="server" Text="Print Final Report" CssClass="btn btn-primary report-button" OnClientClick="window.print();return false;" /></div>
@@ -45,6 +49,9 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CourseName" HeaderText="Course" />
 <asp:BoundField DataField="TrainingID" HeaderText="Training ID" />
 <asp:BoundField DataField="Batch" HeaderText="Batch" />
+<asp:BoundField DataField="ResidentialType" HeaderText="Batch Type" />
+<asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" />
+<asp:BoundField DataField="ManHours" HeaderText="Trainee Man-Hours" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="BatchCount" HeaderText="Batches" />
 <asp:BoundField DataField="SessionCost" HeaderText="Session Cost" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="BatchCost" HeaderText="Batch Cost" DataFormatString="{0:N2}" />
