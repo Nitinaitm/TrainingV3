@@ -449,7 +449,7 @@ TA.TrainingID <> @TrainingID
                 return exists;
             }
         }
-        protected void btnAddEmployee_Click(
+                protected void btnAddEmployee_Click(
         object sender,
         EventArgs e)
         {
@@ -545,7 +545,7 @@ AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
             lblEmpMessage.Text = "Employee assigned successfully.";
         }
 
-        protected void btnAllowRepeatCourse_Click(object sender, EventArgs e)
+                protected void btnAllowRepeatCourse_Click(object sender, EventArgs e)
         {
             string empID = Convert.ToString(ViewState["RepeatCourseEmpID"]).Trim().ToUpperInvariant();
             if (String.IsNullOrWhiteSpace(empID))
@@ -1090,6 +1090,7 @@ SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
 AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'
 AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
             cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
@@ -1201,6 +1202,7 @@ SELECT COUNT(*)
 FROM TrainingAssignment
 WHERE TrainingID=@TrainingID
 AND EmpID=@EmpID
+AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'
 AND ISNULL(AssignmentStatus,'Assigned') <> 'Cancelled'", con, tran);
             cmdDuplicate.Parameters.AddWithValue("@TrainingID", Session["TrainingID"]);
             cmdDuplicate.Parameters.AddWithValue("@EmpID", empid);
