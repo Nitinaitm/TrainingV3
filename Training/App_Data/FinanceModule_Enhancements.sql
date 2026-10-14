@@ -163,3 +163,55 @@ BEGIN
     );
 END;
 GO
+
+/* Expand TrainingID columns to support the actual IDs in TrainingDetails. Run after the base module tables exist. */
+IF OBJECT_ID('dbo.FinanceCostingDetail','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Training') DROP INDEX IX_FinanceCostingDetail_Training ON dbo.FinanceCostingDetail;
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') DROP INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail;
+    ALTER TABLE dbo.FinanceCostingDetail ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Training') CREATE INDEX IX_FinanceCostingDetail_Training ON dbo.FinanceCostingDetail(TrainingID,CostingLevel);
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') CREATE INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail(TrainingID,EmpID,TrainerID,CostHeadID);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceRateMaster','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceRateMaster') AND name='IX_FinanceRateMaster_ScopeDate') DROP INDEX IX_FinanceRateMaster_ScopeDate ON dbo.FinanceRateMaster;
+    ALTER TABLE dbo.FinanceRateMaster ALTER COLUMN TrainingID VARCHAR(100) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceRateMaster') AND name='IX_FinanceRateMaster_ScopeDate') CREATE INDEX IX_FinanceRateMaster_ScopeDate ON dbo.FinanceRateMaster(CostHeadID,CourseID,TrainingID,TrainingLocation,ResidentialType,TrainerID,EffectiveFrom,EffectiveTo,Active);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceActualExpenditure','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Training') DROP INDEX IX_FinanceActualExpenditure_Training ON dbo.FinanceActualExpenditure;
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') DROP INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure;
+    ALTER TABLE dbo.FinanceActualExpenditure ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Training') CREATE INDEX IX_FinanceActualExpenditure_Training ON dbo.FinanceActualExpenditure(TrainingID,SessionID,CostHeadID);
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceHostelUsage','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceHostelUsage') AND name='IX_FinanceHostelUsage_TrainingPerson') DROP INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage;
+    ALTER TABLE dbo.FinanceHostelUsage ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    CREATE INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage(TrainingID,EmpID,TrainerID,UsageStatus);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceTrainingSettings','U') IS NOT NULL
+BEGIN
+    DECLARE @FinanceSettingsPK SYSNAME;
+    SELECT @FinanceSettingsPK=KC.name FROM sys.key_constraints KC WHERE KC.parent_object_id=OBJECT_ID('dbo.FinanceTrainingSettings') AND KC.type='PK';
+    IF @FinanceSettingsPK IS NOT NULL EXEC('ALTER TABLE dbo.FinanceTrainingSettings DROP CONSTRAINT '+QUOTENAME(@FinanceSettingsPK));
+    ALTER TABLE dbo.FinanceTrainingSettings ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE parent_object_id=OBJECT_ID('dbo.FinanceTrainingSettings') AND type='PK')
+        ALTER TABLE dbo.FinanceTrainingSettings ADD CONSTRAINT PK_FinanceTrainingSettings PRIMARY KEY CLUSTERED(TrainingID);
+END;
+GO
+IF OBJECT_ID('dbo.FinanceCostingCalculationHistory','U') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingCalculationHistory') AND name='IX_FinanceCostingCalculationHistory_Training') DROP INDEX IX_FinanceCostingCalculationHistory_Training ON dbo.FinanceCostingCalculationHistory;
+    ALTER TABLE dbo.FinanceCostingCalculationHistory ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
+    CREATE INDEX IX_FinanceCostingCalculationHistory_Training ON dbo.FinanceCostingCalculationHistory(TrainingID,ArchivedOn);
+END;
+GO
+
