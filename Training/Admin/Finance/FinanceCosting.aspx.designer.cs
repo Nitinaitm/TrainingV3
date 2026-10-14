@@ -39,6 +39,8 @@ namespace Training.Admin {
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlResidentialType;
         protected global::System.Web.UI.WebControls.Button btnSaveResidentialType;
+        protected global::System.Web.UI.WebControls.TextBox txtRecalculationReason;
+        protected global::System.Web.UI.WebControls.Button btnRecalculateCosting;
 
         protected global::System.Web.UI.WebControls.Label lblTrainees;
         
