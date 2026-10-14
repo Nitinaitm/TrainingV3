@@ -11,6 +11,8 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.TextBox txtVendor;
         protected global::System.Web.UI.WebControls.TextBox txtBill;
         protected global::System.Web.UI.WebControls.TextBox txtRemarks;
+        protected global::System.Web.UI.WebControls.TextBox txtExpenditureEmpID;
+        protected global::System.Web.UI.WebControls.TextBox txtExpenditureTrainerID;
         protected global::System.Web.UI.WebControls.Button btnSave;
         protected global::System.Web.UI.WebControls.Button btnClear;
         protected global::System.Web.UI.WebControls.Label lblFinalCost;
