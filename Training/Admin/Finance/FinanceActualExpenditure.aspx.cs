@@ -17,6 +17,8 @@ namespace Training.Admin
                 BindTraining();
                 txtDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
                 BindCostHeads();
+                txtHostelCheckIn.Text = DateTime.Today.ToString("yyyy-MM-dd");
+                txtHostelCheckOut.Text = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
                 ClearSelection();
             }
         }
@@ -40,6 +42,7 @@ namespace Training.Admin
             if(ddlTraining.SelectedValue!="") FinanceCommon.EnsureCostingForTraining(objDB,ddlTraining.SelectedValue,Convert.ToString(Session["UserID"]));
             BindSessions();
             BindExpenditure();
+            BindHostelUsage();
             BindSummary();
         }
 
@@ -70,7 +73,7 @@ namespace Training.Admin
             if(e.CommandName!="DeleteExpenditure") return;
             int row=Convert.ToInt32(e.CommandArgument); long id=Convert.ToInt64(gvExpenditure.DataKeys[row].Value);
             objDB.ExecuteSql("DELETE FROM FinanceActualExpenditure WHERE ExpenditureID=@ID",new SqlParameter[]{new SqlParameter("@ID",id)});
-            BindExpenditure(); BindSummary();
+            BindExpenditure(); BindHostelUsage(); BindSummary();
         }
 
         private void BindExpenditure()
@@ -78,6 +81,75 @@ namespace Training.Admin
             if(ddlTraining.SelectedValue==""){gvExpenditure.DataSource=null;gvExpenditure.DataBind();return;}
             DataTable dt=objDB.GetDataTable("SELECT X.ExpenditureID,X.ExpenditureDate,H.CostHeadName,ISNULL(SM.SessionName,'Batch Level') SessionName,X.VendorName,X.BillReference,X.Amount,X.Remarks FROM FinanceActualExpenditure X LEFT JOIN FinanceCostHeadMaster H ON X.CostHeadID=H.CostHeadID LEFT JOIN SessionMaster SM ON X.SessionID=SM.SessionID WHERE X.TrainingID=@TrainingID ORDER BY X.ExpenditureDate DESC,X.ExpenditureID DESC",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             gvExpenditure.DataSource=dt;gvExpenditure.DataBind();
+        }
+
+        private void BindHostelUsage()
+        {
+            if (ddlTraining.SelectedValue == "") { gvHostelUsage.DataSource = null; gvHostelUsage.DataBind(); return; }
+            DataTable dt = objDB.GetDataTable("SELECT HostelUsageID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,UsageStatus,Remarks FROM FinanceHostelUsage WHERE TrainingID=@TrainingID ORDER BY CheckInDate DESC,HostelUsageID DESC", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue) });
+            gvHostelUsage.DataSource = dt;
+            gvHostelUsage.DataBind();
+        }
+
+        protected void btnSaveHostelUsage_Click(object sender, EventArgs e)
+        {
+            string empID = txtHostelEmpID.Text.Trim();
+            string trainerID = txtHostelTrainerID.Text.Trim();
+            DateTime checkIn;
+            DateTime checkOut;
+            decimal nights;
+            if (ddlTraining.SelectedValue == "" || ((empID == "") == (trainerID == "")) || !DateTime.TryParse(txtHostelCheckIn.Text, out checkIn) || !DateTime.TryParse(txtHostelCheckOut.Text, out checkOut) || checkOut.Date < checkIn.Date)
+            {
+                ShowMessage("Select a batch, enter either EmpID or TrainerID (not both), and provide valid check-in/check-out dates.", Color.Red);
+                return;
+            }
+            if (txtHostelNights.Text.Trim() == "")
+            {
+                nights = (decimal)(checkOut.Date - checkIn.Date).Days;
+            }
+            else if (!Decimal.TryParse(txtHostelNights.Text.Trim(), out nights) || nights < 0)
+            {
+                ShowMessage("Chargeable nights must be a valid non-negative number.", Color.Red);
+                return;
+            }
+            if (nights == 0)
+            {
+                ShowMessage("Chargeable nights must be greater than zero for actual hostel usage.", Color.Red);
+                return;
+            }
+            DataTable valid;
+            if (empID != "")
+            {
+                valid = objDB.GetDataTable("SELECT TOP 1 EmpID FROM TrainingAssignment WHERE TrainingID=@TrainingID AND EmpID=@EmpID AND ISNULL(AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(Cancelled,0)=0", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", empID) });
+            }
+            else
+            {
+                valid = objDB.GetDataTable("SELECT TOP 1 TrainerID FROM TrainingTrainerMapping WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID UNION SELECT TOP 1 TrainerID FROM SessionMaster WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@TrainerID", trainerID) });
+            }
+            if (valid.Rows.Count == 0)
+            {
+                ShowMessage("The selected trainee/trainer is not assigned to this batch.", Color.Red);
+                return;
+            }
+            int result = objDB.ExecuteSql("INSERT INTO FinanceHostelUsage(TrainingID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,UsageStatus,Remarks,CreatedOn,CreatedBy) VALUES(@TrainingID,NULLIF(@EmpID,''),NULLIF(@TrainerID,''),@CheckIn,@CheckOut,@Nights,'Used',@Remarks,GETDATE(),@CreatedBy)", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", empID), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@CheckIn", checkIn.Date), new SqlParameter("@CheckOut", checkOut.Date), new SqlParameter("@Nights", nights), new SqlParameter("@Remarks", txtHostelUsageRemarks.Text.Trim()), new SqlParameter("@CreatedBy", Convert.ToString(Session["UserID"])) });
+            if (result > 0)
+            {
+                ShowMessage("Actual hostel usage saved. Recalculate costing to apply the new usage quantity.", Color.Green);
+                txtHostelEmpID.Text = "";
+                txtHostelTrainerID.Text = "";
+                txtHostelNights.Text = "";
+                txtHostelUsageRemarks.Text = "";
+                BindHostelUsage();
+            }
+        }
+
+        protected void gvHostelUsage_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "CancelUsage") return;
+            int row = Convert.ToInt32(e.CommandArgument);
+            long id = Convert.ToInt64(gvHostelUsage.DataKeys[row].Value);
+            objDB.ExecuteSql("UPDATE FinanceHostelUsage SET UsageStatus='Cancelled',ModifiedOn=GETDATE(),ModifiedBy=@UserID WHERE HostelUsageID=@ID", new SqlParameter[] { new SqlParameter("@UserID", Convert.ToString(Session["UserID"])), new SqlParameter("@ID", id) });
+            BindHostelUsage();
         }
 
         private void BindSummary()
@@ -90,7 +162,7 @@ namespace Training.Admin
             lblFinalCost.Text="Rs. "+finalCost.ToString("N2"); lblActual.Text="Rs. "+actual.ToString("N2"); lblBalance.Text="Rs. "+(finalCost-actual).ToString("N2");
         }
 
-        private void ClearSelection(){BindExpenditure();BindSummary();}
+        private void ClearSelection(){BindExpenditure();BindHostelUsage();BindSummary();}
         private void ClearEntry(){txtAmount.Text="";txtVendor.Text="";txtBill.Text="";txtRemarks.Text="";txtDate.Text=DateTime.Today.ToString("yyyy-MM-dd");}
         protected void btnClear_Click(object sender,EventArgs e){ClearEntry();lblMessage.Text="";}
         private void ShowMessage(string text,Color color){lblMessage.Text=text;lblMessage.ForeColor=color;}
