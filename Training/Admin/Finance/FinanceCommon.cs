@@ -88,6 +88,7 @@ namespace Training.Admin
                     DataTable exists;
                     if (costingLevel == "Course")
                     {
+                        if (String.IsNullOrWhiteSpace(courseID)) continue;
                         exists = db.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE CourseID=@CourseID AND CostingLevel='Course' AND CostHeadID=@CostHeadID", new SqlParameter[] { new SqlParameter("@CourseID", courseID), new SqlParameter("@CostHeadID", headID) });
                     }
                     else
