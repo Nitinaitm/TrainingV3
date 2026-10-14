@@ -43,6 +43,13 @@ namespace Training.Admin
             return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
         }
 
+        public static int GetManagerCount(clsDataAccess db, string location)
+        {
+            if (String.IsNullOrWhiteSpace(location)) return 0;
+            DataTable dt = db.GetDataTable("SELECT COUNT(DISTINCT ManagerID) AS Cnt FROM ManagerMaster WHERE (MapForLocation=@Location OR TrainingLocationID=@Location) AND ISNULL(ActiveStatus,'Active') NOT IN ('N','No','Inactive','Disabled')", new SqlParameter[] { new SqlParameter("@Location", location) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
+        }
+
         public static int GetTrainerDays(clsDataAccess db, string trainingID)
         {
             DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM (SELECT DISTINCT TrainerID,TRY_CONVERT(date,SessionDate,105) AS SessionDate FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(TrainerID,'')<>'') X WHERE SessionDate IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
@@ -84,6 +91,7 @@ namespace Training.Admin
             if (training.Rows.Count > 0) DateTime.TryParse(Convert.ToString(training.Rows[0]["DateFrom"]), out costingDate);
             DataTable settings = db.GetDataTable("SELECT ResidentialType FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             string residentialType = settings.Rows.Count == 0 ? "Unspecified" : Convert.ToString(settings.Rows[0]["ResidentialType"]);
+            int managers = GetManagerCount(db, location);
             DataTable heads = db.GetDataTable("SELECT CostHeadID,CostLevel,CalculationMode,UnitType FROM FinanceCostHeadMaster WHERE Active='Y'");
             foreach (DataRow h in heads.Rows)
             {
@@ -114,6 +122,9 @@ namespace Training.Admin
                         else if (unit == "Trainee") qty = trainees;
                         else if (unit == "Trainer-Day") qty = trainerDays;
                         else if (unit == "Trainer") qty = trainers;
+                        else if (unit == "Manager-Day") qty = managers * days;
+                        else if (unit == "Manager") qty = managers;
+                        else if (unit == "Trainee-Hour") qty = GetTraineeManHours(db, trainingID);
                         else if (unit == "Day") qty = days;
                         else if (unit == "Fixed") qty = 1;
                         else if (unit == "Trainee-Night") qty = residentialType == "Residential" ? GetTraineeHostelNights(db, trainingID) : 0;
@@ -145,8 +156,9 @@ namespace Training.Admin
                     if (mode != "Manual")
                     {
                         if (unit == "Trainer-Day" || unit == "Trainer") qty = sessionTrainers;
-                        else if (unit == "Day" || unit == "Fixed") qty = 1;
+                        else if (unit == "Day" || unit == "Fixed" || unit == "Session" || unit == "Session-Day") qty = 1;
                         else if (unit == "Trainee" || unit == "Trainee-Day") qty = sessionTrainees;
+                        else if (unit == "Trainee-Hour") qty = sessionTrainees * Convert.ToDecimal(s["SessionHours"]);
                     }
                     InsertCosting(db, trainingID, sessionID, "Session", headID, rateID, mode, unit, qty, rate, qty * rate, createdBy);
                 }
