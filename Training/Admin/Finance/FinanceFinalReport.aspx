@@ -39,7 +39,7 @@ body{background:#f5f5f5;}
 <div class="col-md-3 mb-2"><span class="summary-value">Final Cost: <asp:Label ID="lblFinalCost" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Actual Paid: <asp:Label ID="lblActual" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value">Balance: <asp:Label ID="lblBalance" runat="server" Text="Rs. 0.00"></asp:Label></span></div>
-<div class="col-md-3 mb-2"><span class="summary-value">Trainee Man-Hours: <asp:Label ID="lblManHours" runat="server" Text="0.00"></asp:Label></span></div>
+<div class="col-md-3 mb-2"><span class="summary-value">Man-Hours: <asp:Label ID="lblManHours" runat="server" Text="0.00"></asp:Label></span></div>
 <div class="col-md-3 mb-2"><span class="summary-value total-value">Report: <asp:Label ID="lblReportName" runat="server" Text="Batch Wise"></asp:Label></span></div>
 </div>
 <div class="text-end no-print mb-3"><asp:Button ID="btnPrint" runat="server" Text="Print Final Report" CssClass="btn btn-primary report-button" OnClientClick="window.print();return false;" /></div>
