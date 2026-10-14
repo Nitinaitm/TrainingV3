@@ -96,6 +96,18 @@ BEGIN
 END;
 GO
 
+/* Upgrade installations that ran an earlier draft of this migration. */
+IF COL_LENGTH('dbo.FinanceHostelUsage','TrainerID') IS NULL
+    ALTER TABLE dbo.FinanceHostelUsage ADD TrainerID VARCHAR(50) NULL;
+GO
+ALTER TABLE dbo.FinanceHostelUsage ALTER COLUMN EmpID VARCHAR(50) NULL;
+GO
+IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceHostelUsage') AND name='IX_FinanceHostelUsage_TrainingPerson')
+    DROP INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage;
+GO
+CREATE INDEX IX_FinanceHostelUsage_TrainingPerson ON dbo.FinanceHostelUsage(TrainingID,EmpID,TrainerID,UsageStatus);
+GO
+
 /* Actual expenditure may be attributable to a particular trainee or trainer. */
 IF COL_LENGTH('dbo.FinanceActualExpenditure','EmpID') IS NULL
     ALTER TABLE dbo.FinanceActualExpenditure ADD EmpID VARCHAR(50) NULL;
