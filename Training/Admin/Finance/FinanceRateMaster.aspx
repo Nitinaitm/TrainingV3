@@ -32,6 +32,11 @@ body{background:#f5f5f5;}
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Rate</label><asp:TextBox ID="txtRate" runat="server" CssClass="form-control" placeholder="0.00"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Effective From</label><asp:TextBox ID="txtFrom" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Effective To</label><asp:TextBox ID="txtTo" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Course ID (optional)</label><asp:TextBox ID="txtCourseID" runat="server" CssClass="form-control" placeholder="All courses"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Training / Batch ID</label><asp:TextBox ID="txtTrainingID" runat="server" CssClass="form-control" placeholder="All batches"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Location</label><asp:TextBox ID="txtLocation" runat="server" CssClass="form-control" placeholder="All locations"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Batch Type</label><asp:DropDownList ID="ddlResidentialType" runat="server" CssClass="form-select"><asp:ListItem Text="All Types" Value=""></asp:ListItem><asp:ListItem Text="Residential" Value="Residential"></asp:ListItem><asp:ListItem Text="Non-Residential" Value="Non-Residential"></asp:ListItem></asp:DropDownList></div>
+<div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Trainer ID</label><asp:TextBox ID="txtTrainerID" runat="server" CssClass="form-control" placeholder="All trainers"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Remarks</label><asp:TextBox ID="txtRemarks" runat="server" CssClass="form-control" placeholder="Optional"></asp:TextBox></div>
 </div>
 <div class="mt-2 text-center">
@@ -44,6 +49,11 @@ body{background:#f5f5f5;}
 <Columns>
 <asp:TemplateField HeaderText="S.No."><ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate><HeaderStyle Width="55px" /><ItemStyle HorizontalAlign="Center" /></asp:TemplateField>
 <asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" />
+<asp:BoundField DataField="CourseScope" HeaderText="Course" />
+<asp:BoundField DataField="BatchScope" HeaderText="Batch" />
+<asp:BoundField DataField="LocationScope" HeaderText="Location" />
+<asp:BoundField DataField="ResidentialScope" HeaderText="Batch Type" />
+<asp:BoundField DataField="TrainerScope" HeaderText="Trainer" />
 <asp:BoundField DataField="Rate" HeaderText="Rate" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="EffectiveFrom" HeaderText="From" DataFormatString="{0:dd-MM-yyyy}" />
 <asp:BoundField DataField="EffectiveTo" HeaderText="To" DataFormatString="{0:dd-MM-yyyy}" />
