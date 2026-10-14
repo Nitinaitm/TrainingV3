@@ -14,6 +14,10 @@ namespace Training.Admin
             if (!IsPostBack)
             {
                 BindCostHeads();
+                BindCourses();
+                BindTrainingBatches();
+                BindLocations();
+                BindTrainers();
                 txtFrom.Text = DateTime.Today.ToString("yyyy-MM-dd");
                 BindGrid();
             }
@@ -27,6 +31,46 @@ namespace Training.Admin
             ddlCostHead.DataValueField = "CostHeadID";
             ddlCostHead.DataBind();
             ddlCostHead.Items.Insert(0,new System.Web.UI.WebControls.ListItem("Select Cost Head",""));
+        }
+
+        private void BindCourses()
+        {
+            DataTable dt = objDB.GetDataTable("SELECT CourseID,ISNULL(CourseName,'')+' ('+CourseID+')' AS CourseDisplay FROM CourseMaster ORDER BY CourseName");
+            ddlCourse.DataSource = dt;
+            ddlCourse.DataTextField = "CourseDisplay";
+            ddlCourse.DataValueField = "CourseID";
+            ddlCourse.DataBind();
+            ddlCourse.Items.Insert(0, new System.Web.UI.WebControls.ListItem("All Courses", ""));
+        }
+
+        private void BindTrainingBatches()
+        {
+            DataTable dt = objDB.GetDataTable("SELECT TD.TrainingID,TD.TrainingID+' - '+ISNULL(C.CourseName,'')+' - '+ISNULL(TD.Batch,'')+' - '+ISNULL(TD.TrainingLocation,'') AS TrainingDisplay FROM TrainingDetails TD LEFT JOIN CourseMaster C ON C.CourseID=TD.CourseID ORDER BY TD.TrainingID DESC");
+            ddlTraining.DataSource = dt;
+            ddlTraining.DataTextField = "TrainingDisplay";
+            ddlTraining.DataValueField = "TrainingID";
+            ddlTraining.DataBind();
+            ddlTraining.Items.Insert(0, new System.Web.UI.WebControls.ListItem("All Batches", ""));
+        }
+
+        private void BindLocations()
+        {
+            DataTable dt = objDB.GetDataTable("SELECT DISTINCT LTRIM(RTRIM(TrainingLocation)) AS TrainingLocation FROM TrainingDetails WHERE ISNULL(LTRIM(RTRIM(TrainingLocation)),'')<>'' ORDER BY TrainingLocation");
+            ddlLocation.DataSource = dt;
+            ddlLocation.DataTextField = "TrainingLocation";
+            ddlLocation.DataValueField = "TrainingLocation";
+            ddlLocation.DataBind();
+            ddlLocation.Items.Insert(0, new System.Web.UI.WebControls.ListItem("All Locations", ""));
+        }
+
+        private void BindTrainers()
+        {
+            DataTable dt = objDB.GetDataTable("SELECT TM.TrainerID,CASE WHEN TM.TrainerType='Internal' THEN ISNULL(E.EmpName,'') ELSE ISNULL(TM.NameExternal,'') END+' ('+TM.TrainerID+')' AS TrainerDisplay FROM TrainerMaster TM LEFT JOIN EmpBasicMaster E ON E.EmpID=TM.EmpID WHERE ISNULL(TM.ActiveStatus,'Active') NOT IN ('N','No','Inactive','Disabled') ORDER BY TrainerDisplay");
+            ddlTrainer.DataSource = dt;
+            ddlTrainer.DataTextField = "TrainerDisplay";
+            ddlTrainer.DataValueField = "TrainerID";
+            ddlTrainer.DataBind();
+            ddlTrainer.Items.Insert(0, new System.Web.UI.WebControls.ListItem("All Trainers", ""));
         }
 
         private void BindGrid()
@@ -60,10 +104,10 @@ namespace Training.Admin
                     return;
                 }
             }
-            string courseID = txtCourseID.Text.Trim();
-            string trainingID = txtTrainingID.Text.Trim();
-            string location = txtLocation.Text.Trim();
-            string trainerID = txtTrainerID.Text.Trim();
+            string courseID = ddlCourse.SelectedValue;
+            string trainingID = ddlTraining.SelectedValue;
+            string location = ddlLocation.SelectedValue;
+            string trainerID = ddlTrainer.SelectedValue;
             object residentialType = ddlResidentialType.SelectedValue == "" ? (object)DBNull.Value : ddlResidentialType.SelectedValue;
             DataTable overlap = objDB.GetDataTable("SELECT TOP 1 RateID FROM FinanceRateMaster WHERE CostHeadID=@CostHeadID AND ISNULL(CourseID,'')=@CourseID AND ISNULL(TrainingID,'')=@TrainingID AND ISNULL(TrainingLocation,'')=@Location AND ISNULL(ResidentialType,'')=@ResidentialType AND ISNULL(TrainerID,'')=@TrainerID AND Active='Y' AND EffectiveFrom<=ISNULL(@To,CONVERT(date,'99991231')) AND ISNULL(EffectiveTo,CONVERT(date,'99991231'))>=@From", new SqlParameter[] { new SqlParameter("@CostHeadID", Convert.ToInt32(ddlCostHead.SelectedValue)), new SqlParameter("@CourseID", courseID), new SqlParameter("@TrainingID", trainingID), new SqlParameter("@Location", location), new SqlParameter("@ResidentialType", residentialType == DBNull.Value ? "" : residentialType), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@From", fromDate.Date), new SqlParameter("@To", to.HasValue ? (object)to.Value : DBNull.Value) });
             if (overlap.Rows.Count > 0)
@@ -80,7 +124,7 @@ namespace Training.Admin
             ClearForm();
         }
 
-        private void ClearForm(){txtRate.Text="";txtFrom.Text=DateTime.Today.ToString("yyyy-MM-dd");txtTo.Text="";txtRemarks.Text="";txtCourseID.Text="";txtTrainingID.Text="";txtLocation.Text="";txtTrainerID.Text="";ddlResidentialType.SelectedIndex=0;}
+        private void ClearForm(){txtRate.Text="";txtFrom.Text=DateTime.Today.ToString("yyyy-MM-dd");txtTo.Text="";txtRemarks.Text="";ddlCourse.SelectedIndex=0;ddlTraining.SelectedIndex=0;ddlLocation.SelectedIndex=0;ddlTrainer.SelectedIndex=0;ddlResidentialType.SelectedIndex=0;}
         private void ShowMessage(string text,Color color){lblMessage.Text=text;lblMessage.ForeColor=color;}
     }
 }
