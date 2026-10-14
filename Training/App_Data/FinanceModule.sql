@@ -117,6 +117,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') DROP INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail;
     ALTER TABLE dbo.FinanceCostingDetail ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Training') CREATE INDEX IX_FinanceCostingDetail_Training ON dbo.FinanceCostingDetail(TrainingID,CostingLevel);
+    IF COL_LENGTH('dbo.FinanceCostingDetail','EmpID') IS NOT NULL AND COL_LENGTH('dbo.FinanceCostingDetail','TrainerID') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceCostingDetail') AND name='IX_FinanceCostingDetail_Person') CREATE INDEX IX_FinanceCostingDetail_Person ON dbo.FinanceCostingDetail(TrainingID,EmpID,TrainerID,CostHeadID);
 END;
 GO
 IF OBJECT_ID('dbo.FinanceActualExpenditure','U') IS NOT NULL
@@ -125,5 +126,6 @@ BEGIN
     IF EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') DROP INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure;
     ALTER TABLE dbo.FinanceActualExpenditure ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Training') CREATE INDEX IX_FinanceActualExpenditure_Training ON dbo.FinanceActualExpenditure(TrainingID,SessionID,CostHeadID);
+    IF COL_LENGTH('dbo.FinanceActualExpenditure','EmpID') IS NOT NULL AND COL_LENGTH('dbo.FinanceActualExpenditure','TrainerID') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
 END;
 GO
