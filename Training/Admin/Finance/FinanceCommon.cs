@@ -43,6 +43,14 @@ namespace Training.Admin
             return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
         }
 
+        public static int GetTrainerDays(clsDataAccess db, string trainingID)
+        {
+            DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM (SELECT DISTINCT TrainerID,TRY_CONVERT(date,SessionDate,105) AS SessionDate FROM SessionMaster WHERE TrainingID=@TrainingID AND ISNULL(TrainerID,'')<>'') X WHERE SessionDate IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            int count = dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
+            if (count > 0) return count;
+            return GetTrainerCount(db, trainingID) * GetTrainingDays(db, trainingID);
+        }
+
         public static int GetSessionTrainerCount(clsDataAccess db, string trainingID, string sessionID)
         {
             DataTable dt = db.GetDataTable("SELECT COUNT(DISTINCT TrainerID) AS Cnt FROM SessionMaster WHERE TrainingID=@TrainingID AND SessionID=@SessionID AND ISNULL(TrainerID,'')<>''", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID) });
@@ -68,6 +76,7 @@ namespace Training.Admin
             int attendedTraineeDays = GetAttendedTraineeDays(db, trainingID);
             int days = GetTrainingDays(db, trainingID);
             int trainers = GetTrainerCount(db, trainingID);
+            int trainerDays = GetTrainerDays(db, trainingID);
             DataTable training = db.GetDataTable("SELECT TOP 1 CourseID,ISNULL(TrainingLocation,'') AS TrainingLocation,DateFrom FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             string courseID = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["CourseID"]);
             string location = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["TrainingLocation"]);
@@ -103,7 +112,7 @@ namespace Training.Admin
                     {
                         if (unit == "Trainee-Day") qty = attendedTraineeDays;
                         else if (unit == "Trainee") qty = trainees;
-                        else if (unit == "Trainer-Day") qty = trainers * days;
+                        else if (unit == "Trainer-Day") qty = trainerDays;
                         else if (unit == "Trainer") qty = trainers;
                         else if (unit == "Day") qty = days;
                         else if (unit == "Fixed") qty = 1;
