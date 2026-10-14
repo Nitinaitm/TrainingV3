@@ -32,6 +32,7 @@ body{background:#f5f5f5;}
 <div class="col-lg-2 col-md-4 col-6 mb-2"><label class="summary-label">Trainees</label><asp:Label ID="lblTrainees" runat="server" CssClass="summary-value"></asp:Label></div>
 <div class="col-lg-2 col-md-4 col-6 mb-2"><label class="summary-label">Training Days</label><asp:Label ID="lblDays" runat="server" CssClass="summary-value"></asp:Label></div>
 <div class="col-lg-2 col-md-4 col-12 mb-2"><label class="summary-label">Total Cost</label><div class="summary-value total-value"><asp:Label ID="lblTotal" runat="server" Text="Rs. 0.00"></asp:Label></div></div>
+<div class="col-lg-4 col-md-8 col-12 mb-2"><label class="summary-label">Batch Type</label><div class="d-flex gap-2"><asp:DropDownList ID="ddlResidentialType" runat="server" CssClass="form-select"></asp:DropDownList><asp:Button ID="btnSaveResidentialType" runat="server" Text="Save Type" CssClass="btn btn-outline-primary" OnClick="btnSaveResidentialType_Click" /></div></div>
 </div>
 <div class="table-responsive">
 <asp:GridView ID="gvCosting" runat="server" CssClass="table table-bordered table-hover finance-grid" AutoGenerateColumns="False" DataKeyNames="CostingDetailID" OnRowCommand="gvCosting_RowCommand">
@@ -46,7 +47,7 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CalculatedAmount" HeaderText="Calculated" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="FinalAmount" HeaderText="Final" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="OverrideAmount" HeaderText="Override" DataFormatString="{0:N2}" />
-<asp:TemplateField HeaderText="Manual Override"><ItemTemplate><asp:TextBox ID="txtOverride" runat="server" CssClass="form-control form-control-sm" Text='<%# Eval("OverrideAmount") %>'></asp:TextBox><asp:Button ID="btnOverride" runat="server" Text="Save" CssClass="btn btn-sm btn-primary mt-1" CommandName="SaveOverride" CommandArgument="<%# Container.DataItemIndex %>" /></ItemTemplate></asp:TemplateField>
+<asp:TemplateField HeaderText="Manual Override"><ItemTemplate><asp:TextBox ID="txtOverride" runat="server" CssClass="form-control form-control-sm" Text='<%# Eval("OverrideAmount") %>' placeholder="Amount"></asp:TextBox><asp:TextBox ID="txtOverrideReason" runat="server" CssClass="form-control form-control-sm mt-1" Text='<%# Eval("OverrideReason") %>' placeholder="Reason for change"></asp:TextBox><asp:Button ID="btnOverride" runat="server" Text="Save" CssClass="btn btn-sm btn-primary mt-1" CommandName="SaveOverride" CommandArgument="<%# Container.DataItemIndex %>" /></ItemTemplate></asp:TemplateField>
 </Columns>
 </asp:GridView>
 </div>
