@@ -201,7 +201,12 @@ IF OBJECT_ID('dbo.FinanceTrainingSettings','U') IS NOT NULL
 BEGIN
     DECLARE @FinanceSettingsPK SYSNAME;
     SELECT @FinanceSettingsPK=KC.name FROM sys.key_constraints KC WHERE KC.parent_object_id=OBJECT_ID('dbo.FinanceTrainingSettings') AND KC.type='PK';
-    IF @FinanceSettingsPK IS NOT NULL EXEC('ALTER TABLE dbo.FinanceTrainingSettings DROP CONSTRAINT '+QUOTENAME(@FinanceSettingsPK));
+    IF @FinanceSettingsPK IS NOT NULL
+    BEGIN
+        DECLARE @FinanceSettingsSQL NVARCHAR(500);
+        SET @FinanceSettingsSQL = N'ALTER TABLE dbo.FinanceTrainingSettings DROP CONSTRAINT ' + QUOTENAME(@FinanceSettingsPK);
+        EXEC(@FinanceSettingsSQL);
+    END;
     ALTER TABLE dbo.FinanceTrainingSettings ALTER COLUMN TrainingID VARCHAR(100) NOT NULL;
     IF NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE parent_object_id=OBJECT_ID('dbo.FinanceTrainingSettings') AND type='PK')
         ALTER TABLE dbo.FinanceTrainingSettings ADD CONSTRAINT PK_FinanceTrainingSettings PRIMARY KEY CLUSTERED(TrainingID);
