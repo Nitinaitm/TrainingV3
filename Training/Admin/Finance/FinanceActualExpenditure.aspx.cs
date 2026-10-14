@@ -155,7 +155,7 @@ namespace Training.Admin
         private void BindSummary()
         {
             if(ddlTraining.SelectedValue==""){lblFinalCost.Text="Rs. 0.00";lblActual.Text="Rs. 0.00";lblBalance.Text="Rs. 0.00";return;}
-            DataTable dt=objDB.GetDataTable("SELECT ISNULL(SUM(FinalAmount),0) FinalCost FROM FinanceCostingDetail WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
+            DataTable dt=objDB.GetDataTable("SELECT ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel IN ('Batch','Session')),0)+ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID) AND CostingLevel='Course'),0)/NULLIF((SELECT COUNT(*) FROM TrainingDetails WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID)),0) AS FinalCost",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             decimal finalCost=Convert.ToDecimal(dt.Rows[0]["FinalCost"]);
             dt=objDB.GetDataTable("SELECT ISNULL(SUM(Amount),0) ActualCost FROM FinanceActualExpenditure WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             decimal actual=Convert.ToDecimal(dt.Rows[0]["ActualCost"]);
