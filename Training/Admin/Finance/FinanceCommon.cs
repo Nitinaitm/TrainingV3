@@ -13,8 +13,14 @@ namespace Training.Admin
 
         public static decimal GetRate(clsDataAccess db, int costHeadID, DateTime asOnDate, out int rateID)
         {
+            return GetRate(db, costHeadID, asOnDate, null, null, null, null, null, out rateID);
+        }
+
+        public static decimal GetRate(clsDataAccess db, int costHeadID, DateTime asOnDate, string courseID, string trainingID, string location, string residentialType, string trainerID, out int rateID)
+        {
             rateID = 0;
-            DataTable dt = db.GetDataTable("SELECT TOP 1 RateID,Rate FROM FinanceRateMaster WHERE CostHeadID=@CostHeadID AND Active='Y' AND EffectiveFrom<=@AsOnDate AND (EffectiveTo IS NULL OR EffectiveTo>=@AsOnDate) ORDER BY EffectiveFrom DESC,RateID DESC", new SqlParameter[] { new SqlParameter("@CostHeadID", costHeadID), new SqlParameter("@AsOnDate", asOnDate.Date) });
+            string query = "SELECT TOP 1 RateID,Rate FROM FinanceRateMaster WHERE CostHeadID=@CostHeadID AND Active='Y' AND EffectiveFrom<=@AsOnDate AND (EffectiveTo IS NULL OR EffectiveTo>=@AsOnDate) AND (CourseID IS NULL OR CourseID=@CourseID) AND (TrainingID IS NULL OR TrainingID=@TrainingID) AND (TrainingLocation IS NULL OR TrainingLocation=@Location) AND (ResidentialType IS NULL OR ResidentialType=@ResidentialType) AND (TrainerID IS NULL OR TrainerID=@TrainerID) ORDER BY (CASE WHEN CourseID IS NULL THEN 0 ELSE 1 END + CASE WHEN TrainingID IS NULL THEN 0 ELSE 4 END + CASE WHEN TrainingLocation IS NULL THEN 0 ELSE 2 END + CASE WHEN ResidentialType IS NULL THEN 0 ELSE 1 END + CASE WHEN TrainerID IS NULL THEN 0 ELSE 2 END) DESC,EffectiveFrom DESC,RateID DESC";
+            DataTable dt = db.GetDataTable(query, new SqlParameter[] { new SqlParameter("@CostHeadID", costHeadID), new SqlParameter("@AsOnDate", asOnDate.Date), new SqlParameter("@CourseID", (object)courseID ?? DBNull.Value), new SqlParameter("@TrainingID", (object)trainingID ?? DBNull.Value), new SqlParameter("@Location", (object)location ?? DBNull.Value), new SqlParameter("@ResidentialType", (object)residentialType ?? DBNull.Value), new SqlParameter("@TrainerID", (object)trainerID ?? DBNull.Value) });
             if (dt.Rows.Count == 0) return 0;
             rateID = Convert.ToInt32(dt.Rows[0]["RateID"]);
             return Convert.ToDecimal(dt.Rows[0]["Rate"]);
@@ -33,7 +39,7 @@ namespace Training.Admin
 
         public static int GetTraineeCount(clsDataAccess db, string trainingID)
         {
-            DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM TrainingAssignment WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            DataTable dt = db.GetDataTable("SELECT COUNT(DISTINCT EmpID) AS Cnt FROM TrainingAssignment WHERE TrainingID=@TrainingID AND ISNULL(AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(Cancelled,0)=0", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
         }
 
@@ -59,8 +65,14 @@ namespace Training.Admin
         public static void EnsureCostingForTraining(clsDataAccess db, string trainingID, string createdBy)
         {
             int trainees = GetTraineeCount(db, trainingID);
+            int attendedTraineeDays = GetAttendedTraineeDays(db, trainingID);
             int days = GetTrainingDays(db, trainingID);
             int trainers = GetTrainerCount(db, trainingID);
+            DataTable training = db.GetDataTable("SELECT TOP 1 CourseID,ISNULL(TrainingLocation,'') AS TrainingLocation FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            string courseID = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["CourseID"]);
+            string location = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["TrainingLocation"]);
+            DataTable settings = db.GetDataTable("SELECT ResidentialType FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            string residentialType = settings.Rows.Count == 0 ? "Unspecified" : Convert.ToString(settings.Rows[0]["ResidentialType"]);
             DataTable heads = db.GetDataTable("SELECT CostHeadID,CostLevel,CalculationMode,UnitType FROM FinanceCostHeadMaster WHERE Active='Y'");
             foreach (DataRow h in heads.Rows)
             {
@@ -73,18 +85,18 @@ namespace Training.Admin
                     DataTable exists = db.GetDataTable("SELECT CostingDetailID FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel='Batch' AND CostHeadID=@CostHeadID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@CostHeadID", headID) });
                     if (exists.Rows.Count > 0) continue;
                     int rateID;
-                    decimal rate = GetRate(db, headID, DateTime.Today, out rateID);
+                    decimal rate = GetRate(db, headID, DateTime.Today, courseID, trainingID, location, residentialType == "Unspecified" ? null : residentialType, null, out rateID);
                     decimal qty = 0;
                     if (mode != "Manual")
                     {
-                        if (unit == "Trainee-Day") qty = trainees * days;
+                        if (unit == "Trainee-Day") qty = attendedTraineeDays;
                         else if (unit == "Trainee") qty = trainees;
                         else if (unit == "Trainer-Day") qty = trainers * days;
                         else if (unit == "Trainer") qty = trainers;
                         else if (unit == "Day") qty = days;
                         else if (unit == "Fixed") qty = 1;
-                        else if (unit == "Trainee-Night") qty = GetTraineeHostelCount(db, trainingID) * Math.Max(0, days - 1);
-                        else if (unit == "Trainer-Night") qty = GetTrainerHostelCount(db, trainingID) * Math.Max(0, days - 1);
+                        else if (unit == "Trainee-Night") qty = residentialType == "Residential" ? GetTraineeHostelNights(db, trainingID) : 0;
+                        else if (unit == "Trainer-Night") qty = residentialType == "Residential" ? GetTrainerHostelNights(db, trainingID) : 0;
                     }
                     InsertCosting(db, trainingID, null, "Batch", headID, rateID, mode, unit, qty, rate, qty * rate, createdBy);
                 }
@@ -106,7 +118,7 @@ namespace Training.Admin
                     string mode = Convert.ToString(h["CalculationMode"]);
                     string unit = Convert.ToString(h["UnitType"]);
                     int rateID;
-                    decimal rate = GetRate(db, headID, asOn, out rateID);
+                    decimal rate = GetRate(db, headID, asOn, courseID, trainingID, location, residentialType == "Unspecified" ? null : residentialType, Convert.ToString(s["TrainerID"]), out rateID);
                     decimal qty = 0;
                     if (mode != "Manual")
                     {
@@ -124,14 +136,28 @@ namespace Training.Admin
             db.ExecuteSql("INSERT INTO FinanceCostingDetail(TrainingID,CourseID,SessionID,CostingLevel,CostHeadID,RateID,CalculationMode,UnitType,Quantity,AppliedRate,CalculatedAmount,Remarks,CreatedBy) SELECT @TrainingID,TD.CourseID,@SessionID,@Level,@CostHeadID,@RateID,@Mode,@Unit,@Qty,@Rate,@Amount,'Automatic finance costing',@CreatedBy FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID == null ? (object)DBNull.Value : sessionID), new SqlParameter("@Level", level), new SqlParameter("@CostHeadID", headID), new SqlParameter("@RateID", rateID == 0 ? (object)DBNull.Value : rateID), new SqlParameter("@Mode", mode), new SqlParameter("@Unit", unit), new SqlParameter("@Qty", qty), new SqlParameter("@Rate", rate), new SqlParameter("@Amount", amount), new SqlParameter("@CreatedBy", createdBy) });
         }
 
-        private static int GetTraineeHostelCount(clsDataAccess db, string trainingID)
+        public static int GetAttendedTraineeDays(clsDataAccess db, string trainingID)
         {
-            try { DataTable dt = db.GetDataTable("SELECT COUNT(*) Cnt FROM HostelAllotment WHERE TrainingID=@TrainingID AND Status='Allotted'", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) }); return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]); } catch { return 0; }
+            DataTable dt = db.GetDataTable("SELECT COUNT(*) AS Cnt FROM (SELECT DISTINCT SA.EmpID,CONVERT(date,SM.SessionDate) AS AttendanceDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID WHERE SA.TrainingID=@TrainingID AND SA.AttendanceStatus='Present') A", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]);
         }
 
-        private static int GetTrainerHostelCount(clsDataAccess db, string trainingID)
+        public static decimal GetTraineeManHours(clsDataAccess db, string trainingID)
         {
-            try { DataTable dt = db.GetDataTable("SELECT COUNT(DISTINCT HA.EmpID) Cnt FROM HostelAllotment HA INNER JOIN TrainerMaster T ON HA.EmpID=T.EmpID WHERE HA.TrainingID=@TrainingID AND HA.Status='Allotted' AND T.TrainerType='Internal'", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) }); return dt.Rows.Count == 0 ? 0 : Convert.ToInt32(dt.Rows[0]["Cnt"]); } catch { return 0; }
+            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(SM.TotalHours),0) AS TotalHours FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID WHERE SA.TrainingID=@TrainingID AND SA.AttendanceStatus='Present'", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToDecimal(dt.Rows[0]["TotalHours"]);
+        }
+
+        private static decimal GetTraineeHostelNights(clsDataAccess db, string trainingID)
+        {
+            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(ChargeableNights),0) AS Cnt FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND EmpID IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToDecimal(dt.Rows[0]["Cnt"]);
+        }
+
+        private static decimal GetTrainerHostelNights(clsDataAccess db, string trainingID)
+        {
+            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(ChargeableNights),0) AS Cnt FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND TrainerID IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            return dt.Rows.Count == 0 ? 0 : Convert.ToDecimal(dt.Rows[0]["Cnt"]);
         }
 
     }
