@@ -59,12 +59,28 @@ namespace Training.Admin
         protected void btnSave_Click(object sender,EventArgs e)
         {
             decimal amount; DateTime date;
-            if(ddlTraining.SelectedValue=="" || ddlCostHead.SelectedValue=="" || !Decimal.TryParse(txtAmount.Text.Trim(),out amount) || amount<=0 || !DateTime.TryParse(txtDate.Text,out date))
+            string expenditureEmpID = txtExpenditureEmpID.Text.Trim();
+            string expenditureTrainerID = txtExpenditureTrainerID.Text.Trim();
+            if(ddlTraining.SelectedValue=="" || ddlCostHead.SelectedValue=="" || !Decimal.TryParse(txtAmount.Text.Trim(),out amount) || amount<=0 || !DateTime.TryParse(txtDate.Text,out date) || (expenditureEmpID!="" && expenditureTrainerID!=""))
             {
-                ShowMessage("Training, Cost Head, valid Date and positive Amount are required.",Color.Red); return;
+                ShowMessage("Training, Cost Head, valid Date and positive Amount are required. Tag an expense to either an EmpID or TrainerID, not both.",Color.Red); return;
             }
-            int result=objDB.ExecuteSql("INSERT INTO FinanceActualExpenditure(TrainingID,CourseID,SessionID,CostHeadID,ExpenditureDate,Amount,VendorName,BillReference,Remarks,CreatedBy) SELECT @TrainingID,TD.CourseID,@SessionID,@CostHeadID,@Date,@Amount,@Vendor,@Bill,@Remarks,@CreatedBy FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID",
-                new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue),new SqlParameter("@SessionID",ddlSession.SelectedValue==""?(object)DBNull.Value:ddlSession.SelectedValue),new SqlParameter("@CostHeadID",Convert.ToInt32(ddlCostHead.SelectedValue)),new SqlParameter("@Date",date.Date),new SqlParameter("@Amount",amount),new SqlParameter("@Vendor",txtVendor.Text.Trim()),new SqlParameter("@Bill",txtBill.Text.Trim()),new SqlParameter("@Remarks",txtRemarks.Text.Trim()),new SqlParameter("@CreatedBy",Convert.ToString(Session["UserID"]))});
+            DataTable personCheck = null;
+            if (expenditureEmpID != "")
+            {
+                personCheck = objDB.GetDataTable("SELECT TOP 1 EmpID FROM TrainingAssignment WHERE TrainingID=@TrainingID AND EmpID=@EmpID AND ISNULL(AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(Cancelled,0)=0", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", expenditureEmpID) });
+            }
+            else if (expenditureTrainerID != "")
+            {
+                personCheck = objDB.GetDataTable("SELECT TOP 1 TrainerID FROM TrainingTrainerMapping WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID UNION SELECT TOP 1 TrainerID FROM SessionMaster WHERE TrainingID=@TrainingID AND TrainerID=@TrainerID", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@TrainerID", expenditureTrainerID) });
+            }
+            if (personCheck != null && personCheck.Rows.Count == 0)
+            {
+                ShowMessage("The tagged trainee/trainer is not assigned to this batch.", Color.Red);
+                return;
+            }
+            int result=objDB.ExecuteSql("INSERT INTO FinanceActualExpenditure(TrainingID,CourseID,SessionID,CostHeadID,EmpID,TrainerID,ExpenditureDate,Amount,VendorName,BillReference,Remarks,CreatedBy) SELECT @TrainingID,TD.CourseID,@SessionID,@CostHeadID,NULLIF(@EmpID,''),NULLIF(@TrainerID,''),@Date,@Amount,@Vendor,@Bill,@Remarks,@CreatedBy FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID",
+                new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue),new SqlParameter("@SessionID",ddlSession.SelectedValue==""?(object)DBNull.Value:ddlSession.SelectedValue),new SqlParameter("@CostHeadID",Convert.ToInt32(ddlCostHead.SelectedValue)),new SqlParameter("@EmpID",expenditureEmpID),new SqlParameter("@TrainerID",expenditureTrainerID),new SqlParameter("@Date",date.Date),new SqlParameter("@Amount",amount),new SqlParameter("@Vendor",txtVendor.Text.Trim()),new SqlParameter("@Bill",txtBill.Text.Trim()),new SqlParameter("@Remarks",txtRemarks.Text.Trim()),new SqlParameter("@CreatedBy",Convert.ToString(Session["UserID"]))});
             if(result>0){ShowMessage("Actual expenditure saved successfully.",Color.Green);ClearEntry();BindExpenditure();BindSummary();}
         }
 
@@ -79,7 +95,7 @@ namespace Training.Admin
         private void BindExpenditure()
         {
             if(ddlTraining.SelectedValue==""){gvExpenditure.DataSource=null;gvExpenditure.DataBind();return;}
-            DataTable dt=objDB.GetDataTable("SELECT X.ExpenditureID,X.ExpenditureDate,H.CostHeadName,ISNULL(SM.SessionName,'Batch Level') SessionName,X.VendorName,X.BillReference,X.Amount,X.Remarks FROM FinanceActualExpenditure X LEFT JOIN FinanceCostHeadMaster H ON X.CostHeadID=H.CostHeadID LEFT JOIN SessionMaster SM ON X.SessionID=SM.SessionID WHERE X.TrainingID=@TrainingID ORDER BY X.ExpenditureDate DESC,X.ExpenditureID DESC",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
+            DataTable dt=objDB.GetDataTable("SELECT X.ExpenditureID,X.ExpenditureDate,H.CostHeadName,ISNULL(SM.SessionName,'Batch Level') SessionName,X.EmpID,X.TrainerID,X.VendorName,X.BillReference,X.Amount,X.Remarks FROM FinanceActualExpenditure X LEFT JOIN FinanceCostHeadMaster H ON X.CostHeadID=H.CostHeadID LEFT JOIN SessionMaster SM ON X.SessionID=SM.SessionID WHERE X.TrainingID=@TrainingID ORDER BY X.ExpenditureDate DESC,X.ExpenditureID DESC",new SqlParameter[]{new SqlParameter("@TrainingID",ddlTraining.SelectedValue)});
             gvExpenditure.DataSource=dt;gvExpenditure.DataBind();
         }
 
@@ -163,7 +179,7 @@ namespace Training.Admin
         }
 
         private void ClearSelection(){BindExpenditure();BindHostelUsage();BindSummary();}
-        private void ClearEntry(){txtAmount.Text="";txtVendor.Text="";txtBill.Text="";txtRemarks.Text="";txtDate.Text=DateTime.Today.ToString("yyyy-MM-dd");}
+        private void ClearEntry(){txtAmount.Text="";txtVendor.Text="";txtBill.Text="";txtRemarks.Text="";txtExpenditureEmpID.Text="";txtExpenditureTrainerID.Text="";txtDate.Text=DateTime.Today.ToString("yyyy-MM-dd");}
         protected void btnClear_Click(object sender,EventArgs e){ClearEntry();lblMessage.Text="";}
         private void ShowMessage(string text,Color color){lblMessage.Text=text;lblMessage.ForeColor=color;}
     }
