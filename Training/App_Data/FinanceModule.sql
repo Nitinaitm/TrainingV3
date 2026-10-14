@@ -129,3 +129,29 @@ BEGIN
     IF COL_LENGTH('dbo.FinanceActualExpenditure','EmpID') IS NOT NULL AND COL_LENGTH('dbo.FinanceActualExpenditure','TrainerID') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.FinanceActualExpenditure') AND name='IX_FinanceActualExpenditure_Person') CREATE INDEX IX_FinanceActualExpenditure_Person ON dbo.FinanceActualExpenditure(TrainingID,EmpID,TrainerID,CostHeadID);
 END;
 GO
+
+/* Keep audit-table TrainingID columns aligned with the source tables. */
+DECLARE @FinanceAuditTable SYSNAME;
+DECLARE @FinanceAuditNullable BIT;
+DECLARE @FinanceAuditSQL NVARCHAR(1000);
+DECLARE FinanceAuditTrainingIDCursor CURSOR LOCAL FAST_FORWARD FOR
+SELECT T.name, C.is_nullable
+FROM sys.tables T
+INNER JOIN sys.columns C ON C.object_id=T.object_id
+INNER JOIN sys.types Y ON Y.user_type_id=C.user_type_id
+WHERE T.schema_id=SCHEMA_ID('dbo')
+  AND T.name LIKE 'Finance%[_]Audit'
+  AND C.name='TrainingID'
+  AND Y.name='varchar'
+  AND C.max_length < 100;
+OPEN FinanceAuditTrainingIDCursor;
+FETCH NEXT FROM FinanceAuditTrainingIDCursor INTO @FinanceAuditTable,@FinanceAuditNullable;
+WHILE @@FETCH_STATUS=0
+BEGIN
+    SET @FinanceAuditSQL=N'ALTER TABLE dbo.'+QUOTENAME(@FinanceAuditTable)+N' ALTER COLUMN TrainingID VARCHAR(100) '+CASE WHEN @FinanceAuditNullable=1 THEN N'NULL' ELSE N'NOT NULL' END+N';';
+    EXEC sp_executesql @FinanceAuditSQL;
+    FETCH NEXT FROM FinanceAuditTrainingIDCursor INTO @FinanceAuditTable,@FinanceAuditNullable;
+END;
+CLOSE FinanceAuditTrainingIDCursor;
+DEALLOCATE FinanceAuditTrainingIDCursor;
+GO
