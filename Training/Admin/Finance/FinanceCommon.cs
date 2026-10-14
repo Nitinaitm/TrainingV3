@@ -68,9 +68,11 @@ namespace Training.Admin
             int attendedTraineeDays = GetAttendedTraineeDays(db, trainingID);
             int days = GetTrainingDays(db, trainingID);
             int trainers = GetTrainerCount(db, trainingID);
-            DataTable training = db.GetDataTable("SELECT TOP 1 CourseID,ISNULL(TrainingLocation,'') AS TrainingLocation FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            DataTable training = db.GetDataTable("SELECT TOP 1 CourseID,ISNULL(TrainingLocation,'') AS TrainingLocation,DateFrom FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             string courseID = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["CourseID"]);
             string location = training.Rows.Count == 0 ? null : Convert.ToString(training.Rows[0]["TrainingLocation"]);
+            DateTime costingDate = DateTime.Today;
+            if (training.Rows.Count > 0) DateTime.TryParse(Convert.ToString(training.Rows[0]["DateFrom"]), out costingDate);
             DataTable settings = db.GetDataTable("SELECT ResidentialType FROM FinanceTrainingSettings WHERE TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             string residentialType = settings.Rows.Count == 0 ? "Unspecified" : Convert.ToString(settings.Rows[0]["ResidentialType"]);
             DataTable heads = db.GetDataTable("SELECT CostHeadID,CostLevel,CalculationMode,UnitType FROM FinanceCostHeadMaster WHERE Active='Y'");
@@ -94,7 +96,7 @@ namespace Training.Admin
                     }
                     if (exists.Rows.Count > 0) continue;
                     int rateID;
-                    decimal rate = GetRate(db, headID, DateTime.Today, courseID, trainingID, location, residentialType == "Unspecified" ? null : residentialType, null, out rateID);
+                    decimal rate = GetRate(db, headID, costingDate, courseID, trainingID, location, residentialType == "Unspecified" ? null : residentialType, null, out rateID);
                     decimal qty = 0;
                     if (mode != "Manual")
                     {
