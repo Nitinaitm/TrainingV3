@@ -43,7 +43,7 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CalculatedAmount" HeaderText="Calculated" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="OverrideAmount" HeaderText="Override" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="FinalAmount" HeaderText="Final" DataFormatString="{0:N2}" />
-<asp:TemplateField HeaderText="Manual Override"><ItemTemplate><asp:TextBox ID="txtOverride" runat="server" CssClass="form-control form-control-sm" Text='<%# Eval("OverrideAmount") %>'></asp:TextBox><asp:Button ID="btnOverride" runat="server" Text="Save" CssClass="btn btn-sm btn-primary mt-1" CommandName="SaveOverride" CommandArgument="<%# Container.DataItemIndex %>" /></ItemTemplate></asp:TemplateField>
+<asp:TemplateField HeaderText="Manual Override"><ItemTemplate><asp:TextBox ID="txtOverride" runat="server" CssClass="form-control form-control-sm" Text='<%# Eval("OverrideAmount") %>' placeholder="Amount"></asp:TextBox><asp:TextBox ID="txtOverrideReason" runat="server" CssClass="form-control form-control-sm mt-1" Text='<%# Eval("OverrideReason") %>' placeholder="Reason for change"></asp:TextBox><asp:Button ID="btnOverride" runat="server" Text="Save" CssClass="btn btn-sm btn-primary mt-1" CommandName="SaveOverride" CommandArgument="<%# Container.DataItemIndex %>" /></ItemTemplate></asp:TemplateField>
 </Columns>
 </asp:GridView>
 </div>
