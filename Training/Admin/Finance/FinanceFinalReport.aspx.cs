@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Web.UI.WebControls;
 
@@ -145,6 +146,7 @@ namespace Training.Admin
         {
             EnsureCostingForCourse(courseID);
             DataTable dt = objDB.GetDataTable(ReportBaseQuery() + " WHERE TD.CourseID=@CourseID ORDER BY TD.TrainingID", new SqlParameter[] { new SqlParameter("@CourseID", courseID) });
+            foreach (DataRow row in dt.Rows) row["BatchCount"] = dt.Rows.Count;
             BindGrid(dt);
             SetSummary(dt);
         }
@@ -154,7 +156,7 @@ namespace Training.Admin
             DataTable assignments = objDB.GetDataTable("SELECT DISTINCT TA.TrainingID FROM TrainingAssignment TA WHERE TA.EmpID=@EmpID AND ISNULL(TA.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA.Cancelled,0)=0", new SqlParameter[] { new SqlParameter("@EmpID", empID) });
             if (assignments.Rows.Count == 0) { ShowEmpty(); ShowMessage("No active course/batch assignments found for this EmpID.", Color.Red); return; }
             foreach (DataRow row in assignments.Rows) EnsureCostingForTraining(Convert.ToString(row["TrainingID"]));
-            string sql = "SELECT ISNULL(C.CourseName,'') AS CourseName,TD.TrainingID,ISNULL(TD.Batch,'') AS Batch,ISNULL(FTS.ResidentialType,'Unspecified') AS ResidentialType,H.CostHeadName,1 AS BatchCount,CAST(SUM(CASE WHEN D.CostingLevel='Session' THEN D.FinalAmount ELSE 0 END)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS SessionCost,CAST(SUM(CASE WHEN D.CostingLevel='Batch' THEN D.FinalAmount ELSE 0 END)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS BatchCost,CAST(SUM(D.FinalAmount)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS FinalCost,ISNULL(X.ActualPaid,0) AS ActualPaid,CAST(SUM(D.FinalAmount)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2))-ISNULL(X.ActualPaid,0) AS Balance,ISNULL(MH.ManHours,0) AS ManHours FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID INNER JOIN FinanceCostingDetail D ON D.TrainingID=TD.TrainingID INNER JOIN FinanceCostHeadMaster H ON H.CostHeadID=D.CostHeadID LEFT JOIN CourseMaster C ON C.CourseID=TD.CourseID LEFT JOIN FinanceTrainingSettings FTS ON FTS.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure WHERE EmpID=@EmpID GROUP BY TrainingID,CostHeadID) X ON X.TrainingID=TD.TrainingID AND X.CostHeadID=D.CostHeadID LEFT JOIN (SELECT SA.TrainingID,SUM(SM.TotalHours) ManHours FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SM.TrainingID=SA.TrainingID AND SM.SessionID=SA.SessionID WHERE SA.AttendanceStatus='Present' GROUP BY SA.TrainingID) MH ON MH.TrainingID=TD.TrainingID WHERE TA.EmpID=@EmpID AND ISNULL(TA.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA.Cancelled,0)=0 GROUP BY C.CourseName,TD.TrainingID,TD.Batch,FTS.ResidentialType,H.CostHeadName,X.ActualPaid,MH.ManHours ORDER BY TD.TrainingID,H.CostHeadName";
+            string sql = "SELECT ISNULL(C.CourseName,'') AS CourseName,TD.TrainingID,ISNULL(TD.Batch,'') AS Batch,ISNULL(FTS.ResidentialType,'Unspecified') AS ResidentialType,H.CostHeadName,1 AS BatchCount,CAST(SUM(CASE WHEN D.CostingLevel='Session' THEN D.FinalAmount ELSE 0 END)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS SessionCost,CAST(SUM(CASE WHEN D.CostingLevel='Batch' THEN D.FinalAmount ELSE 0 END)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS BatchCost,CAST(SUM(D.FinalAmount)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2)) AS FinalCost,ISNULL(X.ActualPaid,0) AS ActualPaid,CAST(SUM(D.FinalAmount)/NULLIF(CAST((SELECT COUNT(DISTINCT TA2.EmpID) FROM TrainingAssignment TA2 WHERE TA2.TrainingID=TD.TrainingID AND ISNULL(TA2.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA2.Cancelled,0)=0) AS DECIMAL(18,2)),0) AS DECIMAL(18,2))-ISNULL(X.ActualPaid,0) AS Balance,ISNULL(MH.ManHours,0) AS ManHours FROM TrainingDetails TD INNER JOIN FinanceCostingDetail D ON D.TrainingID=TD.TrainingID INNER JOIN FinanceCostHeadMaster H ON H.CostHeadID=D.CostHeadID LEFT JOIN CourseMaster C ON C.CourseID=TD.CourseID LEFT JOIN FinanceTrainingSettings FTS ON FTS.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure WHERE EmpID=@EmpID GROUP BY TrainingID,CostHeadID) X ON X.TrainingID=TD.TrainingID AND X.CostHeadID=D.CostHeadID LEFT JOIN (SELECT SA.TrainingID,SUM(SM.TotalHours) ManHours FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SM.TrainingID=SA.TrainingID AND SM.SessionID=SA.SessionID WHERE SA.AttendanceStatus='Present' GROUP BY SA.TrainingID) MH ON MH.TrainingID=TD.TrainingID WHERE EXISTS (SELECT 1 FROM TrainingAssignment TA WHERE TA.TrainingID=TD.TrainingID AND TA.EmpID=@EmpID AND ISNULL(TA.AssignmentStatus,'Assigned')<>'Cancelled' AND ISNULL(TA.Cancelled,0)=0) GROUP BY C.CourseName,TD.TrainingID,TD.Batch,FTS.ResidentialType,H.CostHeadName,X.ActualPaid,MH.ManHours ORDER BY TD.TrainingID,H.CostHeadName";
             DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { new SqlParameter("@EmpID", empID) });
             BindGrid(dt);
             SetSummary(dt);
@@ -192,11 +194,16 @@ namespace Training.Admin
             decimal final = 0;
             decimal actual = 0;
             decimal hours = 0;
+            HashSet<string> countedTrainingHours = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (DataRow r in dt.Rows)
             {
                 final += Convert.ToDecimal(r["FinalCost"]);
                 actual += Convert.ToDecimal(r["ActualPaid"]);
-                hours += dt.Columns.Contains("ManHours") && r["ManHours"] != DBNull.Value ? Convert.ToDecimal(r["ManHours"]) : 0;
+                string trainingID = dt.Columns.Contains("TrainingID") ? Convert.ToString(r["TrainingID"]) : "";
+                if (countedTrainingHours.Add(trainingID) && dt.Columns.Contains("ManHours") && r["ManHours"] != DBNull.Value)
+                {
+                    hours += Convert.ToDecimal(r["ManHours"]);
+                }
             }
             lblFinalCost.Text = "Rs. " + final.ToString("N2");
             lblActual.Text = "Rs. " + actual.ToString("N2");
