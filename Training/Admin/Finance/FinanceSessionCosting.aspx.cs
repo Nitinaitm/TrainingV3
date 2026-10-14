@@ -56,6 +56,7 @@ namespace Training.Admin
             if(ddlTraining.SelectedValue=="" || ddlSession.SelectedValue=="") return;
             string trainingID=ddlTraining.SelectedValue;
             string sessionID=ddlSession.SelectedValue;
+            FinanceCommon.EnsureCostingForTraining(objDB, trainingID, Convert.ToString(Session["UserID"]));
             DataTable session=objDB.GetDataTable("SELECT TOP 1 SessionDate FROM SessionMaster WHERE TrainingID=@TrainingID AND SessionID=@SessionID",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID),new SqlParameter("@SessionID",sessionID)});
             DateTime asOn=DateTime.Today;
             if(session.Rows.Count>0) DateTime.TryParse(Convert.ToString(session.Rows[0]["SessionDate"]),out asOn);
