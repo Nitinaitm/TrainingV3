@@ -116,11 +116,11 @@ namespace Training.Admin
 
             EnsureAutomaticBatchEntries(trainingID);
 
-            DataTable dt=objDB.GetDataTable("SELECT D.CostingDetailID,H.CostHeadName,H.CostLevel,D.CalculationMode,H.UnitType,D.Quantity,D.AppliedRate,D.CalculatedAmount,D.OverrideAmount,D.FinalAmount FROM FinanceCostingDetail D INNER JOIN FinanceCostHeadMaster H ON D.CostHeadID=H.CostHeadID WHERE D.TrainingID=@TrainingID AND D.CostingLevel='Batch' ORDER BY H.CostHeadName",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+            DataTable dt=objDB.GetDataTable("SELECT D.CostingDetailID,H.CostHeadName,H.CostLevel,D.CalculationMode,H.UnitType,D.Quantity,D.AppliedRate,D.CalculatedAmount,D.OverrideAmount,D.FinalAmount FROM FinanceCostingDetail D INNER JOIN FinanceCostHeadMaster H ON D.CostHeadID=H.CostHeadID WHERE (D.TrainingID=@TrainingID AND D.CostingLevel='Batch') OR (D.CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID) AND D.CostingLevel='Course') ORDER BY D.CostingLevel,H.CostHeadName",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
             gvCosting.DataSource=dt;
             gvCosting.DataBind();
 
-            DataTable total=objDB.GetDataTable("SELECT ISNULL(SUM(FinalAmount),0) AS Total FROM FinanceCostingDetail WHERE TrainingID=@TrainingID",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
+            DataTable total=objDB.GetDataTable("SELECT ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE TrainingID=@TrainingID AND CostingLevel IN ('Batch','Session')),0)+ISNULL((SELECT SUM(FinalAmount) FROM FinanceCostingDetail WHERE CourseID=(SELECT CourseID FROM TrainingDetails WHERE TrainingID=@TrainingID) AND CostingLevel='Course'),0) AS Total",new SqlParameter[]{new SqlParameter("@TrainingID",trainingID)});
             lblTotal.Text="Rs. "+Convert.ToDecimal(total.Rows[0]["Total"]).ToString("N2");
         }
 
