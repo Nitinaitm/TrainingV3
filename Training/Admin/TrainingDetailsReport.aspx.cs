@@ -18,7 +18,36 @@ namespace Training.Admin
             {
                 BindStatus();
                 BindCourse();
-                BindTrainingList();
+                string requestedTrainingID = Convert.ToString(Request.QueryString["TrainingID"]).Trim();
+                if (!String.IsNullOrWhiteSpace(requestedTrainingID))
+                {
+                    DataTable requestedTraining = GetTable("SELECT TrainingID FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter("@TrainingID", requestedTrainingID));
+                    if (requestedTraining.Rows.Count > 0)
+                    {
+                        txtTrainingID.Text = requestedTrainingID;
+                        ViewState["TrainingID"] = requestedTrainingID;
+                        LoadTrainingHeader(requestedTrainingID);
+                        BindSessions(requestedTrainingID);
+                        gvReport.DataSource = null;
+                        gvReport.DataBind();
+                        lblDetailMessage.Text = "";
+                        pnlTrainingList.Visible = false;
+                        pnlDetails.Visible = true;
+                    }
+                    else
+                    {
+                        txtTrainingID.Text = requestedTrainingID;
+                        pnlDetails.Visible = false;
+                        pnlTrainingList.Visible = true;
+                        BindTrainingList();
+                    }
+                }
+                else
+                {
+                    pnlDetails.Visible = false;
+                    pnlTrainingList.Visible = true;
+                    BindTrainingList();
+                }
             }
         }
 
