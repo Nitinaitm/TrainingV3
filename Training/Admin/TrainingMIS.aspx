@@ -267,59 +267,197 @@
         .kpi-modal-box {
             background: #fff;
             width: min(1600px,99vw);
-            max-height: none;
+            max-height: calc(100vh - 40px);
             margin: auto;
-            border-radius: 12px;
+            border: 1px solid #dbe4f0;
+            border-radius: 14px;
             box-shadow: 0 20px 60px rgba(0,0,0,.25);
-            overflow: hidden
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .kpi-modal-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 18px;
-            background: #17365d;
+            gap: 16px;
+            padding: 16px 20px;
+            background: linear-gradient(110deg,#17365d,#245b91);
             color: #fff;
             font-size: 18px;
-            font-weight: 700
+            font-weight: 700;
+            flex: 0 0 auto;
         }
 
         .kpi-close {
-            background: none;
-            border: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 9px;
             color: #fff;
-            font-size: 28px;
+            font-size: 26px;
             line-height: 1;
-            cursor: pointer
+            cursor: pointer;
+            transition: background .15s ease, transform .15s ease;
+        }
+
+        .kpi-close:hover, .kpi-close:focus {
+            background: rgba(255,255,255,.24);
+            transform: scale(1.04);
+            outline: none;
         }
 
         .kpi-modal-body {
-            padding: 15px;
+            padding: 18px;
             overflow: auto;
-            max-height: calc(100vh - 170px)
+            max-height: calc(100vh - 160px);
+            background: #f8fafc;
+            overscroll-behavior: contain;
         }
 
         .kpi-modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            padding: 10px 15px;
-            border-top: 1px solid #e2e8f0
+            padding: 12px 18px;
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            flex: 0 0 auto;
         }
 
         .kpi-export {
-            background: #198754;
+            background: #15803d;
             color: #fff;
-            border: 0;
-            border-radius: 6px;
-            padding: 8px 14px;
-            font-weight: 600;
-            cursor: pointer
+            border: 1px solid #15803d;
+            border-radius: 8px;
+            padding: 9px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(21,128,61,.18);
+            transition: background .15s ease, transform .15s ease;
+        }
+
+        .kpi-export:hover, .kpi-export:focus {
+            background: #166534;
+            border-color: #166534;
+            transform: translateY(-1px);
+            outline: none;
         }
 
         .kpi-modal-body .mis-table {
-            min-width: 850px
+            min-width: 850px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border: 1px solid #dbe4f0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .kpi-modal-body .mis-table th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #e8eef7;
+            color: #17365d;
+            padding: 12px 13px;
+            border-bottom: 2px solid #cbd8e8;
+            border-right: 1px solid #dbe4f0;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .kpi-modal-body .mis-table td {
+            padding: 11px 13px;
+            border-bottom: 1px solid #e8edf4;
+            border-right: 1px solid #edf1f6;
+            color: #334155;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .kpi-modal-body .mis-table tbody tr:nth-child(even) {
+            background: #f5f8fc;
+        }
+
+        .kpi-modal-body .mis-table tbody tr:hover {
+            background: #eaf2ff;
+        }
+
+        .kpi-modal-body .mis-table th:first-child,
+        .kpi-modal-body .mis-table td:first-child {
+            text-align: center;
+            min-width: 64px;
+            width: 64px;
+            color: #64748b;
+        }
+
+        .training-id-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border: 1px solid #bfd3f7;
+            border-radius: 7px;
+            background: #eff6ff;
+            color: #1d4ed8 !important;
+            font-weight: 700;
+            text-decoration: none !important;
+            transition: background .15s ease, color .15s ease, border-color .15s ease;
+        }
+
+        .training-id-link:hover, .training-id-link:focus {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            color: #fff !important;
+            text-decoration: none !important;
+            outline: none;
+        }
+
+        .kpi-modal .summary-link {
+            min-width: 54px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #eff6ff;
+            border: 1px solid #c7d7fe;
+            color: #1d4ed8 !important;
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 1px 2px rgba(29,78,216,.08);
+        }
+
+        .kpi-modal .summary-link:hover, .kpi-modal .summary-link:focus {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            color: #fff !important;
+        }
+
+        @media(max-width:600px) {
+            .kpi-modal {
+                padding: 8px;
+            }
+
+            .kpi-modal-box {
+                width: 100%;
+                max-height: calc(100vh - 16px);
+                border-radius: 10px;
+            }
+
+            .kpi-modal-head {
+                padding: 12px 14px;
+                font-size: 16px;
+            }
+
+            .kpi-modal-body {
+                padding: 10px;
+                max-height: calc(100vh - 135px);
+            }
         }
 
         @media(max-width:1100px) {
@@ -564,7 +702,7 @@
                     <button type="button" class="kpi-close" onclick="closeCourseSummary();return false;">&times;</button>
                 </div>
                 <div class="kpi-modal-body">
-                    <asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
+                    <asp:GridView ID="gvCourse" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand" OnRowDataBound="gvCourse_RowDataBound">
                         <Columns>
                             <asp:BoundField DataField="CourseName" HeaderText="Course" />
                             <asp:TemplateField HeaderText="Count">
