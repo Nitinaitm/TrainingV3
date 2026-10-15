@@ -257,8 +257,8 @@ namespace Training.Admin
                     {
                         HyperLink trainingLink=new HyperLink();
                         trainingLink.Text=trainingID;
-                        trainingLink.NavigateUrl=ResolveUrl("~/Admin/TrainingDetailsReport.aspx?TrainingID="+Server.UrlEncode(trainingID));
-                        trainingLink.Target="_blank";
+                        trainingLink.NavigateUrl="#";
+                        trainingLink.Attributes["onclick"]="return openTrainingDetails("+System.Web.HttpUtility.JavaScriptStringEncode(trainingID,true)+");";
                         trainingLink.ToolTip="Open training details in a new tab";
                         e.Row.Cells[trainingIDColumnIndex].Controls.Clear();
                         e.Row.Cells[trainingIDColumnIndex].Text="";
