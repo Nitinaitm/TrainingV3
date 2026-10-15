@@ -196,7 +196,7 @@
         }
 
         .chart-card-wide .chart-holder {
-            height: 400px;
+            height: 430px;
         }
 
         .mis-table {
@@ -353,7 +353,7 @@
             }
 
             .chart-card-wide .chart-holder {
-                height: 390px;
+                height: 420px;
             }
 
             .mis-wrap {
@@ -551,8 +551,16 @@
                 <div class="chart-holder" id="chartTrainingType" role="img" aria-label="Training Type Distribution"></div>
             </div>
             <div class="chart-card chart-card-wide">
-                <div class="chart-title">Monthly Training Trend</div>
+                <div class="chart-title">Monthly Training Trend — Started vs Ended</div>
                 <div class="chart-holder" id="chartTrainingTrend" role="img" aria-label="Monthly Training Trend"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Company-wise Trainee Trained</div>
+                <div class="chart-holder" id="chartCompanyTrainees" role="img" aria-label="Company-wise Trainee Trained"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Top 10 Courses by Trainee Trained</div>
+                <div class="chart-holder" id="chartTopCourses" role="img" aria-label="Top 10 Courses by Trainee Trained"></div>
             </div>
         </div>
         <asp:Panel ID="pnlCourseSummary" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
@@ -654,7 +662,7 @@
             var container = document.getElementById(containerId);
             if (!container) return;
             if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
-            var width = 1000, height = 400, left = 58, right = 28, top = 35, bottom = 105, plotW = width - left - right, plotH = height - top - bottom;
+            var width = 1000, height = 430, left = 78, right = 82, top = 35, bottom = 115, plotW = width - left - right, plotH = height - top - bottom;
             var started = startedValues.map(function(v) { return Number(v) || 0; });
             var ended = endedValues.map(function(v) { return Number(v) || 0; });
             var max = Math.max.apply(null, started.concat(ended).concat([1]));
@@ -681,7 +689,14 @@
             labels.forEach(function(label, i) {
                 if (labels.length <= 18 || i % Math.ceil(labels.length / 18) === 0 || i === labels.length - 1) {
                     var x = labels.length === 1 ? left + plotW / 2 : left + plotW * i / (labels.length - 1);
-                    svg.appendChild(misSvgElement("text", { x: x, y: top + plotH + 30, "text-anchor": "end", transform: "rotate(-25 " + x + " " + (top + plotH + 30) + ")", fill: "#334155", "font-size": "11" }, String(label)));
+                    var monthLabel = String(label);
+                    var monthParts = monthLabel.split("-");
+                    if (monthParts.length === 2 && monthParts[0].length === 4) {
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        var monthIndex = parseInt(monthParts[1], 10) - 1;
+                        if (monthIndex >= 0 && monthIndex < 12) monthLabel = monthNames[monthIndex] + "-" + monthParts[0].substring(2);
+                    }
+                    svg.appendChild(misSvgElement("text", { x: x, y: top + plotH + 30, "text-anchor": "end", transform: "rotate(-25 " + x + " " + (top + plotH + 30) + ")", fill: "#334155", "font-size": "11" }, monthLabel));
                 }
             });
             svg.appendChild(misSvgElement("line", { x1: width / 2 - 120, y1: 18, x2: width / 2 - 95, y2: 18, stroke: "#2563eb", "stroke-width": "3" }));
@@ -691,10 +706,12 @@
             container.innerHTML = "";
             container.appendChild(svg);
         }
-        window.renderTrainingMISCharts = function(statusLabels, statusValues, typeLabels, typeValues, trendLabels, startedValues, endedValues) {
+        window.renderTrainingMISCharts = function(statusLabels, statusValues, typeLabels, typeValues, trendLabels, startedValues, endedValues, companyLabels, companyValues, courseLabels, courseValues) {
             misDrawBars("chartTrainingStatus", statusLabels, statusValues, false);
             misDrawBars("chartTrainingType", typeLabels, typeValues, true);
             misDrawLine("chartTrainingTrend", trendLabels, startedValues, endedValues);
+            misDrawBars("chartCompanyTrainees", companyLabels, companyValues, true);
+            misDrawBars("chartTopCourses", courseLabels, courseValues, true);
         };
         function openTrainingDetails(trainingID) {
             var reportWindow = window.open("about:blank", "_blank");
