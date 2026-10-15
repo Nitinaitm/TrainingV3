@@ -183,6 +183,39 @@
                 background: #f8fafc
             }
 
+        .summary-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            padding: 6px 13px;
+            border-radius: 20px;
+            background: #e8f0ff;
+            border: 1px solid #c7d7fe;
+            color: #1d4ed8 !important;
+            font-weight: 700;
+            text-decoration: none !important;
+            transition: background .15s ease, color .15s ease, transform .15s ease;
+        }
+
+        .summary-link:hover, .summary-link:focus {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            color: #fff !important;
+            text-decoration: none !important;
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .mis-table td:nth-child(2), .mis-table th:nth-child(2) {
+            text-align: center;
+            width: 100px;
+        }
+
+        .mis-table tbody tr:hover {
+            background: #eef4ff;
+        }
+
         .message {
             font-weight: 600;
             color: #475569;
@@ -386,6 +419,12 @@
                     <asp:LinkButton ID="lnkFeedback" runat="server" CommandArgument="Feedback" CssClass="kpi-link" OnClick="kpiCard_Click">
                         <div class="kpi-label">Feedback Submitted</div>
                         <asp:Label ID="lblFeedback" runat="server" CssClass="kpi-value" />
+                    </asp:LinkButton>
+                </div>
+                <div class="kpi k7">
+                    <asp:LinkButton ID="lnkPreTest" runat="server" CommandArgument="PreTest" CssClass="kpi-link" OnClick="kpiCard_Click" Visible="true">
+                        <div class="kpi-label">Avg PreTest %</div>
+                        <asp:Label ID="lblPreTest" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
                 <div class="kpi k6">
