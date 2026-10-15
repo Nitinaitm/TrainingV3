@@ -18,7 +18,7 @@ namespace Training.Admin
             {
                 BindStatus();
                 BindCourse();
-                string requestedTrainingID = Convert.ToString(Request.QueryString["TrainingID"]).Trim();
+                string requestedTrainingID = Convert.ToString(Request.Form["MISSelectedTrainingID"]).Trim();
                 if (!String.IsNullOrWhiteSpace(requestedTrainingID))
                 {
                     DataTable requestedTraining = GetTable("SELECT TrainingID FROM TrainingDetails WHERE TrainingID=@TrainingID", new SqlParameter("@TrainingID", requestedTrainingID));
