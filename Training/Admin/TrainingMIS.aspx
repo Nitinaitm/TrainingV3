@@ -162,6 +162,42 @@
             gap: 20px
         }
 
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 3px 14px rgba(15,23,42,.08);
+            min-width: 0;
+        }
+
+        .chart-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .chart-title {
+            color: #17365d;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .chart-holder {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-card-wide .chart-holder {
+            height: 330px;
+        }
+
         .mis-table {
             width: 100%;
             border-collapse: collapse
@@ -303,8 +339,16 @@
         }
 
         @media(max-width:600px) {
-            .kpi-grid, .filter-grid, .summary-grid {
+            .kpi-grid, .filter-grid, .summary-grid, .chart-grid {
                 grid-template-columns: 1fr
+            }
+
+            .chart-card-wide {
+                grid-column: auto;
+            }
+
+            .chart-holder, .chart-card-wide .chart-holder {
+                height: 260px;
             }
 
             .mis-wrap {
@@ -492,6 +536,20 @@
                 </asp:GridView>
             </div>
         </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">Training Status Distribution</div>
+                <div class="chart-holder"><canvas id="chartTrainingStatus"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Training Type Distribution</div>
+                <div class="chart-holder"><canvas id="chartTrainingType"></canvas></div>
+            </div>
+            <div class="chart-card chart-card-wide">
+                <div class="chart-title">Monthly Training Trend</div>
+                <div class="chart-holder"><canvas id="chartTrainingTrend"></canvas></div>
+            </div>
+        </div>
         <asp:Panel ID="pnlCourseSummary" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
             <div class="kpi-modal-box">
                 <div class="kpi-modal-head">
@@ -531,6 +589,7 @@
             </div>
         </asp:Panel>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function openTrainingDetails(trainingID) {
             var reportWindow = window.open("about:blank", "_blank");
