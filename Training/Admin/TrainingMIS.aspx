@@ -388,8 +388,8 @@
                         <asp:Label ID="lblFeedback" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
                 </div>
-                <div class="kpi k2">
-                    <asp:LinkButton ID="lnkPostTest" runat="server" CommandArgument="PostTest" CssClass="kpi-link" OnClick="kpiCard_Click">
+                <div class="kpi k6">
+                    <asp:LinkButton ID="lnkPostTest" runat="server" CommandArgument="PostTest" CssClass="kpi-link" OnClick="kpiCard_Click" Visible="true">
                         <div class="kpi-label">Avg Post Test %</div>
                         <asp:Label ID="lblPostTest" runat="server" CssClass="kpi-value" />
                     </asp:LinkButton>
