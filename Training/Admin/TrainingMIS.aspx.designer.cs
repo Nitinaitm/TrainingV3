@@ -256,6 +256,24 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.Label lblFeedback;
         
         /// <summary>
+        /// lnkPreTest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPreTest;
+
+        /// <summary>
+        /// lblPreTest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPreTest;
+
+        /// <summary>
         /// lnkPostTest control.
         /// </summary>
         /// <remarks>
