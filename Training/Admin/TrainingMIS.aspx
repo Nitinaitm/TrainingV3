@@ -539,15 +539,15 @@
         <div class="chart-grid">
             <div class="chart-card">
                 <div class="chart-title">Training Status Distribution</div>
-                <div class="chart-holder"><canvas id="chartTrainingStatus"></canvas></div>
+                <div class="chart-holder" id="chartTrainingStatus" role="img" aria-label="Training Status Distribution"></div>
             </div>
             <div class="chart-card">
                 <div class="chart-title">Training Type Distribution</div>
-                <div class="chart-holder"><canvas id="chartTrainingType"></canvas></div>
+                <div class="chart-holder" id="chartTrainingType" role="img" aria-label="Training Type Distribution"></div>
             </div>
             <div class="chart-card chart-card-wide">
                 <div class="chart-title">Monthly Training Trend</div>
-                <div class="chart-holder"><canvas id="chartTrainingTrend"></canvas></div>
+                <div class="chart-holder" id="chartTrainingTrend" role="img" aria-label="Monthly Training Trend"></div>
             </div>
         </div>
         <asp:Panel ID="pnlCourseSummary" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
@@ -589,8 +589,94 @@
             </div>
         </asp:Panel>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        function misSvgElement(name, attrs, textValue) {
+            var node = document.createElementNS("http://www.w3.org/2000/svg", name);
+            Object.keys(attrs || {}).forEach(function(key) { node.setAttribute(key, attrs[key]); });
+            if (textValue !== undefined && textValue !== null) node.textContent = textValue;
+            return node;
+        }
+        function misDrawEmpty(container, message) {
+            container.innerHTML = "";
+            var svg = misSvgElement("svg", { viewBox: "0 0 600 260", width: "100%", height: "100%", role: "img" });
+            svg.appendChild(misSvgElement("text", { x: "300", y: "130", "text-anchor": "middle", fill: "#64748b", "font-size": "16" }, message));
+            container.appendChild(svg);
+        }
+        function misDrawBars(containerId, labels, values, horizontal) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
+            var width = 600, height = 300, left = horizontal ? 150 : 48, right = 24, top = 18, bottom = horizontal ? 18 : 65;
+            var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": container.getAttribute("aria-label") || "Chart" });
+            var max = Math.max.apply(null, values.map(function(v) { return Number(v) || 0; }));
+            if (max < 1) max = 1;
+            var plotW = width - left - right, plotH = height - top - bottom;
+            for (var tick = 0; tick <= 4; tick++) {
+                var val = max * tick / 4;
+                if (horizontal) {
+                    var gx = left + plotW * tick / 4;
+                    svg.appendChild(misSvgElement("line", { x1: gx, y1: top, x2: gx, y2: top + plotH, stroke: "#e2e8f0" }));
+                    svg.appendChild(misSvgElement("text", { x: gx, y: height - 3, "text-anchor": "middle", fill: "#64748b", "font-size": "11" }, String(Math.round(val))));
+                } else {
+                    var gy = top + plotH - plotH * tick / 4;
+                    svg.appendChild(misSvgElement("line", { x1: left, y1: gy, x2: width - right, y2: gy, stroke: "#e2e8f0" }));
+                    svg.appendChild(misSvgElement("text", { x: left - 8, y: gy + 4, "text-anchor": "end", fill: "#64748b", "font-size": "11" }, String(Math.round(val))));
+                }
+            }
+            labels.forEach(function(label, i) {
+                var value = Number(values[i]) || 0;
+                if (horizontal) {
+                    var rowH = plotH / labels.length, barH = Math.min(28, rowH * 0.62), y = top + i * rowH + (rowH - barH) / 2;
+                    var displayLabel = String(label || "(Blank)");
+                    if (displayLabel.length > 20) displayLabel = displayLabel.substring(0, 18) + "...";
+                    svg.appendChild(misSvgElement("text", { x: left - 10, y: y + barH / 2 + 4, "text-anchor": "end", fill: "#334155", "font-size": "12" }, displayLabel));
+                    svg.appendChild(misSvgElement("rect", { x: left, y: y, width: plotW * value / max, height: barH, rx: 4, fill: "#14b8a6" }));
+                    svg.appendChild(misSvgElement("text", { x: left + plotW * value / max + 6, y: y + barH / 2 + 4, fill: "#334155", "font-size": "12" }, String(value)));
+                } else {
+                    var colW = plotW / labels.length, barW = Math.min(48, colW * 0.62), x = left + i * colW + (colW - barW) / 2, barH2 = plotH * value / max, y2 = top + plotH - barH2;
+                    svg.appendChild(misSvgElement("rect", { x: x, y: y2, width: barW, height: Math.max(0, barH2), rx: 4, fill: "#3b82f6" }));
+                    svg.appendChild(misSvgElement("text", { x: x + barW / 2, y: y2 - 6, "text-anchor": "middle", fill: "#334155", "font-size": "12" }, String(value)));
+                    var labelText = String(label || "(Blank)");
+                    if (labelText.length > 12) labelText = labelText.substring(0, 10) + "...";
+                    var labelNode = misSvgElement("text", { x: x + barW / 2, y: top + plotH + 18, "text-anchor": "end", transform: "rotate(-30 " + (x + barW / 2) + " " + (top + plotH + 18) + ")", fill: "#334155", "font-size": "11" }, labelText);
+                    svg.appendChild(labelNode);
+                }
+            });
+            container.innerHTML = "";
+            container.appendChild(svg);
+        }
+        function misDrawLine(containerId, labels, values) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
+            var width = 900, height = 330, left = 52, right = 24, top = 20, bottom = 55, plotW = width - left - right, plotH = height - top - bottom;
+            var nums = values.map(function(v) { return Number(v) || 0; });
+            var max = Math.max.apply(null, nums.concat([1]));
+            var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": "Monthly Training Trend" });
+            for (var tick = 0; tick <= 4; tick++) {
+                var gy = top + plotH - plotH * tick / 4;
+                svg.appendChild(misSvgElement("line", { x1: left, y1: gy, x2: width - right, y2: gy, stroke: "#e2e8f0" }));
+                svg.appendChild(misSvgElement("text", { x: left - 8, y: gy + 4, "text-anchor": "end", fill: "#64748b", "font-size": "11" }, String(Math.round(max * tick / 4))));
+            }
+            var points = nums.map(function(value, i) {
+                var x = labels.length === 1 ? left + plotW / 2 : left + plotW * i / (labels.length - 1);
+                var y = top + plotH - plotH * value / max;
+                return { x: x, y: y, value: value, label: labels[i] };
+            });
+            if (points.length > 1) svg.appendChild(misSvgElement("polyline", { points: points.map(function(p) { return p.x + "," + p.y; }).join(" "), fill: "none", stroke: "#7c3aed", "stroke-width": "3", "stroke-linejoin": "round", "stroke-linecap": "round" }));
+            points.forEach(function(p, i) {
+                svg.appendChild(misSvgElement("circle", { cx: p.x, cy: p.y, r: 4, fill: "#7c3aed" }));
+                svg.appendChild(misSvgElement("text", { x: p.x, y: p.y - 10, "text-anchor": "middle", fill: "#334155", "font-size": "12" }, String(p.value)));
+                if (labels.length <= 18 || i % Math.ceil(labels.length / 18) === 0 || i === labels.length - 1) svg.appendChild(misSvgElement("text", { x: p.x, y: height - 15, "text-anchor": "end", transform: "rotate(-25 " + p.x + " " + (height - 15) + ")", fill: "#334155", "font-size": "11" }, String(p.label)));
+            });
+            container.innerHTML = "";
+            container.appendChild(svg);
+        }
+        window.renderTrainingMISCharts = function(statusLabels, statusValues, typeLabels, typeValues, trendLabels, trendValues) {
+            misDrawBars("chartTrainingStatus", statusLabels, statusValues, false);
+            misDrawBars("chartTrainingType", typeLabels, typeValues, true);
+            misDrawLine("chartTrainingTrend", trendLabels, trendValues);
+        };
         function openTrainingDetails(trainingID) {
             var reportWindow = window.open("about:blank", "_blank");
             var xhr = new XMLHttpRequest();
