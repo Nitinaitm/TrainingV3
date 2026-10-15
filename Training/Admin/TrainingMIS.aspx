@@ -493,6 +493,21 @@
         </asp:Panel>
     </div>
     <script>
+        function openTrainingDetails(trainingID) {
+            var form = document.createElement("form");
+            form.method = "post";
+            form.action = '<%= ResolveUrl("~/Admin/TrainingDetailsReport.aspx") %>';
+            form.target = "_blank";
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "MISSelectedTrainingID";
+            input.value = trainingID;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+            return false;
+        }
         function showKpiDetails() { var e = document.getElementById("pnlKpiDetails"); if (e) e.style.display = "flex"; }
         function closeKpiDetails() { var e = document.getElementById("pnlKpiDetails"); if (e) e.style.display = "none"; }
         function showCourseSummary() { var e = document.getElementById("pnlCourseSummary"); if (e) e.style.display = "flex"; }
