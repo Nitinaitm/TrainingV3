@@ -309,6 +309,7 @@ namespace Training.Admin
                         HyperLink trainingLink=new HyperLink();
                         trainingLink.Text=trainingID;
                         trainingLink.NavigateUrl="#";
+                        trainingLink.CssClass="training-id-link";
                         trainingLink.Attributes["onclick"]="return openTrainingDetails("+System.Web.HttpUtility.JavaScriptStringEncode(trainingID,true)+");";
                         trainingLink.ToolTip="Open training details in a new tab";
                         e.Row.Cells[trainingIDColumnIndex].Controls.Clear();
@@ -316,6 +317,22 @@ namespace Training.Admin
                         e.Row.Cells[trainingIDColumnIndex].Controls.Add(trainingLink);
                     }
                 }
+            }
+        }
+
+        protected void gvCourse_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType==DataControlRowType.Header)
+            {
+                TableCell serialCell=new TableCell();
+                serialCell.Text="S.No.";
+                e.Row.Cells.AddAt(0,serialCell);
+            }
+            else if(e.Row.RowType==DataControlRowType.DataRow)
+            {
+                TableCell serialCell=new TableCell();
+                serialCell.Text=(e.Row.RowIndex+1).ToString();
+                e.Row.Cells.AddAt(0,serialCell);
             }
         }
 
