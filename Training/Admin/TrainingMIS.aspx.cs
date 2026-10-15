@@ -160,10 +160,7 @@ namespace Training.Admin
             string typeValues=SerializeColumn(typeData,"TrainingCount",serializer);
             string trendLabels=SerializeColumn(trendData,"TrainingMonth",serializer);
             string trendValues=SerializeColumn(trendData,"TrainingCount",serializer);
-            string script="if(window.Chart){if(window.trainingStatusChart)window.trainingStatusChart.destroy();if(window.trainingTypeChart)window.trainingTypeChart.destroy();if(window.trainingTrendChart)window.trainingTrendChart.destroy();";
-            script+="window.trainingStatusChart=new Chart(document.getElementById('chartTrainingStatus'),{type:'bar',data:{labels:"+statusLabels+",datasets:[{label:'Trainings',data:"+statusValues+",backgroundColor:'#3b82f6',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});";
-            script+="window.trainingTypeChart=new Chart(document.getElementById('chartTrainingType'),{type:'bar',data:{labels:"+typeLabels+",datasets:[{label:'Trainings',data:"+typeValues+",backgroundColor:'#14b8a6',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}});";
-            script+="window.trainingTrendChart=new Chart(document.getElementById('chartTrainingTrend'),{type:'line',data:{labels:"+trendLabels+",datasets:[{label:'Trainings started',data:"+trendValues+",borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,.12)',fill:true,tension:.25,pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});}";
+            string script="if(window.renderTrainingMISCharts){window.renderTrainingMISCharts("+statusLabels+","+statusValues+","+typeLabels+","+typeValues+","+trendLabels+","+trendValues+");}";
             ScriptManager.RegisterStartupScript(this,GetType(),"trainingMISCharts",script,true);
         }
 
