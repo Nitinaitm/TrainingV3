@@ -494,18 +494,21 @@
     </div>
     <script>
         function openTrainingDetails(trainingID) {
-            var form = document.createElement("form");
-            form.method = "post";
-            form.action = '<%= ResolveUrl("~/Admin/TrainingDetailsReport.aspx") %>';
-            form.target = "_blank";
-            var input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "MISSelectedTrainingID";
-            input.value = trainingID;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
+            var reportWindow = window.open("about:blank", "_blank");
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '<%= ResolveUrl("~/Admin/TrainingMIS.aspx/SetTrainingSession") %>', true);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        reportWindow.location = '<%= ResolveUrl("~/Admin/TrainingDetailsReport.aspx") %>';
+                    } else {
+                        reportWindow.close();
+                        alert("Unable to open training details. Please try again.");
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ trainingID: trainingID }));
             return false;
         }
         function showKpiDetails() { var e = document.getElementById("pnlKpiDetails"); if (e) e.style.display = "flex"; }
