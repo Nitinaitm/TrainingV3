@@ -17,6 +17,13 @@ namespace Training.Admin
             if(!IsPostBack){BindStatus();BindMIS();}
         }
 
+        [System.Web.Services.WebMethod(EnableSession=true)]
+        public static void SetTrainingSession(string trainingID)
+        {
+            if(string.IsNullOrWhiteSpace(trainingID)) throw new System.ArgumentException("TrainingID is required.");
+            System.Web.HttpContext.Current.Session["MISSelectedTrainingID"]=trainingID.Trim();
+        }
+
         private void BindStatus()
         {
             using(SqlConnection con=new SqlConnection(constr))
