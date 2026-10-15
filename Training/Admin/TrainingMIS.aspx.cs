@@ -14,7 +14,8 @@ namespace Training.Admin
 
         protected void Page_Load(object sender,EventArgs e)
         {
-            if(!IsPostBack){BindStatus();BindMIS();}
+            if(!IsPostBack)BindStatus();
+            BindMIS();
         }
 
         [System.Web.Services.WebMethod(EnableSession=true)]
@@ -170,7 +171,7 @@ namespace Training.Admin
             string courseLabels=SerializeColumn(topCoursesData,"CourseName",serializer);
             string courseValues=SerializeColumn(topCoursesData,"TraineeCount",serializer);
             string script="if(window.renderTrainingMISCharts){window.renderTrainingMISCharts("+statusLabels+","+statusValues+","+typeLabels+","+typeValues+","+trendLabels+","+startedValues+","+endedValues+","+companyLabels+","+companyValues+","+courseLabels+","+courseValues+");}";
-            ScriptManager.RegisterStartupScript(this,GetType(),"trainingMISCharts",script,true);
+            ScriptManager.RegisterStartupScript(this,GetType(),"trainingMISCharts"+Guid.NewGuid().ToString("N"),script,true);
         }
 
         private string SerializeColumn(DataTable table,string column,System.Web.Script.Serialization.JavaScriptSerializer serializer)
