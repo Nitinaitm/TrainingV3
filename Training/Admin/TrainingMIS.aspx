@@ -190,12 +190,13 @@
 
         .chart-holder {
             position: relative;
-            height: 300px;
+            height: 350px;
             width: 100%;
+            overflow: visible;
         }
 
         .chart-card-wide .chart-holder {
-            height: 330px;
+            height: 400px;
         }
 
         .mis-table {
@@ -347,8 +348,12 @@
                 grid-column: auto;
             }
 
-            .chart-holder, .chart-card-wide .chart-holder {
-                height: 260px;
+            .chart-holder {
+                height: 330px;
+            }
+
+            .chart-card-wide .chart-holder {
+                height: 390px;
             }
 
             .mis-wrap {
@@ -606,7 +611,7 @@
             var container = document.getElementById(containerId);
             if (!container) return;
             if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
-            var width = 600, height = 300, left = horizontal ? 150 : 48, right = 24, top = 18, bottom = horizontal ? 18 : 65;
+            var width = 600, height = 350, left = horizontal ? 150 : 48, right = 24, top = 18, bottom = horizontal ? 24 : 105;
             var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": container.getAttribute("aria-label") || "Chart" });
             var max = Math.max.apply(null, values.map(function(v) { return Number(v) || 0; }));
             if (max < 1) max = 1;
@@ -638,44 +643,58 @@
                     svg.appendChild(misSvgElement("text", { x: x + barW / 2, y: y2 - 6, "text-anchor": "middle", fill: "#334155", "font-size": "12" }, String(value)));
                     var labelText = String(label || "(Blank)");
                     if (labelText.length > 12) labelText = labelText.substring(0, 10) + "...";
-                    var labelNode = misSvgElement("text", { x: x + barW / 2, y: top + plotH + 18, "text-anchor": "end", transform: "rotate(-30 " + (x + barW / 2) + " " + (top + plotH + 18) + ")", fill: "#334155", "font-size": "11" }, labelText);
+                    var labelNode = misSvgElement("text", { x: x + barW / 2, y: top + plotH + 25, "text-anchor": "end", transform: "rotate(-30 " + (x + barW / 2) + " " + (top + plotH + 25) + ")", fill: "#334155", "font-size": "11" }, labelText);
                     svg.appendChild(labelNode);
                 }
             });
             container.innerHTML = "";
             container.appendChild(svg);
         }
-        function misDrawLine(containerId, labels, values) {
+        function misDrawLine(containerId, labels, startedValues, endedValues) {
             var container = document.getElementById(containerId);
             if (!container) return;
             if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
-            var width = 900, height = 330, left = 52, right = 24, top = 20, bottom = 55, plotW = width - left - right, plotH = height - top - bottom;
-            var nums = values.map(function(v) { return Number(v) || 0; });
-            var max = Math.max.apply(null, nums.concat([1]));
-            var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": "Monthly Training Trend" });
+            var width = 1000, height = 400, left = 58, right = 28, top = 35, bottom = 105, plotW = width - left - right, plotH = height - top - bottom;
+            var started = startedValues.map(function(v) { return Number(v) || 0; });
+            var ended = endedValues.map(function(v) { return Number(v) || 0; });
+            var max = Math.max.apply(null, started.concat(ended).concat([1]));
+            var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": "Monthly Trainings Started and Ended" });
             for (var tick = 0; tick <= 4; tick++) {
                 var gy = top + plotH - plotH * tick / 4;
                 svg.appendChild(misSvgElement("line", { x1: left, y1: gy, x2: width - right, y2: gy, stroke: "#e2e8f0" }));
-                svg.appendChild(misSvgElement("text", { x: left - 8, y: gy + 4, "text-anchor": "end", fill: "#64748b", "font-size": "11" }, String(Math.round(max * tick / 4))));
+                svg.appendChild(misSvgElement("text", { x: left - 8, y: gy + 4, "text-anchor": "end", fill: "#64748b", "font-size": "12" }, String(Math.round(max * tick / 4))));
             }
-            var points = nums.map(function(value, i) {
-                var x = labels.length === 1 ? left + plotW / 2 : left + plotW * i / (labels.length - 1);
-                var y = top + plotH - plotH * value / max;
-                return { x: x, y: y, value: value, label: labels[i] };
+            function drawSeries(nums, color) {
+                var points = nums.map(function(value, i) {
+                    var x = labels.length === 1 ? left + plotW / 2 : left + plotW * i / (labels.length - 1);
+                    var y = top + plotH - plotH * value / max;
+                    return { x: x, y: y, value: value };
+                });
+                if (points.length > 1) svg.appendChild(misSvgElement("polyline", { points: points.map(function(p) { return p.x + "," + p.y; }).join(" "), fill: "none", stroke: color, "stroke-width": "3", "stroke-linejoin": "round", "stroke-linecap": "round" }));
+                points.forEach(function(p) {
+                    svg.appendChild(misSvgElement("circle", { cx: p.x, cy: p.y, r: 4, fill: color }));
+                    svg.appendChild(misSvgElement("text", { x: p.x, y: p.y - 10, "text-anchor": "middle", fill: color, "font-size": "12", "font-weight": "700" }, String(p.value)));
+                });
+            }
+            drawSeries(started, "#2563eb");
+            drawSeries(ended, "#16a34a");
+            labels.forEach(function(label, i) {
+                if (labels.length <= 18 || i % Math.ceil(labels.length / 18) === 0 || i === labels.length - 1) {
+                    var x = labels.length === 1 ? left + plotW / 2 : left + plotW * i / (labels.length - 1);
+                    svg.appendChild(misSvgElement("text", { x: x, y: top + plotH + 30, "text-anchor": "end", transform: "rotate(-25 " + x + " " + (top + plotH + 30) + ")", fill: "#334155", "font-size": "11" }, String(label)));
+                }
             });
-            if (points.length > 1) svg.appendChild(misSvgElement("polyline", { points: points.map(function(p) { return p.x + "," + p.y; }).join(" "), fill: "none", stroke: "#7c3aed", "stroke-width": "3", "stroke-linejoin": "round", "stroke-linecap": "round" }));
-            points.forEach(function(p, i) {
-                svg.appendChild(misSvgElement("circle", { cx: p.x, cy: p.y, r: 4, fill: "#7c3aed" }));
-                svg.appendChild(misSvgElement("text", { x: p.x, y: p.y - 10, "text-anchor": "middle", fill: "#334155", "font-size": "12" }, String(p.value)));
-                if (labels.length <= 18 || i % Math.ceil(labels.length / 18) === 0 || i === labels.length - 1) svg.appendChild(misSvgElement("text", { x: p.x, y: height - 15, "text-anchor": "end", transform: "rotate(-25 " + p.x + " " + (height - 15) + ")", fill: "#334155", "font-size": "11" }, String(p.label)));
-            });
+            svg.appendChild(misSvgElement("line", { x1: width / 2 - 120, y1: 18, x2: width / 2 - 95, y2: 18, stroke: "#2563eb", "stroke-width": "3" }));
+            svg.appendChild(misSvgElement("text", { x: width / 2 - 88, y: 22, fill: "#334155", "font-size": "12" }, "Started"));
+            svg.appendChild(misSvgElement("line", { x1: width / 2 + 10, y1: 18, x2: width / 2 + 35, y2: 18, stroke: "#16a34a", "stroke-width": "3" }));
+            svg.appendChild(misSvgElement("text", { x: width / 2 + 42, y: 22, fill: "#334155", "font-size": "12" }, "Ended"));
             container.innerHTML = "";
             container.appendChild(svg);
         }
-        window.renderTrainingMISCharts = function(statusLabels, statusValues, typeLabels, typeValues, trendLabels, trendValues) {
+        window.renderTrainingMISCharts = function(statusLabels, statusValues, typeLabels, typeValues, trendLabels, startedValues, endedValues) {
             misDrawBars("chartTrainingStatus", statusLabels, statusValues, false);
             misDrawBars("chartTrainingType", typeLabels, typeValues, true);
-            misDrawLine("chartTrainingTrend", trendLabels, trendValues);
+            misDrawLine("chartTrainingTrend", trendLabels, startedValues, endedValues);
         };
         function openTrainingDetails(trainingID) {
             var reportWindow = window.open("about:blank", "_blank");
