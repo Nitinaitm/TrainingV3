@@ -212,7 +212,7 @@ namespace Training.Admin
             }
             else if(type=="PostTest")
             {
-                q="SELECT R.ID,R.TestID,TM.TestTitle,R.EmpID,E.EmpName,R.AttemptNo,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.WrongAnswers,R.TotalMarks,R.ObtainedMarks,R.Percentage,R.ResultStatus FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID WHERE TM.TestType='POST'"+Filter("TD")+" ORDER BY R.Percentage DESC";
+                q="SELECT TD.TrainingID,R.ID,R.TestID,TM.TestTitle,R.EmpID,E.EmpName,R.AttemptNo,R.TotalQuestions,R.AttemptedQuestions,R.CorrectAnswers,R.WrongAnswers,R.TotalMarks,R.ObtainedMarks,R.Percentage,R.ResultStatus FROM TestResult R INNER JOIN TestMaster TM ON R.TestID=TM.TestID INNER JOIN SessionMaster SM ON TM.SessionID=SM.SessionID INNER JOIN TrainingDetails TD ON SM.TrainingID=TD.TrainingID LEFT JOIN EmpBasicMaster E ON R.EmpID=E.EmpID WHERE TM.TestType='POST'"+Filter("TD")+" ORDER BY R.Percentage DESC";
                 title="Post Test Results - Average "+lblPostTest.Text;
             }
             if(q=="")return;
@@ -228,17 +228,43 @@ namespace Training.Admin
 
         protected void gvKpiDetails_RowDataBound(object sender,GridViewRowEventArgs e)
         {
-            if(e.Row.RowType==DataControlRowType.DataRow)
+            if(e.Row.RowType==DataControlRowType.Header)
             {
-                TableCell cell=new TableCell();
-                cell.Text=(e.Row.RowIndex+1).ToString();
-                e.Row.Cells.AddAt(0,cell);
+                TableCell serialCell=new TableCell();
+                serialCell.Text="S.No.";
+                e.Row.Cells.AddAt(0,serialCell);
+                int trainingIDColumnIndex=-1;
+                for(int i=0;i<e.Row.Cells.Count;i++)
+                {
+                    if(String.Equals(Server.HtmlDecode(e.Row.Cells[i].Text).Trim(),"TrainingID",StringComparison.OrdinalIgnoreCase))
+                    {
+                        trainingIDColumnIndex=i;
+                        break;
+                    }
+                }
+                ViewState["KpiTrainingIDColumnIndex"]=trainingIDColumnIndex;
             }
-            else if(e.Row.RowType==DataControlRowType.Header)
+            else if(e.Row.RowType==DataControlRowType.DataRow)
             {
-                TableCell cell=new TableCell();
-                cell.Text="S.No.";
-                e.Row.Cells.AddAt(0,cell);
+                TableCell serialCell=new TableCell();
+                serialCell.Text=(e.Row.RowIndex+1).ToString();
+                e.Row.Cells.AddAt(0,serialCell);
+                int trainingIDColumnIndex=ViewState["KpiTrainingIDColumnIndex"]==null?-1:Convert.ToInt32(ViewState["KpiTrainingIDColumnIndex"]);
+                if(trainingIDColumnIndex>0 && trainingIDColumnIndex<e.Row.Cells.Count)
+                {
+                    string trainingID=Convert.ToString(DataBinder.Eval(e.Row.DataItem,"TrainingID"));
+                    if(!String.IsNullOrWhiteSpace(trainingID))
+                    {
+                        HyperLink trainingLink=new HyperLink();
+                        trainingLink.Text=trainingID;
+                        trainingLink.NavigateUrl=ResolveUrl("~/Admin/TrainingDetailsReport.aspx?TrainingID="+Server.UrlEncode(trainingID));
+                        trainingLink.Target="_blank";
+                        trainingLink.ToolTip="Open training details in a new tab";
+                        e.Row.Cells[trainingIDColumnIndex].Controls.Clear();
+                        e.Row.Cells[trainingIDColumnIndex].Text="";
+                        e.Row.Cells[trainingIDColumnIndex].Controls.Add(trainingLink);
+                    }
+                }
             }
         }
 
