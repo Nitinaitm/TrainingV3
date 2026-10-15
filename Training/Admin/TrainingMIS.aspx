@@ -92,69 +92,62 @@
         }
 
         .kpi {
+            --kpi-accent: #2563eb;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--kpi-accent);
             border-radius: 12px;
             padding: 0;
-            color: #fff;
-            min-height: 105px
+            color: #0f172a;
+            min-height: 105px;
+            box-shadow: 0 2px 8px rgba(15,23,42,.05);
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+        .kpi:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(15,23,42,.10);
         }
 
         .kpi-link {
             display: block;
             padding: 18px;
-            color: #inherit;
+            color: inherit;
             text-decoration: none;
-            height: 100%
+            height: 100%;
         }
 
-            .kpi-link:hover {
-                color: #fff;
-                text-decoration: none;
-                filter: brightness(1.05)
-            }
+        .kpi-link:hover, .kpi-link:focus {
+            color: inherit;
+            text-decoration: none;
+            outline: none;
+        }
 
         .kpi-label {
+            display: block;
             font-size: 13px;
             font-weight: 600;
-            opacity: .9
+            line-height: 1.4;
+            color: #64748b;
         }
 
         .kpi-value {
+            display: block;
             font-size: 30px;
+            line-height: 1.2;
             font-weight: 800;
-            margin-top: 8px
+            margin-top: 8px;
+            color: var(--kpi-accent);
         }
 
-        .k1 {
-            background: #2563eb
-        }
-
-        .k2 {
-            background: #198754
-        }
-
-        .k3 {
-            background: #f59e0b
-        }
-
-        .k4 {
-            background: #7c3aed
-        }
-
-        .k5 {
-            background: #0f766e
-        }
-
-        .k6 {
-            background: #dc2626
-        }
-
-        .k7 {
-            background: #0891b2
-        }
-
-        .k8 {
-            background: #475569
-        }
+        .k1 { --kpi-accent: #2563eb; }
+        .k2 { --kpi-accent: #15803d; }
+        .k3 { --kpi-accent: #b45309; }
+        .k4 { --kpi-accent: #6d28d9; }
+        .k5 { --kpi-accent: #0f766e; }
+        .k6 { --kpi-accent: #be123c; }
+        .k7 { --kpi-accent: #0e7490; }
+        .k8 { --kpi-accent: #475569; }
 
         .summary-grid {
             display: grid;
