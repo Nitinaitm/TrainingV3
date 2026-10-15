@@ -134,13 +134,44 @@ namespace Training.Admin
             lblTotalManHours.Text=scheduledManHours.ToString("0.00");
             lblPreTest.Text=pre.ToString("0.00")+"%";
             lblPostTest.Text=post.ToString("0.00")+"%";
-            string statusQ="SELECT ISNULL(TD.TrainingStatus,'') TrainingStatus,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingStatus,'') ORDER BY TrainingStatus";
-            string typeQ="SELECT ISNULL(TD.TrainingType,'') TrainingType,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingType,'') ORDER BY TrainingType";
+            string statusQ="SELECT ISNULL(TD.TrainingStatus,'') TrainingStatus,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingStatus,'') ORDER BY TrainingCount DESC,TrainingStatus";
+            string typeQ="SELECT ISNULL(TD.TrainingType,'') TrainingType,COUNT(*) TrainingCount FROM TrainingDetails TD WHERE 1=1"+f+" GROUP BY ISNULL(TD.TrainingType,'') ORDER BY TrainingCount DESC,TrainingType";
+            string trendQ="SELECT CONVERT(varchar(7),X.TrainingDate,120) TrainingMonth,COUNT(*) TrainingCount FROM (SELECT "+DateExpr("TD.DateFrom")+" TrainingDate FROM TrainingDetails TD WHERE 1=1"+f+") X WHERE X.TrainingDate IS NOT NULL GROUP BY CONVERT(varchar(7),X.TrainingDate,120) ORDER BY TrainingMonth ASC";
             string courseQ="WITH TraineeCounts AS (SELECT TA.TrainingID,COUNT(DISTINCT TA.EmpID) TraineeCount FROM TrainingAssignment TA WHERE ISNULL(TA.Cancelled,0)=0 GROUP BY TA.TrainingID), SessionHours AS (SELECT SM.TrainingID,SUM((DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0)) ScheduledManHours,SUM(CASE WHEN ISNULL(TD2.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN (DATEDIFF(MINUTE,TRY_CONVERT(time,SM.StartTime),TRY_CONVERT(time,SM.EndTime))/60.0)*ISNULL(TC.TraineeCount,0) ELSE 0 END) CompletedManHours FROM SessionMaster SM INNER JOIN TrainingDetails TD2 ON SM.TrainingID=TD2.TrainingID LEFT JOIN TraineeCounts TC ON TC.TrainingID=SM.TrainingID WHERE ISNULL(SM.SessionCancelled,0)=0 AND TRY_CONVERT(time,SM.StartTime) IS NOT NULL AND TRY_CONVERT(time,SM.EndTime) IS NOT NULL GROUP BY SM.TrainingID) SELECT ISNULL(CM.CourseName,'') CourseName,COUNT(*) TrainingCount,ISNULL(SUM(TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),''))),0) TotalTrainingDays,ISNULL(SUM(CASE WHEN LTRIM(RTRIM(ISNULL(TD.TrainingStatus,''))) IN ('Completed','TrainingCompleted') THEN COALESCE(TRY_CONVERT(decimal(18,2),NULLIF(LTRIM(RTRIM(TD.NoOfDays)),'')),CONVERT(decimal(18,2),DATEDIFF(day,COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)))+1)) ELSE 0 END),0) CompletedTrainingDays,ISNULL(SUM(ISNULL(SH.ScheduledManHours,0)),0) ScheduledManHours,ISNULL(SUM(ISNULL(SH.CompletedManHours,0)),0) CompletedManHours FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID LEFT JOIN SessionHours SH ON SH.TrainingID=TD.TrainingID WHERE 1=1"+f+" GROUP BY ISNULL(CM.CourseName,'') ORDER BY TrainingCount DESC,CourseName";
-            gvStatus.DataSource=GetFiltered(statusQ);gvStatus.DataBind();
-            gvType.DataSource=GetFiltered(typeQ);gvType.DataBind();
-            gvCourse.DataSource=GetFiltered(courseQ);gvCourse.DataBind();
+            DataTable statusData=GetFiltered(statusQ);
+            DataTable typeData=GetFiltered(typeQ);
+            DataTable trendData=GetFiltered(trendQ);
+            gvStatus.DataSource=statusData;
+            gvStatus.DataBind();
+            gvType.DataSource=typeData;
+            gvType.DataBind();
+            gvCourse.DataSource=GetFiltered(courseQ);
+            gvCourse.DataBind();
             lblCourseCount.Text=gvCourse.Rows.Count.ToString();
+            BindCharts(statusData,typeData,trendData);
+        }
+
+        private void BindCharts(DataTable statusData,DataTable typeData,DataTable trendData)
+        {
+            System.Web.Script.Serialization.JavaScriptSerializer serializer=new System.Web.Script.Serialization.JavaScriptSerializer();
+            string statusLabels=SerializeColumn(statusData,"TrainingStatus",serializer);
+            string statusValues=SerializeColumn(statusData,"TrainingCount",serializer);
+            string typeLabels=SerializeColumn(typeData,"TrainingType",serializer);
+            string typeValues=SerializeColumn(typeData,"TrainingCount",serializer);
+            string trendLabels=SerializeColumn(trendData,"TrainingMonth",serializer);
+            string trendValues=SerializeColumn(trendData,"TrainingCount",serializer);
+            string script="if(window.Chart){if(window.trainingStatusChart)window.trainingStatusChart.destroy();if(window.trainingTypeChart)window.trainingTypeChart.destroy();if(window.trainingTrendChart)window.trainingTrendChart.destroy();";
+            script+="window.trainingStatusChart=new Chart(document.getElementById('chartTrainingStatus'),{type:'bar',data:{labels:"+statusLabels+",datasets:[{label:'Trainings',data:"+statusValues+",backgroundColor:'#3b82f6',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});";
+            script+="window.trainingTypeChart=new Chart(document.getElementById('chartTrainingType'),{type:'bar',data:{labels:"+typeLabels+",datasets:[{label:'Trainings',data:"+typeValues+",backgroundColor:'#14b8a6',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}});";
+            script+="window.trainingTrendChart=new Chart(document.getElementById('chartTrainingTrend'),{type:'line',data:{labels:"+trendLabels+",datasets:[{label:'Trainings started',data:"+trendValues+",borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,.12)',fill:true,tension:.25,pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});}";
+            ScriptManager.RegisterStartupScript(this,GetType(),"trainingMISCharts",script,true);
+        }
+
+        private string SerializeColumn(DataTable table,string column,System.Web.Script.Serialization.JavaScriptSerializer serializer)
+        {
+            System.Collections.Generic.List<object> values=new System.Collections.Generic.List<object>();
+            foreach(DataRow row in table.Rows)values.Add(row[column]==DBNull.Value ? "" : row[column]);
+            return serializer.Serialize(values);
         }
 
         protected void kpiCard_Click(object sender,EventArgs e)
@@ -363,7 +394,7 @@ namespace Training.Admin
 
         protected void btnExport_Click(object sender,EventArgs e)
         {
-            DataTable dt=GetFiltered("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,TD.NoOfDays FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom"));
+            DataTable dt=GetFiltered("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,ISNULL(TD.TrainingType,'') TrainingType,ISNULL(TD.TrainingStatus,'') TrainingStatus,TD.NoOfDays FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1"+Filter("TD")+" ORDER BY "+DateExpr("TD.DateFrom")+" DESC");
             Response.Clear();Response.Buffer=true;Response.AddHeader("content-disposition","attachment;filename=TrainingMIS.xls");Response.Charset="";Response.ContentType="application/vnd.ms-excel";
             StringBuilder sb=new StringBuilder();foreach(DataColumn c in dt.Columns)sb.Append(c.ColumnName+"\t");sb.Append("\r\n");foreach(DataRow r in dt.Rows){foreach(DataColumn c in dt.Columns)sb.Append(r[c].ToString().Replace("\t"," ")+"\t");sb.Append("\r\n");}Response.Write(sb.ToString());Response.End();
         }
