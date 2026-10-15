@@ -513,7 +513,30 @@
                 </div>
             </div>
         </div>
-        <div class="summary-grid">
+      
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">Training Status Distribution</div>
+                <div class="chart-holder" id="chartTrainingStatus" role="img" aria-label="Training Status Distribution"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Training Type Distribution</div>
+                <div class="chart-holder" id="chartTrainingType" role="img" aria-label="Training Type Distribution"></div>
+            </div>
+            <div class="chart-card chart-card-wide">
+                <div class="chart-title">Monthly Training Trend : Started vs Ended</div>
+                <div class="chart-holder" id="chartTrainingTrend" role="img" aria-label="Monthly Training Trend"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Company-wise Trainee Trained</div>
+                <div class="chart-holder" id="chartCompanyTrainees" role="img" aria-label="Company-wise Trainee Trained"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Top 10 Courses by Trainee Trained</div>
+                <div class="chart-holder" id="chartTopCourses" role="img" aria-label="Top 10 Courses by Trainee Trained"></div>
+            </div>
+        </div>
+          <div class="summary-grid">
             <div class="mis-card">
                 <div class="mis-title">Training Status Summary</div>
                 <asp:GridView ID="gvStatus" runat="server" AutoGenerateColumns="False" CssClass="mis-table" OnRowCommand="gvSummary_RowCommand">
@@ -539,28 +562,6 @@
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
-            </div>
-        </div>
-        <div class="chart-grid">
-            <div class="chart-card">
-                <div class="chart-title">Training Status Distribution</div>
-                <div class="chart-holder" id="chartTrainingStatus" role="img" aria-label="Training Status Distribution"></div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-title">Training Type Distribution</div>
-                <div class="chart-holder" id="chartTrainingType" role="img" aria-label="Training Type Distribution"></div>
-            </div>
-            <div class="chart-card chart-card-wide">
-                <div class="chart-title">Monthly Training Trend — Started vs Ended</div>
-                <div class="chart-holder" id="chartTrainingTrend" role="img" aria-label="Monthly Training Trend"></div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-title">Company-wise Trainee Trained</div>
-                <div class="chart-holder" id="chartCompanyTrainees" role="img" aria-label="Company-wise Trainee Trained"></div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-title">Top 10 Courses by Trainee Trained</div>
-                <div class="chart-holder" id="chartTopCourses" role="img" aria-label="Top 10 Courses by Trainee Trained"></div>
             </div>
         </div>
         <asp:Panel ID="pnlCourseSummary" runat="server" ClientIDMode="Static" CssClass="kpi-modal" Style="display: none;">
