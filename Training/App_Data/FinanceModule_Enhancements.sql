@@ -85,7 +85,7 @@ BEGIN
         CheckInDate DATE NOT NULL,
         CheckOutDate DATE NULL,
         ChargeableNights DECIMAL(18,4) NOT NULL DEFAULT(0),
-        FoodChargeableDays DECIMAL(18,4) NOT NULL DEFAULT(0),
+        FoodChargeableDays DECIMAL(18,4) NULL,
         UsageStatus VARCHAR(20) NOT NULL DEFAULT('Used'),
         Remarks VARCHAR(1000) NULL,
         CreatedOn DATETIME NOT NULL DEFAULT(GETDATE()),
@@ -99,7 +99,7 @@ GO
 
 /* Food quantities are recorded separately from hostel nights. */
 IF COL_LENGTH('dbo.FinanceHostelUsage','FoodChargeableDays') IS NULL
-    ALTER TABLE dbo.FinanceHostelUsage ADD FoodChargeableDays DECIMAL(18,4) NOT NULL CONSTRAINT DF_FinanceHostelUsage_FoodChargeableDays DEFAULT(0);
+    ALTER TABLE dbo.FinanceHostelUsage ADD FoodChargeableDays DECIMAL(18,4) NULL;
 GO
 
 /* Upgrade installations that ran an earlier draft of this migration. */
