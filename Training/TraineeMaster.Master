@@ -467,6 +467,14 @@
                 -webkit-overflow-scrolling: touch;
             }
 
+            .content-area table:not(.table) {
+                display: block;
+                width: auto;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
             .content-area .table th,
             .content-area .table td {
                 vertical-align: middle;
@@ -936,12 +944,13 @@
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            if (localStorage.getItem("TraineeSidebar") == "Hide") {
+            var traineeSidebar = document.getElementById("traineeSidebar");
+            var savedSidebarState = localStorage.getItem("TraineeSidebar");
 
-                document
-                    .getElementById("traineeSidebar")
-                    .classList
-                    .add("collapsed");
+            if (savedSidebarState == "Hide" ||
+                (savedSidebarState === null && window.matchMedia("(max-width: 900px)").matches)) {
+
+                traineeSidebar.classList.add("collapsed");
             }
 
             document
