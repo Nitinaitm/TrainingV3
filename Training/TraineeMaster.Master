@@ -413,6 +413,164 @@
                 padding-left: 45px;
             }
         }
+
+        /*
+         * Trainee mobile layout enhancements.
+         * All rules are media-query scoped so desktop styling and behavior remain unchanged.
+         */
+        @media (max-width: 767.98px) {
+            .main-layout {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .content-area {
+                box-sizing: border-box;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                padding: 8px;
+                overflow-x: hidden;
+            }
+
+            .content-area .container,
+            .content-area .container-fluid {
+                box-sizing: border-box;
+                width: 100%;
+                max-width: 100%;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .content-area .row > [class*="col-"] {
+                min-width: 0;
+            }
+
+            .content-area .card,
+            .content-area .card-box,
+            .content-area .modern-card,
+            .content-area .welcome-card {
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area .card-body,
+            .content-area .card-body-custom {
+                padding: 12px;
+            }
+
+            .content-area .table {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .content-area .table th,
+            .content-area .table td {
+                vertical-align: middle;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area img,
+            .content-area video,
+            .content-area iframe {
+                max-width: 100%;
+            }
+
+            .content-area .form-control,
+            .content-area .form-select,
+            .content-area select,
+            .content-area textarea,
+            .content-area input[type="text"],
+            .content-area input[type="email"],
+            .content-area input[type="number"],
+            .content-area input[type="date"],
+            .content-area input[type="file"],
+            .content-area input[type="password"] {
+                box-sizing: border-box;
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .content-area .btn {
+                max-width: 100%;
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area .btn-group {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .content-area .btn-group > .btn,
+            .content-area .btn-group > .btn-group {
+                border-radius: 0.375rem !important;
+            }
+
+            .content-area .pagination {
+                flex-wrap: wrap;
+                gap: 3px;
+            }
+
+            .content-area h1,
+            .content-area h2,
+            .content-area h3,
+            .content-area h4,
+            .content-area .page-title {
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area .modal-dialog {
+                width: auto;
+                max-width: calc(100% - 16px);
+                margin: 8px auto;
+            }
+
+            .content-area .modal-content {
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area .progress {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-header {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .header-title {
+                max-width: 52vw;
+                overflow-wrap: anywhere;
+            }
+
+            .content-area {
+                padding: 6px;
+            }
+
+            .content-area .container,
+            .content-area .container-fluid {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+
+            .content-area .card-body,
+            .content-area .card-body-custom {
+                padding: 10px;
+            }
+
+            .content-area .btn {
+                min-height: 38px;
+            }
+        }
     </style>
 
     <asp:ContentPlaceHolder ID="head" runat="server">
