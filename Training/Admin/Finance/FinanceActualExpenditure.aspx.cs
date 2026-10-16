@@ -102,7 +102,7 @@ namespace Training.Admin
         private void BindHostelUsage()
         {
             if (ddlTraining.SelectedValue == "") { gvHostelUsage.DataSource = null; gvHostelUsage.DataBind(); return; }
-            DataTable dt = objDB.GetDataTable("SELECT HostelUsageID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,UsageStatus,Remarks FROM FinanceHostelUsage WHERE TrainingID=@TrainingID ORDER BY CheckInDate DESC,HostelUsageID DESC", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue) });
+            DataTable dt = objDB.GetDataTable("SELECT HostelUsageID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,FoodChargeableDays,UsageStatus,Remarks FROM FinanceHostelUsage WHERE TrainingID=@TrainingID ORDER BY CheckInDate DESC,HostelUsageID DESC", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue) });
             gvHostelUsage.DataSource = dt;
             gvHostelUsage.DataBind();
         }
@@ -114,6 +114,7 @@ namespace Training.Admin
             DateTime checkIn;
             DateTime checkOut;
             decimal nights;
+            decimal foodDays;
             if (ddlTraining.SelectedValue == "" || ((empID == "") == (trainerID == "")) || !DateTime.TryParse(txtHostelCheckIn.Text, out checkIn) || !DateTime.TryParse(txtHostelCheckOut.Text, out checkOut) || checkOut.Date < checkIn.Date)
             {
                 ShowMessage("Select a batch, enter either EmpID or TrainerID (not both), and provide valid check-in/check-out dates.", Color.Red);
@@ -133,6 +134,15 @@ namespace Training.Admin
                 ShowMessage("Chargeable nights must be greater than zero for actual hostel usage.", Color.Red);
                 return;
             }
+            if (txtFoodChargeableDays.Text.Trim() == "")
+            {
+                foodDays = (decimal)(checkOut.Date - checkIn.Date).Days + 1;
+            }
+            else if (!Decimal.TryParse(txtFoodChargeableDays.Text.Trim(), out foodDays) || foodDays < 0)
+            {
+                ShowMessage("Food chargeable days must be a valid non-negative number.", Color.Red);
+                return;
+            }
             DataTable valid;
             if (empID != "")
             {
@@ -147,13 +157,20 @@ namespace Training.Admin
                 ShowMessage("The selected trainee/trainer is not assigned to this batch.", Color.Red);
                 return;
             }
-            int result = objDB.ExecuteSql("INSERT INTO FinanceHostelUsage(TrainingID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,UsageStatus,Remarks,CreatedOn,CreatedBy) VALUES(@TrainingID,NULLIF(@EmpID,''),NULLIF(@TrainerID,''),@CheckIn,@CheckOut,@Nights,'Used',@Remarks,GETDATE(),@CreatedBy)", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", empID), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@CheckIn", checkIn.Date), new SqlParameter("@CheckOut", checkOut.Date), new SqlParameter("@Nights", nights), new SqlParameter("@Remarks", txtHostelUsageRemarks.Text.Trim()), new SqlParameter("@CreatedBy", Convert.ToString(Session["UserID"])) });
+            DataTable overlap = objDB.GetDataTable("SELECT TOP 1 HostelUsageID FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND ((@EmpID<>'' AND EmpID=@EmpID) OR (@TrainerID<>'' AND TrainerID=@TrainerID)) AND CheckInDate<@CheckOut AND ISNULL(CheckOutDate,CONVERT(date,'99991231'))>@CheckIn", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", empID), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@CheckIn", checkIn.Date), new SqlParameter("@CheckOut", checkOut.Date) });
+            if (overlap.Rows.Count > 0)
+            {
+                ShowMessage("This trainee/trainer already has overlapping hostel usage dates in this batch.", Color.Red);
+                return;
+            }
+            int result = objDB.ExecuteSql("INSERT INTO FinanceHostelUsage(TrainingID,EmpID,TrainerID,CheckInDate,CheckOutDate,ChargeableNights,FoodChargeableDays,UsageStatus,Remarks,CreatedOn,CreatedBy) VALUES(@TrainingID,NULLIF(@EmpID,''),NULLIF(@TrainerID,''),@CheckIn,@CheckOut,@Nights,@FoodDays,'Used',@Remarks,GETDATE(),@CreatedBy)", new SqlParameter[] { new SqlParameter("@TrainingID", ddlTraining.SelectedValue), new SqlParameter("@EmpID", empID), new SqlParameter("@TrainerID", trainerID), new SqlParameter("@CheckIn", checkIn.Date), new SqlParameter("@CheckOut", checkOut.Date), new SqlParameter("@Nights", nights), new SqlParameter("@FoodDays", foodDays), new SqlParameter("@Remarks", txtHostelUsageRemarks.Text.Trim()), new SqlParameter("@CreatedBy", Convert.ToString(Session["UserID"])) });
             if (result > 0)
             {
                 ShowMessage("Actual hostel usage saved. Recalculate costing to apply the new usage quantity.", Color.Green);
                 txtHostelEmpID.Text = "";
                 txtHostelTrainerID.Text = "";
                 txtHostelNights.Text = "";
+                txtFoodChargeableDays.Text = "";
                 txtHostelUsageRemarks.Text = "";
                 BindHostelUsage();
             }
