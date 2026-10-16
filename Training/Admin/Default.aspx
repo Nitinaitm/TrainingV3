@@ -409,6 +409,89 @@
             color: #ffffff !important;
         }
 
+        .posting-details-button {
+            min-width: 105px;
+            background: #0f766e;
+        }
+
+        .posting-details-button:hover {
+            background: #115e59;
+        }
+
+        .posting-details-dialog {
+            width: min(900px, 94vw);
+            height: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .posting-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 22px;
+            background: #17365d;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .posting-modal-close {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255,255,255,.45);
+            border-radius: 8px;
+            background: transparent;
+            color: #ffffff;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .posting-modal-body {
+            padding: 22px;
+        }
+
+        .posting-modal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .posting-modal-item {
+            min-width: 0;
+            padding: 13px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .posting-modal-label {
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .posting-modal-value {
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        @media screen and (max-width: 576px) {
+            .posting-modal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .posting-modal-body {
+                padding: 14px;
+            }
+        }
+
         /* =====================================================
            LARGE EDIT EMPLOYEE POPUP
         ===================================================== */
@@ -704,6 +787,39 @@
                     closeOnSelect: false
                 });
             }
+        }
+
+        function openPostingDetails(link) {
+            if (!link) return false;
+            var fields = [
+                ["postingValuePlace", "place"],
+                ["postingValueDepartment", "department"],
+                ["postingValueZone", "zone"],
+                ["postingValueCircle", "circle"],
+                ["postingValueDivision", "division"],
+                ["postingValueSubdivision", "subdivision"],
+                ["postingValueSection", "section"]
+            ];
+            fields.forEach(function(field) {
+                var element = document.getElementById(field[0]);
+                if (element) {
+                    element.textContent = link.getAttribute("data-" + field[1]) || "—";
+                    if (element.textContent.trim() === "") element.textContent = "—";
+                }
+            });
+            var modal = document.getElementById("postingDetailsModal");
+            if (modal) {
+                modal.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+            return false;
+        }
+
+        function closePostingDetails() {
+            var modal = document.getElementById("postingDetailsModal");
+            if (modal) modal.classList.remove("show");
+            document.body.style.overflow = "";
+            return false;
         }
 
         /* =====================================================
@@ -1455,49 +1571,19 @@ window.addEventListener('message', function (event) {
 
                     
 
-                        <asp:BoundField
-                            DataField="DetailPostingPlace"
-                            HeaderText="Posting Details" />
-
-
-                    
-
-                        <asp:BoundField
-                            DataField="EmpPostingDepartment"
-                            HeaderText="Department / Office / Cell" />
-
-
-                      
-                        <asp:BoundField
-                            DataField="AreaBoardZone"
-                            HeaderText="Area Board / Zone" />
-
-
-                       
-
-                        <asp:BoundField
-                            DataField="Circle"
-                            HeaderText="Circle" />
-
-
-                       
-
-                        <asp:BoundField
-                            DataField="Division"
-                            HeaderText="Division" />
-
-
-                      
-
-                        <asp:BoundField
-                            DataField="Subdivision"
-                            HeaderText="Subdivision" />
-
-
-                       
-                        <asp:BoundField
-                            DataField="Section"
-                            HeaderText="Section" />
+                        <asp:TemplateField HeaderText="Posting Details">
+                            <ItemTemplate>
+                                <a href="javascript:void(0);" class="action-button posting-details-button"
+                                   data-place='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("DetailPostingPlace"))) %>'
+                                   data-department='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("EmpPostingDepartment"))) %>'
+                                   data-zone='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("AreaBoardZone"))) %>'
+                                   data-circle='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("Circle"))) %>'
+                                   data-division='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("Division"))) %>'
+                                   data-subdivision='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("Subdivision"))) %>'
+                                   data-section='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("Section"))) %>'
+                                   onclick="return openPostingDetails(this);">View Details</a>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
                     </Columns>
 
@@ -1526,6 +1612,27 @@ window.addEventListener('message', function (event) {
 
     </div>
 
+
+    <!-- POSTING DETAILS POPUP -->
+    <div id="postingDetailsModal" class="employee-edit-modal" role="dialog" aria-modal="true" aria-labelledby="postingDetailsModalTitle" onclick="if(event.target===this){closePostingDetails();}">
+        <div class="employee-edit-dialog posting-details-dialog">
+            <div class="posting-modal-header">
+                <span id="postingDetailsModalTitle">Employee Posting Details</span>
+                <button type="button" class="posting-modal-close" onclick="return closePostingDetails();" aria-label="Close">&times;</button>
+            </div>
+            <div class="posting-modal-body">
+                <div class="posting-modal-grid">
+                    <div class="posting-modal-item"><div class="posting-modal-label">Posting Details</div><div id="postingValuePlace" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Department / Office / Cell</div><div id="postingValueDepartment" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Area Board / Zone</div><div id="postingValueZone" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Circle</div><div id="postingValueCircle" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Division</div><div id="postingValueDivision" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Subdivision</div><div id="postingValueSubdivision" class="posting-modal-value"></div></div>
+                    <div class="posting-modal-item"><div class="posting-modal-label">Section</div><div id="postingValueSection" class="posting-modal-value"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- =========================================================
          EDIT EMPLOYEE POPUP
