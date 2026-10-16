@@ -32,6 +32,10 @@ namespace Training.Admin
             ddlTraining.DataValueField = "TrainingID";
             ddlTraining.DataBind();
             ddlTraining.Items.Insert(0, new ListItem("Select Training / Batch", ""));
+            lstConsolidatedTraining.DataSource = dt;
+            lstConsolidatedTraining.DataTextField = "TrainingName";
+            lstConsolidatedTraining.DataValueField = "TrainingID";
+            lstConsolidatedTraining.DataBind();
         }
 
         private void BindCourse()
@@ -78,6 +82,7 @@ namespace Training.Admin
             pnlTraineeFilter.Visible = ddlReportType.SelectedValue == "Trainee";
             pnlTrainerFilter.Visible = ddlReportType.SelectedValue == "Trainer";
             pnlCostHeadFilter.Visible = ddlReportType.SelectedValue == "CostHead";
+            pnlConsolidatedFilter.Visible = ddlReportType.SelectedValue == "Consolidated";
             lblReportName.Text = ddlReportType.SelectedItem.Text;
         }
 
@@ -111,7 +116,23 @@ namespace Training.Admin
             if (ddlReportType.SelectedValue == "CostHead")
             {
                 int? costHeadID = ddlCostHead.SelectedValue == "ALL" ? (int?)null : Convert.ToInt32(ddlCostHead.SelectedValue);
-                BindCostHeadReport(costHeadID);
+                BindCostHeadReport(costHeadID, null);
+                return;
+            }
+            if (ddlReportType.SelectedValue == "Consolidated")
+            {
+                List<string> selectedTrainingIDs = new List<string>();
+                foreach (ListItem item in lstConsolidatedTraining.Items)
+                {
+                    if (item.Selected && !String.IsNullOrWhiteSpace(item.Value)) selectedTrainingIDs.Add(item.Value);
+                }
+                if (selectedTrainingIDs.Count == 0)
+                {
+                    ShowMessage("Please select at least one training/batch for the consolidated report.", Color.Red);
+                    return;
+                }
+                BindCostHeadReport(null, selectedTrainingIDs);
+                lblReportName.Text = "Consolidated (Selected Trainings)";
             }
         }
 
@@ -173,14 +194,38 @@ namespace Training.Admin
             SetSummary(dt);
         }
 
-        private void BindCostHeadReport(int? costHeadID)
+        private void BindCostHeadReport(int? costHeadID, List<string> trainingIDs)
         {
             DataTable ids = objDB.GetDataTable("SELECT DISTINCT TrainingID FROM TrainingDetails");
+            if (trainingIDs != null && trainingIDs.Count > 0)
+            {
+                ids = ids.Clone();
+                foreach (string trainingID in trainingIDs)
+                {
+                    DataRow selectedRow = ids.NewRow();
+                    selectedRow["TrainingID"] = trainingID;
+                    ids.Rows.Add(selectedRow);
+                }
+            }
             foreach (DataRow row in ids.Rows) EnsureCostingForTraining(Convert.ToString(row["TrainingID"]));
-            string sql = "SELECT ISNULL(C.CourseName,'') AS CourseName,TD.TrainingID,ISNULL(TD.Batch,'') AS Batch,ISNULL(FTS.ResidentialType,'Unspecified') AS ResidentialType,H.CostHeadName,1 AS BatchCount,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0) AS CourseCost,ISNULL(D.SessionCost,0) AS SessionCost,ISNULL(D.BatchCost,0) AS BatchCost,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0)+ISNULL(D.SessionCost,0)+ISNULL(D.BatchCost,0) AS FinalCost,ISNULL(X.ActualPaid,0) AS ActualPaid,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0)+ISNULL(D.SessionCost,0)+ISNULL(D.BatchCost,0)-ISNULL(X.ActualPaid,0) AS Balance,ISNULL(MH.ManHours,0) AS ManHours FROM TrainingDetails TD CROSS JOIN FinanceCostHeadMaster H LEFT JOIN CourseMaster C ON C.CourseID=TD.CourseID LEFT JOIN FinanceTrainingSettings FTS ON FTS.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(CASE WHEN CostingLevel='Session' THEN FinalAmount ELSE 0 END) AS SessionCost,SUM(CASE WHEN CostingLevel='Batch' THEN FinalAmount ELSE 0 END) AS BatchCost FROM FinanceCostingDetail WHERE CostingLevel IN ('Session','Batch') GROUP BY TrainingID,CostHeadID) D ON D.TrainingID=TD.TrainingID AND D.CostHeadID=H.CostHeadID LEFT JOIN (SELECT CourseID,CostHeadID,SUM(FinalAmount) AS CourseCost FROM FinanceCostingDetail WHERE CostingLevel='Course' GROUP BY CourseID,CostHeadID) CC ON CC.CourseID=TD.CourseID AND CC.CostHeadID=H.CostHeadID LEFT JOIN (SELECT CourseID,COUNT(*) AS BatchCount FROM TrainingDetails GROUP BY CourseID) CB ON CB.CourseID=TD.CourseID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure GROUP BY TrainingID,CostHeadID) X ON X.TrainingID=TD.TrainingID AND X.CostHeadID=H.CostHeadID LEFT JOIN (SELECT SA.TrainingID,SUM(SM.TotalHours) ManHours FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SM.TrainingID=SA.TrainingID AND SM.SessionID=SA.SessionID WHERE SA.AttendanceStatus='Present' GROUP BY SA.TrainingID) MH ON MH.TrainingID=TD.TrainingID WHERE H.Active='Y' AND (@CostHeadID IS NULL OR H.CostHeadID=@CostHeadID) ORDER BY C.CourseName,TD.TrainingID,H.CostHeadName";
+            string sql = "SELECT ISNULL(C.CourseName,'') AS CourseName,TD.TrainingID,ISNULL(TD.Batch,'') AS Batch,ISNULL(FTS.ResidentialType,'Unspecified') AS ResidentialType,H.CostHeadName,1 AS BatchCount,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0) AS CourseCost,ISNULL(D.SessionCost,0) AS SessionCost,ISNULL(D.BatchCost,0) AS BatchCost,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0)+ISNULL(D.SessionCost,0)+ISNULL(D.BatchCost,0) AS FinalCost,ISNULL(X.ActualPaid,0) AS ActualPaid,ISNULL(CC.CourseCost,0)/NULLIF(CAST(CB.BatchCount AS DECIMAL(18,2)),0)+ISNULL(D.SessionCost,0)+ISNULL(D.BatchCost,0)-ISNULL(X.ActualPaid,0) AS Balance,ISNULL(MH.ManHours,0) AS ManHours FROM TrainingDetails TD CROSS JOIN FinanceCostHeadMaster H LEFT JOIN CourseMaster C ON C.CourseID=TD.CourseID LEFT JOIN FinanceTrainingSettings FTS ON FTS.TrainingID=TD.TrainingID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(CASE WHEN CostingLevel='Session' THEN FinalAmount ELSE 0 END) AS SessionCost,SUM(CASE WHEN CostingLevel='Batch' THEN FinalAmount ELSE 0 END) AS BatchCost FROM FinanceCostingDetail WHERE CostingLevel IN ('Session','Batch') GROUP BY TrainingID,CostHeadID) D ON D.TrainingID=TD.TrainingID AND D.CostHeadID=H.CostHeadID LEFT JOIN (SELECT CourseID,CostHeadID,SUM(FinalAmount) AS CourseCost FROM FinanceCostingDetail WHERE CostingLevel='Course' GROUP BY CourseID,CostHeadID) CC ON CC.CourseID=TD.CourseID AND CC.CostHeadID=H.CostHeadID LEFT JOIN (SELECT CourseID,COUNT(*) AS BatchCount FROM TrainingDetails GROUP BY CourseID) CB ON CB.CourseID=TD.CourseID LEFT JOIN (SELECT TrainingID,CostHeadID,SUM(Amount) ActualPaid FROM FinanceActualExpenditure GROUP BY TrainingID,CostHeadID) X ON X.TrainingID=TD.TrainingID AND X.CostHeadID=H.CostHeadID LEFT JOIN (SELECT SA.TrainingID,SUM(SM.TotalHours) ManHours FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SM.TrainingID=SA.TrainingID AND SM.SessionID=SA.SessionID WHERE SA.AttendanceStatus='Present' GROUP BY SA.TrainingID) MH ON MH.TrainingID=TD.TrainingID WHERE H.Active='Y' AND (@CostHeadID IS NULL OR H.CostHeadID=@CostHeadID)";
+            List<SqlParameter> parameters = new List<SqlParameter>();
             SqlParameter headParameter = new SqlParameter("@CostHeadID", SqlDbType.Int);
             headParameter.Value = costHeadID.HasValue ? (object)costHeadID.Value : DBNull.Value;
-            DataTable dt = objDB.GetDataTable(sql, new SqlParameter[] { headParameter });
+            parameters.Add(headParameter);
+            if (trainingIDs != null && trainingIDs.Count > 0)
+            {
+                List<string> parameterNames = new List<string>();
+                for (int i = 0; i < trainingIDs.Count; i++)
+                {
+                    string parameterName = "@TrainingID" + i.ToString();
+                    parameterNames.Add(parameterName);
+                    parameters.Add(new SqlParameter(parameterName, trainingIDs[i]));
+                }
+                sql += " AND TD.TrainingID IN (" + String.Join(",", parameterNames.ToArray()) + ")";
+            }
+            sql += " ORDER BY C.CourseName,TD.TrainingID,H.CostHeadName";
+            DataTable dt = objDB.GetDataTable(sql, parameters.ToArray());
             BindGrid(dt);
             SetSummary(dt);
         }
