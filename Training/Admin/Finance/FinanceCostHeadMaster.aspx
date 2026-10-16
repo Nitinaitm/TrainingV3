@@ -34,6 +34,8 @@ body{background:#f5f5f5;}
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Level</label><asp:DropDownList ID="ddlLevel" runat="server" CssClass="form-select"><asp:ListItem>Course</asp:ListItem><asp:ListItem>Batch</asp:ListItem><asp:ListItem>Session</asp:ListItem><asp:ListItem>Person</asp:ListItem></asp:DropDownList></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Calculation</label><asp:DropDownList ID="ddlMode" runat="server" CssClass="form-select"><asp:ListItem>Automatic</asp:ListItem><asp:ListItem>Manual</asp:ListItem><asp:ListItem>Automatic + Override</asp:ListItem></asp:DropDownList></div>
 <div class="col-lg-2 col-md-6 mb-3"><label class="form-label">Unit *</label><asp:TextBox ID="txtUnit" runat="server" CssClass="form-control" placeholder="Trainee-Day"></asp:TextBox></div>
+<div class="col-lg-3 col-md-6 mb-3"><asp:CheckBox ID="chkManualAllowed" runat="server" Text="Allow manual amount entry" Checked="true" /></div>
+<div class="col-lg-3 col-md-6 mb-3"><asp:CheckBox ID="chkOverrideAllowed" runat="server" Text="Allow override for Automatic + Override" Checked="true" /></div>
 </div>
 <div class="mt-2 text-center">
 <asp:Button ID="btnSave" runat="server" Text="Save Cost Head" CssClass="btn btn-save" OnClick="btnSave_Click" />
@@ -48,6 +50,8 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CostHeadName" HeaderText="Cost Head" />
 <asp:BoundField DataField="CostLevel" HeaderText="Level" />
 <asp:BoundField DataField="CalculationMode" HeaderText="Calculation" />
+<asp:BoundField DataField="ManualAllowed" HeaderText="Manual Allowed" />
+<asp:BoundField DataField="OverrideAllowed" HeaderText="Override Allowed" />
 <asp:BoundField DataField="UnitType" HeaderText="Unit" />
 <asp:BoundField DataField="Active" HeaderText="Active" />
 <asp:ButtonField CommandName="Toggle" Text="Activate / Deactivate" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-primary" />
