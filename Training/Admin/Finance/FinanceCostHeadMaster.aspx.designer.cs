@@ -65,6 +65,8 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtUnit;
+        protected global::System.Web.UI.WebControls.CheckBox chkManualAllowed;
+        protected global::System.Web.UI.WebControls.CheckBox chkOverrideAllowed;
         
         /// <summary>
         /// btnSave control.
