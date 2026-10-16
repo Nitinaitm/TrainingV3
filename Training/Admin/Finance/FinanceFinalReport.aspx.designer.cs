@@ -71,6 +71,8 @@ namespace Training.Admin {
         protected global::System.Web.UI.WebControls.DropDownList ddlTrainer;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlCostHeadFilter;
         protected global::System.Web.UI.WebControls.DropDownList ddlCostHead;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlConsolidatedFilter;
+        protected global::System.Web.UI.WebControls.ListBox lstConsolidatedTraining;
         
         /// <summary>
         /// btnShow control.
