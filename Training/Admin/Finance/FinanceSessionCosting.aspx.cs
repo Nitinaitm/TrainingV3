@@ -90,6 +90,12 @@ namespace Training.Admin
             if(e.CommandName!="SaveOverride") return;
             int rowIndex=Convert.ToInt32(e.CommandArgument);
             long detailID=Convert.ToInt64(gvCosting.DataKeys[rowIndex].Value);
+            DataTable policy=objDB.GetDataTable("SELECT H.ManualAllowed,H.OverrideAllowed,D.CalculationMode FROM FinanceCostingDetail D INNER JOIN FinanceCostHeadMaster H ON H.CostHeadID=D.CostHeadID WHERE D.CostingDetailID=@ID",new SqlParameter[]{new SqlParameter("@ID",detailID)});
+            if(policy.Rows.Count==0){lblMessage.Text="Costing row not found.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}
+            string mode=Convert.ToString(policy.Rows[0]["CalculationMode"]);
+            string manualAllowed=Convert.ToString(policy.Rows[0]["ManualAllowed"]);
+            string overrideAllowed=Convert.ToString(policy.Rows[0]["OverrideAllowed"]);
+            if(!((mode=="Manual" && manualAllowed=="Y") || (mode=="Automatic + Override" && overrideAllowed=="Y"))){lblMessage.Text="This cost head does not permit manual entry/override in its current calculation mode.";lblMessage.ForeColor=System.Drawing.Color.Red;return;}
             System.Web.UI.WebControls.TextBox txtOverride=(System.Web.UI.WebControls.TextBox)gvCosting.Rows[rowIndex].FindControl("txtOverride");
             decimal amount;
             object value=DBNull.Value;
