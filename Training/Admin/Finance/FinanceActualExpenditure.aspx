@@ -46,13 +46,14 @@ body{background:#f5f5f5;}
 </asp:GridView></div>
 <hr />
 <h4 class="mt-4">Actual Hostel Usage (not just allotment)</h4>
-<p class="text-muted">Enter the nights actually used. These quantities feed hostel costing only after you select Recalculate Costs on the Training Costing page.</p>
+<p class="text-muted">Enter the nights actually used. Enter food chargeable days separately from hostel nights. Food quantities feed costing after you select Recalculate Costs on the Training Costing page.</p>
 <div class="row">
 <div class="col-lg-3 col-md-6 mb-2"><label class="form-label">Trainee EmpID</label><asp:TextBox ID="txtHostelEmpID" runat="server" CssClass="form-control" placeholder="Enter EmpID"></asp:TextBox></div>
 <div class="col-lg-3 col-md-6 mb-2"><label class="form-label">Trainer ID</label><asp:TextBox ID="txtHostelTrainerID" runat="server" CssClass="form-control" placeholder="Enter TrainerID"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Check-in</label><asp:TextBox ID="txtHostelCheckIn" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Check-out</label><asp:TextBox ID="txtHostelCheckOut" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox></div>
 <div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Chargeable Nights</label><asp:TextBox ID="txtHostelNights" runat="server" CssClass="form-control" placeholder="Auto from dates"></asp:TextBox></div>
+<div class="col-lg-2 col-md-6 mb-2"><label class="form-label">Food Chargeable Days</label><asp:TextBox ID="txtFoodChargeableDays" runat="server" CssClass="form-control" placeholder="Auto from stay dates"></asp:TextBox></div>
 <div class="col-lg-8 col-md-8 mb-2"><label class="form-label">Usage Remarks</label><asp:TextBox ID="txtHostelUsageRemarks" runat="server" CssClass="form-control" placeholder="Optional"></asp:TextBox></div>
 <div class="col-lg-4 col-md-4 mb-2 d-flex align-items-end"><asp:Button ID="btnSaveHostelUsage" runat="server" Text="Save Actual Hostel Usage" CssClass="btn btn-primary w-100" OnClick="btnSaveHostelUsage_Click" /></div>
 </div>
@@ -64,6 +65,7 @@ body{background:#f5f5f5;}
 <asp:BoundField DataField="CheckInDate" HeaderText="Check-in" DataFormatString="{0:dd-MM-yyyy}" />
 <asp:BoundField DataField="CheckOutDate" HeaderText="Check-out" DataFormatString="{0:dd-MM-yyyy}" />
 <asp:BoundField DataField="ChargeableNights" HeaderText="Nights" DataFormatString="{0:N2}" />
+<asp:BoundField DataField="FoodChargeableDays" HeaderText="Food Days" DataFormatString="{0:N2}" />
 <asp:BoundField DataField="UsageStatus" HeaderText="Status" />
 <asp:BoundField DataField="Remarks" HeaderText="Remarks" />
 <asp:ButtonField CommandName="CancelUsage" Text="Cancel" ButtonType="Button" ControlStyle-CssClass="btn btn-sm btn-outline-danger" />
