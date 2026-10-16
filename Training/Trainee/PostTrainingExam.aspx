@@ -38,6 +38,21 @@
             font-size: 18px;
             font-weight: 600;
         }
+    
+        @media (max-width: 767.98px) {
+            .timer { font-size: 22px; }
+            .question-box { min-height: 0; font-size: 16px; line-height: 1.45; }
+            .question-palette { width: 38px; height: 38px; margin: 3px; padding: 0; }
+            .content-area .card-body { padding: 12px; }
+            #ContentPlaceHolder1_rblOption { max-width: 100%; }
+            #ContentPlaceHolder1_rblOption td { padding: 5px 3px; overflow-wrap: anywhere; }
+        }
+        @media (max-width: 480px) {
+            .timer { font-size: 20px; }
+            .question-palette { width: 34px; height: 34px; }
+            .question-box { font-size: 15px; }
+        }
+
     </style>
 
 </asp:Content>
