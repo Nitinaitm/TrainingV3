@@ -430,6 +430,31 @@
             font-size: 14px;
             vertical-align: middle;
         }
+    
+        @media (max-width: 767.98px) {
+            .page-title { font-size: 21px; line-height: 1.3; }
+            .modern-card-header { align-items: flex-start; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .details-body, .search-body { padding: 12px; }
+            .search-buttons { padding-top: 4px; }
+            .search-buttons .btn { margin-bottom: 5px; }
+            .progress { min-width: 0; }
+            .badge-status { min-width: 0; white-space: normal; }
+            .confirmation-badge { white-space: normal; }
+            .grid-action { min-height: 38px; }
+            #correctionModal .modal-dialog { width: auto; max-width: calc(100% - 16px); margin: 8px auto; }
+            #correctionModal .modal-body { max-height: 75vh; padding: 12px !important; }
+            #correctionModal .modal-header { padding: 12px !important; }
+            #correctionModal .modal-footer { flex-wrap: wrap; gap: 6px; }
+            .correction-section-title { flex-wrap: wrap; }
+            .correction-section-hint { margin-left: 0; }
+        }
+        @media (max-width: 480px) {
+            .modern-card-header { padding: 10px; }
+            .card-heading { font-size: 15px; }
+            .card-heading-icon { flex: 0 0 32px; width: 32px; height: 32px; }
+            .search-buttons .btn { min-width: 0; }
+        }
+
     </style>
 
 </asp:Content>
