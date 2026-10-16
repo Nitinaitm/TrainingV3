@@ -80,7 +80,7 @@ namespace Training.Admin
         public static void EnsureCostingForTraining(clsDataAccess db, string trainingID, string createdBy)
         {
             int trainees = GetTraineeCount(db, trainingID);
-            int attendedTraineeDays = GetAttendedTraineeDays(db, trainingID);
+            decimal attendedTraineeDays = GetTraineeFoodDays(db, trainingID);
             int days = GetTrainingDays(db, trainingID);
             int trainers = GetTrainerCount(db, trainingID);
             int trainerDays = GetTrainerDays(db, trainingID);
@@ -168,6 +168,14 @@ namespace Training.Admin
         private static void InsertCosting(clsDataAccess db, string trainingID, string sessionID, string level, int headID, int rateID, string mode, string unit, decimal qty, decimal rate, decimal amount, string createdBy)
         {
             db.ExecuteSql("INSERT INTO FinanceCostingDetail(TrainingID,CourseID,SessionID,CostingLevel,CostHeadID,RateID,CalculationMode,UnitType,Quantity,AppliedRate,CalculatedAmount,Remarks,CreatedBy) SELECT @TrainingID,TD.CourseID,@SessionID,@Level,@CostHeadID,@RateID,@Mode,@Unit,@Qty,@Rate,@Amount,'Automatic finance costing',@CreatedBy FROM TrainingDetails TD WHERE TD.TrainingID=@TrainingID", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID), new SqlParameter("@SessionID", sessionID == null ? (object)DBNull.Value : sessionID), new SqlParameter("@Level", level), new SqlParameter("@CostHeadID", headID), new SqlParameter("@RateID", rateID == 0 ? (object)DBNull.Value : rateID), new SqlParameter("@Mode", mode), new SqlParameter("@Unit", unit), new SqlParameter("@Qty", qty), new SqlParameter("@Rate", rate), new SqlParameter("@Amount", amount), new SqlParameter("@CreatedBy", createdBy) });
+        }
+
+
+        public static decimal GetTraineeFoodDays(clsDataAccess db, string trainingID)
+        {
+            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(FoodChargeableDays),0) AS FoodDays,ISNULL(SUM(CASE WHEN FoodChargeableDays>0 THEN 1 ELSE 0 END),0) AS ExplicitEntries FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND EmpID IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["ExplicitEntries"]) > 0) return Convert.ToDecimal(dt.Rows[0]["FoodDays"]);
+            return GetAttendedTraineeDays(db, trainingID);
         }
 
         public static int GetAttendedTraineeDays(clsDataAccess db, string trainingID)
