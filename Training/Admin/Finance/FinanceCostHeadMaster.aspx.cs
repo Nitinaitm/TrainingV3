@@ -37,7 +37,7 @@ namespace Training.Admin
                 ShowMessage("Cost Head Code or Name already exists.", Color.Red);
                 return;
             }
-            int result = objDB.ExecuteSql("INSERT INTO FinanceCostHeadMaster(CostHeadCode,CostHeadName,CostLevel,CalculationMode,UnitType,CreatedBy) VALUES(@Code,@Name,@Level,@Mode,@Unit,@CreatedBy)", new SqlParameter[] { new SqlParameter("@Code", code), new SqlParameter("@Name", name), new SqlParameter("@Level", ddlLevel.SelectedValue), new SqlParameter("@Mode", ddlMode.SelectedValue), new SqlParameter("@Unit", unit), new SqlParameter("@CreatedBy", Convert.ToString(Session["UserID"])) });
+            int result = objDB.ExecuteSql("INSERT INTO FinanceCostHeadMaster(CostHeadCode,CostHeadName,CostLevel,CalculationMode,UnitType,ManualAllowed,OverrideAllowed,CreatedBy) VALUES(@Code,@Name,@Level,@Mode,@Unit,@ManualAllowed,@OverrideAllowed,@CreatedBy)", new SqlParameter[] { new SqlParameter("@Code", code), new SqlParameter("@Name", name), new SqlParameter("@Level", ddlLevel.SelectedValue), new SqlParameter("@Mode", ddlMode.SelectedValue), new SqlParameter("@Unit", unit), new SqlParameter("@ManualAllowed", chkManualAllowed.Checked ? "Y" : "N"), new SqlParameter("@OverrideAllowed", chkOverrideAllowed.Checked ? "Y" : "N"), new SqlParameter("@CreatedBy", Convert.ToString(Session["UserID"])) });
             if (result > 0)
             {
                 ShowMessage("Cost Head saved successfully.", Color.Green);
@@ -68,6 +68,8 @@ namespace Training.Admin
             txtUnit.Text = "";
             ddlLevel.SelectedIndex = 0;
             ddlMode.SelectedIndex = 0;
+            chkManualAllowed.Checked = true;
+            chkOverrideAllowed.Checked = true;
         }
 
         private void ShowMessage(string text, Color color)
