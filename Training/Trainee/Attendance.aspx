@@ -97,6 +97,14 @@
             width: 220px;
             font-weight: 600;
         }
+    
+        @media (max-width: 767.98px) {
+            .page-title { font-size: 22px; }
+            .card-header-custom { padding: 10px 12px; font-size: 16px; }
+            .card-body-custom { padding: 12px; }
+            .btn-complete { width: 100%; max-width: 100%; }
+        }
+
     </style>
 
 </asp:Content>
