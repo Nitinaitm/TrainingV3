@@ -173,7 +173,7 @@ namespace Training.Admin
 
         public static decimal GetTraineeFoodDays(clsDataAccess db, string trainingID)
         {
-            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(FoodChargeableDays),0) AS FoodDays,ISNULL(SUM(CASE WHEN FoodChargeableDays>0 THEN 1 ELSE 0 END),0) AS ExplicitEntries FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND EmpID IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
+            DataTable dt = db.GetDataTable("SELECT ISNULL(SUM(FoodChargeableDays),0) AS FoodDays,COUNT(FoodChargeableDays) AS ExplicitEntries FROM FinanceHostelUsage WHERE TrainingID=@TrainingID AND UsageStatus='Used' AND EmpID IS NOT NULL", new SqlParameter[] { new SqlParameter("@TrainingID", trainingID) });
             if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["ExplicitEntries"]) > 0) return Convert.ToDecimal(dt.Rows[0]["FoodDays"]);
             return GetAttendedTraineeDays(db, trainingID);
         }
