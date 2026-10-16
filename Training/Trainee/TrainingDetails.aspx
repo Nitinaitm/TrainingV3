@@ -67,6 +67,72 @@
         .gridview td {
             vertical-align: middle
         }
+
+        /* Mobile-only lifecycle sizing; desktop layout remains unchanged. */
+        @media (max-width: 767.98px) {
+            .trainee-lifecycle-mobile {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .trainee-lifecycle-mobile .bl-wrap {
+                box-sizing: border-box;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                padding: 10px;
+            }
+
+            .trainee-lifecycle-mobile .bl-scroll {
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                margin: 0;
+                padding: 8px 0 24px;
+                overflow-x: auto !important;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-x: contain;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-section {
+                box-sizing: border-box;
+                min-width: 0;
+                padding: 10px;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-section:not(.session-cycle) .stage-line {
+                min-width: 760px;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-section.session-cycle .stage-line {
+                min-width: 480px;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-title {
+                font-size: 15px;
+                line-height: 1.35;
+                overflow-wrap: anywhere;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .trainee-lifecycle-mobile .bl-wrap {
+                padding: 8px;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-section:not(.session-cycle) .stage-line {
+                min-width: 720px;
+            }
+
+            .trainee-lifecycle-mobile .lifecycle-section.session-cycle .stage-line {
+                min-width: 450px;
+            }
+        }
+
     </style>
 </asp:Content>
 <asp:content id="Content2" contentplaceholderid="ContentPlaceHolder1" runat="server">
@@ -83,7 +149,9 @@
 <asp:TemplateField HeaderText="Post Test"><ItemTemplate><asp:Label ID="lblPost" runat="server" ForeColor="Black" Text='<%# Eval("PostStatus") %>'></asp:Label></ItemTemplate></asp:TemplateField>
 <asp:TemplateField HeaderText="Action"><ItemTemplate><asp:LinkButton ID="lnkView" runat="server" CssClass="btn btn-primary btn-sm" CommandName="ViewSession" CommandArgument='<%# Eval("SessionID") %>'>View</asp:LinkButton></ItemTemplate></asp:TemplateField>
 </Columns></asp:GridView></div></div>
-    <uc2:BatchLifecycle ID="BatchLifecycle1" runat="server" />
+    <div class="trainee-lifecycle-mobile">
+        <uc2:BatchLifecycle ID="BatchLifecycle1" runat="server" />
+    </div>
 
 <div class="row"><div class="col-md-12 text-center">
 <asp:Button ID="btnBack" runat="server" Text="Back" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnBack_Click" />
