@@ -24,6 +24,7 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.TextBox txtHostelCheckIn;
         protected global::System.Web.UI.WebControls.TextBox txtHostelCheckOut;
         protected global::System.Web.UI.WebControls.TextBox txtHostelNights;
+        protected global::System.Web.UI.WebControls.TextBox txtFoodChargeableDays;
         protected global::System.Web.UI.WebControls.TextBox txtHostelUsageRemarks;
         protected global::System.Web.UI.WebControls.Button btnSaveHostelUsage;
         protected global::System.Web.UI.WebControls.GridView gvHostelUsage;
