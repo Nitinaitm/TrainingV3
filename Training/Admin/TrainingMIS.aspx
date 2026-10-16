@@ -790,6 +790,51 @@
             container.innerHTML = "";
             container.appendChild(svg);
         }
+        function misDrawPie(containerId, labels, values) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            if (!labels || !labels.length) { misDrawEmpty(container, "No data available for selected filters"); return; }
+            var items = labels.map(function(label, i) { return { label: String(label || "(Blank)"), value: Math.max(0, Number(values[i]) || 0) }; }).filter(function(item) { return item.value > 0; });
+            var total = items.reduce(function(sum, item) { return sum + item.value; }, 0);
+            if (!items.length || total <= 0) { misDrawEmpty(container, "No trainee data available"); return; }
+            items.sort(function(a, b) { return b.value - a.value; });
+            if (items.length > 8) {
+                var rest = items.slice(7).reduce(function(sum, item) { return sum + item.value; }, 0);
+                items = items.slice(0, 7);
+                items.push({ label: "Other companies", value: rest });
+            }
+            var colors = ["#2563eb", "#16a34a", "#f59e0b", "#8b5cf6", "#ec4899", "#0891b2", "#f97316", "#64748b"];
+            var width = 600, height = 350, cx = 165, cy = 175, radius = 118;
+            var svg = misSvgElement("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", height: "100%", role: "img", "aria-label": "Company-wise Trainee Trained pie chart" });
+            var angle = -Math.PI / 2;
+            items.forEach(function(item, i) {
+                var sliceAngle = item.value / total * Math.PI * 2;
+                var endAngle = angle + sliceAngle;
+                if (items.length === 1) {
+                    svg.appendChild(misSvgElement("circle", { cx: cx, cy: cy, r: radius, fill: colors[i % colors.length] }));
+                } else {
+                    var x1 = cx + radius * Math.cos(angle);
+                    var y1 = cy + radius * Math.sin(angle);
+                    var x2 = cx + radius * Math.cos(endAngle);
+                    var y2 = cy + radius * Math.sin(endAngle);
+                    var largeArc = sliceAngle > Math.PI ? 1 : 0;
+                    var path = "M " + cx + " " + cy + " L " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArc + " 1 " + x2 + " " + y2 + " Z";
+                    svg.appendChild(misSvgElement("path", { d: path, fill: colors[i % colors.length], stroke: "#ffffff", "stroke-width": "2" }));
+                }
+                var legendY = 35 + i * 39;
+                var pct = (item.value * 100 / total).toFixed(1);
+                svg.appendChild(misSvgElement("rect", { x: 315, y: legendY - 12, width: 13, height: 13, rx: 3, fill: colors[i % colors.length] }));
+                var label = item.label;
+                if (label.length > 25) label = label.substring(0, 22) + "...";
+                svg.appendChild(misSvgElement("text", { x: 336, y: legendY, fill: "#334155", "font-size": "12", "font-weight": "600" }, label));
+                svg.appendChild(misSvgElement("text", { x: 336, y: legendY + 16, fill: "#64748b", "font-size": "11" }, item.value + " trainees (" + pct + "%)"));
+                angle = endAngle;
+            });
+            svg.appendChild(misSvgElement("text", { x: cx, y: cy - 4, "text-anchor": "middle", fill: "#ffffff", "font-size": "17", "font-weight": "700" }, String(total)));
+            svg.appendChild(misSvgElement("text", { x: cx, y: cy + 17, "text-anchor": "middle", fill: "#ffffff", "font-size": "11" }, "Trainees"));
+            container.innerHTML = "";
+            container.appendChild(svg);
+        }
         function misDrawLine(containerId, labels, startedValues, endedValues) {
             var container = document.getElementById(containerId);
             if (!container) return;
@@ -842,7 +887,7 @@
             misDrawBars("chartTrainingStatus", statusLabels, statusValues, false);
             misDrawBars("chartTrainingType", typeLabels, typeValues, true);
             misDrawLine("chartTrainingTrend", trendLabels, startedValues, endedValues);
-            misDrawBars("chartCompanyTrainees", companyLabels, companyValues, true);
+            misDrawPie("chartCompanyTrainees", companyLabels, companyValues);
             misDrawBars("chartTopCourses", courseLabels, courseValues, true);
         };
         function openTrainingDetails(trainingID) {
