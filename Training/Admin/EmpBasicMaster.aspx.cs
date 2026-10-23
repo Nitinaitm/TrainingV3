@@ -33,7 +33,7 @@ namespace Training.Admin
 
         private void LoadSelect2()
         {
-            ScriptManager.RegisterStartupScript(this, GetType(), "LoadSearchableDropdown", "window.addEventListener('load', function () { LoadSearchableDropdown(); });", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "LoadSearchableDropdown", "LoadSearchableDropdown(); RestoreEmpBasicTab();", true);
         }
 
         protected void ddlCompany_SelectedIndexChanged(object sender, EventArgs e)
