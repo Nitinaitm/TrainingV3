@@ -19,92 +19,92 @@ END
 GO
 CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'EmpBasicMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'EmpBasicMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_EmpPostingDetails ON dbo.EmpPostingDetails AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_EmpPostingDetails ON dbo.EmpPostingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'EmpPostingDetails',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'EmpPostingDetails',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
-GO\nCREATE OR ALTER TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
+GO\nCREATE TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'TrainingDetails',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'TrainingDetails',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
-END
-GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_TrainingAssignment ON dbo.TrainingAssignment AFTER INSERT,UPDATE,DELETE AS
-BEGIN
-SET NOCOUNT ON;
-INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'TrainingAssignment',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
-FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_SessionMaster ON dbo.SessionMaster AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_TrainingAssignment ON dbo.TrainingAssignment AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'SessionMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'TrainingAssignment',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_SessionAttendance ON dbo.SessionAttendance AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_SessionMaster ON dbo.SessionMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'SessionAttendance',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'SessionMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_TestMaster ON dbo.TestMaster AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_SessionAttendance ON dbo.SessionAttendance AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'TestMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'SessionAttendance',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_TrainingCertificate ON dbo.TrainingCertificate AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_TestMaster ON dbo.TestMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'TrainingCertificate',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'TestMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
-CREATE OR ALTER TRIGGER dbo.trg_Audit_ManagerMaster ON dbo.ManagerMaster AFTER INSERT,UPDATE,DELETE AS
+CREATE TRIGGER dbo.trg_Audit_TrainingCertificate ON dbo.TrainingCertificate AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'ManagerMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,CONVERT(nvarchar(100),SESSION_CONTEXT(N'UserID')),CONVERT(nvarchar(50),SESSION_CONTEXT(N'UserRole')),CONVERT(varchar(100),SESSION_CONTEXT(N'IPAddress')),CONVERT(nvarchar(100),SESSION_CONTEXT(N'SessionID')),ORIGINAL_LOGIN()
+SELECT 'TrainingCertificate',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT d.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)o(OldData)
-OUTER APPLY(SELECT i.* FOR JSON PATH,WITHOUT_ARRAY_WRAPPER)n(NewData);
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
+END
+GO
+CREATE TRIGGER dbo.trg_Audit_ManagerMaster ON dbo.ManagerMaster AFTER INSERT,UPDATE,DELETE AS
+BEGIN
+SET NOCOUNT ON;
+INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
+SELECT 'ManagerMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
+FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
+OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
+OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
