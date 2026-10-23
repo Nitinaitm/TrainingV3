@@ -229,7 +229,7 @@ AND TrainingType =
 
 SELECT
 
-EBM.EmpDesignation,
+CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END,
 
 COUNT(
 DISTINCT EBM.EmpID
@@ -252,6 +252,10 @@ LEFT JOIN
 TrainingDetails TD
 ON TD.TrainingID =
 TA.TrainingID
+
+LEFT JOIN TrainingEmployeeSnapshot TES
+ON TES.TrainingID = TA.TrainingID
+AND TES.EmpID = TA.EmpID
 
 WHERE 1=1
 
@@ -322,7 +326,7 @@ TD.DateTo,
                 q.Append(@"
 
 GROUP BY
-EBM.EmpDesignation
+CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
 
 HAVING
 COUNT(
@@ -330,7 +334,7 @@ DISTINCT TA.EmpID
 ) > 0
 
 ORDER BY
-EBM.EmpDesignation
+CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
 
 ");
 
@@ -472,9 +476,13 @@ TrainingDetails TD
 ON TD.TrainingID =
 TA.TrainingID
 
+LEFT JOIN TrainingEmployeeSnapshot TES
+ON TES.TrainingID = TA.TrainingID
+AND TES.EmpID = TA.EmpID
+
 WHERE
 
-EBM.EmpDesignation =
+(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END) =
 @Designation
 
 AND
