@@ -348,6 +348,12 @@ TD.DateTo,
 ");
                 }
 
+                string roleIDs = SelectedRoleIDs();
+                if (roleIDs != "")
+                {
+                    q.Append(" AND (((ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN (" + roleIDs + ") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TES.EmployeeRoleIDs,'')+',')>0)) OR (NOT (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=EBM.EmpID AND ERM.RoleID IN (" + roleIDs + "))))");
+                }
+
                 q.Append(@"
 
 GROUP BY
