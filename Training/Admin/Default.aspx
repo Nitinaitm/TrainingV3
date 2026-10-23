@@ -1460,6 +1460,7 @@ window.addEventListener('message', function (event) {
                 <asp:GridView
                     ID="gvEmployee"
                     runat="server"
+                    DataKeyNames="DetailPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,Subdivision,Section"
                     AutoGenerateColumns="False"
                     CssClass="gridview"
                     EmptyDataText="No Record Found"
