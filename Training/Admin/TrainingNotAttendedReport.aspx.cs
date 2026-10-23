@@ -546,31 +546,17 @@ txtDateTo.Text
             }
         }
 
-        private void FillGrid(
-string query)
+        private void FillGrid(string query)
         {
-            using (SqlConnection con =
-            new SqlConnection(constr))
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                SqlDataAdapter da =
-                new SqlDataAdapter(
-                query,
-                con);
-
-                DataTable dt =
-                new DataTable();
-
-                da.Fill(dt);
-
-
-                gvReport.DataSource =
-    dt;
-
+                AddRoleParameters(cmd);
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd)) da.Fill(dt);
+                gvReport.DataSource = dt;
                 gvReport.DataBind();
-
-                lblRecordCount.Text =
-                "Total Records : " +
-                dt.Rows.Count.ToString();
+                lblRecordCount.Text = "Total Records : " + dt.Rows.Count.ToString();
             }
         }
         private int GetTotalEmployees()
