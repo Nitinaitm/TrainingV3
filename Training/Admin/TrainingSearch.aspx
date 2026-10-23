@@ -52,6 +52,7 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 <div class="form-group"><label>Company</label><asp:ListBox ID="lstCompany" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div class="form-group"><label>Designation</label><asp:ListBox ID="lstDesignation" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div class="form-group"><label>Role</label><asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
+<div class="form-group"><label>Role</label><asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div class="form-group"><label>Posting Place (HRMS)</label><asp:ListBox ID="lstPostingPlace" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div id="grpPostingDetails" runat="server" class="posting-details-card" visible="true">
 <div class="posting-details-title">Posting Details</div><div class="posting-details-grid">
