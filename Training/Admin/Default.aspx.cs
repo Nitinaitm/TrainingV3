@@ -18,6 +18,7 @@ namespace Training.Admin
             {
                 BindCompany();
                 BindDesignation();
+                BindRole();
                 BindPostingPlace();
 
 
@@ -294,6 +295,32 @@ namespace Training.Admin
         /* =========================================================
            HRMS POSTING PLACE
         ========================================================= */
+
+        private void BindRole()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            BindList(lstRole, dt, "RoleName", "RoleID");
+        }
+
+        private void AddRoleFilter(StringBuilder query, SqlCommand cmd)
+        {
+            List<string> placeholders = new List<string>();
+            int index = 0;
+            foreach (ListItem item in lstRole.Items)
+            {
+                if (!item.Selected) continue;
+                int roleID;
+                if (!int.TryParse(item.Value, out roleID)) continue;
+                string name = "@RoleID" + index++;
+                placeholders.Add(name);
+                cmd.Parameters.Add(new SqlParameter(name, roleID));
+            }
+
+            if (placeholders.Count > 0)
+            {
+                query.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=EBM.EmpID AND RM.RoleID IN (" + string.Join(",", placeholders) + "))");
+            }
+        }
 
         private void BindPostingPlace()
         {
@@ -1167,6 +1194,8 @@ EventArgs e)
                     "EBM.EmpDesignation",
                     "Designation"
                 );
+
+                AddRoleFilter(query, cmd);
 
                 AddMultiSelectFilter(
                     query,
