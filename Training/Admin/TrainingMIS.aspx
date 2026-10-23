@@ -531,6 +531,7 @@
                 <div class="field">
                     <label>Training Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="input" />
                 </div>
+                <div class="field"><label>Role (any selected)</label><asp:CheckBoxList ID="cblRole" runat="server" RepeatLayout="Flow" /></div>
             </div>
             <div class="actions">
                 <asp:Button ID="btnSearch" runat="server" Text="Generate MIS" CssClass="btnx blue" OnClick="btnSearch_Click" /><asp:Button ID="btnReset" runat="server" Text="Reset" CssClass="btnx gray" OnClick="btnReset_Click" /><asp:Button ID="btnExport" runat="server" Text="Export MIS" CssClass="btnx green" OnClick="btnExport_Click" />
