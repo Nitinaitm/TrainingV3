@@ -19,6 +19,7 @@ namespace Training.Admin
             {
                 BindCompany();
                 BindDesignation();
+                BindRole();
                 BindPostingPlace();
                 ClearPostingDetailControls();
                 BindPostingPlaceRadio();
@@ -146,6 +147,36 @@ namespace Training.Admin
         {
             DataTable dt=DB().GetDataTable("SELECT DISTINCT EmpDesignation FROM (SELECT EmpDesignation,EmpCompany FROM EmpBasicMaster WHERE EmpType='Internal' UNION SELECT EmpDesignation,EmpCompany FROM TrainingEmployeeSnapshot) X WHERE ISNULL(EmpDesignation,'')<>''"+CompanyWhere("EmpCompany")+" ORDER BY EmpDesignation",CompanyParameters());
             BindList(lstDesignation,dt,"EmpDesignation");
+        }
+
+        private void BindRole()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName");
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstRole.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+        }
+
+        private void AddRoleFilter(StringBuilder q, SqlCommand cmd)
+        {
+            List<string> placeholders = new List<string>();
+            int index = 0;
+            foreach (ListItem item in lstRole.Items)
+            {
+                if (!item.Selected) continue;
+                int roleID;
+                if (!int.TryParse(item.Value, out roleID)) continue;
+                string name = "@RoleFilter" + index++;
+                placeholders.Add(name);
+                cmd.Parameters.Add(new SqlParameter(name, roleID));
+            }
+
+            if (placeholders.Count == 0) return;
+            string inList = string.Join(",", placeholders);
+            string completed = "(ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ')";
+            q.Append(" AND ((" + completed + " AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN (" + inList + ") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TES.EmployeeRoleIDs,'')+',')>0)) OR (NOT " + completed + " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN (" + inList + "))))");
         }
 
         private void BindPostingPlace()
@@ -404,6 +435,7 @@ namespace Training.Admin
             AddTextFilter(q,cmd,"E.EmailId",txtEmail.Text,"@EmailId");
             AddMultiSelectFilter(q,cmd,lstCompany,"CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpCompany,'') ELSE E.EmpCompany END","Company");
             AddMultiSelectFilter(q,cmd,lstDesignation,"CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE E.EmpDesignation END","Designation");
+            AddRoleFilter(q,cmd);
             AddMultiSelectFilter(q,cmd,lstPostingPlace,"CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingPlace,'') ELSE E.EmpPostingPlace END","PostingPlace");
             if(!string.IsNullOrWhiteSpace(rblPostingPlace.SelectedValue)){q.Append(" AND (CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.DetailPostingPlace,'') ELSE ISNULL(P.EmpPostingPlace,'') END)=@DetailPlace");cmd.Parameters.Add(new SqlParameter("@DetailPlace",rblPostingPlace.SelectedValue));}
             AddMultiSelectFilter(q,cmd,lstPostingDepartment,"CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingDepartment,'') ELSE ISNULL(P.EmpPostingDepartment,'') END","Department");
