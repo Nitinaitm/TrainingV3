@@ -18,6 +18,7 @@ namespace Training.Admin
             {
                 BindStatus();
                 BindCourse();
+                BindRole();
                 string requestedTrainingID = Convert.ToString(Session["MISSelectedTrainingID"]).Trim();
                 if(!string.IsNullOrEmpty(requestedTrainingID)) Session.Remove("MISSelectedTrainingID");
                 if (!String.IsNullOrWhiteSpace(requestedTrainingID))
@@ -95,9 +96,39 @@ namespace Training.Admin
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
             ddlStatus.SelectedIndex = 0;
+            foreach (ListItem item in lstRole.Items) item.Selected = false;
             pnlDetails.Visible = false;
             pnlTrainingList.Visible = true;
             BindTrainingList();
+        }
+
+        private void BindRole()
+        {
+            DataTable dt = GetTable("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName");
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstRole.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+        }
+
+        private void AddRoleTrainingFilter(StringBuilder q, SqlCommand cmd)
+        {
+            System.Collections.Generic.List<string> p = new System.Collections.Generic.List<string>();
+            int i = 0;
+            foreach (ListItem item in lstRole.Items)
+            {
+                if (!item.Selected) continue;
+                int roleID;
+                if (!int.TryParse(item.Value, out roleID)) continue;
+                string name = "@TrainingRole" + i++;
+                p.Add(name);
+                cmd.Parameters.Add(new SqlParameter(name, roleID));
+            }
+            if (p.Count == 0) return;
+            string roles = string.Join(",", p);
+            string completed = "(ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ')";
+            q.Append(" AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TRA LEFT JOIN dbo.TrainingEmployeeSnapshot TRS ON TRS.TrainingID=TRA.TrainingID AND TRS.EmpID=TRA.EmpID WHERE TRA.TrainingID=TD.TrainingID AND ISNULL(TRA.Cancelled,0)=0 AND ((" + completed + " AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN (" + roles + ") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TRS.EmployeeRoleIDs,'')+',')>0)) OR (NOT " + completed + " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TRA.EmpID AND ERM.RoleID IN (" + roles + ")))))");
         }
 
         private void BindTrainingList()
@@ -105,6 +136,7 @@ namespace Training.Admin
             StringBuilder q = new StringBuilder();
             q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
             SqlCommand cmd = new SqlCommand();
+            AddRoleTrainingFilter(q, cmd);
             if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
             if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
             if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
@@ -184,7 +216,7 @@ namespace Training.Admin
 
         private void ShowAttendance(string sessionID)
         {
-            string q = "SELECT E.EmpID,E.EmpName,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE ISNULL(E.EmpDesignation,'') END EmpDesignation,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpCompany,'') ELSE ISNULL(E.EmpCompany,'') END EmpCompany,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingPlace,'') ELSE ISNULL(E.EmpPostingPlace,'') END EmpPostingPlace,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND TES.EmpID IS NULL THEN 'Legacy - snapshot unavailable' WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN 'Historical snapshot' ELSE 'Current employee details' END EmployeeDetailsSource,ISNULL(SA.AttendanceStatus,'Pending') AttendanceStatus,ISNULL(SA.Remarks,'') Remarks,SA.CreatedBy AttendanceMarkedBy,SA.CreatedOn AttendanceMarkedOn FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID LEFT JOIN TrainingEmployeeSnapshot TES ON TES.TrainingID=TA.TrainingID AND TES.EmpID=TA.EmpID LEFT JOIN SessionAttendance SA ON SA.EmpID=TA.EmpID AND SA.TrainingID=TA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
+            string q = "SELECT E.EmpID,E.EmpName,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE ISNULL(E.EmpDesignation,'') END EmpDesignation,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpCompany,'') ELSE ISNULL(E.EmpCompany,'') END EmpCompany,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingPlace,'') ELSE ISNULL(E.EmpPostingPlace,'') END EmpPostingPlace,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmployeeRoles,'') ELSE ISNULL((SELECT STUFF((SELECT ', '+RM.RoleName FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=E.EmpID ORDER BY RM.RoleName FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')),'') END EmployeeRoles,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND TES.EmpID IS NULL THEN 'Legacy - snapshot unavailable' WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN 'Historical snapshot' ELSE 'Current employee details' END EmployeeDetailsSource,ISNULL(SA.AttendanceStatus,'Pending') AttendanceStatus,ISNULL(SA.Remarks,'') Remarks,SA.CreatedBy AttendanceMarkedBy,SA.CreatedOn AttendanceMarkedOn FROM TrainingAssignment TA INNER JOIN EmpBasicMaster E ON TA.EmpID=E.EmpID INNER JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID LEFT JOIN TrainingEmployeeSnapshot TES ON TES.TrainingID=TA.TrainingID AND TES.EmpID=TA.EmpID LEFT JOIN SessionAttendance SA ON SA.EmpID=TA.EmpID AND SA.TrainingID=TA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 ORDER BY E.EmpName";
             BindReport(q,new SqlParameter("@SessionID",sessionID),new SqlParameter("@TrainingID",ViewState["TrainingID"].ToString()));
             lblDetailMessage.Text = "Session Attendance: trainee-wise Present / Absent / Pending with attendance marked by.";
         }
