@@ -656,7 +656,11 @@ E.EmpDesignation,
 
 E.EmpCompany,
 
-E.EmpPostingPlace
+E.EmpPostingPlace,
+
+E.MobileNo,
+
+E.EmailId
 
 FROM TrainingAssignment TA
 
@@ -809,7 +813,9 @@ EmpID,
 EmpName,
 EmpDesignation,
 EmpCompany,
-EmpPostingPlace
+EmpPostingPlace,
+MobileNo,
+EmailId
 
 FROM EmpBasicMaster
 
