@@ -329,6 +329,7 @@ namespace Training.Admin
             StringBuilder q = new StringBuilder();
             q.Append("SELECT TD.TrainingID,ISNULL(CM.CourseName,'') CourseName,TD.TrainingType,TD.TrainingOrganizer,TD.TrainingLocation,TD.Batch,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateFrom,105),TRY_CONVERT(date,TD.DateFrom,23),TRY_CONVERT(date,TD.DateFrom)),105) DateFrom,CONVERT(varchar(10),COALESCE(TRY_CONVERT(date,TD.DateTo,105),TRY_CONVERT(date,TD.DateTo,23),TRY_CONVERT(date,TD.DateTo)),105) DateTo,TD.NoOfDays,ISNULL(TD.TrainingStatus,'') TrainingStatus FROM TrainingDetails TD LEFT JOIN CourseMaster CM ON TD.CourseID=CM.CourseID WHERE 1=1");
             SqlCommand cmd = new SqlCommand();
+            AddRoleTrainingFilter(q, cmd);
             if (txtTrainingID.Text.Trim() != "") { q.Append(" AND TD.TrainingID LIKE @TrainingID"); cmd.Parameters.AddWithValue("@TrainingID","%" + txtTrainingID.Text.Trim() + "%"); }
             if (txtBatch.Text.Trim() != "") { q.Append(" AND TD.Batch LIKE @Batch"); cmd.Parameters.AddWithValue("@Batch","%" + txtBatch.Text.Trim() + "%"); }
             if (ddlStatus.SelectedValue != "") { q.Append(" AND ISNULL(TD.TrainingStatus,'')=@Status"); cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue); }
