@@ -865,7 +865,7 @@ ORDER BY E.EmpID
         private void BindAttendedSelectedGrid()
         {
             lblCurrentView.Text =
-            "Current View : Attended Selected Training";
+            "Current View : Attended Selected Training (details from latest matching training)";
 
             StringBuilder q =
             new StringBuilder();
@@ -876,9 +876,11 @@ SELECT
 
 E.EmpID,
 E.EmpName,
-E.EmpCompany,
-E.EmpDesignation,
-E.EmpPostingPlace,
+CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpCompany,'') ELSE E.EmpCompany END EmpCompany,
+CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpDesignation,'') ELSE E.EmpDesignation END EmpDesignation,
+CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpPostingPlace,'') ELSE E.EmpPostingPlace END EmpPostingPlace,
+ISNULL(H.TrainingID,'') DetailsTrainingID,
+CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') AND H.SnapshotEmpID IS NULL THEN 'Legacy - snapshot unavailable' WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN 'Historical snapshot' WHEN H.TrainingID IS NOT NULL THEN 'Current employee details' ELSE 'No matching attended training' END EmployeeDetailsSource,
 E.MobileNo,
 E.EmailId,
 
@@ -893,7 +895,34 @@ WHERE TA2.EmpID = E.EmpID
 AS TotalTrainingsAttended
 
 FROM EmpBasicMaster E
-
+OUTER APPLY
+(
+    SELECT TOP 1
+        TDH.TrainingID,
+        TDH.TrainingStatus,
+        TDH.WorkflowStatus,
+        TES.EmpID AS SnapshotEmpID,
+        TES.EmpCompany,
+        TES.EmpDesignation,
+        TES.EmpPostingPlace
+    FROM TrainingAssignment TAH
+    INNER JOIN TrainingDetails TDH ON TDH.TrainingID=TAH.TrainingID
+    LEFT JOIN TrainingEmployeeSnapshot TES ON TES.TrainingID=TAH.TrainingID AND TES.EmpID=TAH.EmpID
+    WHERE TAH.EmpID=E.EmpID
+      AND ISNULL(TAH.Cancelled,0)=0
+      AND EXISTS
+      (
+          SELECT 1
+          FROM SessionAttendance SAH
+          WHERE SAH.TrainingID=TAH.TrainingID
+            AND SAH.EmpID=TAH.EmpID
+            AND SAH.AttendanceStatus='Present'
+      )
+");
+            ApplyHistoricalTrainingFilters(q);
+            q.Append(@"
+    ORDER BY COALESCE(TRY_CONVERT(date,TDH.DateTo,105),TRY_CONVERT(date,TDH.DateFrom,105),TRY_CONVERT(date,TDH.DateTo,23),TRY_CONVERT(date,TDH.DateFrom,23)) DESC,TDH.TrainingID DESC
+) H
 WHERE 1=1
 
 ");
@@ -928,6 +957,16 @@ ORDER BY E.EmpID
 ");
 
             FillGrid(q.ToString());
+        }
+
+        private void ApplyHistoricalTrainingFilters(StringBuilder q)
+        {
+            if (ddlTrainingType.SelectedValue != "") q.Append(" AND TDH.TrainingType = '" + ddlTrainingType.SelectedValue.Replace("'", "''") + "'");
+            if (ddlOrganizer.SelectedValue != "") q.Append(" AND TDH.TrainingOrganizer = '" + ddlOrganizer.SelectedValue.Replace("'", "''") + "'");
+            if (ddlLocation.SelectedValue != "") q.Append(" AND TDH.TrainingLocation = '" + ddlLocation.SelectedValue.Replace("'", "''") + "'");
+            if (txtBatch.Text.Trim() != "") q.Append(" AND TDH.Batch LIKE '%" + txtBatch.Text.Replace("'", "''") + "%'");
+            if (txtDateFrom.Text.Trim() != "") q.Append(" AND TRY_CONVERT(date,TDH.DateFrom,105) >= '" + txtDateFrom.Text.Replace("'", "''") + "'");
+            if (txtDateTo.Text.Trim() != "") q.Append(" AND TRY_CONVERT(date,TDH.DateTo,105) <= '" + txtDateTo.Text.Replace("'", "''") + "'");
         }
        
 
