@@ -1373,27 +1373,64 @@ EventArgs e)
             using (ExcelPackage package = new ExcelPackage())
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee Data");
-
                 int exportColumnIndex = 1;
 
-                for (int i = 2; i < gvEmployee.HeaderRow.Cells.Count; i++)
+                for (int i = 2; i < gvEmployee.HeaderRow.Cells.Count - 1; i++)
                 {
-                    worksheet.Cells[1, exportColumnIndex].Value = gvEmployee.HeaderRow.Cells[i].Text;
+                    worksheet.Cells[1, exportColumnIndex].Value = Server.HtmlDecode(gvEmployee.HeaderRow.Cells[i].Text);
                     exportColumnIndex++;
                 }
+
+                string[] postingDetailHeaders = new string[]
+                {
+                    "Posting Details",
+                    "Department / Office / Cell",
+                    "Area Board / Zone",
+                    "Circle",
+                    "Division",
+                    "Subdivision",
+                    "Section"
+                };
+
+                foreach (string header in postingDetailHeaders)
+                {
+                    worksheet.Cells[1, exportColumnIndex].Value = header;
+                    exportColumnIndex++;
+                }
+
+                string[] postingDetailFields = new string[]
+                {
+                    "DetailPostingPlace",
+                    "EmpPostingDepartment",
+                    "AreaBoardZone",
+                    "Circle",
+                    "Division",
+                    "Subdivision",
+                    "Section"
+                };
 
                 for (int rowIndex = 0; rowIndex < gvEmployee.Rows.Count; rowIndex++)
                 {
                     exportColumnIndex = 1;
 
-                    for (int cellIndex = 2; cellIndex < gvEmployee.Rows[rowIndex].Cells.Count; cellIndex++)
+                    for (int cellIndex = 2; cellIndex < gvEmployee.Rows[rowIndex].Cells.Count - 1; cellIndex++)
                     {
                         worksheet.Cells[rowIndex + 2, exportColumnIndex].Value = Server.HtmlDecode(gvEmployee.Rows[rowIndex].Cells[cellIndex].Text);
                         exportColumnIndex++;
                     }
+
+                    foreach (string field in postingDetailFields)
+                    {
+                        object value = gvEmployee.DataKeys[rowIndex].Values[field];
+                        worksheet.Cells[rowIndex + 2, exportColumnIndex].Value = value == null || value == DBNull.Value || string.IsNullOrWhiteSpace(Convert.ToString(value)) ? "—" : Convert.ToString(value);
+                        exportColumnIndex++;
+                    }
                 }
 
-                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                if (worksheet.Dimension != null)
+                {
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                }
 
                 Response.Clear();
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
