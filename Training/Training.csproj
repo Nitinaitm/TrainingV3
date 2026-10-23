@@ -366,6 +366,7 @@
     <Content Include="bin\Training.pdb" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Admin\EditEmployee.aspx" />
+    <Content Include="Admin\RoleMaster.aspx" />
     <Content Include="Admin\EmpBasicMaster.aspx" />
     <Content Include="Admin\ExamResultReport.aspx" />
     <Content Include="Admin\ExternalEmpEntry.aspx" />
@@ -1184,6 +1185,13 @@
     <Compile Include="Admin\EditEmployee.aspx.cs">
       <DependentUpon>EditEmployee.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleMaster.aspx.cs">
+      <DependentUpon>RoleMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleMaster.aspx.designer.cs">
+      <DependentUpon>RoleMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\EditEmployee.aspx.designer.cs">
       <DependentUpon>EditEmployee.aspx</DependentUpon>
@@ -2465,5 +2473,7 @@
   <ItemGroup>
     <Compile Include="Business\Audit\clsAuditLog.cs" />
     <Content Include="Database\AuditLogging.sql" />
+    <Content Include="Database\TrainingEmployeeSnapshot.sql" />
+    <Content Include="Database\VerifyTrainingEmployeeSnapshot.sql" />
   </ItemGroup>
 </Project>
