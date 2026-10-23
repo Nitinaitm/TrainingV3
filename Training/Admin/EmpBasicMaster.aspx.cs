@@ -19,6 +19,7 @@ namespace Training.Admin
             {
                 BindCompany();
                 BindDesignation();
+                BindRoleMaster();
                 BindPostingPlace();
                 BindPostingPlaceOptions();
                 SetPostingDetailMode();
@@ -93,6 +94,28 @@ namespace Training.Admin
         {
             DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpDesignation FROM EmpBasicMaster WHERE EmpType='Internal' AND ISNULL(EmpDesignation,'')<>'' ORDER BY EmpDesignation");
             BindSimpleList(ddlDesignation, dt, "EmpDesignation", "Select Designation");
+        }
+
+        private void BindRoleMaster()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            lstEmployeeRoles.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstEmployeeRoles.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+        }
+
+        private void SaveEmployeeRoles(clsDataAccess db, string empID)
+        {
+            db.ExecuteSql("DELETE FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", empID) }, db.Transaction);
+            foreach (ListItem item in lstEmployeeRoles.Items)
+            {
+                if (item.Selected)
+                {
+                    db.ExecuteSql("INSERT INTO dbo.EmpRoleMapping(EmpID,RoleID) VALUES(@EmpID,@RoleID)", new SqlParameter[] { new SqlParameter("@EmpID", empID), new SqlParameter("@RoleID", Convert.ToInt32(item.Value)) }, db.Transaction);
+                }
+            }
         }
 
         private void BindPostingPlace()
@@ -456,6 +479,7 @@ namespace Training.Admin
                 }
 
                 SavePostingDetails(db, empID, false);
+                SaveEmployeeRoles(db, empID);
 
                 db.Commit();
 
@@ -464,6 +488,7 @@ namespace Training.Admin
                 ClearControls();
                 BindCompany();
                 BindDesignation();
+                BindRoleMaster();
                 BindPostingPlace();
                 BindPostingPlaceOptions();
                 SetPostingDetailMode();
@@ -522,6 +547,7 @@ namespace Training.Admin
             txtDOJ.Text = "";
             txtMobileNo.Text = "";
             txtEmailId.Text = "";
+            foreach (ListItem item in lstEmployeeRoles.Items) item.Selected = false;
             ddlCompany.SelectedIndex = 0;
             ddlDesignation.SelectedIndex = 0;
             ddlPostingPlace.SelectedIndex = 0;
