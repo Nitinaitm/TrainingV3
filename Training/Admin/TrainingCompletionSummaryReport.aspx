@@ -144,6 +144,11 @@ Training Completion Report
     </div>
 
     <div class="form-group">
+        <label>Role (any selected)</label>
+        <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="textbox" Rows="3" />
+    </div>
+
+    <div class="form-group">
         <label>Training Type</label>
 
         <asp:DropDownList

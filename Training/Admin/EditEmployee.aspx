@@ -267,6 +267,12 @@
                 allowClear: true,
                 width: '100%'
             });
+
+            $('[id*=lstEmployeeRoles]').select2({
+                placeholder: 'Search / Select Roles',
+                closeOnSelect: false,
+                width: '100%'
+            });
         }
 
 
@@ -424,6 +430,10 @@
                             <h5 class="text-primary mb-3">
                                 Posting Details
                             </h5>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Role (select multiple)</label>
+                                <asp:ListBox ID="lstEmployeeRoles" runat="server" SelectionMode="Multiple" CssClass="form-select" Rows="4" />
+                            </div>
 
 
                             <div class="row">

@@ -85,6 +85,7 @@ namespace Training.Admin
                 Convert.ToString(row["EmpPostingPlace"])
             );
 
+            BindEmployeeRoles();
             LoadPostingDetails();
         }
 
@@ -788,6 +789,35 @@ namespace Training.Admin
          * LOAD EXISTING POSTING DETAILS
          * ============================================================
          */
+
+        private void BindEmployeeRoles()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RM.RoleID,RM.RoleName FROM dbo.RoleMaster RM WHERE RM.IsActive=1 OR EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=@EmpID AND ERM.RoleID=RM.RoleID) ORDER BY RM.RoleName", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) });
+            lstEmployeeRoles.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstEmployeeRoles.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+
+            DataTable selected = DB().GetDataTable("SELECT RoleID FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) });
+            foreach (DataRow row in selected.Rows)
+            {
+                ListItem item = lstEmployeeRoles.Items.FindByValue(Convert.ToString(row["RoleID"]));
+                if (item != null) item.Selected = true;
+            }
+        }
+
+        private void SaveEmployeeRoles(clsDataAccess db)
+        {
+            db.ExecuteSql("DELETE FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) }, db.Transaction);
+            foreach (ListItem item in lstEmployeeRoles.Items)
+            {
+                if (item.Selected)
+                {
+                    db.ExecuteSql("INSERT INTO dbo.EmpRoleMapping(EmpID,RoleID) VALUES(@EmpID,@RoleID)", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value), new SqlParameter("@RoleID", Convert.ToInt32(item.Value)) }, db.Transaction);
+                }
+            }
+        }
 
         private void LoadPostingDetails()
         {
@@ -1543,6 +1573,7 @@ namespace Training.Admin
                  * ====================================================
                  */
 
+                SaveEmployeeRoles(db);
                 db.Commit();
 
 

@@ -580,6 +580,10 @@
                             class="submenu-item">Employee Registration/ Entry
                         </a>
 
+                        <a href='<%= ResolveUrl("~/Admin/RoleMaster.aspx") %>'
+                            class="submenu-item">Role Master
+                        </a>
+
                         <a href='<%= ResolveUrl("~/Admin/ExternalEmpEntry.aspx") %>'
                             class="submenu-item">External Trainee Entry
                         </a>

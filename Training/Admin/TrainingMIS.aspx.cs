@@ -14,7 +14,7 @@ namespace Training.Admin
 
         protected void Page_Load(object sender,EventArgs e)
         {
-            if(!IsPostBack)BindStatus();
+            if(!IsPostBack){BindStatus();BindRole();}
             BindMIS();
         }
 
@@ -39,8 +39,33 @@ namespace Training.Admin
             }
         }
 
+        private void BindRole()
+        {
+            using(SqlConnection con=new SqlConnection(constr))
+            using(SqlDataAdapter da=new SqlDataAdapter("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName",con))
+            {
+                DataTable dt=new DataTable();
+                da.Fill(dt);
+                lstRole.DataSource=dt;
+                lstRole.DataTextField="RoleName";
+                lstRole.DataValueField="RoleID";
+                lstRole.DataBind();
+            }
+        }
+
+        private string SelectedRoleIDs()
+        {
+            System.Collections.Generic.List<string> ids=new System.Collections.Generic.List<string>();
+            foreach(ListItem item in lstRole.Items)
+            {
+                int roleID;
+                if(item.Selected && int.TryParse(item.Value,out roleID))ids.Add(roleID.ToString());
+            }
+            return string.Join(",",ids);
+        }
+
         protected void btnSearch_Click(object sender,EventArgs e){BindMIS();}
-        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;BindMIS();}
+        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;foreach(ListItem item in lstRole.Items)item.Selected=false;BindMIS();}
 
         private string DateExpr(string field)
         {
@@ -53,6 +78,12 @@ namespace Training.Admin
             if(txtFromDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateFrom")+">=TRY_CONVERT(date,@FromDate,105)");
             if(txtToDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateTo")+"<=TRY_CONVERT(date,@ToDate,105)");
             if(ddlStatus.SelectedValue!="")s.Append(" AND ISNULL("+alias+".TrainingStatus,'')=@Status");
+            string roleIDs=SelectedRoleIDs();
+            if(roleIDs!="")
+            {
+                string completed="(ISNULL("+alias+".TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL("+alias+".WorkflowStatus,'')='ABCDEFGHIJ')";
+                s.Append(" AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TRA LEFT JOIN dbo.TrainingEmployeeSnapshot TRS ON TRS.TrainingID=TRA.TrainingID AND TRS.EmpID=TRA.EmpID WHERE TRA.TrainingID="+alias+".TrainingID AND ISNULL(TRA.Cancelled,0)=0 AND (("+completed+" AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN ("+roleIDs+") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TRS.EmployeeRoleIDs,'')+',')>0)) OR (NOT "+completed+" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TRA.EmpID AND ERM.RoleID IN ("+roleIDs+")))))");
+            }
             return s.ToString();
         }
 
@@ -116,8 +147,10 @@ namespace Training.Admin
             lblOngoingTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+"<=CAST(GETDATE() AS date) AND "+DateExpr("TD.DateTo")+">=CAST(GETDATE() AS date)"+f).ToString();
             lblFutureTrainings.Text=Scalar("SELECT COUNT(*) FROM TrainingDetails TD WHERE ISNULL(TD.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted') AND "+DateExpr("TD.DateFrom")+">CAST(GETDATE() AS date)"+f).ToString();
             lblTotalTrainees.Text=Scalar("SELECT COUNT(DISTINCT TA.EmpID) FROM TrainingAssignment TA INNER JOIN TrainingDetails TD ON TA.TrainingID=TD.TrainingID WHERE ISNULL(TA.Cancelled,0)=0"+f).ToString();
-            int totalEmployees=ScalarAllTime("SELECT COUNT(DISTINCT NULLIF(LTRIM(RTRIM(EmpID)),'')) FROM EmpBasicMaster");
-            int trainedEmployees=ScalarAllTime("SELECT COUNT(DISTINCT LTRIM(RTRIM(SA.EmpID))) FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TDX ON TDX.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TDX.TrainingStatus,'') NOT IN ('Cancelled','Canceled')");
+            string selectedRoleIDs=SelectedRoleIDs();
+            string currentRoleFilter=selectedRoleIDs=="" ? "" : " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN ("+selectedRoleIDs+"))";
+            int totalEmployees=selectedRoleIDs=="" ? ScalarAllTime("SELECT COUNT(DISTINCT NULLIF(LTRIM(RTRIM(EmpID)),'')) FROM EmpBasicMaster") : ScalarAllTime("SELECT COUNT(DISTINCT E.EmpID) FROM EmpBasicMaster E WHERE EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN ("+selectedRoleIDs+"))");
+            int trainedEmployees=ScalarAllTime("SELECT COUNT(DISTINCT LTRIM(RTRIM(SA.EmpID))) FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TDX ON TDX.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TDX.TrainingStatus,'') NOT IN ('Cancelled','Canceled')"+currentRoleFilter);
             decimal trainingCoverage=totalEmployees>0 ? (100.0m*trainedEmployees/totalEmployees) : 0m;
             lblTrainingCoverage.Text=trainingCoverage.ToString("0.00")+"%";
             lblTrainingCoverageCount.Text=trainedEmployees.ToString("N0")+" / "+totalEmployees.ToString("N0")+" employees";
@@ -223,7 +256,9 @@ namespace Training.Admin
             }
             else if(type=="TrainingCoverage")
             {
-                q="SELECT E.EmpID,ISNULL(E.EmpName,'') EmpName,ISNULL(E.EmpDesignation,'') EmpDesignation,ISNULL(E.EmpCompany,'') EmpCompany,ISNULL(E.EmpPostingPlace,'') EmpPostingPlace,COUNT(DISTINCT SA.TrainingID) TrainingsAttended,CONVERT(varchar(10),MAX(COALESCE(TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(date,SM.SessionDate,23),TRY_CONVERT(date,SM.SessionDate))),105) LastTrainingDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TD ON TD.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TD.TrainingStatus,'') NOT IN ('Cancelled','Canceled') GROUP BY E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace ORDER BY E.EmpName,E.EmpID";
+                string coverageRoleIDs=SelectedRoleIDs();
+                string coverageRoleFilter=coverageRoleIDs=="" ? "" : " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN ("+coverageRoleIDs+"))";
+                q="SELECT E.EmpID,ISNULL(E.EmpName,'') EmpName,ISNULL(E.EmpDesignation,'') EmpDesignation,ISNULL(E.EmpCompany,'') EmpCompany,ISNULL(E.EmpPostingPlace,'') EmpPostingPlace,COUNT(DISTINCT SA.TrainingID) TrainingsAttended,CONVERT(varchar(10),MAX(COALESCE(TRY_CONVERT(date,SM.SessionDate,105),TRY_CONVERT(date,SM.SessionDate,23),TRY_CONVERT(date,SM.SessionDate))),105) LastTrainingDate FROM SessionAttendance SA INNER JOIN SessionMaster SM ON SA.SessionID=SM.SessionID AND SA.TrainingID=SM.TrainingID INNER JOIN TrainingDetails TD ON TD.TrainingID=SA.TrainingID INNER JOIN EmpBasicMaster E ON LTRIM(RTRIM(E.EmpID))=LTRIM(RTRIM(SA.EmpID)) WHERE SA.AttendanceStatus='Present' AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TD.TrainingStatus,'') NOT IN ('Cancelled','Canceled')"+coverageRoleFilter+" GROUP BY E.EmpID,E.EmpName,E.EmpDesignation,E.EmpCompany,E.EmpPostingPlace ORDER BY E.EmpName,E.EmpID";
                 title="% Employees Trained - "+lblTrainingCoverage.Text+" ("+lblTrainingCoverageCount.Text+")";
             }
             else if(type=="TotalSessions")

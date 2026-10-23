@@ -24,7 +24,8 @@
                 ['ddlCircle', 'Search Circle'],
                 ['ddlDivision', 'Search Division'],
                 ['ddlSubdivision', 'Search Subdivision'],
-                ['ddlSection', 'Search Section']
+                ['ddlSection', 'Search Section'],
+                ['lstEmployeeRoles', 'Search / Select Roles']
             ];
             controls.forEach(function (item) {
                 var ddl = $('[id$="' + item[0] + '"]');
@@ -384,6 +385,9 @@
                         <div class="col-12 mt-4">
                             <div class="border rounded p-3">
                                 <h5 class="mb-3 text-primary">Posting Details</h5>
+                                <div class="col-lg-12 col-md-12 mb-3">
+                                    <label class="form-label">Role (select multiple)</label>
+                                    <asp:ListBox ID="lstEmployeeRoles" runat="server" SelectionMode="Multiple" CssClass="form-select" Rows="4" /></div>
                                 <div class="row">
                                     <div class="col-lg-4 col-md-6 mb-3">
                                         <label class="form-label">Posting Place</label>

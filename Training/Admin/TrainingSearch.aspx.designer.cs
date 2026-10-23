@@ -51,5 +51,6 @@ namespace Training.Admin
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl gridScrollTop;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl gridScroll;
         protected global::System.Web.UI.WebControls.GridView gvTraining;
+        protected global::System.Web.UI.WebControls.ListBox lstRole;
     }
 }

@@ -21,6 +21,7 @@
 <div class="report-title">Training Report</div>
 <div class="filter-grid">
 <div class="field"><label>Training Status</label><asp:DropDownList ID="ddlStatus" runat="server" CssClass="input" /></div>
+<div class="field"><label>Role (any selected)</label><asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="input" Rows="3" /></div>
 <div class="field"><label>Course</label><asp:DropDownList ID="ddlCourse" runat="server" CssClass="input" /></div>
 <div class="field"><label>Training ID</label><asp:TextBox ID="txtTrainingID" runat="server" CssClass="input" /></div>
 <div class="field"><label>Batch</label><asp:TextBox ID="txtBatch" runat="server" CssClass="input" /></div>

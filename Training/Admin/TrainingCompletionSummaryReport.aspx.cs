@@ -37,7 +37,7 @@ namespace Training.Admin
                 //}
 
                 BindCompany();
-
+                BindRole();
                 BindTrainingType();
             }
         }
@@ -81,6 +81,31 @@ ORDER BY EmpCompany
                 "All",
                 ""));
             }
+        }
+
+        private void BindRole()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlDataAdapter da = new SqlDataAdapter("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName", con))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                lstRole.DataSource = dt;
+                lstRole.DataTextField = "RoleName";
+                lstRole.DataValueField = "RoleID";
+                lstRole.DataBind();
+            }
+        }
+
+        private string SelectedRoleIDs()
+        {
+            List<string> ids = new List<string>();
+            foreach (ListItem item in lstRole.Items)
+            {
+                int roleID;
+                if (item.Selected && int.TryParse(item.Value, out roleID)) ids.Add(roleID.ToString());
+            }
+            return string.Join(",", ids);
         }
 
         private void BindTrainingType()
@@ -321,6 +346,12 @@ TD.DateTo,
 @DateTo
 
 ");
+                }
+
+                string roleIDs = SelectedRoleIDs();
+                if (roleIDs != "")
+                {
+                    q.Append(" AND (((ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN (" + roleIDs + ") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TES.EmployeeRoleIDs,'')+',')>0)) OR (NOT (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=EBM.EmpID AND ERM.RoleID IN (" + roleIDs + "))))");
                 }
 
                 q.Append(@"

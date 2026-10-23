@@ -55,3 +55,19 @@ SELECT
     ISNULL(SUM(CASE WHEN ISNULL(EmpPostingPlace,'') = '' THEN 1 ELSE 0 END),0) AS MissingMasterPostingCount,
     ISNULL(SUM(CASE WHEN ISNULL(DetailPostingPlace,'') = '' THEN 1 ELSE 0 END),0) AS MissingDetailedPostingCount
 FROM dbo.TrainingEmployeeSnapshot;
+
+GO
+
+SELECT
+    CASE WHEN OBJECT_ID('dbo.RoleMaster','U') IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS RoleMasterStatus,
+    CASE WHEN OBJECT_ID('dbo.EmpRoleMapping','U') IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS EmployeeRoleMappingStatus,
+    CASE WHEN COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoles') IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS SnapshotRoleNamesColumnStatus,
+    CASE WHEN COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoleIDs') IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS SnapshotRoleIDsColumnStatus;
+GO
+
+SELECT
+    COUNT(*) AS SnapshotRowCount,
+    ISNULL(SUM(CASE WHEN ISNULL(EmployeeRoles,'')='' THEN 1 ELSE 0 END),0) AS SnapshotRowsWithoutRoleNames,
+    ISNULL(SUM(CASE WHEN ISNULL(EmployeeRoleIDs,'')='' THEN 1 ELSE 0 END),0) AS SnapshotRowsWithoutRoleIDs
+FROM dbo.TrainingEmployeeSnapshot;
+GO
