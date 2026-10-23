@@ -8,6 +8,7 @@ namespace Training.Admin
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
         protected global::System.Web.UI.WebControls.ListBox lstCompany;
         protected global::System.Web.UI.WebControls.ListBox lstDesignation;
+        protected global::System.Web.UI.WebControls.ListBox lstRole;
         protected global::System.Web.UI.WebControls.ListBox lstPostingPlace;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl grpPostingDetails;
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl grpPostingPlace;
