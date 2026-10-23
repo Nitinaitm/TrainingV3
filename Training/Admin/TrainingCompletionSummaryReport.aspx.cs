@@ -37,7 +37,7 @@ namespace Training.Admin
                 //}
 
                 BindCompany();
-
+                BindRole();
                 BindTrainingType();
             }
         }
@@ -81,6 +81,31 @@ ORDER BY EmpCompany
                 "All",
                 ""));
             }
+        }
+
+        private void BindRole()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlDataAdapter da = new SqlDataAdapter("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName", con))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                lstRole.DataSource = dt;
+                lstRole.DataTextField = "RoleName";
+                lstRole.DataValueField = "RoleID";
+                lstRole.DataBind();
+            }
+        }
+
+        private string SelectedRoleIDs()
+        {
+            List<string> ids = new List<string>();
+            foreach (ListItem item in lstRole.Items)
+            {
+                int roleID;
+                if (item.Selected && int.TryParse(item.Value, out roleID)) ids.Add(roleID.ToString());
+            }
+            return string.Join(",", ids);
         }
 
         private void BindTrainingType()
