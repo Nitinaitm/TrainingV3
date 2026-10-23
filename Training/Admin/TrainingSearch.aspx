@@ -71,7 +71,7 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 <asp:BoundField DataField="EmpName" HeaderText="EmpName" />
 <asp:BoundField DataField="EmpDesignation" HeaderText="EmpDesignation" />
 <asp:BoundField DataField="EmpCompany" HeaderText="EmpCompany" />
-<asp:BoundField DataField="EmpPostingPlace" HeaderText="Salary Disbursing Office (HRMS)" />
+<asp:BoundField DataField="EmpPostingPlace" HeaderText="Salary Disbursing Office (HRMS)" /><asp:BoundField DataField="Employee Details Source" HeaderText="Employee Details Source" />
 <asp:TemplateField HeaderText="Posting Place"><ItemTemplate><asp:LinkButton ID="lnkPostingDetails" runat="server" CssClass="grid-link" CommandName="Posting" CommandArgument='<%# Convert.ToString(Eval("EmpID")) + "|" + Convert.ToString(Eval("TrainingID")) %>'>View Details</asp:LinkButton></ItemTemplate></asp:TemplateField>
 <asp:BoundField DataField="CourseName" HeaderText="Course" />
 <asp:TemplateField HeaderText="TrainingAttendanceStatus"><ItemTemplate><asp:LinkButton ID="lnkAttendance" runat="server" CssClass='<%# Convert.ToString(Eval("TrainingAttendanceStatus"))=="Attended" ? "grid-link status-attended" : "grid-link status-not-attended" %>' CommandName="Training" CommandArgument='<%# Eval("EmpID") %>'><%# Eval("TrainingAttendanceStatus") %></asp:LinkButton></ItemTemplate></asp:TemplateField>
