@@ -214,6 +214,8 @@
                 width: '100%'
             });
 
+            $('[id*=lstRole]').select2({ placeholder: 'Search / Select Role', width: '100%', closeOnSelect: false });
+
             $('[id*=ddlDesignation]').select2({
                 placeholder: 'Search Designation',
                 allowClear: true,
@@ -428,6 +430,10 @@
 
                             <div class="row">
 
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Role</label>
+                                    <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" />
+                                </div>
 
                                 <div class="col-md-4 mb-3"
                                      id="divPostingPlace"
