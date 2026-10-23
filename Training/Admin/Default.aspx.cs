@@ -18,6 +18,7 @@ namespace Training.Admin
             {
                 BindCompany();
                 BindDesignation();
+                BindRole();
                 BindPostingPlace();
 
 
@@ -289,6 +290,31 @@ namespace Training.Admin
                 dt,
                 "EmpDesignation"
             );
+        }
+
+
+        private void BindRole()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstRole.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+        }
+
+        private void AddRoleFilter(StringBuilder query, SqlCommand cmd)
+        {
+            List<string> roleIDs = SelectedValues(lstRole);
+            if (roleIDs.Count == 0) return;
+            List<string> placeholders = new List<string>();
+            for (int i = 0; i < roleIDs.Count; i++)
+            {
+                string parameterName = "@RoleID" + i;
+                placeholders.Add(parameterName);
+                cmd.Parameters.Add(new SqlParameter(parameterName, roleIDs[i]));
+            }
+            query.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=EBM.EmpID AND ERM.RoleID IN (" + string.Join(",", placeholders) + "))");
         }
 
         /* =========================================================
@@ -1168,6 +1194,8 @@ EventArgs e)
                     "Designation"
                 );
 
+                AddRoleFilter(query, cmd);
+
                 AddMultiSelectFilter(
                     query,
                     cmd,
@@ -1470,6 +1498,15 @@ EventArgs e)
                 db.BeginTransaction();
 
                 db.ExecuteSql(
+                    "DELETE FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID",
+                    new SqlParameter[]
+                    {
+                        new SqlParameter("@EmpID", empID)
+                    },
+                    db.Transaction
+                );
+
+                db.ExecuteSql(
                     "DELETE FROM EmpPostingDetails WHERE EmpID=@EmpID",
                     new SqlParameter[]
                     {
@@ -1558,6 +1595,7 @@ EventArgs e)
 
             lstCompany.ClearSelection();
             lstDesignation.ClearSelection();
+            lstRole.ClearSelection();
             lstPostingPlace.ClearSelection();
 
             ClearPostingDetailControls();
