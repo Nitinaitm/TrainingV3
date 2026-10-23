@@ -625,6 +625,14 @@ Employees Not Attended Training Report
                     HeaderText="Posting Place" />
 
                 <asp:BoundField
+                    DataField="DetailsTrainingID"
+                    HeaderText="Training Used for Details" />
+
+                <asp:BoundField
+                    DataField="EmployeeDetailsSource"
+                    HeaderText="Employee Details Source" />
+
+                <asp:BoundField
                     DataField="MobileNo"
                     HeaderText="Mobile" />
 
