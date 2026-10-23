@@ -64,6 +64,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.AuditTra
     CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_EmpBasicMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_EmpBasicMaster;
+GO
 CREATE TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -75,6 +76,7 @@ OUTER APPLY(SELECT CONVERT(nvarchar(max),(SELECT i.* FOR XML PATH('Row'),TYPE)) 
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_EmpPostingDetails',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_EmpPostingDetails;
+GO
 CREATE TRIGGER dbo.trg_Audit_EmpPostingDetails ON dbo.EmpPostingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -98,6 +100,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_TrainingAssignment',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TrainingAssignment;
+GO
 CREATE TRIGGER dbo.trg_Audit_TrainingAssignment ON dbo.TrainingAssignment AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -109,6 +112,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_SessionMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_SessionMaster;
+GO
 CREATE TRIGGER dbo.trg_Audit_SessionMaster ON dbo.SessionMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -120,6 +124,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_SessionAttendance',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_SessionAttendance;
+GO
 CREATE TRIGGER dbo.trg_Audit_SessionAttendance ON dbo.SessionAttendance AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -131,6 +136,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_TestMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TestMaster;
+GO
 CREATE TRIGGER dbo.trg_Audit_TestMaster ON dbo.TestMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -142,6 +148,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_TrainingCertificate',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TrainingCertificate;
+GO
 CREATE TRIGGER dbo.trg_Audit_TrainingCertificate ON dbo.TrainingCertificate AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -153,6 +160,7 @@ OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_ManagerMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_ManagerMaster;
+GO
 CREATE TRIGGER dbo.trg_Audit_ManagerMaster ON dbo.ManagerMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
