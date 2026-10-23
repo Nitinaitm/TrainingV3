@@ -53,6 +53,7 @@ BEGIN
         Subdivision nvarchar(200) NULL,
         Section nvarchar(200) NULL,
         EmployeeRoles nvarchar(max) NULL,
+        EmployeeRoleIDs nvarchar(max) NULL,
         SnapshotCapturedOn datetime NOT NULL CONSTRAINT DF_TrainingEmployeeSnapshot_CapturedOn DEFAULT(GETDATE()),
         SnapshotSource varchar(50) NOT NULL CONSTRAINT DF_TrainingEmployeeSnapshot_Source DEFAULT('TrainingCompleted'),
         CONSTRAINT PK_TrainingEmployeeSnapshot PRIMARY KEY (TrainingID, EmpID)
@@ -62,6 +63,8 @@ GO
 
 IF COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoles') IS NULL
     ALTER TABLE dbo.TrainingEmployeeSnapshot ADD EmployeeRoles nvarchar(max) NULL;
+IF COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoleIDs') IS NULL
+    ALTER TABLE dbo.TrainingEmployeeSnapshot ADD EmployeeRoleIDs nvarchar(max) NULL;
 GO
 
 IF OBJECT_ID('dbo.trg_TrainingDetails_CaptureEmployeeSnapshot','TR') IS NOT NULL
@@ -79,7 +82,7 @@ BEGIN
     (
         TrainingID,EmpID,EmpName,EmpDesignation,EmpCompany,EmpPostingPlace,
         DetailPostingPlace,EmpPostingDepartment,AreaBoardZone,Circle,Division,
-        Subdivision,Section,EmployeeRoles,SnapshotCapturedOn,SnapshotSource
+        Subdivision,Section,EmployeeRoles,EmployeeRoleIDs,SnapshotCapturedOn,SnapshotSource
     )
     SELECT
         I.TrainingID,
@@ -96,6 +99,7 @@ BEGIN
         P.Subdivision,
         P.Section,
         R.EmployeeRoles,
+        R.EmployeeRoleIDs,
         GETDATE(),
         'TrainingCompleted'
     FROM inserted I
@@ -129,7 +133,20 @@ BEGIN
                 FOR XML PATH(''), TYPE
             ).value('.','nvarchar(max)'),
             1,2,''
-        ) AS EmployeeRoles
+        ) AS EmployeeRoles,
+        (
+            SELECT STUFF
+            (
+                (
+                    SELECT ',' + CONVERT(varchar(12), ERM.RoleID)
+                    FROM dbo.EmpRoleMapping ERM
+                    WHERE ERM.EmpID=TA.EmpID
+                    ORDER BY ERM.RoleID
+                    FOR XML PATH(''), TYPE
+                ).value('.','nvarchar(max)'),
+                1,1,''
+            )
+        ) AS EmployeeRoleIDs
     ) R
     WHERE (ISNULL(I.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(I.WorkflowStatus,'')='ABCDEFGHIJ')
       AND NOT (ISNULL(D.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(D.WorkflowStatus,'')='ABCDEFGHIJ')
