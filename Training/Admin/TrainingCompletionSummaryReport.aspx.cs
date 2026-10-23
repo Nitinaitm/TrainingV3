@@ -142,10 +142,11 @@ ORDER BY TrainingType
         private List<int> SelectedRoleIDs()
         {
             List<int> ids = new List<int>();
-            foreach (ListItem item in chkRole.Items)
+            foreach (System.Web.UI.WebControls.ListItem item in chkRole.Items)
             {
+                if (!item.Selected) continue;
                 int id;
-                if (item.Selected && int.TryParse(item.Value, out id)) ids.Add(id);
+                if (int.TryParse(item.Value, out id)) ids.Add(id);
             }
             return ids;
         }
