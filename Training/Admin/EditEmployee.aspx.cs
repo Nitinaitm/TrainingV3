@@ -792,7 +792,7 @@ namespace Training.Admin
 
         private void BindEmployeeRoles()
         {
-            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            DataTable dt = DB().GetDataTable("SELECT RM.RoleID,RM.RoleName FROM dbo.RoleMaster RM WHERE RM.IsActive=1 OR EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=@EmpID AND ERM.RoleID=RM.RoleID) ORDER BY RM.RoleName", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) });
             lstEmployeeRoles.Items.Clear();
             foreach (DataRow row in dt.Rows)
             {
