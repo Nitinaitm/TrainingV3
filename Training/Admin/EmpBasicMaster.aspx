@@ -43,8 +43,21 @@
 
         }
 
+        function RestoreEmpBasicTab() {
+            var activeTab = sessionStorage.getItem('empBasicMasterActiveTab');
+            if (!activeTab || typeof bootstrap === 'undefined') return;
+            var tabButton = document.querySelector('[data-bs-toggle="tab"][data-bs-target="' + activeTab + '"]');
+            if (tabButton) bootstrap.Tab.getOrCreateInstance(tabButton).show();
+        }
+
+        document.addEventListener('shown.bs.tab', function (event) {
+            var target = event.target.getAttribute('data-bs-target');
+            if (target) sessionStorage.setItem('empBasicMasterActiveTab', target);
+        });
+
         window.addEventListener('load', function () {
             LoadSearchableDropdown();
+            RestoreEmpBasicTab();
         });
 
     </script>
@@ -109,6 +122,11 @@
 <asp:Content ID="Content2"
     ContentPlaceHolderID="ContentPlaceHolder1"
     runat="server">
+
+    <asp:ScriptManager ID="smEmpBasicMaster" runat="server" />
+
+    <asp:UpdatePanel ID="upEmpBasicMaster" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+        <ContentTemplate>
 
     <div class="container-fluid">
 
@@ -515,6 +533,12 @@
         </div>
 
     </div>
+
+        </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnUpload" />
+        </Triggers>
+    </asp:UpdatePanel>
 
     <!-- Bootstrap -->
 
