@@ -1194,6 +1194,10 @@ window.addEventListener('message', function (event) {
 
                 </div>
 
+                <div class="form-group">
+                    <label>Role</label>
+                    <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control"></asp:ListBox>
+                </div>
 
                 <!-- =================================================
                      HRMS POSTING PLACE
