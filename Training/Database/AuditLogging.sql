@@ -17,6 +17,47 @@ BEGIN
 CREATE TABLE dbo.AuditTrail(AuditID bigint IDENTITY(1,1) NOT NULL PRIMARY KEY,TableName sysname NOT NULL,RecordID nvarchar(150) NULL,ActionType varchar(10) NOT NULL,OldData nvarchar(max) NULL,NewData nvarchar(max) NULL,ChangedBy nvarchar(100) NULL,ChangedRole nvarchar(50) NULL,ChangedOn datetime NOT NULL CONSTRAINT DF_AuditTrail_ChangedOn DEFAULT(GETDATE()),IPAddress varchar(100) NULL,SessionID nvarchar(100) NULL,SQLLogin nvarchar(128) NULL);
 END
 GO
+GO
+IF OBJECT_ID(N'dbo.fn_AuditUserID',N'FN') IS NULL
+    EXEC(N'CREATE FUNCTION dbo.fn_AuditUserID() RETURNS nvarchar(100) AS BEGIN RETURN NULL; END');
+GO
+ALTER FUNCTION dbo.fn_AuditUserID()
+RETURNS nvarchar(100)
+AS
+BEGIN
+    RETURN LTRIM(RTRIM(CONVERT(nvarchar(100),SUBSTRING(CONVERT(varchar(128),CONTEXT_INFO()),1,20))));
+END
+GO
+IF OBJECT_ID(N'dbo.fn_AuditUserRole',N'FN') IS NULL
+    EXEC(N'CREATE FUNCTION dbo.fn_AuditUserRole() RETURNS nvarchar(50) AS BEGIN RETURN NULL; END');
+GO
+ALTER FUNCTION dbo.fn_AuditUserRole()
+RETURNS nvarchar(50)
+AS
+BEGIN
+    RETURN LTRIM(RTRIM(CONVERT(nvarchar(50),SUBSTRING(CONVERT(varchar(128),CONTEXT_INFO()),21,20))));
+END
+GO
+IF OBJECT_ID(N'dbo.fn_AuditIPAddress',N'FN') IS NULL
+    EXEC(N'CREATE FUNCTION dbo.fn_AuditIPAddress() RETURNS varchar(100) AS BEGIN RETURN NULL; END');
+GO
+ALTER FUNCTION dbo.fn_AuditIPAddress()
+RETURNS varchar(100)
+AS
+BEGIN
+    RETURN LTRIM(RTRIM(CONVERT(varchar(100),SUBSTRING(CONVERT(varchar(128),CONTEXT_INFO()),41,45))));
+END
+GO
+IF OBJECT_ID(N'dbo.fn_AuditSessionID',N'FN') IS NULL
+    EXEC(N'CREATE FUNCTION dbo.fn_AuditSessionID() RETURNS nvarchar(100) AS BEGIN RETURN NULL; END');
+GO
+ALTER FUNCTION dbo.fn_AuditSessionID()
+RETURNS nvarchar(100)
+AS
+BEGIN
+    RETURN LTRIM(RTRIM(CONVERT(nvarchar(100),SUBSTRING(CONVERT(varchar(128),CONTEXT_INFO()),86,32))));
+END
+GO
 CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
 CREATE TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
