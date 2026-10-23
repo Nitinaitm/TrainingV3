@@ -85,9 +85,40 @@ namespace Training.Admin
                 Convert.ToString(row["EmpPostingPlace"])
             );
 
+            BindRoles();
             LoadPostingDetails();
         }
 
+
+
+        private void BindRoles()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 OR RoleID IN (SELECT RoleID FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID) ORDER BY RoleName", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) });
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                ListItem item = new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"]));
+                lstRole.Items.Add(item);
+            }
+            DataTable selected = DB().GetDataTable("SELECT RoleID FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", hfEmpID.Value) });
+            foreach (DataRow row in selected.Rows)
+            {
+                ListItem item = lstRole.Items.FindByValue(Convert.ToString(row["RoleID"]));
+                if (item != null) item.Selected = true;
+            }
+        }
+
+        private void SaveEmployeeRoles(clsDataAccess db, string empID)
+        {
+            db.ExecuteSql("DELETE FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", empID) }, db.Transaction);
+            foreach (ListItem item in lstRole.Items)
+            {
+                if (item.Selected)
+                {
+                    db.ExecuteSql("INSERT INTO dbo.EmpRoleMapping(EmpID,RoleID,CreatedOn,CreatedBy) SELECT @EmpID,RoleID,GETDATE(),@CreatedBy FROM dbo.RoleMaster WHERE RoleID=@RoleID AND IsActive=1", new SqlParameter[] { new SqlParameter("@EmpID", empID), new SqlParameter("@RoleID", item.Value), new SqlParameter("@CreatedBy", "Admin") }, db.Transaction);
+                }
+            }
+        }
 
         private void BindCompany(string selected)
         {
@@ -1348,6 +1379,8 @@ namespace Training.Admin
                     db.Transaction
                 );
 
+
+                SaveEmployeeRoles(db, hfEmpID.Value);
 
                 string department = "";
 
