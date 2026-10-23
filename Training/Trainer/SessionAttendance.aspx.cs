@@ -273,7 +273,7 @@ namespace Training.Trainer
 
         protected void btnCompleteAttendance_Click(object sender, EventArgs e)
         {
-            string query = @"SELECT COUNT(*) FROM TrainingAssignment TA LEFT JOIN SessionAttendance SA ON TA.EmpID=SA.EmpID AND TA.TrainingID=SA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND TA.AssignmentStatus='Assigned' AND SA.AttendanceStatus IS NULL";
+            string query = @"SELECT COUNT(*) FROM TrainingAssignment TA LEFT JOIN SessionAttendance SA ON TA.EmpID=SA.EmpID AND TA.TrainingID=SA.TrainingID AND SA.SessionID=@SessionID WHERE TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 AND ISNULL(TA.AssignmentStatus,'Assigned')='Assigned' AND SA.AttendanceStatus IS NULL AND NOT EXISTS (SELECT 1 FROM SessionMaster SM INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID WHERE SM.TrainingID=TA.TrainingID AND SM.SessionID=@SessionID AND (ISNULL(SM.SessionCancelled,0)=1 OR ISNULL(SM.AttendanceSkipped,0)=1 OR ISNULL(TD.AttendanceRequired,0)=0))";
             SqlParameter[] param =
             {
                 new SqlParameter("@TrainingID",Session["TrainingID"].ToString()),
@@ -332,7 +332,7 @@ namespace Training.Trainer
 
         private void UpdateTrainingAttendanceWorkflow()
         {
-            string query = @"SELECT COUNT(*) FROM SessionMaster WHERE TrainingID=@TrainingID AND (AttendanceStatus IS NULL OR LTRIM(RTRIM(AttendanceStatus))<>'Completed')";
+            string query = @"SELECT COUNT(*) FROM SessionMaster SM INNER JOIN TrainingDetails TD ON TD.TrainingID=SM.TrainingID WHERE SM.TrainingID=@TrainingID AND ISNULL(SM.SessionCancelled,0)=0 AND ISNULL(TD.AttendanceRequired,0)=1 AND ISNULL(SM.AttendanceSkipped,0)=0 AND (SM.AttendanceStatus IS NULL OR LTRIM(RTRIM(SM.AttendanceStatus))<>'Completed')";
             SqlParameter[] param = { new SqlParameter("@TrainingID",Session["TrainingID"].ToString()) };
             int pending = Convert.ToInt32(obj.ExecuteScalar(query,param));
             if (pending != 0) return;
