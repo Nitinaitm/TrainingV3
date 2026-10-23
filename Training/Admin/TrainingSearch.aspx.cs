@@ -423,21 +423,25 @@ namespace Training.Admin
 
         protected void gvTraining_RowCommand(object sender,GridViewCommandEventArgs e)
         {
-            string empID=Convert.ToString(e.CommandArgument);
-            if(string.IsNullOrWhiteSpace(empID)) return;
-            if(e.CommandName=="Posting") ShowEmployeePosting(empID);
+            string argument=Convert.ToString(e.CommandArgument);
+            if(string.IsNullOrWhiteSpace(argument)) return;
+            string[] values=argument.Split(new char[] {'|'},2);
+            string empID=values[0];
+            string trainingID=values.Length>1 ? values[1] : "";
+            if(e.CommandName=="Posting") ShowEmployeePosting(empID,trainingID);
             if(e.CommandName=="Training") ShowEmployeeTraining(empID);
         }
 
-        private void ShowEmployeePosting(string empID)
+        private void ShowEmployeePosting(string empID,string trainingID)
         {
-            string q="SELECT TOP 1 E.EmpID,E.EmpName,E.EmpCompany,E.EmpPostingPlace,ISNULL(P.EmpPostingPlace,'') DetailPlace,ISNULL(P.EmpPostingDepartment,'') DepartmentName,ISNULL(P.AreaBoardZone,'') AreaBoardZone,ISNULL(P.Circle,'') Circle,ISNULL(P.Division,'') Division,ISNULL(P.Subdivision,'') Subdivision,ISNULL(P.Section,'') Section FROM EmpBasicMaster E OUTER APPLY (SELECT TOP 1 EP.EmpPostingPlace,EP.EmpPostingDepartment,EP.AreaBoardZone,EP.Circle,EP.Division,EP.Subdivision,EP.Section FROM EmpPostingDetails EP WHERE EP.EmpID=E.EmpID ORDER BY EP.ID DESC) P WHERE E.EmpID=@EmpID";
+            string q="SELECT TOP 1 E.EmpID,E.EmpName,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE ISNULL(E.EmpDesignation,'') END EmpDesignation,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpCompany,'') ELSE ISNULL(E.EmpCompany,'') END EmpCompany,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingPlace,'') ELSE ISNULL(E.EmpPostingPlace,'') END EmpPostingPlace,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.DetailPostingPlace,'') ELSE ISNULL(P.EmpPostingPlace,'') END DetailPlace,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpPostingDepartment,'') ELSE ISNULL(P.EmpPostingDepartment,'') END DepartmentName,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.AreaBoardZone,'') ELSE ISNULL(P.AreaBoardZone,'') END AreaBoardZone,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.Circle,'') ELSE ISNULL(P.Circle,'') END Circle,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.Division,'') ELSE ISNULL(P.Division,'') END Division,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.Subdivision,'') ELSE ISNULL(P.Subdivision,'') END Subdivision,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.Section,'') ELSE ISNULL(P.Section,'') END Section,CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') AND TES.EmpID IS NULL THEN 'Legacy - snapshot unavailable' WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN 'Historical snapshot' ELSE 'Current employee details' END EmployeeDetailsSource FROM EmpBasicMaster E LEFT JOIN TrainingAssignment TA ON TA.EmpID=E.EmpID AND TA.TrainingID=@TrainingID AND ISNULL(TA.Cancelled,0)=0 LEFT JOIN TrainingDetails TD ON TD.TrainingID=TA.TrainingID LEFT JOIN TrainingEmployeeSnapshot TES ON TES.TrainingID=TA.TrainingID AND TES.EmpID=TA.EmpID OUTER APPLY (SELECT TOP 1 EP.EmpPostingPlace,EP.EmpPostingDepartment,EP.AreaBoardZone,EP.Circle,EP.Division,EP.Subdivision,EP.Section FROM EmpPostingDetails EP WHERE EP.EmpID=E.EmpID ORDER BY EP.ID DESC) P WHERE E.EmpID=@EmpID";
             DataTable dt=new DataTable();
-            using(SqlConnection con=new SqlConnection(constr)){using(SqlCommand cmd=new SqlCommand(q,con)){cmd.Parameters.AddWithValue("@EmpID",empID);using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);}}
+            using(SqlConnection con=new SqlConnection(constr)){using(SqlCommand cmd=new SqlCommand(q,con)){cmd.Parameters.AddWithValue("@EmpID",empID);cmd.Parameters.AddWithValue("@TrainingID",trainingID);using(SqlDataAdapter da=new SqlDataAdapter(cmd))da.Fill(dt);}}
             if(dt.Rows.Count==0) return;
             DataRow r=dt.Rows[0];
             lblPopupEmpID.Text=Convert.ToString(r["EmpID"]);
             lblPopupEmpName.Text=Convert.ToString(r["EmpName"]);
+            lblPopupDesignation.Text=Convert.ToString(r["EmpDesignation"]);
             lblPopupCompany.Text=Convert.ToString(r["EmpCompany"]);
             lblPopupPostingPlace.Text=Convert.ToString(r["EmpPostingPlace"]);
             lblPopupDetailPlace.Text=Convert.ToString(r["DetailPlace"]);
@@ -447,6 +451,7 @@ namespace Training.Admin
             lblPopupDivision.Text=Convert.ToString(r["Division"]);
             lblPopupSubdivision.Text=Convert.ToString(r["Subdivision"]);
             lblPopupSection.Text=Convert.ToString(r["Section"]);
+            lblPopupDetailsSource.Text=Convert.ToString(r["EmployeeDetailsSource"]);
             ScriptManager.RegisterStartupScript(this,GetType(),"showPostingModal","showEmployeeModal('employeePostingModal');",true);
         }
 
