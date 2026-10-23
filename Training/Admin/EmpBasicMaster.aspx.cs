@@ -20,6 +20,7 @@ namespace Training.Admin
                 BindCompany();
                 BindDesignation();
                 BindPostingPlace();
+                BindRole();
                 BindPostingPlaceOptions();
                 SetPostingDetailMode();
                 LoadSelect2();
@@ -99,6 +100,29 @@ namespace Training.Admin
         {
             DataTable dt = DB().GetDataTable("SELECT DISTINCT EmpPostingPlace FROM EmpBasicMaster WHERE EmpType='Internal' AND ISNULL(EmpPostingPlace,'')<>'' ORDER BY EmpPostingPlace");
             BindSimpleList(ddlPostingPlace, dt, "EmpPostingPlace", "Select HRMS Posting Place");
+        }
+
+
+        private void BindRole()
+        {
+            DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstRole.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
+        }
+
+        private void SaveEmployeeRoles(clsDataAccess db, string empID)
+        {
+            db.ExecuteSql("DELETE FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID", new SqlParameter[] { new SqlParameter("@EmpID", empID) }, db.Transaction);
+            foreach (ListItem item in lstRole.Items)
+            {
+                if (item.Selected)
+                {
+                    db.ExecuteSql("INSERT INTO dbo.EmpRoleMapping(EmpID,RoleID,CreatedOn,CreatedBy) SELECT @EmpID,RoleID,GETDATE(),@CreatedBy FROM dbo.RoleMaster WHERE RoleID=@RoleID AND IsActive=1 AND NOT EXISTS (SELECT 1 FROM dbo.EmpRoleMapping WHERE EmpID=@EmpID AND RoleID=@RoleID)", new SqlParameter[] { new SqlParameter("@EmpID", empID), new SqlParameter("@RoleID", item.Value), new SqlParameter("@CreatedBy", "Admin") }, db.Transaction);
+                }
+            }
         }
 
         private void BindPostingPlaceOptions()
@@ -456,6 +480,7 @@ namespace Training.Admin
                 }
 
                 SavePostingDetails(db, empID, false);
+                SaveEmployeeRoles(db, empID);
 
                 db.Commit();
 
@@ -465,6 +490,7 @@ namespace Training.Admin
                 BindCompany();
                 BindDesignation();
                 BindPostingPlace();
+                BindRole();
                 BindPostingPlaceOptions();
                 SetPostingDetailMode();
                 LoadSelect2();
@@ -525,6 +551,7 @@ namespace Training.Admin
             ddlCompany.SelectedIndex = 0;
             ddlDesignation.SelectedIndex = 0;
             ddlPostingPlace.SelectedIndex = 0;
+            foreach (ListItem item in lstRole.Items) item.Selected = false;
             BindPostingPlaceOptions();
             ddlPostingDetailPlace.SelectedValue = "";
             ClearList(ddlPostingDepartment, "Select Department / Office / Cell");
