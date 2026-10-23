@@ -1014,6 +1014,11 @@ window.addEventListener('message', function (event) {
     ContentPlaceHolderID="ContentPlaceHolder1"
     runat="server">
 
+    <asp:ScriptManager ID="smDefault" runat="server" />
+
+    <asp:UpdatePanel ID="upEmployeeSearch" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+        <ContentTemplate>
+
     <div class="main-container">
 
         <!-- =====================================================
@@ -1670,7 +1675,12 @@ window.addEventListener('message', function (event) {
 
         </div>
 
-    </div>
+     </div>
 
+        </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnExportExcel" />
+        </Triggers>
+    </asp:UpdatePanel>
 
 </asp:Content>
