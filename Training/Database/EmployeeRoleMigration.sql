@@ -1,6 +1,7 @@
 /*
     Employee Role migration — SQL Server 2012 compatible.
     Run in the Training database before publishing the Role-enabled application.
+    If also applying TrainingEmployeeSnapshot.sql, run that script first and do not rerun it after this migration.
 
     This script is additive and intentionally uses no foreign-key constraints.
     Historical role rows are captured only when a training transitions to final
@@ -39,7 +40,31 @@ BEGIN
     CREATE INDEX IX_EmpRoleMapping_RoleID_EmpID ON dbo.EmpRoleMapping(RoleID,EmpID);
 END
 GO
-IF OBJECT_ID('dbo.TrainingEmployeeSnapshot','U') IS NOT NULL AND COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoles') IS NULL
+IF OBJECT_ID('dbo.TrainingEmployeeSnapshot','U') IS NULL
+BEGIN
+    CREATE TABLE dbo.TrainingEmployeeSnapshot
+    (
+        TrainingID varchar(50) NOT NULL,
+        EmpID varchar(50) NOT NULL,
+        EmpName nvarchar(200) NULL,
+        EmpDesignation nvarchar(200) NULL,
+        EmpCompany nvarchar(200) NULL,
+        EmpPostingPlace nvarchar(300) NULL,
+        DetailPostingPlace nvarchar(300) NULL,
+        EmpPostingDepartment nvarchar(300) NULL,
+        AreaBoardZone nvarchar(200) NULL,
+        Circle nvarchar(200) NULL,
+        Division nvarchar(200) NULL,
+        Subdivision nvarchar(200) NULL,
+        Section nvarchar(300) NULL,
+        EmployeeRoles nvarchar(max) NULL,
+        SnapshotCapturedOn datetime NOT NULL CONSTRAINT DF_TrainingEmployeeSnapshot_CapturedOn DEFAULT(GETDATE()),
+        SnapshotSource varchar(50) NOT NULL CONSTRAINT DF_TrainingEmployeeSnapshot_Source DEFAULT('TrainingCompleted'),
+        CONSTRAINT PK_TrainingEmployeeSnapshot PRIMARY KEY (TrainingID, EmpID)
+    );
+END
+GO
+IF COL_LENGTH('dbo.TrainingEmployeeSnapshot','EmployeeRoles') IS NULL
 BEGIN
     ALTER TABLE dbo.TrainingEmployeeSnapshot ADD EmployeeRoles nvarchar(max) NULL;
 END
