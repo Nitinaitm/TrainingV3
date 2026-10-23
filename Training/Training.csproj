@@ -367,6 +367,7 @@
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Admin\EditEmployee.aspx" />
     <Content Include="Admin\EmpBasicMaster.aspx" />
+    <Content Include="Admin\RoleMaster.aspx" />
     <Content Include="Admin\ExamResultReport.aspx" />
     <Content Include="Admin\ExternalEmpEntry.aspx" />
     <Content Include="Admin\FeedbackCategoryMaster.aspx" />
@@ -1187,6 +1188,12 @@
     </Compile>
     <Compile Include="Admin\EditEmployee.aspx.designer.cs">
       <DependentUpon>EditEmployee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\RoleMaster.aspx.cs">
+      <DependentUpon>RoleMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\RoleMaster.aspx.designer.cs">
+      <DependentUpon>RoleMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\EmpBasicMaster.aspx.cs">
       <DependentUpon>EmpBasicMaster.aspx</DependentUpon>
