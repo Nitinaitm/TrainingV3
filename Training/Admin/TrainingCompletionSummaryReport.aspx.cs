@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -123,6 +124,34 @@ ORDER BY TrainingType
                 ""));
             }
         }
+        private List<int> SelectedRoleIDs()
+        {
+            List<int> ids = new List<int>();
+            foreach (ListItem item in chkRole.Items)
+            {
+                int id;
+                if (item.Selected && int.TryParse(item.Value, out id)) ids.Add(id);
+            }
+            return ids;
+        }
+
+        private string BuildRoleFilter(string trainingAlias, string assignmentAlias, string employeeAlias, string snapshotAlias)
+        {
+            List<int> ids = SelectedRoleIDs();
+            if (ids.Count == 0) return "";
+            List<string> names = new List<string>();
+            for (int i = 0; i < ids.Count; i++) names.Add("@RoleID" + i);
+            string namesSql = string.Join(",", names);
+            string completed = "(ISNULL(" + trainingAlias + ".TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(" + trainingAlias + ".WorkflowStatus,'')='ABCDEFGHIJ')";
+            return " AND ((" + completed + " AND EXISTS (SELECT 1 FROM dbo.TrainingEmployeeSnapshotRole TSR WHERE TSR.TrainingID=" + trainingAlias + ".TrainingID AND TSR.EmpID=" + assignmentAlias + ".EmpID AND TSR.RoleID IN (" + namesSql + "))) OR (NOT " + completed + " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=" + employeeAlias + ".EmpID AND ERM.RoleID IN (" + namesSql + "))))";
+        }
+
+        private void AddRoleParameters(SqlCommand cmd)
+        {
+            List<int> ids = SelectedRoleIDs();
+            for (int i = 0; i < ids.Count; i++) cmd.Parameters.AddWithValue("@RoleID" + i, ids[i]);
+        }
+
         private DataTable BuildReportData()
         {
             DataTable dtReport =
@@ -229,9 +258,6 @@ AND TrainingType =
 
 SELECT
 
-CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmployeeRoles,'') ELSE ISNULL(ER.CurrentRoles,'') END AS EmployeeRoles,
-
-CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmployeeRoles,'') ELSE ISNULL(ER.CurrentRoles,'') END AS EmployeeRoles,
 CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END AS EmpDesignation,
 
 COUNT(
@@ -259,10 +285,6 @@ TA.TrainingID
 LEFT JOIN TrainingEmployeeSnapshot TES
 ON TES.TrainingID = TA.TrainingID
 AND TES.EmpID = TA.EmpID
-
-OUTER APPLY (SELECT STUFF((SELECT N', '+RM.RoleName FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=EBM.EmpID ORDER BY RM.RoleName FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'') CurrentRoles) ER
-
-OUTER APPLY (SELECT STUFF((SELECT N', '+RM.RoleName FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=EBM.EmpID ORDER BY RM.RoleName FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'') CurrentRoles) ER
 
 WHERE 1=1
 
@@ -349,6 +371,7 @@ CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR 
                 new SqlCommand(
                 q.ToString(),
                 con);
+                AddRoleParameters(cmd);
 
                 if (
                 ddlCompany.SelectedValue
@@ -502,6 +525,8 @@ AND
 TD.TrainingLocation =
 @Location
 
+" + BuildRoleFilter("TD", "TA", "EBM", "TES") + @"
+
 ", con);
 
                 cmd.Parameters.AddWithValue(
@@ -516,6 +541,7 @@ TD.TrainingLocation =
                 "@Location",
                 loc);
 
+                AddRoleParameters(cmd);
                 con.Open();
 
                 return Convert.ToInt32(
