@@ -663,6 +663,7 @@
 
             var company = $('#<%= lstCompany.ClientID %>');
             var designation = $('#<%= lstDesignation.ClientID %>');
+            var role = $('#<%= lstRole.ClientID %>');
             var postingPlace = $('#<%= lstPostingPlace.ClientID %>');
             var department = $('#<%= lstPostingDepartment.ClientID %>');
             var zone = $('#<%= lstAreaBoardZone.ClientID %>');
@@ -695,6 +696,14 @@
                     placeholder: 'Search / Select Designation',
                     closeOnSelect: false
                 });
+            }
+
+
+            if (role.length > 0) {
+                if (role.hasClass('select2-hidden-accessible')) {
+                    role.select2('destroy');
+                }
+                role.select2({ width: '100%', placeholder: 'Search / Select Role', closeOnSelect: false });
             }
 
             if (postingPlace.length > 0) {
@@ -1052,7 +1061,8 @@ window.addEventListener('message', function (event) {
 
         <div class="search-card">
 
-            <div class="page-title">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:12px;"><a href="RoleMaster.aspx" class="custom-btn btn-search">Role Master</a></div>
+<div class="page-title">
 
                 <i class="fa fa-search"></i>
 
@@ -1184,6 +1194,10 @@ window.addEventListener('message', function (event) {
 
                 </div>
 
+                <div class="form-group">
+                    <label>Role</label>
+                    <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control"></asp:ListBox>
+                </div>
 
                 <!-- =================================================
                      HRMS POSTING PLACE

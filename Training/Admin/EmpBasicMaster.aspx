@@ -16,6 +16,7 @@
         function LoadSearchableDropdown() {
             var controls = [
                 ['ddlDesignation', 'Search Designation'],
+                ['lstRole', 'Search / Select Role'],
                 ['ddlPostingPlace', 'Search HRMS Posting Place'],
                 ['ddlCompany', 'Search Company'],
                 ['ddlPostingDetailPlace', 'Search Posting Place'],
@@ -385,6 +386,10 @@
                             <div class="border rounded p-3">
                                 <h5 class="mb-3 text-primary">Posting Details</h5>
                                 <div class="row">
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label class="form-label">Role</label>
+                                        <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-select"></asp:ListBox>
+                                    </div>
                                     <div class="col-lg-4 col-md-6 mb-3">
                                         <label class="form-label">Posting Place</label>
                                         <asp:DropDownList ID="ddlPostingDetailPlace" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlPostingDetailPlace_SelectedIndexChanged">

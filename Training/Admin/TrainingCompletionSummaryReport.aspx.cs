@@ -39,6 +39,7 @@ namespace Training.Admin
                 BindCompany();
 
                 BindTrainingType();
+                BindRoles();
             }
         }
 
@@ -123,6 +124,50 @@ ORDER BY TrainingType
                 ""));
             }
         }
+        private void BindRoles()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName", con))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                chkRole.DataSource = dt;
+                chkRole.DataTextField = "RoleName";
+                chkRole.DataValueField = "RoleID";
+                chkRole.DataBind();
+            }
+        }
+
+        private List<int> SelectedRoleIDs()
+        {
+            List<int> ids = new List<int>();
+            foreach (System.Web.UI.WebControls.ListItem item in chkRole.Items)
+            {
+                if (!item.Selected) continue;
+                int id;
+                if (int.TryParse(item.Value, out id)) ids.Add(id);
+            }
+            return ids;
+        }
+
+        private string BuildRoleFilter(string trainingAlias, string assignmentAlias, string employeeAlias, string snapshotAlias)
+        {
+            List<int> ids = SelectedRoleIDs();
+            if (ids.Count == 0) return "";
+            List<string> names = new List<string>();
+            for (int i = 0; i < ids.Count; i++) names.Add("@RoleID" + i);
+            string namesSql = string.Join(",", names);
+            string completed = "(ISNULL(" + trainingAlias + ".TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(" + trainingAlias + ".WorkflowStatus,'')='ABCDEFGHIJ')";
+            return " AND ((" + completed + " AND EXISTS (SELECT 1 FROM dbo.TrainingEmployeeSnapshotRole TSR WHERE TSR.TrainingID=" + trainingAlias + ".TrainingID AND TSR.EmpID=" + assignmentAlias + ".EmpID AND TSR.RoleID IN (" + namesSql + "))) OR (NOT " + completed + " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=" + employeeAlias + ".EmpID AND ERM.RoleID IN (" + namesSql + "))))";
+        }
+
+        private void AddRoleParameters(SqlCommand cmd)
+        {
+            List<int> ids = SelectedRoleIDs();
+            for (int i = 0; i < ids.Count; i++) cmd.Parameters.AddWithValue("@RoleID" + i, ids[i]);
+        }
+
         private DataTable BuildReportData()
         {
             DataTable dtReport =
@@ -342,6 +387,7 @@ CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR 
                 new SqlCommand(
                 q.ToString(),
                 con);
+                AddRoleParameters(cmd);
 
                 if (
                 ddlCompany.SelectedValue
@@ -495,6 +541,8 @@ AND
 TD.TrainingLocation =
 @Location
 
+" + BuildRoleFilter("TD", "TA", "EBM", "TES") + @"
+
 ", con);
 
                 cmd.Parameters.AddWithValue(
@@ -509,6 +557,7 @@ TD.TrainingLocation =
                 "@Location",
                 loc);
 
+                AddRoleParameters(cmd);
                 con.Open();
 
                 return Convert.ToInt32(

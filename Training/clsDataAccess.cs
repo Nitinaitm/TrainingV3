@@ -26,16 +26,23 @@ public class clsDataAccess
             string role = HttpContext.Current.Session == null || HttpContext.Current.Session["Role"] == null ? "" : HttpContext.Current.Session["Role"].ToString();
             string sessionID = HttpContext.Current.Session == null ? "" : HttpContext.Current.Session.SessionID;
             string ip = HttpContext.Current.Request.UserHostAddress ?? "";
-            using (SqlCommand cmd = new SqlCommand("EXEC sys.sp_set_session_context @key=N'UserID',@value=@UserID; EXEC sys.sp_set_session_context @key=N'UserRole',@value=@UserRole; EXEC sys.sp_set_session_context @key=N'IPAddress',@value=@IPAddress; EXEC sys.sp_set_session_context @key=N'SessionID',@value=@SessionID;", con))
+            string contextValue = FitAuditField(userID, 20) + FitAuditField(role, 20) + FitAuditField(ip, 45) + FitAuditField(sessionID, 32);
+            byte[] contextBytes = System.Text.Encoding.ASCII.GetBytes(contextValue);
+            using (SqlCommand cmd = new SqlCommand("SET CONTEXT_INFO @ContextInfo;", con))
             {
-                cmd.Parameters.AddWithValue("@UserID", userID);
-                cmd.Parameters.AddWithValue("@UserRole", role);
-                cmd.Parameters.AddWithValue("@IPAddress", ip);
-                cmd.Parameters.AddWithValue("@SessionID", sessionID);
+                cmd.Parameters.Add("@ContextInfo", SqlDbType.VarBinary, 128).Value = contextBytes;
                 cmd.ExecuteNonQuery();
             }
         }
         catch { }
+    }
+
+    private string FitAuditField(string value, int length)
+    {
+        value = value ?? "";
+        value = value.Replace("\r", " ").Replace("\n", " ");
+        if (value.Length > length) value = value.Substring(0, length);
+        return value.PadRight(length);
     }
     private void LogError(string source, string query, Exception ex)
     {

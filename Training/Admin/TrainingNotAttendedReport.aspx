@@ -453,6 +453,17 @@ Employees Not Attended Training Report
 
 
     <div class="form-group">
+        <label>Role</label>
+        <div class="multiselect-container" id="roleBox">
+            <div class="multiselect-header" onclick="toggleMultiSelect('roleBox')">Select Role</div>
+            <div class="multiselect-content">
+                <input type="text" class="multiselect-search" placeholder="Search Role" onkeyup="filterCheckbox('roleBox',this.value)" />
+                <asp:CheckBoxList ID="chkRole" runat="server"></asp:CheckBoxList>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
 
         <label>
             Designation

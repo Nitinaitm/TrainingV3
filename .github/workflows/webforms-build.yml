@@ -1,0 +1,27 @@
+name: ASP.NET Web Forms Build
+
+on:
+  push:
+    branches:
+      - feature/employee-role-and-sql2012-fixes
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Install .NET Framework 4.6.1 targeting pack
+        run: choco install netfx-4.6.1-devpack --version 4.6.01055.00 -y --no-progress
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+      - name: Restore NuGet packages
+        run: nuget restore Training.sln
+      - name: Build ASP.NET Web Forms solution
+        run: msbuild Training.sln /t:Build /m /p:Configuration=Release /p:DeployOnBuild=false
