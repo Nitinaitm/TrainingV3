@@ -92,5 +92,6 @@ namespace Training.Admin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvReport;
+        protected global::System.Web.UI.WebControls.ListBox lstRole;
     }
 }
