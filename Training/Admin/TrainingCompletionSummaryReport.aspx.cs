@@ -229,7 +229,7 @@ AND TrainingType =
 
 SELECT
 
-CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END,
+CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END AS EmpDesignation,
 
 COUNT(
 DISTINCT EBM.EmpID
