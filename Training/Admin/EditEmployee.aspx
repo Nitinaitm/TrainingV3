@@ -267,6 +267,12 @@
                 allowClear: true,
                 width: '100%'
             });
+
+            $('[id*=lstEmployeeRoles]').select2({
+                placeholder: 'Search / Select Roles',
+                closeOnSelect: false,
+                width: '100%'
+            });
         }
 
 
