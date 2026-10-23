@@ -19,6 +19,7 @@ function LoadSearchableDropdowns(){
 var ids=[
 '#<%= lstCompany.ClientID %>',
 '#<%= lstDesignation.ClientID %>',
+'#<%= lstRole.ClientID %>',
 '#<%= lstPostingPlace.ClientID %>',
 '#<%= lstPostingDepartment.ClientID %>',
 '#<%= lstAreaBoardZone.ClientID %>',
@@ -27,7 +28,7 @@ var ids=[
 '#<%= lstSubdivision.ClientID %>',
 '#<%= lstSection.ClientID %>'
 ];
-var placeholders=['Search / Select Company','Search / Select Designation','Search / Select HRMS Posting Place','Search / Select Department / Office / Cell','Search / Select Area Board / Zone','Search / Select Circle','Search / Select Division','Search / Select Subdivision','Search / Select Section'];for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:placeholders[i],closeOnSelect:false});}}
+var placeholders=['Search / Select Company','Search / Select Designation','Search / Select Role','Search / Select HRMS Posting Place','Search / Select Department / Office / Cell','Search / Select Area Board / Zone','Search / Select Circle','Search / Select Division','Search / Select Subdivision','Search / Select Section'];for(var i=0;i<ids.length;i++){var j=$(ids[i]);if(j.length>0){if(j.hasClass('select2-hidden-accessible'))j.select2('destroy');j.select2({width:'100%',placeholder:placeholders[i],closeOnSelect:false});}}
 }
 function initializeTrainingSearchControls(){if(typeof jQuery==='undefined')return;if(typeof jQuery.fn.select2==='undefined'){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';s.onload=function(){jQuery(function(){LoadSearchableDropdowns();bindTrainingDependencyEvents();initializeEmployeeGridScrollbars();setTimeout(syncEmployeeGridScrollbars,250);setTimeout(syncEmployeeGridScrollbars,750);jQuery(window).on('resize',syncEmployeeGridScrollbars);});};document.head.appendChild(s);}else{jQuery(function(){LoadSearchableDropdowns();initializeEmployeeGridScrollbars();setTimeout(syncEmployeeGridScrollbars,250);setTimeout(syncEmployeeGridScrollbars,750);jQuery(window).on('resize',syncEmployeeGridScrollbars);});}}window.addEventListener('load',initializeTrainingSearchControls);
 function bindTrainingDependencyEvents(){
@@ -50,6 +51,7 @@ function initializeEmployeeGridScrollbars(){var e=getEmployeeGridElements();if(!
 <div class="form-group"><label>Email ID</label><asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder="Enter Email ID" /></div>
 <div class="form-group"><label>Company</label><asp:ListBox ID="lstCompany" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div class="form-group"><label>Designation</label><asp:ListBox ID="lstDesignation" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
+<div class="form-group"><label>Role</label><asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div class="form-group"><label>Posting Place (HRMS)</label><asp:ListBox ID="lstPostingPlace" runat="server" SelectionMode="Multiple" CssClass="form-control" /></div>
 <div id="grpPostingDetails" runat="server" class="posting-details-card" visible="true">
 <div class="posting-details-title">Posting Details</div><div class="posting-details-grid">
