@@ -14,7 +14,7 @@ namespace Training.Admin
 
         protected void Page_Load(object sender,EventArgs e)
         {
-            if(!IsPostBack)BindStatus();
+            if(!IsPostBack){BindStatus();BindRoles();}
             BindMIS();
         }
 
@@ -47,12 +47,43 @@ namespace Training.Admin
             return "COALESCE(TRY_CONVERT(date,"+field+",105),TRY_CONVERT(date,"+field+",23),TRY_CONVERT(date,"+field+"))";
         }
 
+        private void BindRoles()
+        {
+            DataTable dt = GetTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
+            cblRole.DataSource = dt;
+            cblRole.DataTextField = "RoleName";
+            cblRole.DataValueField = "RoleID";
+            cblRole.DataBind();
+        }
+
+        private List<int> SelectedRoleIDs()
+        {
+            List<int> ids = new List<int>();
+            foreach (ListItem item in cblRole.Items)
+            {
+                int id;
+                if (item.Selected && int.TryParse(item.Value, out id)) ids.Add(id);
+            }
+            return ids;
+        }
+
+        private string RoleFilter(string alias)
+        {
+            List<int> ids = SelectedRoleIDs();
+            if (ids.Count == 0) return "";
+            List<string> tokens = new List<string>();
+            for (int i = 0; i < ids.Count; i++) tokens.Add("@RoleID" + i);
+            ViewState["MISRoleIDs"] = ids.ToArray();
+            return " AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TA_R INNER JOIN dbo.TrainingDetails TD_R ON TD_R.TrainingID=TA_R.TrainingID WHERE TA_R.TrainingID=" + alias + ".TrainingID AND ISNULL(TA_R.Cancelled,0)=0 AND ((ISNULL(TD_R.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD_R.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.TrainingEmployeeSnapshotRole TSR WHERE TSR.TrainingID=TA_R.TrainingID AND TSR.EmpID=TA_R.EmpID AND TSR.RoleID IN (" + string.Join(",", tokens) + ")) OR NOT (ISNULL(TD_R.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD_R.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TA_R.EmpID AND ERM.RoleID IN (" + string.Join(",", tokens) + ")))";
+        }
+
         private string Filter(string alias)
         {
             StringBuilder s=new StringBuilder();
             if(txtFromDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateFrom")+">=TRY_CONVERT(date,@FromDate,105)");
             if(txtToDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateTo")+"<=TRY_CONVERT(date,@ToDate,105)");
             if(ddlStatus.SelectedValue!="")s.Append(" AND ISNULL("+alias+".TrainingStatus,'')=@Status");
+            s.Append(RoleFilter(alias));
             return s.ToString();
         }
 
@@ -61,6 +92,11 @@ namespace Training.Admin
             if(txtFromDate.Text.Trim()!="")cmd.Parameters.AddWithValue("@FromDate",txtFromDate.Text.Trim());
             if(txtToDate.Text.Trim()!="")cmd.Parameters.AddWithValue("@ToDate",txtToDate.Text.Trim());
             if(ddlStatus.SelectedValue!="")cmd.Parameters.AddWithValue("@Status",ddlStatus.SelectedValue);
+            int[] roleIDs = ViewState["MISRoleIDs"] as int[];
+            if (roleIDs != null)
+            {
+                for (int i = 0; i < roleIDs.Length; i++) cmd.Parameters.AddWithValue("@RoleID" + i, roleIDs[i]);
+            }
         }
 
         private DataTable GetTable(string q,params SqlParameter[] p)
