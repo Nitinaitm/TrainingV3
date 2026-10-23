@@ -2472,5 +2472,6 @@
   <ItemGroup>
     <Compile Include="Business\Audit\clsAuditLog.cs" />
     <Content Include="Database\AuditLogging.sql" />
+    <Content Include="Database\EmployeeRoleMigration.sql" />
   </ItemGroup>
 </Project>
