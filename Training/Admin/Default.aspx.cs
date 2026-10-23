@@ -299,7 +299,11 @@ namespace Training.Admin
         private void BindRole()
         {
             DataTable dt = DB().GetDataTable("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName");
-            BindList(lstRole, dt, "RoleName", "RoleID");
+            lstRole.Items.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                lstRole.Items.Add(new ListItem(Convert.ToString(row["RoleName"]), Convert.ToString(row["RoleID"])));
+            }
         }
 
         private void AddRoleFilter(StringBuilder query, SqlCommand cmd)
