@@ -579,6 +579,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyCurrentRoleFilter(q);
 
             using (SqlConnection con =
             new SqlConnection(constr))
