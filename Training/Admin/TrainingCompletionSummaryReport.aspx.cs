@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -40,6 +39,7 @@ namespace Training.Admin
                 BindCompany();
 
                 BindTrainingType();
+                BindRoles();
             }
         }
 
@@ -124,6 +124,21 @@ ORDER BY TrainingType
                 ""));
             }
         }
+        private void BindRoles()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName", con))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                chkRole.DataSource = dt;
+                chkRole.DataTextField = "RoleName";
+                chkRole.DataValueField = "RoleID";
+                chkRole.DataBind();
+            }
+        }
+
         private List<int> SelectedRoleIDs()
         {
             List<int> ids = new List<int>();
