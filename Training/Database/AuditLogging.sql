@@ -3,14 +3,16 @@ BEGIN
 CREATE TABLE dbo.UserLoginHistory(LoginHistoryID bigint IDENTITY(1,1) NOT NULL PRIMARY KEY,UserID nvarchar(100) NOT NULL,UserRole nvarchar(50) NULL,LoginTime datetime NOT NULL CONSTRAINT DF_UserLoginHistory_LoginTime DEFAULT(GETDATE()),LogoutTime datetime NULL,LoginStatus varchar(20) NOT NULL,FailureReason nvarchar(500) NULL,IPAddress varchar(100) NULL,UserAgent nvarchar(500) NULL,SessionID nvarchar(100) NULL);
 END
 GO
-CREATE INDEX IX_UserLoginHistory_UserID_LoginTime ON dbo.UserLoginHistory(UserID,LoginTime DESC);
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.UserLoginHistory') AND name='IX_UserLoginHistory_UserID_LoginTime')
+    CREATE INDEX IX_UserLoginHistory_UserID_LoginTime ON dbo.UserLoginHistory(UserID,LoginTime DESC);
 GO
 IF OBJECT_ID('dbo.UserActivityLog','U') IS NULL
 BEGIN
 CREATE TABLE dbo.UserActivityLog(ActivityID bigint IDENTITY(1,1) NOT NULL PRIMARY KEY,UserID nvarchar(100) NOT NULL,UserRole nvarchar(50) NULL,ActionType varchar(30) NOT NULL,Module nvarchar(100) NULL,PageName nvarchar(200) NULL,RecordType nvarchar(100) NULL,RecordID nvarchar(150) NULL,Description nvarchar(1000) NULL,ActivityTime datetime NOT NULL CONSTRAINT DF_UserActivityLog_ActivityTime DEFAULT(GETDATE()),IPAddress varchar(100) NULL,SessionID nvarchar(100) NULL);
 END
 GO
-CREATE INDEX IX_UserActivityLog_UserTime ON dbo.UserActivityLog(UserID,ActivityTime DESC);
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.UserActivityLog') AND name='IX_UserActivityLog_UserTime')
+    CREATE INDEX IX_UserActivityLog_UserTime ON dbo.UserActivityLog(UserID,ActivityTime DESC);
 GO
 IF OBJECT_ID('dbo.AuditTrail','U') IS NULL
 BEGIN
@@ -58,7 +60,8 @@ BEGIN
     RETURN LTRIM(RTRIM(CONVERT(nvarchar(100),SUBSTRING(CONVERT(varchar(128),CONTEXT_INFO()),86,32))));
 END
 GO
-CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.AuditTrail') AND name='IX_AuditTrail_TableRecord')
+    CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
 IF OBJECT_ID(N'dbo.trg_Audit_EmpBasicMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_EmpBasicMaster;
 CREATE TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
