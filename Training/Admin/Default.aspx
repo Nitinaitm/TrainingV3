@@ -1191,11 +1191,6 @@ window.addEventListener('message', function (event) {
                 </div>
 
 
-                <div class="form-group">
-                    <label>Role</label>
-                    <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" />
-                </div>
-
                 <!-- =================================================
                      HRMS POSTING PLACE
                 ================================================== -->
@@ -1228,6 +1223,11 @@ window.addEventListener('message', function (event) {
 
                     <div class="posting-details-title">
                         Posting Details
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role</label>
+                        <asp:ListBox ID="lstRole" runat="server" SelectionMode="Multiple" CssClass="form-control" />
                     </div>
 
 
