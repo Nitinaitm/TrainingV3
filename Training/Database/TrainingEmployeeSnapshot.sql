@@ -1,7 +1,7 @@
 /*
     Historical trainee designation/posting snapshot.
     Run once against the Training database before deploying the report code.
-    Snapshots are captured when TrainingDetails transitions into Completed.
+    Snapshots are captured when TrainingDetails enters a completed TrainingStatus or WorkflowStatus.
     Existing completed records are deliberately NOT backfilled from current employee data,
     because current data cannot prove the employee's historical designation/posting.
 */
