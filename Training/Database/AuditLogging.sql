@@ -60,16 +60,18 @@ END
 GO
 CREATE INDEX IX_AuditTrail_TableRecord ON dbo.AuditTrail(TableName,RecordID,ChangedOn DESC);
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_EmpBasicMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_EmpBasicMaster;
 CREATE TRIGGER dbo.trg_Audit_EmpBasicMaster ON dbo.EmpBasicMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
-SELECT 'EmpBasicMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,CONVERT(nvarchar(max),o.X),CONVERT(nvarchar(max),n.X),dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
+SELECT 'EmpBasicMaster',CONVERT(nvarchar(150),COALESCE(i.ID,d.ID)),CASE WHEN i.ID IS NULL THEN 'DELETE' WHEN d.ID IS NULL THEN 'INSERT' ELSE 'UPDATE' END,o.OldData,n.NewData,dbo.fn_AuditUserID(),dbo.fn_AuditUserRole(),dbo.fn_AuditIPAddress(),dbo.fn_AuditSessionID(),ORIGINAL_LOGIN()
 FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
-OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
-OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
+OUTER APPLY(SELECT CONVERT(nvarchar(max),(SELECT d.* FOR XML PATH('Row'),TYPE)) AS OldData)o
+OUTER APPLY(SELECT CONVERT(nvarchar(max),(SELECT i.* FOR XML PATH('Row'),TYPE)) AS NewData)n;
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_EmpPostingDetails',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_EmpPostingDetails;
 CREATE TRIGGER dbo.trg_Audit_EmpPostingDetails ON dbo.EmpPostingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -89,6 +91,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_TrainingAssignment',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TrainingAssignment;
 CREATE TRIGGER dbo.trg_Audit_TrainingAssignment ON dbo.TrainingAssignment AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -99,6 +102,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_SessionMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_SessionMaster;
 CREATE TRIGGER dbo.trg_Audit_SessionMaster ON dbo.SessionMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -109,6 +113,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_SessionAttendance',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_SessionAttendance;
 CREATE TRIGGER dbo.trg_Audit_SessionAttendance ON dbo.SessionAttendance AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -119,6 +124,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_TestMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TestMaster;
 CREATE TRIGGER dbo.trg_Audit_TestMaster ON dbo.TestMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -129,6 +135,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_TrainingCertificate',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TrainingCertificate;
 CREATE TRIGGER dbo.trg_Audit_TrainingCertificate ON dbo.TrainingCertificate AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
@@ -139,6 +146,7 @@ OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
 GO
+IF OBJECT_ID(N'dbo.trg_Audit_ManagerMaster',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_ManagerMaster;
 CREATE TRIGGER dbo.trg_Audit_ManagerMaster ON dbo.ManagerMaster AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
