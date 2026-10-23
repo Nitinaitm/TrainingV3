@@ -81,7 +81,10 @@ FROM inserted i FULL OUTER JOIN deleted d ON i.ID=d.ID
 OUTER APPLY(SELECT (SELECT d.* FOR XML PATH('Row'),TYPE) AS X)o(OldData)
 OUTER APPLY(SELECT (SELECT i.* FOR XML PATH('Row'),TYPE) AS X)n(NewData);
 END
-GO\nCREATE TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
+GO
+IF OBJECT_ID(N'dbo.trg_Audit_TrainingDetails',N'TR') IS NOT NULL DROP TRIGGER dbo.trg_Audit_TrainingDetails;
+GO
+CREATE TRIGGER dbo.trg_Audit_TrainingDetails ON dbo.TrainingDetails AFTER INSERT,UPDATE,DELETE AS
 BEGIN
 SET NOCOUNT ON;
 INSERT dbo.AuditTrail(TableName,RecordID,ActionType,OldData,NewData,ChangedBy,ChangedRole,IPAddress,SessionID,SQLLogin)
