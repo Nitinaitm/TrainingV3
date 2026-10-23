@@ -611,6 +611,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyCurrentRoleFilter(q);
 
             q.Append(@"
 
@@ -654,6 +655,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyCurrentRoleFilter(q);
 
             q.Append(@"
 
@@ -742,6 +744,7 @@ E.EmpName,
 E.EmpCompany,
 E.EmpDesignation,
 E.EmpPostingPlace,
+ISNULL((SELECT STUFF((SELECT ', '+RM.RoleName FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=E.EmpID ORDER BY RM.RoleName FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')) AS EmployeeRoles,
 '' AS DetailsTrainingID,
 'Current employee details' AS EmployeeDetailsSource,
 E.MobileNo,
@@ -764,6 +767,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyCurrentRoleFilter(q);
 
             q.Append(@"
 
@@ -913,6 +917,7 @@ E.EmpName,
 CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpCompany,'') ELSE E.EmpCompany END EmpCompany,
 CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpDesignation,'') ELSE E.EmpDesignation END EmpDesignation,
 CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmpPostingPlace,'') ELSE E.EmpPostingPlace END EmpPostingPlace,
+CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(H.EmployeeRoles,'') ELSE ISNULL((SELECT STUFF((SELECT ', '+RM.RoleName FROM dbo.EmpRoleMapping ERM INNER JOIN dbo.RoleMaster RM ON RM.RoleID=ERM.RoleID WHERE ERM.EmpID=E.EmpID ORDER BY RM.RoleName FOR XML PATH(''),TYPE).value('.','nvarchar(max)'),1,2,'')),'') END EmployeeRoles,
 ISNULL(H.TrainingID,'') DetailsTrainingID,
 CASE WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') AND H.SnapshotEmpID IS NULL THEN 'Legacy - snapshot unavailable' WHEN (ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ') THEN 'Historical snapshot' WHEN H.TrainingID IS NOT NULL THEN 'Current employee details' ELSE 'No matching attended training' END EmployeeDetailsSource,
 E.MobileNo,
@@ -938,7 +943,9 @@ OUTER APPLY
         TES.EmpID AS SnapshotEmpID,
         TES.EmpCompany,
         TES.EmpDesignation,
-        TES.EmpPostingPlace
+        TES.EmpPostingPlace,
+        TES.EmployeeRoles,
+        TES.EmployeeRoleIDs
     FROM TrainingAssignment TAH
     INNER JOIN TrainingDetails TDH ON TDH.TrainingID=TAH.TrainingID
     LEFT JOIN TrainingEmployeeSnapshot TES ON TES.TrainingID=TAH.TrainingID AND TES.EmpID=TAH.EmpID
@@ -962,6 +969,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyHistoricalRoleFilter(q);
 
             q.Append(@"
 
@@ -1004,6 +1012,23 @@ ORDER BY E.EmpID
         }
        
 
+        private void ApplyCurrentRoleFilter(StringBuilder q)
+        {
+            string roleIDs = GetRoleFilter();
+            if (roleIDs != "")
+            {
+                q.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN (" + roleIDs + ")) ");
+            }
+        }
+
+        private void ApplyHistoricalRoleFilter(StringBuilder q)
+        {
+            string roleIDs = GetRoleFilter();
+            if (roleIDs == "") return;
+            string completed = "(ISNULL(H.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(H.WorkflowStatus,'')='ABCDEFGHIJ')";
+            q.Append(" AND H.TrainingID IS NOT NULL AND ((" + completed + " AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN (" + roleIDs + ") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(H.EmployeeRoleIDs,'')+',')>0)) OR (NOT " + completed + " AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN (" + roleIDs + ")))) ");
+        }
+
         private void ApplyEmployeeFiltersToQuery(
 StringBuilder q)
         {
@@ -1033,11 +1058,6 @@ AND E.EmpDesignation IN
 ");
             }
 
-            string roleIDs = GetRoleFilter();
-            if (roleIDs != "")
-            {
-                q.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN (" + roleIDs + ")) ");
-            }
         }
 
         private void LoadCounts()
