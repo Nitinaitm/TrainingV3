@@ -229,7 +229,7 @@ AND TrainingType =
 
 SELECT
 
-CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END,
+CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END,
 
 COUNT(
 DISTINCT EBM.EmpID
@@ -326,7 +326,7 @@ TD.DateTo,
                 q.Append(@"
 
 GROUP BY
-CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
+CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
 
 HAVING
 COUNT(
@@ -334,7 +334,7 @@ DISTINCT TA.EmpID
 ) > 0
 
 ORDER BY
-CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
+CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END
 
 ");
 
@@ -482,7 +482,7 @@ AND TES.EmpID = TA.EmpID
 
 WHERE
 
-(CASE WHEN ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END) =
+(CASE WHEN (ISNULL(TD.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD.WorkflowStatus,'')='ABCDEFGHIJ') THEN ISNULL(TES.EmpDesignation,'') ELSE EBM.EmpDesignation END) =
 @Designation
 
 AND
