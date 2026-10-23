@@ -1061,7 +1061,8 @@ window.addEventListener('message', function (event) {
 
         <div class="search-card">
 
-            <div class="page-title">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:12px;"><a href="RoleMaster.aspx" class="custom-btn btn-search">Role Master</a></div>
+<div class="page-title">
 
                 <i class="fa fa-search"></i>
 
