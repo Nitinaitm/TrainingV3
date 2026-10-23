@@ -80,8 +80,8 @@ BEGIN
         WHERE EP.EmpID=TA.EmpID
         ORDER BY EP.ID DESC
     ) P
-    WHERE ISNULL(I.TrainingStatus,'') IN ('Completed','TrainingCompleted')
-      AND ISNULL(D.TrainingStatus,'') NOT IN ('Completed','TrainingCompleted')
+    WHERE (ISNULL(I.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(I.WorkflowStatus,'')='ABCDEFGHIJ')
+      AND NOT (ISNULL(D.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(D.WorkflowStatus,'')='ABCDEFGHIJ')
       AND ISNULL(TA.Cancelled,0)=0
       AND NOT EXISTS
       (
