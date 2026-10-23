@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -50,6 +51,7 @@ namespace Training.Admin
                 BindCompany();
 
                 BindDesignation();
+                BindRoles();
 
                
                 LoadCounts();
@@ -253,6 +255,42 @@ ORDER BY EmpCompany
                 "EmpCompany";
 
                 chkCompany.DataBind();
+            }
+        }
+
+        private void BindRoles()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlCommand cmd = new SqlCommand("SELECT RoleID,RoleName FROM dbo.RoleMaster WHERE IsActive=1 ORDER BY RoleName", con))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                chkRole.DataSource = dt;
+                chkRole.DataTextField = "RoleName";
+                chkRole.DataValueField = "RoleID";
+                chkRole.DataBind();
+            }
+        }
+
+        private void ApplyRoleFilter(StringBuilder q, string empAlias)
+        {
+            int i = 0;
+            List<string> names = new List<string>();
+            foreach (ListItem item in chkRole.Items)
+            {
+                if (!item.Selected) continue;
+                names.Add("@RoleFilter" + i++);
+            }
+            if (names.Count > 0) q.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=" + empAlias + ".EmpID AND ERM.RoleID IN (" + string.Join(",", names) + "))");
+        }
+
+        private void AddRoleParameters(SqlCommand cmd)
+        {
+            int i = 0;
+            foreach (ListItem item in chkRole.Items)
+            {
+                if (item.Selected) cmd.Parameters.AddWithValue("@RoleFilter" + i++, Convert.ToInt32(item.Value));
             }
         }
 
@@ -551,6 +589,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             using (SqlConnection con =
             new SqlConnection(constr))
@@ -560,6 +599,7 @@ WHERE 1=1
                 q.ToString(),
                 con);
 
+                AddRoleParameters(cmd);
                 con.Open();
 
                 return Convert.ToInt32(
@@ -583,6 +623,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
@@ -603,6 +644,7 @@ AND NOT EXISTS
                 q.ToString(),
                 con);
 
+                AddRoleParameters(cmd);
                 con.Open();
 
                 return Convert.ToInt32(
@@ -626,6 +668,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
@@ -660,6 +703,7 @@ AND NOT EXISTS
                 q.ToString(),
                 con);
 
+                AddRoleParameters(cmd);
                 con.Open();
 
                 return Convert.ToInt32(
@@ -736,6 +780,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
@@ -780,6 +825,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
@@ -837,6 +883,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
@@ -934,6 +981,7 @@ WHERE 1=1
 ");
 
             ApplyEmployeeFiltersToQuery(q);
+            ApplyRoleFilter(q, "E");
 
             q.Append(@"
 
