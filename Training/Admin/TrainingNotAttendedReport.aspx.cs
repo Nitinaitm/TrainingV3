@@ -50,8 +50,7 @@ namespace Training.Admin
                 BindCompany();
 
                 BindDesignation();
-
-               
+                BindRole();
                 LoadCounts();
             }
         }
@@ -254,6 +253,35 @@ ORDER BY EmpCompany
 
                 chkCompany.DataBind();
             }
+        }
+
+        private void BindRole()
+        {
+            using (SqlConnection con = new SqlConnection(constr))
+            using (SqlDataAdapter da = new SqlDataAdapter("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName", con))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                chkRole.DataSource = dt;
+                chkRole.DataTextField = "RoleName";
+                chkRole.DataValueField = "RoleID";
+                chkRole.DataBind();
+            }
+        }
+
+        private string GetRoleFilter()
+        {
+            StringBuilder ids = new StringBuilder();
+            foreach (ListItem item in chkRole.Items)
+            {
+                int roleID;
+                if (item.Selected && int.TryParse(item.Value, out roleID))
+                {
+                    if (ids.Length > 0) ids.Append(",");
+                    ids.Append(roleID);
+                }
+            }
+            return ids.ToString();
         }
 
         private void BindDesignation()
@@ -1004,6 +1032,12 @@ AND E.EmpDesignation IN
 
 ");
             }
+
+            string roleIDs = GetRoleFilter();
+            if (roleIDs != "")
+            {
+                q.Append(" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=E.EmpID AND ERM.RoleID IN (" + roleIDs + ")) ");
+            }
         }
 
         private void LoadCounts()
@@ -1119,6 +1153,11 @@ AND E.EmpDesignation IN
 
             foreach (ListItem item
             in chkDesignation.Items)
+            {
+                item.Selected = false;
+            }
+
+            foreach (ListItem item in chkRole.Items)
             {
                 item.Selected = false;
             }
