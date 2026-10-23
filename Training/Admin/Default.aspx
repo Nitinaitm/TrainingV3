@@ -787,6 +787,31 @@
                     closeOnSelect: false
                 });
             }
+
+            BindCascadePostback(company, '<%= lstCompany.UniqueID %>');
+            BindCascadePostback(zone, '<%= lstAreaBoardZone.UniqueID %>');
+            BindCascadePostback(circle, '<%= lstCircle.UniqueID %>');
+            BindCascadePostback(division, '<%= lstDivision.UniqueID %>');
+            BindCascadePostback(subdivision, '<%= lstSubdivision.UniqueID %>');
+        }
+
+        function BindCascadePostback(dropdown, uniqueId) {
+            if (!dropdown || dropdown.length === 0) {
+                return;
+            }
+
+            dropdown.off('.cascadePostback');
+
+            dropdown.on('select2:select.cascadePostback select2:unselect.cascadePostback', function () {
+                dropdown.data('cascadeChanged', true);
+            });
+
+            dropdown.on('select2:close.cascadePostback', function () {
+                if (dropdown.data('cascadeChanged') === true) {
+                    dropdown.data('cascadeChanged', false);
+                    __doPostBack(uniqueId, '');
+                }
+            });
         }
 
         function openPostingDetails(link) {
@@ -1134,8 +1159,7 @@ window.addEventListener('message', function (event) {
                         runat="server"
                         SelectionMode="Multiple"
                         CssClass="form-control"
-                        AutoPostBack="true"
-                        OnSelectedIndexChanged="lstCompany_SelectedIndexChanged">
+                                                OnSelectedIndexChanged="lstCompany_SelectedIndexChanged">
                     </asp:ListBox>
 
                 </div>
@@ -1283,8 +1307,7 @@ window.addEventListener('message', function (event) {
                                 runat="server"
                                 SelectionMode="Multiple"
                                 CssClass="form-control"
-                                AutoPostBack="true"
-                                OnSelectedIndexChanged="lstAreaBoardZone_SelectedIndexChanged">
+                                                                OnSelectedIndexChanged="lstAreaBoardZone_SelectedIndexChanged">
                             </asp:ListBox>
 
                         </div>
@@ -1309,8 +1332,7 @@ window.addEventListener('message', function (event) {
                                 runat="server"
                                 SelectionMode="Multiple"
                                 CssClass="form-control"
-                                AutoPostBack="true"
-                                OnSelectedIndexChanged="lstCircle_SelectedIndexChanged">
+                                                                OnSelectedIndexChanged="lstCircle_SelectedIndexChanged">
                             </asp:ListBox>
 
                         </div>
@@ -1335,8 +1357,7 @@ window.addEventListener('message', function (event) {
                                 runat="server"
                                 SelectionMode="Multiple"
                                 CssClass="form-control"
-                                AutoPostBack="true"
-                                OnSelectedIndexChanged="lstDivision_SelectedIndexChanged">
+                                                                OnSelectedIndexChanged="lstDivision_SelectedIndexChanged">
                             </asp:ListBox>
 
                         </div>
@@ -1361,8 +1382,7 @@ window.addEventListener('message', function (event) {
                                 runat="server"
                                 SelectionMode="Multiple"
                                 CssClass="form-control"
-                                AutoPostBack="true"
-                                OnSelectedIndexChanged="lstSubdivision_SelectedIndexChanged">
+                                                                OnSelectedIndexChanged="lstSubdivision_SelectedIndexChanged">
                             </asp:ListBox>
 
                         </div>
