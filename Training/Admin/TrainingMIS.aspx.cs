@@ -40,7 +40,7 @@ namespace Training.Admin
         }
 
         protected void btnSearch_Click(object sender,EventArgs e){BindMIS();}
-        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;BindMIS();}
+        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;foreach(ListItem item in cblRole.Items)item.Selected=false;ViewState.Remove("MISRoleIDs");BindMIS();}
 
         private string DateExpr(string field)
         {
@@ -74,7 +74,11 @@ namespace Training.Admin
             List<string> tokens = new List<string>();
             for (int i = 0; i < ids.Count; i++) tokens.Add("@RoleID" + i);
             ViewState["MISRoleIDs"] = ids.ToArray();
-            return " AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TA_R INNER JOIN dbo.TrainingDetails TD_R ON TD_R.TrainingID=TA_R.TrainingID WHERE TA_R.TrainingID=" + alias + ".TrainingID AND ISNULL(TA_R.Cancelled,0)=0 AND ((ISNULL(TD_R.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD_R.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.TrainingEmployeeSnapshotRole TSR WHERE TSR.TrainingID=TA_R.TrainingID AND TSR.EmpID=TA_R.EmpID AND TSR.RoleID IN (" + string.Join(",", tokens) + ")) OR NOT (ISNULL(TD_R.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD_R.WorkflowStatus,'')='ABCDEFGHIJ') AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TA_R.EmpID AND ERM.RoleID IN (" + string.Join(",", tokens) + ")))";
+            string roleList = string.Join(",", tokens);
+            string completed = "(ISNULL(TD_R.TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL(TD_R.WorkflowStatus,'')='ABCDEFGHIJ')";
+            string snapshotMatch = "EXISTS (SELECT 1 FROM dbo.TrainingEmployeeSnapshotRole TSR WHERE TSR.TrainingID=TA_R.TrainingID AND TSR.EmpID=TA_R.EmpID AND TSR.RoleID IN (" + roleList + "))";
+            string currentMatch = "EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TA_R.EmpID AND ERM.RoleID IN (" + roleList + "))";
+            return " AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TA_R INNER JOIN dbo.TrainingDetails TD_R ON TD_R.TrainingID=TA_R.TrainingID WHERE TA_R.TrainingID=" + alias + ".TrainingID AND ISNULL(TA_R.Cancelled,0)=0 AND ((" + completed + " AND " + snapshotMatch + ") OR (NOT " + completed + " AND " + currentMatch + ")))";
         }
 
         private string Filter(string alias)
