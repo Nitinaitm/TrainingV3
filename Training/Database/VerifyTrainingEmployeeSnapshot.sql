@@ -50,8 +50,8 @@ ORDER BY TD.TrainingID, TA.EmpID;
 
 SELECT
     COUNT(*) AS SnapshotRowCount,
-    SUM(CASE WHEN ISNULL(EmpDesignation,'') = '' THEN 1 ELSE 0 END) AS MissingDesignationCount,
-    SUM(CASE WHEN ISNULL(EmpCompany,'') = '' THEN 1 ELSE 0 END) AS MissingCompanyCount,
-    SUM(CASE WHEN ISNULL(EmpPostingPlace,'') = '' THEN 1 ELSE 0 END) AS MissingMasterPostingCount,
-    SUM(CASE WHEN ISNULL(DetailPostingPlace,'') = '' THEN 1 ELSE 0 END) AS MissingDetailedPostingCount
+    ISNULL(SUM(CASE WHEN ISNULL(EmpDesignation,'') = '' THEN 1 ELSE 0 END),0) AS MissingDesignationCount,
+    ISNULL(SUM(CASE WHEN ISNULL(EmpCompany,'') = '' THEN 1 ELSE 0 END),0) AS MissingCompanyCount,
+    ISNULL(SUM(CASE WHEN ISNULL(EmpPostingPlace,'') = '' THEN 1 ELSE 0 END),0) AS MissingMasterPostingCount,
+    ISNULL(SUM(CASE WHEN ISNULL(DetailPostingPlace,'') = '' THEN 1 ELSE 0 END),0) AS MissingDetailedPostingCount
 FROM dbo.TrainingEmployeeSnapshot;
