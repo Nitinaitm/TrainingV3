@@ -975,6 +975,8 @@ EventArgs e)
         {
             BindDesignation();
 
+            BindRole();
+
             BindPostingPlace();
 
             ClearPostingDetailControls();
@@ -1591,6 +1593,7 @@ EventArgs e)
 
             lstCompany.ClearSelection();
             lstDesignation.ClearSelection();
+            lstRole.ClearSelection();
             lstPostingPlace.ClearSelection();
 
             ClearPostingDetailControls();
