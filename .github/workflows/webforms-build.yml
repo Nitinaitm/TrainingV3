@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+      - name: Install .NET Framework 4.6.1 targeting pack
+        run: choco install netfx-4.6.1-devpack --version 4.6.01055.00 -y --no-progress
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Restore NuGet packages
