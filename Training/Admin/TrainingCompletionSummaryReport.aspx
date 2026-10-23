@@ -144,6 +144,11 @@ Training Completion Report
     </div>
 
     <div class="form-group">
+        <label>Role (select any)</label>
+        <asp:CheckBoxList ID="chkRole" runat="server" RepeatLayout="Flow" CssClass="role-filter-list"></asp:CheckBoxList>
+    </div>
+
+    <div class="form-group">
         <label>Training Type</label>
 
         <asp:DropDownList
