@@ -14,7 +14,7 @@ namespace Training.Admin
 
         protected void Page_Load(object sender,EventArgs e)
         {
-            if(!IsPostBack)BindStatus();
+            if(!IsPostBack){BindStatus();BindRole();}
             BindMIS();
         }
 
@@ -39,8 +39,33 @@ namespace Training.Admin
             }
         }
 
+        private void BindRole()
+        {
+            using(SqlConnection con=new SqlConnection(constr))
+            using(SqlDataAdapter da=new SqlDataAdapter("SELECT RoleID,RoleName FROM dbo.RoleMaster ORDER BY RoleName",con))
+            {
+                DataTable dt=new DataTable();
+                da.Fill(dt);
+                lstRole.DataSource=dt;
+                lstRole.DataTextField="RoleName";
+                lstRole.DataValueField="RoleID";
+                lstRole.DataBind();
+            }
+        }
+
+        private string SelectedRoleIDs()
+        {
+            System.Collections.Generic.List<string> ids=new System.Collections.Generic.List<string>();
+            foreach(ListItem item in lstRole.Items)
+            {
+                int roleID;
+                if(item.Selected && int.TryParse(item.Value,out roleID))ids.Add(roleID.ToString());
+            }
+            return string.Join(",",ids);
+        }
+
         protected void btnSearch_Click(object sender,EventArgs e){BindMIS();}
-        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;BindMIS();}
+        protected void btnReset_Click(object sender,EventArgs e){txtFromDate.Text="";txtToDate.Text="";ddlStatus.SelectedIndex=0;foreach(ListItem item in lstRole.Items)item.Selected=false;BindMIS();}
 
         private string DateExpr(string field)
         {
@@ -53,6 +78,12 @@ namespace Training.Admin
             if(txtFromDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateFrom")+">=TRY_CONVERT(date,@FromDate,105)");
             if(txtToDate.Text.Trim()!="")s.Append(" AND "+DateExpr(alias+".DateTo")+"<=TRY_CONVERT(date,@ToDate,105)");
             if(ddlStatus.SelectedValue!="")s.Append(" AND ISNULL("+alias+".TrainingStatus,'')=@Status");
+            string roleIDs=SelectedRoleIDs();
+            if(roleIDs!="")
+            {
+                string completed="(ISNULL("+alias+".TrainingStatus,'') IN ('Completed','TrainingCompleted') OR ISNULL("+alias+".WorkflowStatus,'')='ABCDEFGHIJ')";
+                s.Append(" AND EXISTS (SELECT 1 FROM dbo.TrainingAssignment TRA LEFT JOIN dbo.TrainingEmployeeSnapshot TRS ON TRS.TrainingID=TRA.TrainingID AND TRS.EmpID=TRA.EmpID WHERE TRA.TrainingID="+alias+".TrainingID AND ISNULL(TRA.Cancelled,0)=0 AND (("+completed+" AND EXISTS (SELECT 1 FROM dbo.RoleMaster RM WHERE RM.RoleID IN ("+roleIDs+") AND CHARINDEX(','+CONVERT(varchar(12),RM.RoleID)+',',','+ISNULL(TRS.EmployeeRoleIDs,'')+',')>0)) OR (NOT "+completed+" AND EXISTS (SELECT 1 FROM dbo.EmpRoleMapping ERM WHERE ERM.EmpID=TRA.EmpID AND ERM.RoleID IN ("+roleIDs+")))))");
+            }
             return s.ToString();
         }
 
